@@ -3,7 +3,7 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
 VisualStudioVersion = 17.0.31903.59
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Gateway", "Gateway\Gateway.csproj", "{82C63C10-01A4-48B2-B3C9-0DBEB8E02FBD}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ExampleBff", "ExampleBff\ExampleBff.csproj", "{82C63C10-01A4-48B2-B3C9-0DBEB8E02FBD}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GoCloudNative.Bff.Authentication", "GoCloudNative.Bff.Authentication\GoCloudNative.Bff.Authentication.csproj", "{EA906DE5-50E3-4B66-A908-4C2E6D23494D}"
 EndProject
