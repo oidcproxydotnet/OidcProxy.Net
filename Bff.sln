@@ -1,0 +1,34 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.0.31903.59
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Gateway", "Gateway\Gateway.csproj", "{82C63C10-01A4-48B2-B3C9-0DBEB8E02FBD}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GoCloudNative.Bff.Authentication", "GoCloudNative.Bff.Authentication\GoCloudNative.Bff.Authentication.csproj", "{EA906DE5-50E3-4B66-A908-4C2E6D23494D}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GoCloudNative.Bff.Authentication.OpenIdConnect", "GoCloudNative.Bff.Authentication.OpenIdConnect\GoCloudNative.Bff.Authentication.OpenIdConnect.csproj", "{F301446E-5CCF-449D-B847-64DEA8A5B944}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{82C63C10-01A4-48B2-B3C9-0DBEB8E02FBD}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{82C63C10-01A4-48B2-B3C9-0DBEB8E02FBD}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{82C63C10-01A4-48B2-B3C9-0DBEB8E02FBD}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{82C63C10-01A4-48B2-B3C9-0DBEB8E02FBD}.Release|Any CPU.Build.0 = Release|Any CPU
+		{EA906DE5-50E3-4B66-A908-4C2E6D23494D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{EA906DE5-50E3-4B66-A908-4C2E6D23494D}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{EA906DE5-50E3-4B66-A908-4C2E6D23494D}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{EA906DE5-50E3-4B66-A908-4C2E6D23494D}.Release|Any CPU.Build.0 = Release|Any CPU
+		{F301446E-5CCF-449D-B847-64DEA8A5B944}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{F301446E-5CCF-449D-B847-64DEA8A5B944}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{F301446E-5CCF-449D-B847-64DEA8A5B944}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{F301446E-5CCF-449D-B847-64DEA8A5B944}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+EndGlobal
