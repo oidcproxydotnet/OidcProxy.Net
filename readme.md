@@ -10,7 +10,9 @@ This repository contains a Back-end For Front-end written in C#. It authenticate
 
 Many organisations have implemented the following architecture:
 
-<img src="docs/spa-without-bff.png" alt="PKCE without client_secret" width="500">
+<p align="center">
+    <img src="docs/spa-without-bff.png" alt="PKCE without client_secret" width="500">
+</p>
 
 * The Single Page Application
     * It runs in the browser
@@ -51,7 +53,9 @@ As a result, the solution architecture will be a lot more complex. (This is why 
 
 To make it possible to authenticate the user on the server side, you'll need a component which keeps track of the user's session and authentictes the user:
 
-<img src="docs/architecture.png" alt="PKCE with client_secret on the server side" width="500">
+<p align="center">
+    <img src="docs/architecture.png" alt="PKCE with client_secret on the server side" width="500">
+</p>
 
 In this diagram there is a:
 
@@ -96,7 +100,9 @@ Simply put, a BFF is nothing but a reverse proxy. But it does not just forward t
 
 This BFF is built to process two types of requests. Most of the requests are API requests done by a Single Page Application. A BFF processes these requests as displayed in the following diagram:
 
-<img src="docs/BFF-flow.png" width="300">
+<p align="center">
+    <img src="docs/BFF-flow.png" width="300">
+</p>
 
 The BFF is also built to serve a website. This means the user must be able to navigate to it with a browser.
 
@@ -104,7 +110,9 @@ When the user navigates to the BFF, they can navigate to a special endpoint too:
 
 The process flow to authenticate a user is visualised in the following diagram:
 
-![Logging in](docs/BFF-login-workflow.png)
+<p align="center">
+    <img src="docs/BFF-login-workflow.png" width="300">
+</p>
 
 ## Getting started
 
