@@ -10,7 +10,7 @@ This repository contains a Back-end For Front-end written in C#. It authenticate
 
 Many organisations have implemented the following architecture:
 
-<img src="docs/spa-without-bff.png" alt="PKCE without client_secret" width="450">
+<img src="docs/spa-without-bff.png" alt="PKCE without client_secret" width="500">
 
 * The Single Page Application
     * It runs in the browser
@@ -51,7 +51,7 @@ As a result, the solution architecture will be a lot more complex. (This is why 
 
 To make it possible to authenticate the user on the server side, you'll need a component which keeps track of the user's session and authentictes the user:
 
-<img src="docs/architecture.png" alt="PKCE with client_secret on the server side" widht="450">
+<img src="docs/architecture.png" alt="PKCE with client_secret on the server side" width="500">
 
 In this diagram there is a:
 
