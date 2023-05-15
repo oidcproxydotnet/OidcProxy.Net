@@ -1,3 +1,4 @@
+using System.Text;
 using GoCloudNative.Bff.Authentication.IdentityProviders;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Http;
@@ -21,8 +22,11 @@ public static class LoginEndpoints
         {
             var authorizeRequest = await identityProvider.GetAuthorizeUrlAsync(context);
 
-            context.Session.SetString(VerifierKey, authorizeRequest.CodeVerifier);
-                
+            if (!string.IsNullOrEmpty(authorizeRequest.CodeVerifier))
+            {
+                context.Session.SetString(VerifierKey, authorizeRequest.CodeVerifier);
+            }
+
             context.Response.Redirect(authorizeRequest.AuthorizeUri.ToString());
         });
 
@@ -35,12 +39,7 @@ public static class LoginEndpoints
             }
             
             var codeVerifier = context.Session.GetString(VerifierKey); 
-            if (string.IsNullOrEmpty(codeVerifier))
-            {
-                throw new NotSupportedException("Invoke the /login endpoint first.");
-            }
-            
-            var tokenResponse =  await identityProvider.GetTokenAsync(context, codeVerifier);
+            var tokenResponse = await identityProvider.GetTokenAsync(context, code, codeVerifier);
             
             context.Session.Remove(VerifierKey);
             
@@ -66,9 +65,13 @@ public static class LoginEndpoints
         
         app.Map("/oidc/revoke", async (HttpContext context, [FromServices] IIdentityProvider identityProvider) =>
         {
-            // todo: revoke tokens
-            
-            context.Session.Remove(TokenKey);
+            if (context.Session.TryGetValue(TokenKey, out var accessTokenBytes))
+            {
+                var accessToken = Encoding.UTF8.GetString(accessTokenBytes);
+                await identityProvider.Revoke(accessToken);
+                //context.Session.Remove(TokenKey);
+            }
+
             context.Session.Remove(IdTokenKey);
             context.Session.Remove(RefreshTokenKey);
         });

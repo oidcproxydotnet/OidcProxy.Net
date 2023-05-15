@@ -18,21 +18,17 @@ public static class ModuleInitializer
         options?.ApplyReverseProxyConfiguration(proxyBuilder);
 
         options?.ApplyDistributedCache(serviceCollection);
+        
+        options?.IdentityProviderFactory(serviceCollection);
 
-        serviceCollection.AddSession(options =>
-        {
-            options.IdleTimeout = TimeSpan.FromMinutes(15);
-            options.Cookie.HttpOnly = true;
-            options.Cookie.IsEssential = true;
-        });
-
-        serviceCollection
+        return serviceCollection
             .AddMemoryCache()
-            .AddTransient(_ => options?.IdentityProviderFactory() 
-                              ?? throw new NotSupportedException(
-                                  "Unable to configure. IdentityProviderFactory cannot returm null."));
-
-        return serviceCollection;
+            .AddSession(options =>
+            {
+                options.IdleTimeout = TimeSpan.FromMinutes(15);
+                options.Cookie.HttpOnly = true;
+                options.Cookie.IsEssential = true;
+            });
     }
 
     public static WebApplication UseSecurityBff(this WebApplication app)
