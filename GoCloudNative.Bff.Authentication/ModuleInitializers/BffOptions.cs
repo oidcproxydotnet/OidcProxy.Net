@@ -9,11 +9,11 @@ public class BffOptions
 {
     public Func<IIdentityProvider> IdentityProviderFactory = 
         () => throw new Exception("Unable to start. You must configure an identity provider. ");
-    
-    internal Action<MemoryDistributedCacheOptions> ApplyDistributedCacheConfiguration = _ => { };
 
     internal Action<IReverseProxyBuilder> ApplyReverseProxyConfiguration = _ => { };
 
+    internal Action<IServiceCollection> ApplyDistributedCache => (s) => s.AddDistributedMemoryCache();
+    
     public void LoadYarpFromConfig(IConfigurationSection configurationSection)
     {
         ApplyReverseProxyConfiguration = b => b.LoadFromConfig(configurationSection);
@@ -22,10 +22,5 @@ public class BffOptions
     public void ConfigureYarp(Action<IReverseProxyBuilder> configuration)
     {
         ApplyReverseProxyConfiguration = configuration;
-    }
-    
-    public void ConfigureDistributedCache(Action<MemoryDistributedCacheOptions> configuration)
-    {
-        ApplyDistributedCacheConfiguration = configuration ?? throw new ArgumentNullException(nameof(configuration));
     }
 }

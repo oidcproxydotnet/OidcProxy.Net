@@ -16,8 +16,8 @@ public static class ModuleInitializer
             .AddTransforms<AddTokenHeaderTransferProvider>();
 
         options?.ApplyReverseProxyConfiguration(proxyBuilder);
-        
-        serviceCollection.AddDistributedMemoryCache(options?.ApplyDistributedCacheConfiguration ?? (_ => { }) );
+
+        options?.ApplyDistributedCache(serviceCollection);
 
         serviceCollection.AddSession(options =>
         {

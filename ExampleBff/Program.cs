@@ -12,6 +12,7 @@ builder.Services.AddSecurityBff(o =>
 var app = builder.Build();
 
 app.UseRouting();
+
 app.UseSecurityBff();
 
 app.Run();
