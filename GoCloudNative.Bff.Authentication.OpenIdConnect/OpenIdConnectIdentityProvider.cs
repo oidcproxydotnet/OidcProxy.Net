@@ -39,7 +39,7 @@ public class OpenIdConnectIdentityProvider : IIdentityProvider
             .AcquireTokenByAuthorizationCode(_configuration.Scopes, code)
             .WithPkceCodeVerifier(codeVerifier)
             .ExecuteAsync();
-
+        
         return new TokenResponse(token.AccessToken, token.IdToken, null);
     }
 
@@ -47,23 +47,19 @@ public class OpenIdConnectIdentityProvider : IIdentityProvider
     {
         var openIdConfiguration = await GetWellKnownConfiguration();
 
-        var requestBody = new StringContent($"token={accessToken}", 
-            Encoding.Default, 
-            "application/x-www-form-urlencoded");
-
-        var authenticationHeaderBytes = Encoding.UTF8
-            .GetBytes($"{_configuration.ClientId}:{_configuration.ClientSecret}");
+        var requestText = $"token={accessToken}" +
+                          $"&client_id={_configuration.ClientId}" +
+                          $"&client_secret={_configuration.ClientSecret}";
         
-        var authenticationHeaderValue = Convert.ToBase64String(authenticationHeaderBytes);
-        
-        _httpClient.DefaultRequestHeaders.Authorization = AuthenticationHeaderValue
-            .Parse("Basic ${authenticationHeaderValue}");
+        var requestBody = new StringContent(requestText, Encoding.Default, "application/x-www-form-urlencoded");
 
         var response = await _httpClient.PostAsync(openIdConfiguration.revocation_endpoint, requestBody);
         if (response.StatusCode != HttpStatusCode.OK)
         {
             // Todo: implement logging here
-            throw new ApplicationException("Unable to revoke tokens. Check the logs for details.");
+            var responseBody = await response.Content.ReadAsStringAsync();
+            throw new ApplicationException($"Unable to revoke tokens. OIDC server responded {response.StatusCode}:" +
+                                           $" \r\n{responseBody}");
         }
     }
     

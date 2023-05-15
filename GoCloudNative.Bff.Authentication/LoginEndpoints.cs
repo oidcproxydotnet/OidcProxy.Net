@@ -65,15 +65,21 @@ public static class LoginEndpoints
         
         app.Map("/oidc/revoke", async (HttpContext context, [FromServices] IIdentityProvider identityProvider) =>
         {
+            context.Session.Remove(IdTokenKey);
+            
             if (context.Session.TryGetValue(TokenKey, out var accessTokenBytes))
             {
                 var accessToken = Encoding.UTF8.GetString(accessTokenBytes);
                 await identityProvider.Revoke(accessToken);
-                //context.Session.Remove(TokenKey);
+                context.Session.Remove(TokenKey);
             }
 
-            context.Session.Remove(IdTokenKey);
-            context.Session.Remove(RefreshTokenKey);
+            if (context.Session.TryGetValue(RefreshTokenKey, out var refreshTokenBytes))
+            {
+                var refreshToken = Encoding.UTF8.GetString(refreshTokenBytes);
+                await identityProvider.Revoke(refreshToken);
+                context.Session.Remove(RefreshTokenKey);
+            }
         });
     }
 }
