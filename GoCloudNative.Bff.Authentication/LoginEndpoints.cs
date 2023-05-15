@@ -17,7 +17,7 @@ public static class LoginEndpoints
 
     public static void MapAuthenticationEndpoints(this WebApplication app)
     {   
-        app.Map("/login", async (HttpContext context, [FromServices] IIdentityProvider identityProvider) =>
+        app.Map("/oidc/login", async (HttpContext context, [FromServices] IIdentityProvider identityProvider) =>
         {
             var authorizeRequest = await identityProvider.GetAuthorizeUrlAsync(context);
 
@@ -26,7 +26,7 @@ public static class LoginEndpoints
             context.Response.Redirect(authorizeRequest.AuthorizeUri.ToString());
         });
 
-        app.Map("/login/callback", async (HttpContext context, [FromServices] IIdentityProvider identityProvider) =>
+        app.Map("/oidc/login/callback", async (HttpContext context, [FromServices] IIdentityProvider identityProvider) =>
         {
             var code = context.Request.Query["code"].SingleOrDefault();
             if (string.IsNullOrEmpty(code))
@@ -62,6 +62,15 @@ public static class LoginEndpoints
                     context.Session.SetString(key, value);
                 }
             }
+        });
+        
+        app.Map("/oidc/revoke", async (HttpContext context, [FromServices] IIdentityProvider identityProvider) =>
+        {
+            // todo: revoke tokens
+            
+            context.Session.Remove(TokenKey);
+            context.Session.Remove(IdTokenKey);
+            context.Session.Remove(RefreshTokenKey);
         });
     }
 }

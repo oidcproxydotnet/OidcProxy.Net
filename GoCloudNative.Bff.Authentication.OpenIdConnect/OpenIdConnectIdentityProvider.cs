@@ -12,7 +12,7 @@ internal class OpenIdConnectIdentityProvider : IIdentityProvider
     private static IConfidentialClientApplication CreateConfidentialClientApplication(OpenIdConnectConfig config, HttpContext httpContext)
     {   
         var protocol = httpContext.Request.IsHttps ? "https://" : "http://";
-        var redirectUrl = $"{protocol}{httpContext.Request.Host}/login/callback";
+        var redirectUrl = $"{protocol}{httpContext.Request.Host}/oidc/login/callback";
         
         return ConfidentialClientApplicationBuilder.Create(config.ClientId)
             .WithExperimentalFeatures()
@@ -54,5 +54,15 @@ internal class OpenIdConnectIdentityProvider : IIdentityProvider
             .ExecuteAsync();
 
         return new TokenResponse(token.AccessToken, token.IdToken, null);
+    }
+
+    public Task RevokeAccessToken(string accessToken)
+    {
+        throw new NotImplementedException();
+    }
+
+    public Task RevokeRefreshToken(string refreshToken)
+    {
+        throw new NotImplementedException();
     }
 }
