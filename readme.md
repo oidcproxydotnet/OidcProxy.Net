@@ -110,9 +110,7 @@ When the user navigates to the BFF, they can navigate to a special endpoint too:
 
 The process flow to authenticate a user is visualised in the following diagram:
 
-<p align="center">
-    <img src="docs/BFF-login-workflow.png" width="300">
-</p>
+<img src="docs/BFF-login-workflow.png">
 
 ## Getting started
 
