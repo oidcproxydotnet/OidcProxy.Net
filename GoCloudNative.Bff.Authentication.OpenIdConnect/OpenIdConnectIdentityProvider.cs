@@ -1,11 +1,11 @@
 using System.Net;
 using System.Net.Http.Json;
-using System.Text;
 using Microsoft.AspNetCore.Http;
 using GoCloudNative.Bff.Authentication.IdentityProviders;
 using IdentityModel;
 using IdentityModel.Client;
 using IdentityModel.OidcClient;
+using Microsoft.Extensions.Caching.Memory;
 using TokenResponse = GoCloudNative.Bff.Authentication.IdentityProviders.TokenResponse;
 
 namespace TheCloudNativeWebApp.Bff.Authentication.OpenIdConnect;
@@ -13,17 +13,20 @@ namespace TheCloudNativeWebApp.Bff.Authentication.OpenIdConnect;
 public class OpenIdConnectIdentityProvider : IIdentityProvider
 {
     private readonly HttpClient _wellKnownHttpClient;
+    private readonly IMemoryCache _cache;
     private readonly HttpClient _tokenHttpClient;
     private readonly HttpClient _revocationHttpClient;
 
     private readonly OpenIdConnectConfig _configuration;
     
     public OpenIdConnectIdentityProvider(HttpClient wellKnownHttpClient, 
+        IMemoryCache cache,
         HttpClient tokenHttpClient, 
         HttpClient revocationHttpClient, 
         OpenIdConnectConfig configuration)
     {
         _wellKnownHttpClient = wellKnownHttpClient;
+        _cache = cache;
         _tokenHttpClient = tokenHttpClient;
         _revocationHttpClient = revocationHttpClient;
         _configuration = configuration;
@@ -56,7 +59,7 @@ public class OpenIdConnectIdentityProvider : IIdentityProvider
                 "document does not contain a token endpoint.");
         }
 
-        _tokenHttpClient.BaseAddress = new Uri(wellKnown.token_endpoint);
+        _tokenHttpClient.SetBaseAddressIfNotSet(wellKnown.token_endpoint);
         
         var response = await _tokenHttpClient.RequestTokenAsync(new AuthorizationCodeTokenRequest
         {
@@ -86,7 +89,7 @@ public class OpenIdConnectIdentityProvider : IIdentityProvider
     {
         var openIdConfiguration = await GetWellKnownConfiguration();
 
-        _revocationHttpClient.BaseAddress = new Uri(openIdConfiguration.revocation_endpoint);
+        _revocationHttpClient.SetBaseAddressIfNotSet(openIdConfiguration.revocation_endpoint);
         
         var response = await _revocationHttpClient.RevokeTokenAsync(new TokenRevocationRequest
         {
@@ -106,17 +109,24 @@ public class OpenIdConnectIdentityProvider : IIdentityProvider
     {
         var endpointAddress = $"{_configuration.Authority.TrimEnd('/')}/" +
                               $"{_configuration.WellKnownEndpoint.TrimStart('/')}";
+
+        if (_cache.TryGetValue(endpointAddress, out var wellKnownDocument))
+        {
+            return (OpenIdConfiguration)wellKnownDocument;
+        }
         
         var httpResponse = await _wellKnownHttpClient.GetAsync(endpointAddress);         
-        var openIdConfiguration = await httpResponse.Content.ReadFromJsonAsync<OpenIdConfiguration>();
+        wellKnownDocument = await httpResponse.Content.ReadFromJsonAsync<OpenIdConfiguration>();
         
-        if (openIdConfiguration == null)
+        if (wellKnownDocument == null)
         {
             throw new ApplicationException(
                 "Unable to login. Unable to find a well-known/openid-configuration document " +
                 $"at {endpointAddress}");
         }
 
-        return openIdConfiguration;
+        _cache.Set(endpointAddress, wellKnownDocument, TimeSpan.FromHours(1));
+
+        return (OpenIdConfiguration)wellKnownDocument;
     }
 }
