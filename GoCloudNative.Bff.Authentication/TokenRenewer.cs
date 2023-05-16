@@ -20,10 +20,10 @@ public class TokenRenewer
     public async Task Renew(string refreshToken)
     {
         var cacheKey = $"refreshing_token_{_session.Id}";
-        var isWorking = await _cache.GetStringAsync(cacheKey);
+        var isWorking = !string.IsNullOrEmpty(await _cache.GetStringAsync(cacheKey));
 
         // The first request in a session which needs a renewed access token will bump into this block
-        if (string.IsNullOrEmpty(isWorking))
+        if (!isWorking)
         {
             await _cache.SetStringAsync(cacheKey, "true");
 
@@ -49,15 +49,9 @@ public class TokenRenewer
         // ddossing the token endpoint. That's why only one request per second may renew a token. The others should wait.
         // This is the second path, if another request is already fetching a new token, then this thread will wait
         // until the other completes. It waits for a maximum of 90 seconds (average request timeout) to complete.
-        for (var i = 0; i < 900; i++)
+        for (var i = 0; i < 900 && isWorking; i++)
         {
             await Task.Delay(100);
-            
-            isWorking = await _cache.GetStringAsync(cacheKey);
-            if (!string.IsNullOrEmpty(isWorking))
-            {
-                return;
-            }
         }
 
         throw new TimeoutException("Unable to renew the token. The request timed out.");
