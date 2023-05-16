@@ -15,6 +15,7 @@ public class OpenIdConnectIdentityProvider : IIdentityProvider
     private readonly HttpClient _wellKnownHttpClient;
     private readonly IMemoryCache _cache;
     private readonly HttpClient _tokenHttpClient;
+    private readonly HttpClient _refreshHttpClient;
     private readonly HttpClient _revocationHttpClient;
 
     private readonly OpenIdConnectConfig _configuration;
@@ -22,17 +23,19 @@ public class OpenIdConnectIdentityProvider : IIdentityProvider
     public OpenIdConnectIdentityProvider(HttpClient wellKnownHttpClient, 
         IMemoryCache cache,
         HttpClient tokenHttpClient, 
+        HttpClient refreshHttpClient, 
         HttpClient revocationHttpClient, 
         OpenIdConnectConfig configuration)
     {
         _wellKnownHttpClient = wellKnownHttpClient;
         _cache = cache;
         _tokenHttpClient = tokenHttpClient;
+        _refreshHttpClient = refreshHttpClient;
         _revocationHttpClient = revocationHttpClient;
         _configuration = configuration;
     }
     
-    public virtual async Task<AuthorizeRequest> GetAuthorizeUrlAsync(HttpContext context, string redirectUri)
+    public virtual async Task<AuthorizeRequest> GetAuthorizeUrlAsync(string redirectUri)
     { 
         var client = new OidcClient(new OidcClientOptions
         {
@@ -56,7 +59,7 @@ public class OpenIdConnectIdentityProvider : IIdentityProvider
         return new AuthorizeRequest(new Uri(startUrl), request.CodeVerifier);
     }
 
-    public virtual async Task<TokenResponse> GetTokenAsync(HttpContext context, string redirectUri, string code, string? codeVerifier)
+    public virtual async Task<TokenResponse> GetTokenAsync(string redirectUri, string code, string? codeVerifier)
     {
         var wellKnown = await GetWellKnownConfiguration();
 
@@ -84,6 +87,28 @@ public class OpenIdConnectIdentityProvider : IIdentityProvider
              }
         });
 
+        if (response.IsError)
+        {
+            throw new ApplicationException($"Unable to retrieve token. " +
+                                           $"OIDC server responded {response.HttpStatusCode}: {response.Raw}");
+        }
+
+        return new TokenResponse(response.AccessToken, response.IdentityToken, response.RefreshToken);
+    }
+
+    public async Task<TokenResponse> RefreshTokenAsync(string refreshToken)
+    {
+        var openIdConfiguration = await GetWellKnownConfiguration();
+
+        var response = await _refreshHttpClient.RequestRefreshTokenAsync(new RefreshTokenRequest
+        {
+            Address = openIdConfiguration.token_endpoint,
+            GrantType = OidcConstants.GrantTypes.RefreshToken,
+            RefreshToken = refreshToken,
+            ClientId = _configuration.ClientId,
+            ClientSecret = _configuration.ClientSecret,
+        });
+        
         if (response.IsError)
         {
             throw new ApplicationException($"Unable to retrieve token. " +

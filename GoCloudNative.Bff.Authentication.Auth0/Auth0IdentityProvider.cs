@@ -10,11 +10,14 @@ public class Auth0IdentityProvider : OpenIdConnectIdentityProvider
 
     public Auth0IdentityProvider(HttpClient wellKnownHttpClient, 
         IMemoryCache cache,
-        HttpClient tokenHttpClient, 
-        HttpClient revocationHttpClient, Auth0Config config) : base(wellKnownHttpClient, 
+        HttpClient client1, 
+        HttpClient client3, 
+        HttpClient client2, // todo: fix this, this is ugly...
+        Auth0Config config) : base(wellKnownHttpClient, 
         cache, 
-        tokenHttpClient, 
-        revocationHttpClient, 
+        client1, 
+        client2, 
+        client3, 
         MapConfiguration(config))
     {
         _config = config;

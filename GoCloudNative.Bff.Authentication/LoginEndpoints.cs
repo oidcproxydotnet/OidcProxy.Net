@@ -8,13 +8,13 @@ namespace GoCloudNative.Bff.Authentication;
 
 public static class LoginEndpoints
 {
-    private static readonly string VerifierKey = "verifier_key";
+    internal static readonly string VerifierKey = "verifier_key";
 
-    private static readonly string TokenKey = "token_key";
+    internal static readonly string TokenKey = "token_key";
 
-    private static readonly string IdTokenKey = "id_token_key";
+    internal static readonly string IdTokenKey = "id_token_key";
     
-    private static readonly string RefreshTokenKey = "refresh_token_key";
+    internal static readonly string RefreshTokenKey = "refresh_token_key";
 
     public static void MapAuthenticationEndpoints(this WebApplication app, string endpointName)
     {
@@ -26,14 +26,14 @@ public static class LoginEndpoints
             }
 
             var idToken = context.Session.GetString(IdTokenKey);
-            return Results.Ok(idToken.ParseJwt());
+            return Results.Ok(idToken.ParseJwtPayload());
         });
         
         app.Map($"/{endpointName}/login", async (HttpContext context, [FromServices] IIdentityProvider identityProvider) =>
         {
             var redirectUri = CreateRedirectUri(context, endpointName);
             
-            var authorizeRequest = await identityProvider.GetAuthorizeUrlAsync(context,redirectUri);
+            var authorizeRequest = await identityProvider.GetAuthorizeUrlAsync(redirectUri);
 
             if (!string.IsNullOrEmpty(authorizeRequest.CodeVerifier))
             {
@@ -54,13 +54,13 @@ public static class LoginEndpoints
             var redirectUrl = CreateRedirectUri(context, endpointName);
 
             var codeVerifier = context.Session.GetString(VerifierKey); 
-            var tokenResponse = await identityProvider.GetTokenAsync(context, redirectUrl, code, codeVerifier);
+            var tokenResponse = await identityProvider.GetTokenAsync(redirectUrl, code, codeVerifier);
             
             context.Session.Remove(VerifierKey);
             
-            SetSessionValue(context, TokenKey, tokenResponse.access_token);
-            SetSessionValue(context, IdTokenKey, tokenResponse.id_token);
-            SetSessionValue(context, RefreshTokenKey, tokenResponse.refresh_token);
+            context.Session.Save(TokenKey, tokenResponse.access_token);
+            context.Session.Save(IdTokenKey, tokenResponse.id_token);
+            context.Session.Save(RefreshTokenKey, tokenResponse.refresh_token);
             
             context.Response.Redirect("/");
 
@@ -91,18 +91,5 @@ public static class LoginEndpoints
         var protocol = context.Request.IsHttps ? "https://" : "http://";
         var redirectUrl = $"{protocol}{context.Request.Host}/{endpointName}/login/callback";
         return redirectUrl;
-    }
-
-    private static void SetSessionValue(HttpContext context, string key, string value)
-    {
-        if (value == null && context.Session.Keys.Contains(key))
-        {
-            context.Session.Remove(key);
-        }
-
-        if (value != null)
-        {
-            context.Session.SetString(key, value);
-        }
     }
 }
