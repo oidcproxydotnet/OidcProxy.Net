@@ -58,14 +58,14 @@ public class OpenIdConnectIdentityProvider : IIdentityProvider
              {
                  { "code", code },
                  { "scope", string.Join(' ', _configuration.Scopes) },
-                 { "redirect_uri", redirectUrl },
+                 //{ "redirect_uri", redirectUrl },
                  { "code_verifier", codeVerifier },
              }
         });
 
         if (response.IsError)
         {
-            throw new ApplicationException($"Unable to retrieve token. OIDC server responded: {response.Error}");
+            throw new ApplicationException($"Unable to retrieve token. OIDC server responded {response.HttpStatusCode}: {response.Raw}");
         }
 
         return new TokenResponse(response.AccessToken, response.IdentityToken, response.RefreshToken);
@@ -97,7 +97,7 @@ public class OpenIdConnectIdentityProvider : IIdentityProvider
             .Replace("//", "/")
             .Replace("https:/", "https://");
         
-        var httpResponse = await _httpClient.GetAsync(endpointAddress);
+        var httpResponse = await _httpClient.GetAsync(endpointAddress);         
         return await httpResponse.Content.ReadFromJsonAsync<OpenIdConfiguration>();
     }
 }
