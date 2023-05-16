@@ -16,11 +16,11 @@ public static class LoginEndpoints
     
     private static readonly string RefreshTokenKey = "refresh_token_key";
 
-    public static void MapAuthenticationEndpoints(this WebApplication app)
+    public static void MapAuthenticationEndpoints(this WebApplication app, string endpointName)
     {   
-        app.Map("/oidc/login", async (HttpContext context, [FromServices] IIdentityProvider identityProvider) =>
+        app.Map($"/{endpointName}/login", async (HttpContext context, [FromServices] IIdentityProvider identityProvider) =>
         {
-            var redirectUri = CreateRedirectUri(context);
+            var redirectUri = CreateRedirectUri(context, endpointName);
             
             var authorizeRequest = await identityProvider.GetAuthorizeUrlAsync(context,redirectUri);
 
@@ -32,7 +32,7 @@ public static class LoginEndpoints
             context.Response.Redirect(authorizeRequest.AuthorizeUri.ToString());
         });
 
-        app.Map("/oidc/login/callback", async (HttpContext context, [FromServices] IIdentityProvider identityProvider) =>
+        app.Map($"/{endpointName}/login/callback", async (HttpContext context, [FromServices] IIdentityProvider identityProvider) =>
         {
             var code = context.Request.Query["code"].SingleOrDefault();
             if (string.IsNullOrEmpty(code))
@@ -40,7 +40,7 @@ public static class LoginEndpoints
                 throw new ArgumentException("The querystring parameter 'code' cannot be empty. Invoke the /login endpoint first.");
             }
             
-            var redirectUrl = CreateRedirectUri(context);
+            var redirectUrl = CreateRedirectUri(context, endpointName);
 
             var codeVerifier = context.Session.GetString(VerifierKey); 
             var tokenResponse = await identityProvider.GetTokenAsync(context, redirectUrl, code, codeVerifier);
@@ -55,7 +55,7 @@ public static class LoginEndpoints
 
         });
         
-        app.Map("/oidc/revoke", async (HttpContext context, [FromServices] IIdentityProvider identityProvider) =>
+        app.Map($"/{endpointName}/revoke", async (HttpContext context, [FromServices] IIdentityProvider identityProvider) =>
         {
             context.Session.Remove(IdTokenKey);
             
@@ -75,10 +75,10 @@ public static class LoginEndpoints
         });
     }
 
-    private static string CreateRedirectUri(HttpContext context)
+    private static string CreateRedirectUri(HttpContext context, string endpointName)
     {
         var protocol = context.Request.IsHttps ? "https://" : "http://";
-        var redirectUrl = $"{protocol}{context.Request.Host}/oidc/login/callback";
+        var redirectUrl = $"{protocol}{context.Request.Host}/{endpointName}/login/callback";
         return redirectUrl;
     }
 

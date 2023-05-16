@@ -33,7 +33,7 @@ public static class ModuleInitializer
 
     public static WebApplication UseSecurityBff(this WebApplication app)
     {
-        app.MapAuthenticationEndpoints();
+        app.MapAuthenticationEndpoints("account");
         app.MapReverseProxy();
         
         app.UseSession();
