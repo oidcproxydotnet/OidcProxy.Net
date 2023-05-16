@@ -1,6 +1,5 @@
 using System.Net;
 using System.Net.Http.Json;
-using Microsoft.AspNetCore.Http;
 using GoCloudNative.Bff.Authentication.IdentityProviders;
 using IdentityModel;
 using IdentityModel.Client;
@@ -14,24 +13,18 @@ public class OpenIdConnectIdentityProvider : IIdentityProvider
 {
     private readonly HttpClient _wellKnownHttpClient;
     private readonly IMemoryCache _cache;
-    private readonly HttpClient _tokenHttpClient;
-    private readonly HttpClient _refreshHttpClient;
-    private readonly HttpClient _revocationHttpClient;
+    private readonly HttpClient _httpClient;
 
     private readonly OpenIdConnectConfig _configuration;
     
     public OpenIdConnectIdentityProvider(HttpClient wellKnownHttpClient, 
         IMemoryCache cache,
-        HttpClient tokenHttpClient, 
-        HttpClient refreshHttpClient, 
-        HttpClient revocationHttpClient, 
+        HttpClient httpClient, 
         OpenIdConnectConfig configuration)
     {
         _wellKnownHttpClient = wellKnownHttpClient;
         _cache = cache;
-        _tokenHttpClient = tokenHttpClient;
-        _refreshHttpClient = refreshHttpClient;
-        _revocationHttpClient = revocationHttpClient;
+        _httpClient = httpClient;
         _configuration = configuration;
     }
     
@@ -69,11 +62,10 @@ public class OpenIdConnectIdentityProvider : IIdentityProvider
                 "Unable to exchange code for access_token. The well-known/openid-configuration" +
                 "document does not contain a token endpoint.");
         }
-
-        _tokenHttpClient.SetBaseAddressIfNotSet(wellKnown.token_endpoint);
         
-        var response = await _tokenHttpClient.RequestTokenAsync(new AuthorizationCodeTokenRequest
+        var response = await _httpClient.RequestTokenAsync(new AuthorizationCodeTokenRequest
         {
+             Address = wellKnown.token_endpoint,
              GrantType = OidcConstants.GrantTypes.AuthorizationCode,
              ClientId = _configuration.ClientId,
              ClientSecret = _configuration.ClientSecret,
@@ -100,7 +92,7 @@ public class OpenIdConnectIdentityProvider : IIdentityProvider
     {
         var openIdConfiguration = await GetWellKnownConfiguration();
 
-        var response = await _refreshHttpClient.RequestRefreshTokenAsync(new RefreshTokenRequest
+        var response = await _httpClient.RequestRefreshTokenAsync(new RefreshTokenRequest
         {
             Address = openIdConfiguration.token_endpoint,
             GrantType = OidcConstants.GrantTypes.RefreshToken,
@@ -122,10 +114,9 @@ public class OpenIdConnectIdentityProvider : IIdentityProvider
     {
         var openIdConfiguration = await GetWellKnownConfiguration();
 
-        _revocationHttpClient.SetBaseAddressIfNotSet(openIdConfiguration.revocation_endpoint);
-        
-        var response = await _revocationHttpClient.RevokeTokenAsync(new TokenRevocationRequest
+        var response = await _httpClient.RevokeTokenAsync(new TokenRevocationRequest
         {
+            Address = openIdConfiguration.revocation_endpoint,
             Token = token,
             ClientId = _configuration.ClientId,
             ClientSecret = _configuration.ClientSecret

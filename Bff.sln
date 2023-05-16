@@ -11,6 +11,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GoCloudNative.Bff.Authentic
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GoCloudNative.Bff.Authentication.Auth0", "GoCloudNative.Bff.Authentication.Auth0\GoCloudNative.Bff.Authentication.Auth0.csproj", "{078CD1FA-94A5-4C8E-A944-8F29F228AF16}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GoCloudNative.Bff.Authentication.Tests", "GoCloudNative.Bff.Authentication.Tests\GoCloudNative.Bff.Authentication.Tests.csproj", "{A6FFD8F5-0373-4B7E-A27E-3C29C2EE1BC4}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -36,5 +38,9 @@ Global
 		{078CD1FA-94A5-4C8E-A944-8F29F228AF16}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{078CD1FA-94A5-4C8E-A944-8F29F228AF16}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{078CD1FA-94A5-4C8E-A944-8F29F228AF16}.Release|Any CPU.Build.0 = Release|Any CPU
+		{A6FFD8F5-0373-4B7E-A27E-3C29C2EE1BC4}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{A6FFD8F5-0373-4B7E-A27E-3C29C2EE1BC4}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{A6FFD8F5-0373-4B7E-A27E-3C29C2EE1BC4}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{A6FFD8F5-0373-4B7E-A27E-3C29C2EE1BC4}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 EndGlobal

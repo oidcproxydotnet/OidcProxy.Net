@@ -1,6 +1,8 @@
+using System.IdentityModel.Tokens.Jwt;
 using System.Net.Http.Headers;
 using GoCloudNative.Bff.Authentication.IdentityProviders;
 using Microsoft.AspNetCore.Http;
+using Microsoft.Extensions.Caching.Distributed;
 using Yarp.ReverseProxy.Transforms;
 using Yarp.ReverseProxy.Transforms.Builder;
 
@@ -9,10 +11,12 @@ namespace GoCloudNative.Bff.Authentication;
 public class AddTokenHeaderTransferProvider : ITransformProvider
 {
     private readonly IIdentityProvider _identityProvider;
+    private readonly IDistributedCache _cache;
 
-    public AddTokenHeaderTransferProvider(IIdentityProvider identityProvider)
+    public AddTokenHeaderTransferProvider(IIdentityProvider identityProvider, IDistributedCache cache)
     {
         _identityProvider = identityProvider;
+        _cache = cache;
     }
     
     public void ValidateRoute(TransformRouteValidationContext context)
@@ -39,22 +43,32 @@ public class AddTokenHeaderTransferProvider : ITransformProvider
             var tokenHeader = token.ParseJwtPayload();
             if (tokenHeader.Exp.HasValue)
             {
-                var expiryDate = DateTimeOffset.FromUnixTimeSeconds(tokenHeader.Exp.Value);
-                var oneMinuteAgo = DateTimeOffset.UtcNow.AddMinutes(-1);
-                
-                if (expiryDate < oneMinuteAgo)
+                if (await RenewToken(tokenHeader, x))
                 {
-                    var refreshToken = x.HttpContext.Session.GetString(LoginEndpoints.RefreshTokenKey);
-                    var tokenResponse = await _identityProvider.RefreshTokenAsync(refreshToken);
-
-                    // todo: revoke the old refresh token
-                    
-                    x.HttpContext.Session.Save(LoginEndpoints.TokenKey, tokenResponse.access_token);
-                    x.HttpContext.Session.Save(LoginEndpoints.RefreshTokenKey, tokenResponse.refresh_token);
+                    token = x.HttpContext.Session.GetString(LoginEndpoints.TokenKey);
                 }
             }
 
             x.ProxyRequest.Headers.Authorization = new AuthenticationHeaderValue("Bearer", token);
         });
+    }
+
+    private async Task<bool> RenewToken(JwtPayload tokenHeader, RequestTransformContext x)
+    {
+        var expiryDate = DateTimeOffset.FromUnixTimeSeconds(tokenHeader.Exp.Value - 60);
+        var now = DateTimeOffset.UtcNow;
+
+        if (expiryDate > now)
+        {
+            return false;
+        }
+
+        var refreshToken = x.HttpContext.Session.GetString(LoginEndpoints.RefreshTokenKey);
+
+        var renewer = new TokenRenewer(_identityProvider, _cache, x.HttpContext.Session);
+        await renewer.Renew(refreshToken);
+        
+        return true;
+
     }
 }
