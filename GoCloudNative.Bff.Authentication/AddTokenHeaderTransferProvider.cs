@@ -44,9 +44,13 @@ public class AddTokenHeaderTransferProvider : ITransformProvider
                 
                 if (expiryDate < oneMinuteAgo)
                 {
+                    // todo: Implement a mechanism to prevent refreshing the token extremely often
+                    //       case: A page invokes multiple endpoints, in that case, this code will get multiple tokens at the same time.
                     var refreshToken = x.HttpContext.Session.GetString(LoginEndpoints.RefreshTokenKey);
                     var tokenResponse = await _identityProvider.RefreshTokenAsync(refreshToken);
 
+                    // todo: revoke the old refresh token
+                    
                     x.HttpContext.Session.Save(LoginEndpoints.TokenKey, tokenResponse.access_token);
                     x.HttpContext.Session.Save(LoginEndpoints.RefreshTokenKey, tokenResponse.refresh_token);
                 }
