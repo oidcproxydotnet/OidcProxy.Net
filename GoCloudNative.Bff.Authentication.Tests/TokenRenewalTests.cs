@@ -1,9 +1,6 @@
 using FluentAssertions;
 using GoCloudNative.Bff.Authentication.IdentityProviders;
 using Microsoft.AspNetCore.Http;
-using Microsoft.Extensions.Caching.Distributed;
-using Microsoft.Extensions.Caching.Memory;
-using Microsoft.Extensions.Options;
 using NSubstitute;
 
 namespace GoCloudNative.Bff.Authentication.Tests;
