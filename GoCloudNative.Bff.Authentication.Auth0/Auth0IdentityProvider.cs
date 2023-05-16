@@ -15,11 +15,8 @@ public class Auth0IdentityProvider : IIdentityProvider
         _config = config;
     }
     
-    public Task<AuthorizeRequest> GetAuthorizeUrlAsync(HttpContext context)
+    public Task<AuthorizeRequest> GetAuthorizeUrlAsync(HttpContext context, string redirectUrl)
     {
-        var protocol = context.Request.IsHttps ? "https://" : "http://";
-        var redirectUrl = $"{protocol}{context.Request.Host}/oidc/login/callback";
-        
         var client = new Vendor.AuthenticationApi.AuthenticationApiClient(new Uri(_config.Authority));
         var authorizeUrl = client.BuildAuthorizationUrl()
             .WithClient(_config.ClientId)
@@ -31,11 +28,8 @@ public class Auth0IdentityProvider : IIdentityProvider
         return Task.FromResult(new AuthorizeRequest(authorizeUrl));
     }
 
-    public async Task<TokenResponse> GetTokenAsync(HttpContext context, string code, string? codeVerifier)
+    public async Task<TokenResponse> GetTokenAsync(HttpContext context, string redirectUrl, string code, string? codeVerifier)
     {
-        var protocol = context.Request.IsHttps ? "https://" : "http://";
-        var redirectUrl = $"{protocol}{context.Request.Host}/oidc/login/callback";
-        
         var client = CreateAuthenticationApiClient();
         var response = await client.GetTokenAsync(new AuthorizationCodeTokenRequest
         { 
@@ -48,7 +42,7 @@ public class Auth0IdentityProvider : IIdentityProvider
         return new TokenResponse(response.AccessToken, response.IdToken, response.RefreshToken);
     }
 
-    public Task Revoke(string accessToken)
+    public Task Revoke(string token)
     {
         // I.l.e.: Auth0 does not support token revocation
         

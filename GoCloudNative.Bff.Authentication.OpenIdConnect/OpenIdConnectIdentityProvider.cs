@@ -12,27 +12,31 @@ namespace TheCloudNativeWebApp.Bff.Authentication.OpenIdConnect;
 
 public class OpenIdConnectIdentityProvider : IIdentityProvider
 {
-    private readonly HttpClient _httpClient;
-    
+    private readonly HttpClient _wellKnownHttpClient;
+    private readonly HttpClient _tokenHttpClient;
+    private readonly HttpClient _revocationHttpClient;
+
     private readonly OpenIdConnectConfig _configuration;
     
-    public OpenIdConnectIdentityProvider(HttpClient httpClient, OpenIdConnectConfig configuration)
+    public OpenIdConnectIdentityProvider(HttpClient wellKnownHttpClient, 
+        HttpClient tokenHttpClient, 
+        HttpClient revocationHttpClient, 
+        OpenIdConnectConfig configuration)
     {
-        _httpClient = httpClient;
+        _wellKnownHttpClient = wellKnownHttpClient;
+        _tokenHttpClient = tokenHttpClient;
+        _revocationHttpClient = revocationHttpClient;
         _configuration = configuration;
     }
     
-    public virtual async Task<AuthorizeRequest> GetAuthorizeUrlAsync(HttpContext context)
+    public virtual async Task<AuthorizeRequest> GetAuthorizeUrlAsync(HttpContext context, string redirectUri)
     { 
-        var protocol = context.Request.IsHttps ? "https://" : "http://";
-        var redirectUrl = $"{protocol}{context.Request.Host}/oidc/login/callback";
-
         var client = new OidcClient(new OidcClientOptions
         {
             Authority = _configuration.Authority,
             ClientId = _configuration.ClientId,
             ClientSecret = _configuration.ClientSecret,
-            RedirectUri = redirectUrl,
+            RedirectUri = redirectUri,
             Scope = string.Join(' ', _configuration.Scopes)
         });
 
@@ -41,14 +45,20 @@ public class OpenIdConnectIdentityProvider : IIdentityProvider
         return new AuthorizeRequest(new Uri(request.StartUrl), request.CodeVerifier);
     }
 
-    public virtual async Task<TokenResponse> GetTokenAsync(HttpContext context, string code, string? codeVerifier)
+    public virtual async Task<TokenResponse> GetTokenAsync(HttpContext context, string redirectUri, string code, string? codeVerifier)
     {
-        var protocol = context.Request.IsHttps ? "https://" : "http://";
-        var redirectUrl = $"{protocol}{context.Request.Host}/oidc/login/callback";
+        var wellKnown = await GetWellKnownConfiguration();
 
-        _httpClient.BaseAddress = new Uri("https://localhost:7031/connect/token");
+        if (wellKnown.token_endpoint == null)
+        {
+            throw new ApplicationException(
+                "Unable to exchange code for access_token. The well-known/openid-configuration" +
+                "document does not contain a token endpoint.");
+        }
+
+        _tokenHttpClient.BaseAddress = new Uri(wellKnown.token_endpoint);
         
-        var response = await _httpClient.RequestTokenAsync(new AuthorizationCodeTokenRequest
+        var response = await _tokenHttpClient.RequestTokenAsync(new AuthorizationCodeTokenRequest
         {
              GrantType = OidcConstants.GrantTypes.AuthorizationCode,
              ClientId = _configuration.ClientId,
@@ -58,46 +68,55 @@ public class OpenIdConnectIdentityProvider : IIdentityProvider
              {
                  { "code", code },
                  { "scope", string.Join(' ', _configuration.Scopes) },
-                 //{ "redirect_uri", redirectUrl },
+                 { "redirect_uri", redirectUri },
                  { "code_verifier", codeVerifier },
              }
         });
 
         if (response.IsError)
         {
-            throw new ApplicationException($"Unable to retrieve token. OIDC server responded {response.HttpStatusCode}: {response.Raw}");
+            throw new ApplicationException($"Unable to retrieve token. " +
+                                           $"OIDC server responded {response.HttpStatusCode}: {response.Raw}");
         }
 
         return new TokenResponse(response.AccessToken, response.IdentityToken, response.RefreshToken);
     }
 
-    public virtual async Task Revoke(string accessToken)
+    public virtual async Task Revoke(string token)
     {
         var openIdConfiguration = await GetWellKnownConfiguration();
-        
-        var requestText = $"token={accessToken}" +
-                          $"&client_id={_configuration.ClientId}" +
-                          $"&client_secret={_configuration.ClientSecret}";
-        
-        var requestBody = new StringContent(requestText, Encoding.Default, "application/x-www-form-urlencoded");
 
-        var response = await _httpClient.PostAsync(openIdConfiguration.revocation_endpoint, requestBody);
-        if (response.StatusCode != HttpStatusCode.OK)
+        _revocationHttpClient.BaseAddress = new Uri(openIdConfiguration.revocation_endpoint);
+        
+        var response = await _revocationHttpClient.RevokeTokenAsync(new TokenRevocationRequest
         {
-            // Todo: implement logging here
-            var responseBody = await response.Content.ReadAsStringAsync();
-            throw new ApplicationException($"Unable to revoke tokens. OIDC server responded {response.StatusCode}:" +
-                                           $" \r\n{responseBody}");
+            Token = token,
+            ClientId = _configuration.ClientId,
+            ClientSecret = _configuration.ClientSecret
+        });
+        
+        if (response.HttpStatusCode != HttpStatusCode.OK)
+        {
+            throw new ApplicationException($"Unable to revoke tokens. OIDC server responded {response.HttpStatusCode}:" +
+                                           $" \r\n{response.Raw}");
         }
     }
     
     private async Task<OpenIdConfiguration> GetWellKnownConfiguration()
     {
-        var endpointAddress = $"{_configuration.Authority}{_configuration.WellKnownEndpoint}"
-            .Replace("//", "/")
-            .Replace("https:/", "https://");
+        var endpointAddress = $"{_configuration.Authority.TrimEnd('/')}/" +
+                              $"{_configuration.WellKnownEndpoint.TrimStart('/')}";
         
-        var httpResponse = await _httpClient.GetAsync(endpointAddress);         
-        return await httpResponse.Content.ReadFromJsonAsync<OpenIdConfiguration>();
+        var httpResponse = await _wellKnownHttpClient.GetAsync(endpointAddress);         
+        var openIdConfiguration = await httpResponse.Content.ReadFromJsonAsync<OpenIdConfiguration>();
+        
+        if (openIdConfiguration == null)
+        {
+            throw new ApplicationException(
+                "Unable to login. Unable to find a well-known/openid-configuration document " +
+                $"at {endpointAddress}");
+        }
+
+        return openIdConfiguration;
     }
 }
