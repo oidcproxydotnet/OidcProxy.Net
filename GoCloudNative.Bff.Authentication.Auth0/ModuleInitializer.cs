@@ -15,7 +15,7 @@ public static class ModuleInitializer
         options.IdentityProviderFactory = (serviceCollection) =>
         {
             serviceCollection.AddTransient(_ => config);
-            serviceCollection.AddTransient<IIdentityProvider, Auth0IdentityProvider>();
+            serviceCollection.AddHttpClient<IIdentityProvider, Auth0IdentityProvider>();
         };
     }
 }

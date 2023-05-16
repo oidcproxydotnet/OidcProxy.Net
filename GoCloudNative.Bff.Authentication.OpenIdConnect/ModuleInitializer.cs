@@ -16,7 +16,6 @@ public static class ModuleInitializer
         {
             serviceCollection.AddTransient(_ => config);
 
-            serviceCollection.AddHttpClient<OpenIdConnectIdentityProvider>();
             serviceCollection.AddHttpClient<IIdentityProvider, OpenIdConnectIdentityProvider>();
         };
     }

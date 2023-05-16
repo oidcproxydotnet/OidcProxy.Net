@@ -6,7 +6,8 @@ var builder = WebApplication.CreateBuilder(args);
 
 builder.Services.AddSecurityBff(o =>
 {
-    o.ConfigureOpenIdConnect(builder.Configuration.GetSection("IdentityProvider"));
+    //o.ConfigureOpenIdConnect(builder.Configuration.GetSection("IdentityProvider"));
+    o.ConfigureAuth0(builder.Configuration.GetSection("auth0"));
     o.LoadYarpFromConfig(builder.Configuration.GetSection("ReverseProxy"));
 });
 

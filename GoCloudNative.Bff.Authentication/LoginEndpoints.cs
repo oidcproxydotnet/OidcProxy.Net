@@ -17,7 +17,18 @@ public static class LoginEndpoints
     private static readonly string RefreshTokenKey = "refresh_token_key";
 
     public static void MapAuthenticationEndpoints(this WebApplication app, string endpointName)
-    {   
+    {
+        app.Map($"/{endpointName}/me", async (HttpContext context, [FromServices] IIdentityProvider identityProvider) =>
+        {
+            if (!context.Session.Keys.Contains(IdTokenKey))
+            {
+                return Results.NotFound();
+            }
+
+            var idToken = context.Session.GetString(IdTokenKey);
+            return Results.Ok(idToken.ParseJwt());
+        });
+        
         app.Map($"/{endpointName}/login", async (HttpContext context, [FromServices] IIdentityProvider identityProvider) =>
         {
             var redirectUri = CreateRedirectUri(context, endpointName);

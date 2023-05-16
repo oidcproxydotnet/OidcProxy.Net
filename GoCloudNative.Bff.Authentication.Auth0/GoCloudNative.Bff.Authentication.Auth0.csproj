@@ -11,11 +11,7 @@
     </ItemGroup>
 
     <ItemGroup>
+      <ProjectReference Include="..\GoCloudNative.Bff.Authentication.OpenIdConnect\GoCloudNative.Bff.Authentication.OpenIdConnect.csproj" />
       <ProjectReference Include="..\GoCloudNative.Bff.Authentication\GoCloudNative.Bff.Authentication.csproj" />
-    </ItemGroup>
-
-    <ItemGroup>
-      <PackageReference Include="Auth0.AuthenticationApi" Version="7.19.1" />
-      <PackageReference Include="Auth0.Core" Version="7.19.1" />
     </ItemGroup>
 </Project>

@@ -39,13 +39,21 @@ public class OpenIdConnectIdentityProvider : IIdentityProvider
             Authority = _configuration.Authority,
             ClientId = _configuration.ClientId,
             ClientSecret = _configuration.ClientSecret,
-            RedirectUri = redirectUri,
-            Scope = string.Join(' ', _configuration.Scopes)
+            RedirectUri = redirectUri
         });
 
         var request = await client.PrepareLoginAsync();
+
+        // Strange.. Oidc clients seems not to include the scope in the authorize request
+        // As a result, the response will not contain an id_token, nor a refresh_token
+        // So, we append the start-url with the scopes to get the tokens we need
+        var requiredScopes = new[] { "openid", "offline_access" };
+        var allScopes = _configuration.Scopes.Select(x => x.ToLowerInvariant()).Union(requiredScopes);
+        var scopesParameter = $"scope={string.Join("%20", allScopes)}";
         
-        return new AuthorizeRequest(new Uri(request.StartUrl), request.CodeVerifier);
+        var startUrl = $"{request.StartUrl}&{scopesParameter}";
+        
+        return new AuthorizeRequest(new Uri(startUrl), request.CodeVerifier);
     }
 
     public virtual async Task<TokenResponse> GetTokenAsync(HttpContext context, string redirectUri, string code, string? codeVerifier)
@@ -104,7 +112,7 @@ public class OpenIdConnectIdentityProvider : IIdentityProvider
                                            $" \r\n{response.Raw}");
         }
     }
-    
+
     private async Task<OpenIdConfiguration> GetWellKnownConfiguration()
     {
         var endpointAddress = $"{_configuration.Authority.TrimEnd('/')}/" +

@@ -1,57 +1,40 @@
-﻿using Auth0.AuthenticationApi;
-using Auth0.AuthenticationApi.Models;
-using GoCloudNative.Bff.Authentication.IdentityProviders;
-using Microsoft.AspNetCore.Http;
-using Vendor = Auth0;
+﻿
+using Microsoft.Extensions.Caching.Memory;
+using TheCloudNativeWebApp.Bff.Authentication.OpenIdConnect;
 
 namespace GoCloudNative.Bff.Authentication.Auth0;
 
-public class Auth0IdentityProvider : IIdentityProvider
+public class Auth0IdentityProvider : OpenIdConnectIdentityProvider
 {
     private readonly Auth0Config _config;
 
-    public Auth0IdentityProvider(Auth0Config config)
+    public Auth0IdentityProvider(HttpClient wellKnownHttpClient, 
+        IMemoryCache cache,
+        HttpClient tokenHttpClient, 
+        HttpClient revocationHttpClient, Auth0Config config) : base(wellKnownHttpClient, 
+        cache, 
+        tokenHttpClient, 
+        revocationHttpClient, 
+        MapConfiguration(config))
     {
         _config = config;
     }
-    
-    public Task<AuthorizeRequest> GetAuthorizeUrlAsync(HttpContext context, string redirectUrl)
-    {
-        var client = new Vendor.AuthenticationApi.AuthenticationApiClient(new Uri(_config.Authority));
-        var authorizeUrl = client.BuildAuthorizationUrl()
-            .WithClient(_config.ClientId)
-            .WithScopes(_config.Scopes)
-            .WithRedirectUrl(redirectUrl)
-            .WithResponseType(AuthorizationResponseType.Code)
-            .Build();
 
-        return Task.FromResult(new AuthorizeRequest(authorizeUrl));
-    }
-
-    public async Task<TokenResponse> GetTokenAsync(HttpContext context, string redirectUrl, string code, string? codeVerifier)
-    {
-        var client = CreateAuthenticationApiClient();
-        var response = await client.GetTokenAsync(new AuthorizationCodeTokenRequest
-        { 
-            Code = code,
-            ClientId = _config.ClientId,
-            ClientSecret = _config.ClientSecret,
-            RedirectUri = redirectUrl
-        });
-
-        return new TokenResponse(response.AccessToken, response.IdToken, response.RefreshToken);
-    }
-
-    public Task Revoke(string token)
+    public override Task Revoke(string token)
     {
         // I.l.e.: Auth0 does not support token revocation
         
         return Task.CompletedTask;
     }
-    
-    private AuthenticationApiClient CreateAuthenticationApiClient()
-    {
-        return new Vendor.AuthenticationApi.AuthenticationApiClient(new Uri(_config.Authority));
-    }
 
+    private static OpenIdConnectConfig MapConfiguration(Auth0Config config)
+    {
+        return new OpenIdConnectConfig
+        {
+            Authority = config.Authority,
+            ClientId = config.ClientId,
+            ClientSecret = config.ClientSecret,
+            Scopes = config.Scopes
+        };
+    }
 }
