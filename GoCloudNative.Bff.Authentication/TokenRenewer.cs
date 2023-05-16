@@ -7,25 +7,24 @@ namespace GoCloudNative.Bff.Authentication;
 public class TokenRenewer
 {
     private readonly IIdentityProvider _identityProvider;
-    private readonly IDistributedCache _cache;
     private readonly ISession _session;
 
-    public TokenRenewer(IIdentityProvider identityProvider, IDistributedCache cache, ISession session)
+    public TokenRenewer(IIdentityProvider identityProvider, ISession session)
     {
         _identityProvider = identityProvider;
-        _cache = cache;
         _session = session;
     }
     
-    public async Task Renew(string refreshToken)
+    public async Task Renew(string refreshToken, int timeoutInSeconds = 90)
     {
         var cacheKey = $"refreshing_token_{_session.Id}";
-        var isWorking = !string.IsNullOrEmpty(await _cache.GetStringAsync(cacheKey));
+        var valueInSession = _session.GetString(cacheKey);
+        var isWorking = !string.IsNullOrEmpty(valueInSession);
 
         // The first request in a session which needs a renewed access token will bump into this block
         if (!isWorking)
         {
-            await _cache.SetStringAsync(cacheKey, "true");
+            _session.SetString(cacheKey, "true");
 
             var tokenResponse = await _identityProvider.RefreshTokenAsync(refreshToken);
             
@@ -40,7 +39,7 @@ public class TokenRenewer
                 await _identityProvider.Revoke(refreshToken);
             }
             
-            await _cache.RemoveAsync(cacheKey);
+            _session.Remove(cacheKey);
 
             return;
         }
@@ -49,9 +48,18 @@ public class TokenRenewer
         // ddossing the token endpoint. That's why only one request per second may renew a token. The others should wait.
         // This is the second path, if another request is already fetching a new token, then this thread will wait
         // until the other completes. It waits for a maximum of 90 seconds (average request timeout) to complete.
-        for (var i = 0; i < 900 && isWorking; i++)
+        var maxValue = timeoutInSeconds * 10; // increment with steps of 100 ms
+        for (var i = 0; i < maxValue; i++)
         {
             await Task.Delay(100);
+            
+            valueInSession = _session.GetString(cacheKey);
+            isWorking = !string.IsNullOrEmpty(valueInSession);
+
+            if (!isWorking)
+            {
+                return;
+            }
         }
 
         throw new TimeoutException("Unable to renew the token. The request timed out.");

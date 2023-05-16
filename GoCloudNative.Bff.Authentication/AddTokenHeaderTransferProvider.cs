@@ -11,12 +11,10 @@ namespace GoCloudNative.Bff.Authentication;
 public class AddTokenHeaderTransferProvider : ITransformProvider
 {
     private readonly IIdentityProvider _identityProvider;
-    private readonly IDistributedCache _cache;
 
-    public AddTokenHeaderTransferProvider(IIdentityProvider identityProvider, IDistributedCache cache)
+    public AddTokenHeaderTransferProvider(IIdentityProvider identityProvider)
     {
         _identityProvider = identityProvider;
-        _cache = cache;
     }
     
     public void ValidateRoute(TransformRouteValidationContext context)
@@ -65,7 +63,7 @@ public class AddTokenHeaderTransferProvider : ITransformProvider
 
         var refreshToken = x.HttpContext.Session.GetString(LoginEndpoints.RefreshTokenKey);
 
-        var renewer = new TokenRenewer(_identityProvider, _cache, x.HttpContext.Session);
+        var renewer = new TokenRenewer(_identityProvider, x.HttpContext.Session);
         await renewer.Renew(refreshToken);
         
         return true;
