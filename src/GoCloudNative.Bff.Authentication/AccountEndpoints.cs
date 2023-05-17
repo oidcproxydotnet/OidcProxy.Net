@@ -1,7 +1,9 @@
 using GoCloudNative.Bff.Authentication.IdentityProviders;
+using GoCloudNative.Bff.Authentication.Logging;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Logging;
 
 namespace GoCloudNative.Bff.Authentication;
 
@@ -9,8 +11,9 @@ public static class AccountEndpoints
 {
     public static void MapAuthenticationEndpoints(this WebApplication app, string endpointName)
     {
-        app.Map($"/{endpointName}/me", (HttpContext context, [FromServices] IIdentityProvider identityProvider) =>
-        {
+        app.Map($"/{endpointName}/me", (HttpContext context, 
+            [FromServices] IIdentityProvider identityProvider) =>
+        {   
             if (!context.Session.HasIdToken())
             {
                 return Results.NotFound();
@@ -20,63 +23,108 @@ public static class AccountEndpoints
             return Results.Ok(idToken.ParseJwtPayload());
         });
         
-        app.Map($"/{endpointName}/login", async (HttpContext context, [FromServices] IIdentityProvider identityProvider) =>
+        app.Map($"/{endpointName}/login", async (HttpContext context, 
+            [FromServices] ILogger<Endpoints> logger, 
+            [FromServices] IIdentityProvider identityProvider) =>
         {
-            var redirectUri = CreateRedirectUri(context, endpointName);
+            try
+            {            
+                var redirectUri = DetermineRedirectUri(context, endpointName);
             
-            var authorizeRequest = await identityProvider.GetAuthorizeUrlAsync(redirectUri);
+                var authorizeRequest = await identityProvider.GetAuthorizeUrlAsync(redirectUri);
 
-            if (!string.IsNullOrEmpty(authorizeRequest.CodeVerifier))
-            {
-                context.Session.SetCodeVerifier(authorizeRequest.CodeVerifier);
+                if (!string.IsNullOrEmpty(authorizeRequest.CodeVerifier))
+                {
+                    context.Session.SetCodeVerifier(authorizeRequest.CodeVerifier);
+                }
+
+                logger.LogLine(context, new LogLine($"Redirect({authorizeRequest.AuthorizeUri})"));
+            
+                context.Response.Redirect(authorizeRequest.AuthorizeUri.ToString());
             }
-
-            context.Response.Redirect(authorizeRequest.AuthorizeUri.ToString());
+            catch (Exception e)
+            {
+                logger.LogException(context, e);
+                throw;
+            }
         });
 
-        app.Map($"/{endpointName}/login/callback", async (HttpContext context, [FromServices] IIdentityProvider identityProvider) =>
+        app.Map($"/{endpointName}/login/callback", async (HttpContext context, 
+            [FromServices] ILogger<Endpoints> logger, 
+            [FromServices] IIdentityProvider identityProvider) =>
         {
-            var code = context.Request.Query["code"].SingleOrDefault();
-            if (string.IsNullOrEmpty(code))
+            try
             {
-                throw new ArgumentException("The querystring parameter 'code' cannot be empty. Invoke the /login endpoint first.");
+                var code = context.Request.Query["code"].SingleOrDefault();
+                if (string.IsNullOrEmpty(code))
+                {
+                    logger.LogLine(context, new LogLine($"BadRequest (querystring parameter 'code' has is required)"));
+                    return Results.BadRequest();
+                }
+            
+                var redirectUrl = DetermineRedirectUri(context, endpointName);
+
+                var codeVerifier = context.Session.GetCodeVerifier(); 
+                
+                logger.LogLine(context, new LogLine($"Exchanging code for access_token."));
+                var tokenResponse = await identityProvider.GetTokenAsync(redirectUrl, code, codeVerifier);
+            
+                context.Session.RemoveCodeVerifier();
+
+                context.Session.Save(tokenResponse);
+
+                logger.LogLine(context, new LogLine($"Redirect(/)"));
+                
+                return Results.Redirect("/");
             }
-            
-            var redirectUrl = CreateRedirectUri(context, endpointName);
-
-            var codeVerifier = context.Session.GetCodeVerifier(); 
-            var tokenResponse = await identityProvider.GetTokenAsync(redirectUrl, code, codeVerifier);
-            
-            context.Session.RemoveCodeVerifier();
-
-            context.Session.Save(tokenResponse);
-
-            context.Response.Redirect("/");
-
+            catch (Exception e)
+            {
+                logger.LogException(context, e);
+                throw;
+            }
         });
         
-        app.MapDelete($"/{endpointName}/session", async (HttpContext context, [FromServices] IIdentityProvider identityProvider) =>
+        app.MapDelete($"/{endpointName}/session", async (HttpContext context, 
+            [FromServices] ILogger<Endpoints> logger,
+            [FromServices] IIdentityProvider identityProvider) =>
         {
-            if (context.Session.HasAccessToken())
+            try
             {
-                var accessToken = context.Session.GetAccessToken();
-                await identityProvider.Revoke(accessToken);
-            }
+                if (context.Session.HasAccessToken())
+                {
+                    var accessToken = context.Session.GetAccessToken();
+                    
+                    logger.LogLine(context, new LogLine($"Revoking access_token."));
+                    await identityProvider.Revoke(accessToken);
+                }
             
-            if (context.Session.HasRefreshToken())
+                if (context.Session.HasRefreshToken())
+                {
+                    var refreshToken = context.Session.GetRefreshToken();
+                    
+                    logger.LogLine(context, new LogLine($"Revoking refresh_token."));
+                    await identityProvider.Revoke(refreshToken);
+                }
+            
+                context.Session.Clear();
+                
+                logger.LogLine(context, new LogLine($"OK"));
+            }
+            catch (Exception e)
             {
-                var refreshToken = context.Session.GetRefreshToken();
-                await identityProvider.Revoke(refreshToken);
+                logger.LogException(context, e);
+                throw;
             }
-            
-            context.Session.Clear();
         });
     }
 
-    private static string CreateRedirectUri(HttpContext context, string endpointName)
+    private static string DetermineRedirectUri(HttpContext context, string endpointName)
     {
         var protocol = context.Request.IsHttps ? "https://" : "http://";
-        var redirectUrl = $"{protocol}{context.Request.Host}/{endpointName}/login/callback";
-        return redirectUrl;
+        return $"{protocol}{context.Request.Host}/{endpointName}/login/callback";
     }
+}
+
+public class Endpoints
+{
 }

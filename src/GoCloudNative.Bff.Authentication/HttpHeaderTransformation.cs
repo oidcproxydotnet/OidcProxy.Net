@@ -1,5 +1,8 @@
 using System.Net.Http.Headers;
 using GoCloudNative.Bff.Authentication.IdentityProviders;
+using GoCloudNative.Bff.Authentication.Logging;
+using Microsoft.AspNetCore.Http;
+using Microsoft.Extensions.Logging;
 using Yarp.ReverseProxy.Transforms;
 using Yarp.ReverseProxy.Transforms.Builder;
 
@@ -8,10 +11,12 @@ namespace GoCloudNative.Bff.Authentication;
 public class HttpHeaderTransformation : ITransformProvider
 {
     private readonly IIdentityProvider _identityProvider;
+    private readonly ILogger<HttpHeaderTransformation> _logger;
 
-    public HttpHeaderTransformation(IIdentityProvider identityProvider)
+    public HttpHeaderTransformation(IIdentityProvider identityProvider, ILogger<HttpHeaderTransformation> logger)
     {
         _identityProvider = identityProvider;
+        _logger = logger;
     }
     
     public void ValidateRoute(TransformRouteValidationContext context)
@@ -37,7 +42,9 @@ public class HttpHeaderTransformation : ITransformProvider
             
             var factory = new TokenFactory(_identityProvider, x.HttpContext.Session);
             if (await factory.RenewAccessTokenIfExpired())
-            {
+            {   
+                _logger.LogLine(x.HttpContext, new LogLine("Renewed access_token and refresh_token"));
+                
                 token = x.HttpContext.Session.GetAccessToken();
             }
 
