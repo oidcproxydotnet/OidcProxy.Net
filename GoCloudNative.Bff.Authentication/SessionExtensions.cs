@@ -20,13 +20,13 @@ public static class SessionExtensions
         session.Save(TokenKey, tokenResponse.access_token);
         session.Save(IdTokenKey, tokenResponse.id_token);
         session.Save(RefreshTokenKey, tokenResponse.refresh_token);
-        session.Save(ExpiryKey, tokenResponse.ExpiryDate);
+        session.SetDateTime(ExpiryKey, tokenResponse.ExpiryDate);
     }
     
     public static void UpdateAccessAndRefreshToken(this ISession session, TokenResponse tokenResponse)
     {
         session.Save(TokenKey, tokenResponse.access_token);
-        session.Save(ExpiryKey, tokenResponse.ExpiryDate);
+        session.SetDateTime(ExpiryKey, tokenResponse.ExpiryDate);
         
         if (!string.IsNullOrEmpty(tokenResponse.refresh_token))
         {
@@ -56,10 +56,7 @@ public static class SessionExtensions
     public static void RemoveCodeVerifier(this ISession session) => session.Remove(VerifierKey);
     
     
-    private static void Save(this ISession session, string key, DateTime? value)
-    {
-        Save(session, key, value?.ToString("T"));
-    }
+
     
     private static DateTime? GetDateTime(this ISession session, string key)
     {
@@ -70,6 +67,12 @@ public static class SessionExtensions
         }
 
         return DateTime.Parse(date);
+    }
+    
+    private static void SetDateTime(this ISession session, string key, DateTime? value)
+    {
+        var stringValue = value?.ToString("s");
+        Save(session, key, stringValue);
     }
     
     private static void Save(this ISession session, string key, string? value)
