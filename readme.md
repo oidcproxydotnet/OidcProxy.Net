@@ -2,6 +2,10 @@
 
 This repository contains a Back-end For Front-end written in C#. It authenticates users, it forwards requests to down-stream API's and adds the access_token to the forwarded requests by adding the `Authentication` header with value `Bearer xyz` to it. You can also use this BFF as a BFF is intended to be used: to invoke down-stream endpoints 'manually' and aggregate the results.
 
+## !! Work in progress !!
+
+_This software is still in an expirimental phase. Please take some time to test this software and to provide feedback (by creating [issues](https://github.com/thecloudnativewebapp/GoCloudNative.Bff/issues)!). The more feedback we get, the faster we can release a 1.0.0 version._
+
 ## Getting started
 
 To implement the BFF Security Pattern, execute the following commands:
