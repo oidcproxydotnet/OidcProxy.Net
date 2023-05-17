@@ -24,7 +24,7 @@
     </ItemGroup>
 
     <ItemGroup>
-      <ProjectReference Include="..\GoCloudNative.Bff.Authentication\GoCloudNative.Bff.Authentication.csproj" />
+      <ProjectReference Include="..\..\src\GoCloudNative.Bff.Authentication\GoCloudNative.Bff.Authentication.csproj" />
     </ItemGroup>
 
 </Project>
