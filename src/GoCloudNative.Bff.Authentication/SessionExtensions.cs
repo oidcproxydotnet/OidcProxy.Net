@@ -71,7 +71,7 @@ public static class SessionExtensions
     
     private static void SetDateTime(this ISession session, string key, DateTime? value)
     {
-        var stringValue = value?.ToString("s");
+        var stringValue = value?.ToString("yyyy-MM-dd HH:mm:sszzz");
         Save(session, key, stringValue);
     }
     
