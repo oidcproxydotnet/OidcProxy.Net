@@ -4,9 +4,104 @@ This repository contains a Back-end For Front-end written in C#. It authenticate
 
 ## Getting started
 
-// todo: Describe how to run this code
+To implement the BFF Security Pattern, execute the following commands:
 
-## 'Wrong' architecture:
+```bash
+dotnet new web
+dotnet add package GoCloudNative.Bff.Authentication
+dotnet add package GoCloudNative.Bff.Authentication.OpenIdConnect
+```
+
+Create the following `Program.cs`:
+
+```csharp
+using GoCloudNative.Bff.Authentication.OpenIdConnect;
+using GoCloudNative.Bff.Authentication.ModuleInitializers;
+
+var builder = WebApplication.CreateBuilder(args);
+
+builder.Services.AddSecurityBff(o =>
+{
+    o.ConfigureOpenIdConnect(builder.Configuration.GetSection("Oidc"));
+    o.LoadYarpFromConfig(builder.Configuration.GetSection("ReverseProxy"));
+});
+
+var app = builder.Build();
+
+app.UseRouting();
+
+app.UseSecurityBff();
+
+app.Run();
+
+```
+
+And use the following `appsettings.json`:
+
+```json
+{
+  "Logging": {
+    "LogLevel": {
+      "Default": "Information",
+      "Microsoft.AspNetCore": "Warning"
+    }
+  },
+  "Oidc": {
+    "ClientId": "[InsertClientIdHere]",
+    "ClientSecret": "[InsertClientSecretHere]",
+    "Authority": "https://authority",
+    "Scopes": [
+      "openid", "profile", "offline_access"
+    ]
+  },
+  "AllowedHosts": "*",
+  "ReverseProxy": {
+    "Routes": {
+      "spa": {
+        "ClusterId": "spa",
+        "Match": {
+          "Path": "/{*any}"
+        }
+      },
+      "api": {
+        "ClusterId": "api",
+        "Match": {
+          "Path": "/api/{*any}"
+        }
+      },
+    },
+    "Clusters": {
+      "spa": {
+        "Destinations": {
+          "spa": {
+            "Address": "http://localhost:4200/"
+          }
+        }
+      },
+      "api": {
+        "Destinations": {
+          "api": {
+            "Address": "http://localhost:8080/"
+          }
+        }
+      },
+    }
+  }
+}
+```
+
+Type `dotnet run`.
+
+# What problem does this software solve?
+
+Many organizations who have a Single Page Application, have access_tokens in the front-end, and have a microservices architecture, are now struggling to move authentication to the server side. This is made possible with this software.
+
+This section explains:
+* What is 'wrong' with having access_tokens at the client-side
+* What the alternative is
+* How this software works
+
+## The problem:
 
 Many organisations have implemented the following architecture:
 
@@ -45,9 +140,9 @@ The fact that this architecture has these weak spots does not mean it is not a '
 
 Use the probability/impact matrix to see if you need to act.
 
-## A more secure architecture
+## The recommended solution:
 
-To mitigate the risks associated with the architecture stated in the previous chapter, you need to move the authentication to the server side.
+Often, to mitigate the risks associated with the architecture stated in the previous chapter, the proposed solution is to move the authentication to the server side.
 
 As a result, the solution architecture will be a lot more complex. (This is why you must carefully consider whether or not you really need this.)
 
