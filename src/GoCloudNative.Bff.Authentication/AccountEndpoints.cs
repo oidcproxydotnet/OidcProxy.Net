@@ -5,7 +5,7 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace GoCloudNative.Bff.Authentication;
 
-public static class LoginEndpoints
+public static class AccountEndpoints
 {
     public static void MapAuthenticationEndpoints(this WebApplication app, string endpointName)
     {
@@ -55,7 +55,7 @@ public static class LoginEndpoints
 
         });
         
-        app.Map($"/{endpointName}/revoke", async (HttpContext context, [FromServices] IIdentityProvider identityProvider) =>
+        app.MapDelete($"/{endpointName}/session", async (HttpContext context, [FromServices] IIdentityProvider identityProvider) =>
         {
             if (context.Session.HasAccessToken())
             {

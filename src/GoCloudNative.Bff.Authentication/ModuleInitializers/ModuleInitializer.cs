@@ -13,7 +13,7 @@ public static class ModuleInitializer
         
         var proxyBuilder = serviceCollection
             .AddReverseProxy()
-            .AddTransforms<AddTokenHeaderTransferProvider>();
+            .AddTransforms<HttpHeaderTransformation>();
 
         options?.ApplyReverseProxyConfiguration(proxyBuilder);
 
