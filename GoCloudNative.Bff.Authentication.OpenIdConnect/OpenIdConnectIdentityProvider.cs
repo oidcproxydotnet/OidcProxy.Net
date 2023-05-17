@@ -11,18 +11,15 @@ namespace TheCloudNativeWebApp.Bff.Authentication.OpenIdConnect;
 
 public class OpenIdConnectIdentityProvider : IIdentityProvider
 {
-    private readonly HttpClient _wellKnownHttpClient;
     private readonly IMemoryCache _cache;
     private readonly HttpClient _httpClient;
 
     private readonly OpenIdConnectConfig _configuration;
     
-    public OpenIdConnectIdentityProvider(HttpClient wellKnownHttpClient, 
-        IMemoryCache cache,
+    public OpenIdConnectIdentityProvider(IMemoryCache cache,
         HttpClient httpClient, 
         OpenIdConnectConfig configuration)
     {
-        _wellKnownHttpClient = wellKnownHttpClient;
         _cache = cache;
         _httpClient = httpClient;
         _configuration = configuration;
@@ -85,7 +82,8 @@ public class OpenIdConnectIdentityProvider : IIdentityProvider
                                            $"OIDC server responded {response.HttpStatusCode}: {response.Raw}");
         }
 
-        return new TokenResponse(response.AccessToken, response.IdentityToken, response.RefreshToken);
+        var expiryDate = DateTime.UtcNow.AddSeconds(response.ExpiresIn);
+        return new TokenResponse(response.AccessToken, response.IdentityToken, response.RefreshToken, expiryDate);
     }
 
     public async Task<TokenResponse> RefreshTokenAsync(string refreshToken)
@@ -107,7 +105,8 @@ public class OpenIdConnectIdentityProvider : IIdentityProvider
                                            $"OIDC server responded {response.HttpStatusCode}: {response.Raw}");
         }
 
-        return new TokenResponse(response.AccessToken, response.IdentityToken, response.RefreshToken);
+        var expiresIn = DateTime.UtcNow.AddSeconds(response.ExpiresIn);
+        return new TokenResponse(response.AccessToken, response.IdentityToken, response.RefreshToken, expiresIn);
     }
 
     public virtual async Task Revoke(string token)
@@ -139,7 +138,7 @@ public class OpenIdConnectIdentityProvider : IIdentityProvider
             return (OpenIdConfiguration)wellKnownDocument;
         }
         
-        var httpResponse = await _wellKnownHttpClient.GetAsync(endpointAddress);         
+        var httpResponse = await _httpClient.GetAsync(endpointAddress);
         wellKnownDocument = await httpResponse.Content.ReadFromJsonAsync<OpenIdConfiguration>();
         
         if (wellKnownDocument == null)

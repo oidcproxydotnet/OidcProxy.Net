@@ -31,37 +31,34 @@ public class AddTokenHeaderTransferProvider : ITransformProvider
     {
         context.AddRequestTransform(async x =>
         {   
-            if (!x.HttpContext.Session.Keys.Contains(LoginEndpoints.TokenKey))
+            if (!x.HttpContext.Session.HasAccessToken())
             {
                 return;
             }
 
-            var token = x.HttpContext.Session.GetString(LoginEndpoints.TokenKey);
-            
-            var tokenHeader = token.ParseJwtPayload();
-            if (tokenHeader.Exp.HasValue)
+            var expiryDate = x.HttpContext.Session.GetExpiryDate();
+            var token = x.HttpContext.Session.GetAccessToken();
+
+            if (expiryDate.HasValue && await RenewToken(expiryDate.Value, x))
             {
-                if (await RenewToken(tokenHeader, x))
-                {
-                    token = x.HttpContext.Session.GetString(LoginEndpoints.TokenKey);
-                }
+                token = x.HttpContext.Session.GetAccessToken();
             }
 
             x.ProxyRequest.Headers.Authorization = new AuthenticationHeaderValue("Bearer", token);
         });
     }
 
-    private async Task<bool> RenewToken(JwtPayload tokenHeader, RequestTransformContext x)
+    private async Task<bool> RenewToken(DateTime expiryDate, RequestTransformContext x)
     {
-        var expiryDate = DateTimeOffset.FromUnixTimeSeconds(tokenHeader.Exp.Value - 60);
         var now = DateTimeOffset.UtcNow;
-
-        if (expiryDate > now)
+        var expiry = expiryDate.AddSeconds(-15);
+        
+        if (expiry > now)
         {
             return false;
         }
 
-        var refreshToken = x.HttpContext.Session.GetString(LoginEndpoints.RefreshTokenKey);
+        var refreshToken = x.HttpContext.Session.GetRefreshToken();
 
         var renewer = new TokenRenewer(_identityProvider, x.HttpContext.Session);
         await renewer.Renew(refreshToken);

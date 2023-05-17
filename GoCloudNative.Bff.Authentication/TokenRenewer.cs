@@ -25,22 +25,24 @@ public class TokenRenewer
         {
             _session.SetString(cacheKey, "true");
 
-            var tokenResponse = await _identityProvider.RefreshTokenAsync(refreshToken);
-            
-            // Store the tokens in the session
-            _session.Save(LoginEndpoints.TokenKey, tokenResponse.access_token);
-            _session.Save(LoginEndpoints.RefreshTokenKey, tokenResponse.refresh_token);
-
-            // Revoke the old refresh token in case of rolling refresh tokens
-            var newRefreshToken = tokenResponse.refresh_token;
-            if (refreshToken != newRefreshToken)
+            try
             {
-                await _identityProvider.Revoke(refreshToken);
-            }
+                var tokenResponse = await _identityProvider.RefreshTokenAsync(refreshToken);
             
-            _session.Remove(cacheKey);
+                _session.UpdateAccessAndRefreshToken(tokenResponse);
 
-            return;
+                // in case of static refresh_tokens requesting a new access token will not always yield a refresh_token
+                if (!string.IsNullOrEmpty(tokenResponse.refresh_token) && refreshToken != tokenResponse.refresh_token) 
+                {
+                    await _identityProvider.Revoke(refreshToken);
+                }
+
+                return;
+            }
+            finally
+            {
+                _session.Remove(cacheKey);
+            }
         }
 
         // But when you have a page which invokes several endpoints at the same time, we want to prevent the bff from

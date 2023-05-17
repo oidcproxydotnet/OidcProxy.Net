@@ -20,4 +20,8 @@
     <ItemGroup>
       <ProjectReference Include="..\GoCloudNative.Bff.Authentication\GoCloudNative.Bff.Authentication.csproj" />
     </ItemGroup>
+
+    <ItemGroup>
+      <None Remove="FakeIdp\WellKnown.json" />
+    </ItemGroup>
 </Project>

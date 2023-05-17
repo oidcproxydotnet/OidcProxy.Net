@@ -1,4 +1,3 @@
-using System.Text;
 using GoCloudNative.Bff.Authentication.IdentityProviders;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Http;
@@ -8,24 +7,16 @@ namespace GoCloudNative.Bff.Authentication;
 
 public static class LoginEndpoints
 {
-    internal static readonly string VerifierKey = "verifier_key";
-
-    internal static readonly string TokenKey = "token_key";
-
-    internal static readonly string IdTokenKey = "id_token_key";
-    
-    internal static readonly string RefreshTokenKey = "refresh_token_key";
-
     public static void MapAuthenticationEndpoints(this WebApplication app, string endpointName)
     {
-        app.Map($"/{endpointName}/me", async (HttpContext context, [FromServices] IIdentityProvider identityProvider) =>
+        app.Map($"/{endpointName}/me", (HttpContext context, [FromServices] IIdentityProvider identityProvider) =>
         {
-            if (!context.Session.Keys.Contains(IdTokenKey))
+            if (!context.Session.HasIdToken())
             {
                 return Results.NotFound();
             }
 
-            var idToken = context.Session.GetString(IdTokenKey);
+            var idToken = context.Session.GetIdToken();
             return Results.Ok(idToken.ParseJwtPayload());
         });
         
@@ -37,7 +28,7 @@ public static class LoginEndpoints
 
             if (!string.IsNullOrEmpty(authorizeRequest.CodeVerifier))
             {
-                context.Session.SetString(VerifierKey, authorizeRequest.CodeVerifier);
+                context.Session.SetCodeVerifier(authorizeRequest.CodeVerifier);
             }
 
             context.Response.Redirect(authorizeRequest.AuthorizeUri.ToString());
@@ -53,36 +44,32 @@ public static class LoginEndpoints
             
             var redirectUrl = CreateRedirectUri(context, endpointName);
 
-            var codeVerifier = context.Session.GetString(VerifierKey); 
+            var codeVerifier = context.Session.GetCodeVerifier(); 
             var tokenResponse = await identityProvider.GetTokenAsync(redirectUrl, code, codeVerifier);
             
-            context.Session.Remove(VerifierKey);
-            
-            context.Session.Save(TokenKey, tokenResponse.access_token);
-            context.Session.Save(IdTokenKey, tokenResponse.id_token);
-            context.Session.Save(RefreshTokenKey, tokenResponse.refresh_token);
-            
+            context.Session.RemoveCodeVerifier();
+
+            context.Session.Save(tokenResponse);
+
             context.Response.Redirect("/");
 
         });
         
         app.Map($"/{endpointName}/revoke", async (HttpContext context, [FromServices] IIdentityProvider identityProvider) =>
         {
-            context.Session.Remove(IdTokenKey);
-            
-            if (context.Session.TryGetValue(TokenKey, out var accessTokenBytes))
+            if (context.Session.HasAccessToken())
             {
-                var accessToken = Encoding.UTF8.GetString(accessTokenBytes);
+                var accessToken = context.Session.GetAccessToken();
                 await identityProvider.Revoke(accessToken);
-                context.Session.Remove(TokenKey);
             }
-
-            if (context.Session.TryGetValue(RefreshTokenKey, out var refreshTokenBytes))
+            
+            if (context.Session.HasRefreshToken())
             {
-                var refreshToken = Encoding.UTF8.GetString(refreshTokenBytes);
+                var refreshToken = context.Session.GetRefreshToken();
                 await identityProvider.Revoke(refreshToken);
-                context.Session.Remove(RefreshTokenKey);
             }
+            
+            context.Session.Clear();
         });
     }
 

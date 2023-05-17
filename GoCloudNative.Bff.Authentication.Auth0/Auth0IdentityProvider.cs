@@ -8,11 +8,9 @@ public class Auth0IdentityProvider : OpenIdConnectIdentityProvider
 {
     private readonly Auth0Config _config;
 
-    public Auth0IdentityProvider(HttpClient wellKnownHttpClient, 
-        IMemoryCache cache,
+    public Auth0IdentityProvider(IMemoryCache cache,
         HttpClient client, 
-        Auth0Config config) : base(wellKnownHttpClient, 
-        cache, 
+        Auth0Config config) : base(cache, 
         client, 
         MapConfiguration(config))
     {

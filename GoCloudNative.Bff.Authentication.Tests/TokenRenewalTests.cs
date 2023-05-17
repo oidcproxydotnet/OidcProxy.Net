@@ -18,7 +18,8 @@ public class TokenRenewalTests
             await Task.Delay(25);
             return new TokenResponse(Guid.NewGuid().ToString(),
                 Guid.NewGuid().ToString(),
-                Guid.NewGuid().ToString());
+                Guid.NewGuid().ToString(),
+                DateTime.UtcNow.AddSeconds(75));
         }));
     }
     
