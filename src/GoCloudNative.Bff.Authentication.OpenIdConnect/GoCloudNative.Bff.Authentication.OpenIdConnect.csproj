@@ -5,6 +5,13 @@
         <ImplicitUsings>enable</ImplicitUsings>
         <Nullable>enable</Nullable>
         <RootNamespace>TheCloudNativeWebApp.Bff.Authentication.OpenIdConnect</RootNamespace>
+
+        <PackageId>GoCloudNative.Bff.Authentication.OpenIdConnect</PackageId>
+        <Version>0.0.1</Version>
+        <Authors>Albert Starreveld</Authors>
+        <Company>GoCloudNative.org</Company>
+        <PackageLicenseExpression>GPL-3.0-or-later</PackageLicenseExpression>
+        <PackageReadmeFile>Readme.md</PackageReadmeFile>
     </PropertyGroup>
 
     <ItemGroup>
@@ -20,8 +27,10 @@
     <ItemGroup>
       <ProjectReference Include="..\GoCloudNative.Bff.Authentication\GoCloudNative.Bff.Authentication.csproj" />
     </ItemGroup>
-
+    
     <ItemGroup>
-      <None Remove="FakeIdp\WellKnown.json" />
+        <Content Include="..\..\docs\Readme.md" Pack="true" PackagePath="\">
+            <Link>Readme.md</Link>
+        </Content>
     </ItemGroup>
 </Project>

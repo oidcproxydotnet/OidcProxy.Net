@@ -4,6 +4,12 @@
         <TargetFramework>net6.0</TargetFramework>
         <ImplicitUsings>enable</ImplicitUsings>
         <Nullable>enable</Nullable>
+        
+        <PackageId>GoCloudNative.Bff.Authentication.Auth0</PackageId>
+        <Version>0.0.1</Version>
+        <Authors>Albert Starreveld</Authors>
+        <Company>GoCloudNative.org</Company>
+        <PackageLicenseExpression>GPL-3.0-or-later</PackageLicenseExpression>
     </PropertyGroup>
 
     <ItemGroup>

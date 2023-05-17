@@ -3,7 +3,7 @@ using GoCloudNative.Bff.Authentication.ModuleInitializers;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 
-namespace TheCloudNativeWebApp.Bff.Authentication.OpenIdConnect;
+namespace GoCloudNative.Bff.Authentication.OpenIdConnect;
 
 public static class ModuleInitializer
 {

@@ -4,6 +4,13 @@
         <TargetFramework>net6.0</TargetFramework>
         <ImplicitUsings>enable</ImplicitUsings>
         <Nullable>enable</Nullable>
+
+        <PackageId>GoCloudNative.Bff.Authentication</PackageId>
+        <Version>0.0.1</Version>
+        <Authors>Albert Starreveld</Authors>
+        <Company>GoCloudNative.org</Company>
+        <PackageLicenseExpression>GPL-3.0-or-later</PackageLicenseExpression>
+        <PackageReadmeFile>Readme.md</PackageReadmeFile>
     </PropertyGroup>
 
     <ItemGroup>
@@ -16,5 +23,11 @@
 
     <ItemGroup>
         <FrameworkReference Include="Microsoft.AspNetCore.App" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <Content Include="..\..\docs\Readme.md" Pack="true" PackagePath="\">
+        <Link>Readme.md</Link>
+      </Content>
     </ItemGroup>
 </Project>

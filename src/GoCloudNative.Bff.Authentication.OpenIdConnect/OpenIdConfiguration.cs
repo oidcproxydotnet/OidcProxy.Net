@@ -1,4 +1,4 @@
-namespace TheCloudNativeWebApp.Bff.Authentication.OpenIdConnect;
+namespace GoCloudNative.Bff.Authentication.OpenIdConnect;
 
 internal class OpenIdConfiguration
 {

@@ -19,7 +19,6 @@ public class TokenFactory
         var expiryDateInSession = _session.GetExpiryDate();
         if (!expiryDateInSession.HasValue)
         {
-            // todo: warning log this
             return false;
         }
         
