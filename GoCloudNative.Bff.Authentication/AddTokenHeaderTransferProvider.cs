@@ -1,8 +1,5 @@
-using System.IdentityModel.Tokens.Jwt;
 using System.Net.Http.Headers;
 using GoCloudNative.Bff.Authentication.IdentityProviders;
-using Microsoft.AspNetCore.Http;
-using Microsoft.Extensions.Caching.Distributed;
 using Yarp.ReverseProxy.Transforms;
 using Yarp.ReverseProxy.Transforms.Builder;
 
@@ -36,34 +33,15 @@ public class AddTokenHeaderTransferProvider : ITransformProvider
                 return;
             }
 
-            var expiryDate = x.HttpContext.Session.GetExpiryDate();
             var token = x.HttpContext.Session.GetAccessToken();
-
-            if (expiryDate.HasValue && await RenewToken(expiryDate.Value, x))
+            
+            var factory = new TokenFactory(_identityProvider, x.HttpContext.Session);
+            if (await factory.RenewAccessTokenIfExpired())
             {
                 token = x.HttpContext.Session.GetAccessToken();
             }
 
             x.ProxyRequest.Headers.Authorization = new AuthenticationHeaderValue("Bearer", token);
         });
-    }
-
-    private async Task<bool> RenewToken(DateTime expiryDate, RequestTransformContext x)
-    {
-        var now = DateTimeOffset.UtcNow;
-        var expiry = expiryDate.AddSeconds(-15);
-        
-        if (expiry > now)
-        {
-            return false;
-        }
-
-        var refreshToken = x.HttpContext.Session.GetRefreshToken();
-
-        var renewer = new TokenRenewer(_identityProvider, x.HttpContext.Session);
-        await renewer.Renew(refreshToken);
-        
-        return true;
-
     }
 }

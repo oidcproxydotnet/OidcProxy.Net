@@ -3,18 +3,40 @@ using Microsoft.AspNetCore.Http;
 
 namespace GoCloudNative.Bff.Authentication;
 
-public class TokenRenewer
+public class TokenFactory
 {
     private readonly IIdentityProvider _identityProvider;
     private readonly ISession _session;
 
-    public TokenRenewer(IIdentityProvider identityProvider, ISession session)
+    public TokenFactory(IIdentityProvider identityProvider, ISession session)
     {
         _identityProvider = identityProvider;
         _session = session;
     }
     
-    public async Task Renew(string refreshToken, int timeoutInSeconds = 90)
+    public async Task<bool> RenewAccessTokenIfExpired(int timeoutInSeconds = 90)
+    {
+        var expiryDateInSession = _session.GetExpiryDate();
+        if (!expiryDateInSession.HasValue)
+        {
+            // todo: warning log this
+            return false;
+        }
+        
+        var expiry = expiryDateInSession.Value.AddSeconds(-15);
+        var now = DateTimeOffset.UtcNow;
+        
+        if (expiry > now)
+        {
+            return false;
+        }
+
+        var refreshToken = _session.GetRefreshToken();
+        await Renew(refreshToken, timeoutInSeconds);
+        return true;
+    }
+    
+    private async Task Renew(string refreshToken, int timeoutInSeconds = 90)
     {
         var cacheKey = $"refreshing_token_{_session.Id}";
         var valueInSession = _session.GetString(cacheKey);
