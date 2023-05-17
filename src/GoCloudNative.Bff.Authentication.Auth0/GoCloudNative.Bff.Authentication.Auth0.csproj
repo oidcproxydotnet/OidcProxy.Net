@@ -10,6 +10,7 @@
         <Authors>Albert Starreveld</Authors>
         <Company>GoCloudNative.org</Company>
         <PackageLicenseExpression>GPL-3.0-or-later</PackageLicenseExpression>
+        <PackageReadmeFile>Readme.md</PackageReadmeFile>
     </PropertyGroup>
 
     <ItemGroup>
@@ -20,4 +21,14 @@
       <ProjectReference Include="..\GoCloudNative.Bff.Authentication.OpenIdConnect\GoCloudNative.Bff.Authentication.OpenIdConnect.csproj" />
       <ProjectReference Include="..\GoCloudNative.Bff.Authentication\GoCloudNative.Bff.Authentication.csproj" />
     </ItemGroup>
+
+    <ItemGroup>
+      <None Remove="clientid-secret.png" />
+      <Content Include="clientid-secret.png" Pack="true" PackagePath="\" />
+      <None Remove="grant-types.png" />
+      <Content Include="grant-types.png" Pack="true" PackagePath="\" />
+      <None Remove="Readme.md" />
+      <Content Include="Readme.md" Pack="true" PackagePath="\" />
+    </ItemGroup>
+    
 </Project>

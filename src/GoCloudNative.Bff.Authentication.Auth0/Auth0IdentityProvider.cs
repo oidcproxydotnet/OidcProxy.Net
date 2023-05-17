@@ -28,7 +28,7 @@ public class Auth0IdentityProvider : OpenIdConnectIdentityProvider
     {
         return new OpenIdConnectConfig
         {
-            Authority = config.Authority,
+            Authority = $"https://{config.Authority}",
             ClientId = config.ClientId,
             ClientSecret = config.ClientSecret,
             Scopes = config.Scopes
