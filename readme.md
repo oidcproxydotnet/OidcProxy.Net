@@ -94,7 +94,14 @@ And use the following `appsettings.json`:
 }
 ```
 
-Type `dotnet run`.
+
+This solution supports authentication with
+
+* Auth0 _([Read documentation](https://github.com/thecloudnativewebapp/GoCloudNative.Bff/blob/main/src/GoCloudNative.Bff.Authentication.Auth0/Readme.md))_
+* ~~Okta~~ (todo..)
+* ~~Azure Active Directory~~ (todo..)
+* Identity Server
+* ~~Key Cloak~~ (todo..)
 
 # What problem does this software solve?
 
@@ -210,18 +217,6 @@ When the user navigates to the BFF, they can navigate to a special endpoint too:
 The process flow to authenticate a user is visualised in the following diagram:
 
 <img src="docs/BFF-login-workflow.png">
-
-## Getting started
-
-This solution supports authentication with
-
-* Auth0
-* Okta
-* Azure Active Directory
-* Identity Server
-* Key Cloak
-
-Follow the instructions in the documentation to implement it. (//todo: Write these docs)
 
 ## Want to help making the internet more secure?
 

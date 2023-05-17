@@ -115,7 +115,7 @@ Follow these steps to configure Auth0 correctly:
 * Provide a name for your app and select `Regular web applications`
 * Now, click settings, now you'll see the following section:
 
-![client-id/secret](clientid-secret.png)
+![client-id/secret](https://raw.githubusercontent.com/thecloudnativewebapp/GoCloudNative.Bff/main/src/GoCloudNative.Bff.Authentication.Auth0/clientid-secret.png)
 
 * Copy the client_id, the secret, and the authority into the `appsettings.json`, like so:
 
@@ -136,7 +136,7 @@ Follow these steps to configure Auth0 correctly:
 
 * Next, scroll to the `Advanced settings` and configure the `grant_types`. Enable `Authorization Code` and `Refresh tokens`
 
-![client-id/secret](grant-types.png)
+![grant-types](https://raw.githubusercontent.com/thecloudnativewebapp/GoCloudNative.Bff/main/src/GoCloudNative.Bff.Authentication.Auth0/grant-types.png)
 
 ## Endpoints
 

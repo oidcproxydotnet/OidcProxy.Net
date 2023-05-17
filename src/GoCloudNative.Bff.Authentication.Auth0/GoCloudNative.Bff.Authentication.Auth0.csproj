@@ -24,9 +24,9 @@
 
     <ItemGroup>
       <None Remove="clientid-secret.png" />
-      <Content Include="clientid-secret.png" Pack="true" PackagePath="\" />
+      <Content Include="clientid-secret.png" />
       <None Remove="grant-types.png" />
-      <Content Include="grant-types.png" Pack="true" PackagePath="\" />
+      <Content Include="grant-types.png" />
       <None Remove="Readme.md" />
       <Content Include="Readme.md" Pack="true" PackagePath="\" />
     </ItemGroup>
