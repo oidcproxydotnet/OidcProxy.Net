@@ -5,7 +5,7 @@ VisualStudioVersion = 17.0.31903.59
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Auth0", "Auth0", "{38E49F8C-C664-4A1B-8FE7-95F9855AEF1B}"
 EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Example", "Example", "{A5BD000C-4C0E-46D9-A56E-E974B744BB98}"
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Host", "Host", "{A5BD000C-4C0E-46D9-A56E-E974B744BB98}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "OpenIdConnect", "OpenIdConnect", "{EE04429D-4B0B-4A40-9A32-23A5F159EE32}"
 EndProject
@@ -21,7 +21,7 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GoCloudNative.Bff.Authentic
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GoCloudNative.Bff.Authentication.OpenIdConnect.Tests.TestServer", "OpenIdConnect\GoCloudNative.Bff.Authentication.OpenIdConnect.Tests.TestServer\GoCloudNative.Bff.Authentication.OpenIdConnect.Tests.TestServer.csproj", "{875271E5-DA4D-4FED-AAE6-E2E3D60D40CA}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ExampleBff", "Example\ExampleBff\ExampleBff.csproj", "{8BE6C43C-61E2-4955-AA4F-6982BFE09423}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Host", "Example\Host\Host.csproj", "{8BE6C43C-61E2-4955-AA4F-6982BFE09423}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

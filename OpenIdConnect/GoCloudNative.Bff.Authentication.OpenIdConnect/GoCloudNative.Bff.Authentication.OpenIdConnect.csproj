@@ -27,10 +27,4 @@
     <ItemGroup>
       <ProjectReference Include="..\..\GoCloudNative.Bff.Authentication\GoCloudNative.Bff.Authentication.csproj" />
     </ItemGroup>
-    
-    <ItemGroup>
-        <Content Include="..\..\docs\Readme.md" Pack="true" PackagePath="\">
-            <Link>Readme.md</Link>
-        </Content>
-    </ItemGroup>
 </Project>
