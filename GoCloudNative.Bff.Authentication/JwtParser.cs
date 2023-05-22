@@ -7,19 +7,18 @@ public static class JwtParser
 {   
     public static JwtPayload ParseJwtPayload(this string token)
     {
-        var middleSection = GetSection(token, 1);
-        byte[] bytes;
-
-        try
-        {
-            bytes = Convert.FromBase64String(middleSection);
-        }
-        catch (FormatException)
-        {
-            bytes = Convert.FromBase64String($"{middleSection}==");
-        }
+        var urlEncodedMiddleSection = GetSection(token, 1);
         
+        var middleSection = urlEncodedMiddleSection
+            .Replace('-', '+')
+            .Replace('_', '/');
+        
+        var base64 = middleSection
+            .PadRight(middleSection.Length + (4 - middleSection.Length % 4) % 4, '=');
+        
+        var bytes = Convert.FromBase64String(base64);
         var json = Encoding.UTF8.GetString(bytes);
+        
         return JwtPayload.Deserialize(json);
     }
 
