@@ -26,7 +26,8 @@ Follow these steps to configure Auth0 correctly:
   "Auth0": {
     "ClientId": "iuw4kjwkj34kj3",
     "ClientSecret": "kjh423j43jkh43jk2443jhsdfgs345te4th",
-    "Authority": "example.eu.auth0.com",
+    "Domain": "example.eu.auth0.com",
+    "Audience": "https://example.eu.auth0.com/api/v2",
     "Scopes": [
       "openid", "profile", "offline_access"
     ]
@@ -45,8 +46,78 @@ Create a new project:
 
 ```bash
 dotnet new webapi
+dotnet add package Microsoft.AspNetCore.Authentication.JwtBearer
 ```
 
+Create the following `Program.cs` file:
+
+```csharp
+using System.Security.Claims;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.IdentityModel.Tokens;
+
+var builder = WebApplication.CreateBuilder(args);
+
+builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
+    .AddJwtBearer(options =>
+    {
+        options.Authority = $"https://{builder.Configuration["Auth0:Domain"]}/";
+        options.Audience = builder.Configuration["Auth0:Audience"];
+        options.TokenValidationParameters = new TokenValidationParameters
+        {
+            NameClaimType = ClaimTypes.NameIdentifier
+        };
+    });
+
+builder.Services.AddControllers();
+
+var app = builder.Build();
+
+app.UseHttpsRedirection();
+
+app.UseAuthorization();
+
+app.MapControllers();
+
+app.Run();
+```
+
+Make sure you have configured Auth0 in your `appsettings.json` file:
+
+```json
+{
+  "Logging": {
+    "LogLevel": {
+      "Default": "Information",
+      "Microsoft.AspNetCore": "Warning"
+    }
+  },
+  "Auth0": {
+    "Domain": "{yourDomain}",
+    "Audience": "{yourApiIdentifier}"
+  },
+  "AllowedHosts": "*"
+}
+```
+
+In this example, we assume you're running this API on port 8080. To get this API to run on that port, modify your `LaunchSettings.json` file to like like so:
+
+```json
+{
+  "profiles": {
+    "http": {
+      "commandName": "Project",
+      "dotnetRunMessages": true,
+      "launchBrowser": true,
+      "launchUrl": "/",
+      "applicationUrl": "http://localhost:8080",
+      "environmentVariables": {
+        "ASPNETCORE_ENVIRONMENT": "Development"
+      }
+    }
+  }
+}
+```
 
 ## Step 3.) Build the BFF
 
@@ -127,7 +198,7 @@ Create the following `appsettings.json` file:
       "api": {
         "Destinations": {
           "api": {
-            "Address": "http://localhost:8081/"
+            "Address": "http://localhost:8080/"
           }
         }
       },
