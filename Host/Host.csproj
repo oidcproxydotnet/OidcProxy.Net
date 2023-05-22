@@ -13,7 +13,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\..\Auth0\GoCloudNative.Bff.Authentication.Auth0\GoCloudNative.Bff.Authentication.Auth0.csproj" />
+    <ProjectReference Include="..\Auth0\GoCloudNative.Bff.Authentication.Auth0\GoCloudNative.Bff.Authentication.Auth0.csproj" />
   </ItemGroup>
 
 </Project>
