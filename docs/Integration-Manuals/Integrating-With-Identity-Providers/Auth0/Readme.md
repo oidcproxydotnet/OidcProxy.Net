@@ -125,7 +125,6 @@ To build a BFF with aspnet core, execute the following commands on the command l
 
 ```bash
 dotnet new web
-dotnet add package GoCloudNative.Bff.Authentication
 dotnet add package GoCloudNative.Bff.Authentication.Auth0
 ```
 
@@ -228,9 +227,9 @@ Use the following `Properties/launchSettings.json`, this launchSettings file ens
 }
 ```
 
-In this example we assume you are running a Single Page Application on localhost on port `4200` and you have an API running at localhost on port `8081`. If that is not the case, then update the `appsettings.json` accordingly.
+In this example we assume you are running a Single Page Application on localhost on port `4200` and you have an API running at localhost on port `8080`. If that is not the case, then update the `appsettings.json` accordingly.
 
-To run the BFF, type `dotnet run` or just hit the 'play'-button in Visual Studio.
+To run the BFF, type `dotnet run` or just hit the 'play'-button in Visual Studio. When you run the BFF, make sure to have your API and your SPA running too.
 
 ### Endpoints
 
