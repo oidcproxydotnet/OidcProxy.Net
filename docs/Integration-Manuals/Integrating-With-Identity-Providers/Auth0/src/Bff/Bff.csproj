@@ -8,7 +8,7 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="GoCloudNative.Bff.Authentication.Auth0" Version="0.0.2" />
+    <PackageReference Include="GoCloudNative.Bff.Authentication.Auth0" Version="0.0.3" />
   </ItemGroup>
 
 </Project>
