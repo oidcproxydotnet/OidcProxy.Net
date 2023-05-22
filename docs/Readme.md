@@ -24,7 +24,7 @@
       - Applying a BFF in an Azure Container Apps environment
       - Applying a BFF in Kubernetes
   - Integrating with Identity Providers
-    - Auth0
+    - [Auth0](https://github.com/thecloudnativewebapp/GoCloudNative.Bff/tree/main/docs/Integration-Manuals/Integrating-With-Identity-Providers/Auth0)
     - Azure Active Directory
     - IdentityServer4
     - KeyCloak
