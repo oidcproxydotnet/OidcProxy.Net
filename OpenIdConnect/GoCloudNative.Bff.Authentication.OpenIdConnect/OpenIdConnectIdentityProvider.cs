@@ -1,5 +1,6 @@
 using System.Net;
 using System.Net.Http.Json;
+using System.Web;
 using GoCloudNative.Bff.Authentication.IdentityProviders;
 using IdentityModel;
 using IdentityModel.Client;
@@ -126,6 +127,33 @@ public class OpenIdConnectIdentityProvider : IIdentityProvider
             throw new ApplicationException($"Unable to revoke tokens. OIDC server responded {response.HttpStatusCode}:" +
                                            $" \r\n{response.Raw}");
         }
+    }
+
+    public async Task<Uri> GetEndSessionEndpoint(string? idToken, string baseAddress)
+    {        
+        // Determine redirect URL
+        var logOutRedirectEndpoint = _configuration.PostLogoutRedirectEndpoint.StartsWith('/')
+            ? _configuration.PostLogoutRedirectEndpoint
+            : $"/{_configuration.PostLogoutRedirectEndpoint}";
+        
+        var redirectUrl = $"{baseAddress}{logOutRedirectEndpoint}";
+
+        return await BuildEndSessionUri(idToken, redirectUrl);
+    }
+    
+    protected virtual async Task<Uri> BuildEndSessionUri(string? idToken, string redirectUri)
+    {        
+        var openIdConfiguration = await GetWellKnownConfiguration();
+
+        var endSessionUrEndpoint = openIdConfiguration.end_session_endpoint;
+        if (endSessionUrEndpoint == null)
+        {
+            throw new NotSupportedException($"Invalid OpenId configuration. OpenId Configuration MUST contain a value for end_session_sendpoint. (https://openid.net/specs/openid-connect-session-1_0-17.html#OPMetadata)");
+        }
+
+        var urlEncodedRedirectUri = HttpUtility.UrlEncode(redirectUri);
+        var endSessionUrl  = $"{endSessionUrEndpoint}?id_token_hint={idToken}&post_logout_redirect_uri={urlEncodedRedirectUri}";
+        return new Uri(endSessionUrl);
     }
 
     private async Task<OpenIdConfiguration> GetWellKnownConfiguration()

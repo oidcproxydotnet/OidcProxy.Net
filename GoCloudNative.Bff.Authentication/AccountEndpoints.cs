@@ -84,7 +84,7 @@ public static class AccountEndpoints
             }
         });
         
-        app.MapDelete($"/{endpointName}/session", async (HttpContext context, 
+        app.MapGet($"/{endpointName}/end-session", async (HttpContext context, 
             [FromServices] ILogger<Endpoints> logger,
             [FromServices] IIdentityProvider identityProvider) =>
         {
@@ -105,10 +105,22 @@ public static class AccountEndpoints
                     logger.LogLine(context, new LogLine($"Revoking refresh_token."));
                     await identityProvider.Revoke(refreshToken);
                 }
+
+                string? idToken = null;
+                if (context.Session.HasIdToken())
+                {
+                    idToken = context.Session.GetIdToken();
+                }
             
                 context.Session.Clear();
+
+                var baseAddress = $"{DetermineHostName(context)}";
                 
-                logger.LogLine(context, new LogLine($"OK"));
+                var endSessionEndpoint = await identityProvider.GetEndSessionEndpoint(idToken, baseAddress);
+                
+                logger.LogLine(context, new LogLine($"Redirect to {endSessionEndpoint}"));
+
+                return Results.Redirect(endSessionEndpoint.ToString());
             }
             catch (Exception e)
             {
@@ -118,10 +130,16 @@ public static class AccountEndpoints
         });
     }
 
-    private static string DetermineRedirectUri(HttpContext context, string endpointName)
+    private static string DetermineHostName(HttpContext context)
     {
         var protocol = context.Request.IsHttps ? "https://" : "http://";
-        return $"{protocol}{context.Request.Host}/{endpointName}/login/callback";
+        return $"{protocol}{context.Request.Host}";
+    }
+
+    private static string DetermineRedirectUri(HttpContext context, string endpointName)
+    {
+        var hostName = DetermineHostName(context);
+        return $"{hostName}/{endpointName}/login/callback";
     }
 }
 

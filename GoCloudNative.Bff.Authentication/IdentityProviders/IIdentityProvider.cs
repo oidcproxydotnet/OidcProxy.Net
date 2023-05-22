@@ -11,4 +11,5 @@ public interface IIdentityProvider
     public Task<TokenResponse> RefreshTokenAsync(string refreshToken);
     
     public Task Revoke(string token);
+    public Task<Uri> GetEndSessionEndpoint(string? idToken, string baseAddress);
 }

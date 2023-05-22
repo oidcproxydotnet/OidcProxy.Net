@@ -11,4 +11,6 @@ public class OpenIdConnectConfig
     public string WellKnownEndpoint { get; set; } = "/.well-known/openid-configuration";
 
     public string[] Scopes { get; set; } = Array.Empty<string>();
+
+    public string PostLogoutRedirectEndpoint { get; set; } = "/";
 }

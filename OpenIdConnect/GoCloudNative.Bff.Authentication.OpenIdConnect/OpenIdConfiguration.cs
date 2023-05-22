@@ -13,4 +13,6 @@ internal class OpenIdConfiguration
     public string? jwks_uri { get; set; }
     
     public string? revocation_endpoint { get; set; }
+    
+    public string? end_session_endpoint { get; set; }
 }

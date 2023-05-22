@@ -1,4 +1,5 @@
 ﻿
+using System.Web;
 using GoCloudNative.Bff.Authentication.OpenIdConnect;
 using Microsoft.Extensions.Caching.Memory;
 
@@ -22,6 +23,17 @@ public class Auth0IdentityProvider : OpenIdConnectIdentityProvider
         // I.l.e.: Auth0 does not support token revocation
         
         return Task.CompletedTask;
+    }
+
+    protected override Task<Uri> BuildEndSessionUri(string? idToken, string redirectUri)
+    {
+        // Auth0 does not define their end_session_endpoint in the well-known/openid-configuration
+
+        var federated = _config.FederatedLogout ? "?federated" : string.Empty;
+        var endSessionUrl = $"https://{_config.Authority}/oidc/logout{federated}";
+        var endSessionUri = new Uri(endSessionUrl);
+        
+        return Task.FromResult(endSessionUri);
     }
 
     private static OpenIdConnectConfig MapConfiguration(Auth0Config config)
