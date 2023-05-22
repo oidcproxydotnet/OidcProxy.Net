@@ -16,7 +16,7 @@ Follow these steps to configure Auth0 correctly:
 * Go to the `Applications` section in the menu on the left-hand side and click `Applications`
 * Click `+ Create application` in the right upper corner
 * Provide a name for your app and select `Regular web applications`
-* Now, click settings, now you'll see the following section: ![client-id/secret](clientid-secret.png)
+* Now, click settings, now you'll see the following section: ![client-id/secret](https://raw.githubusercontent.com/thecloudnativewebapp/GoCloudNative.Bff/main/docs/Integration-Manuals/Integrating-With-Identity-Providers/Auth0/clientid-secret.png)
 
 * Copy the client_id, the secret, and the authority into the `appsettings.json`, like so:
 
@@ -36,9 +36,9 @@ Follow these steps to configure Auth0 correctly:
 }
 ```
 
-* Now, configure the redirecturl. When the user has logged into Auth0, Auth0 will redirect the user to this URL. Redirecting will not work unless the redirect URL has been whitelisted: ![Whitelisting the redirect_uri](redirect-uri.png)
+* Now, configure the redirecturl. When the user has logged into Auth0, Auth0 will redirect the user to this URL. Redirecting will not work unless the redirect URL has been whitelisted: ![Whitelisting the redirect_uri](https://raw.githubusercontent.com/thecloudnativewebapp/GoCloudNative.Bff/main/docs/Integration-Manuals/Integrating-With-Identity-Providers/Auth0/redirect-uri.png)
 
-* Next, scroll to the `Advanced settings` and configure the `grant_types`. Enable `Authorization Code` and `Refresh tokens` ![grant-types](grant-types.png)
+* Next, scroll to the `Advanced settings` and configure the `grant_types`. Enable `Authorization Code` and `Refresh tokens` ![grant-types](https://raw.githubusercontent.com/thecloudnativewebapp/GoCloudNative.Bff/main/docs/Integration-Manuals/Integrating-With-Identity-Providers/Auth0/grant-types.png)
 
 ## Step 2.) Build the aspnetcore API
 
@@ -230,9 +230,6 @@ In this example we assume you are running a Single Page Application on localhost
 
 To run the BFF, type `dotnet run` or just hit the 'play'-button in Visual Studio.
 
-
-
-
 ### Endpoints
 
 The BFF relays all requests as configured in the `ReverseProxy` section in the `appsettings.json` file, except for four endpoints:
@@ -246,8 +243,12 @@ This endpoint is used by the IdentityProvider.
 ### [GET] /account/me
 To see the logged in user, navigate to the `/account/me` endpoint. This endpoint shows the claims that are in the `id_token`.
 
-### [DELETE] /account/session
-To revoke the tokens that have been obtained when the user logged in, execute a delete request on the `/account/delete` endpoint. This will revoke the tokens that have been stored in the user session. __This will not log the user out from the Identity Provider session. This must be implemented at client side.__
+### [GET] /account/end-session
+To revoke the tokens that have been obtained when the user logged in, navigate to `/account/end-session` endpoint. This will revoke the tokens that have been stored in the user session. This will also end the user-session on at the Identity Provider
+
+## Demo
+
+Check out a fully working demo [here](https://github.com/thecloudnativewebapp/GoCloudNative.Bff/tree/main/docs/Integration-Manuals/Integrating-With-Identity-Providers/Auth0/src).
 
 ## Issues
 

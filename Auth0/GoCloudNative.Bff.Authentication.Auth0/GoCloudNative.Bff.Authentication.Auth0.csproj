@@ -22,12 +22,9 @@
     </ItemGroup>
 
     <ItemGroup>
-      <None Remove="clientid-secret.png" />
-      <Content Include="clientid-secret.png" />
-      <None Remove="grant-types.png" />
-      <Content Include="grant-types.png" />
-      <None Remove="Readme.md" />
-      <Content Include="Readme.md" Pack="true" PackagePath="\" />
+      <Content Include="..\..\docs\Integration-Manuals\Integrating-With-Identity-Providers\Auth0\Readme.md" Pack="true" PackagePath="\" >
+        <Link>Readme.md</Link>
+      </Content>
     </ItemGroup>
     
 </Project>
