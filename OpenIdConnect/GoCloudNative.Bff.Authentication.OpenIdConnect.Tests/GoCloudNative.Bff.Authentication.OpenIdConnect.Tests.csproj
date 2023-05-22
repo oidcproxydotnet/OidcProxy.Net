@@ -24,8 +24,8 @@
     </ItemGroup>
 
     <ItemGroup>
-        <ProjectReference Include="..\..\src\GoCloudNative.Bff.Authentication\GoCloudNative.Bff.Authentication.csproj" />
-        <ProjectReference Include="..\..\src\GoCloudNative.Bff.Authentication.OpenIdConnect\GoCloudNative.Bff.Authentication.OpenIdConnect.csproj" />
+        <ProjectReference Include="..\GoCloudNative.Bff.Authentication\GoCloudNative.Bff.Authentication.csproj" />
+        <ProjectReference Include="..\GoCloudNative.Bff.Authentication.OpenIdConnect\GoCloudNative.Bff.Authentication.OpenIdConnect.csproj" />
         <ProjectReference Include="..\GoCloudNative.Bff.Authentication.OpenIdConnect.Tests.TestServer\GoCloudNative.Bff.Authentication.OpenIdConnect.Tests.TestServer.csproj" />
     </ItemGroup>
 
