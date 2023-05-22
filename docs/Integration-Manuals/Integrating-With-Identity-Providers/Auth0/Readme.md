@@ -164,9 +164,11 @@ Create the following `appsettings.json` file:
     }
   },
   "Auth0": {
-    "ClientId": "[InsertClientIdHere]",
-    "ClientSecret": "[InsertClientSecretHere]",
-    "Authority": "[InsertAuthorityHere]",
+    "ClientId": "{yourClientId}",
+    "ClientSecret": "{yourClientSecret}",
+    "Domain": "{yourDomain}",
+    "Audience": "{yourAudience}",
+    "FederatedLogout": false,
     "Scopes": [
       "openid", "profile", "offline_access"
     ]
