@@ -1,5 +1,6 @@
 ﻿
 using System.Web;
+using GoCloudNative.Bff.Authentication.IdentityProviders;
 using GoCloudNative.Bff.Authentication.OpenIdConnect;
 using Microsoft.Extensions.Caching.Memory;
 
@@ -18,6 +19,16 @@ public class Auth0IdentityProvider : OpenIdConnectIdentityProvider
         _config = config;
     }
 
+    public override async Task<AuthorizeRequest> GetAuthorizeUrlAsync(string redirectUri)
+    {
+        var result = await base.GetAuthorizeUrlAsync(redirectUri);
+
+        var audience = HttpUtility.UrlEncode(_config.Audience);
+        var authorizeRequestWithAudience = $"{result.AuthorizeUri}&audience={audience}";
+
+        return new AuthorizeRequest(new Uri(authorizeRequestWithAudience), result.CodeVerifier);
+    }
+
     public override Task Revoke(string token)
     {
         // I.l.e.: Auth0 does not support token revocation
@@ -30,7 +41,7 @@ public class Auth0IdentityProvider : OpenIdConnectIdentityProvider
         // Auth0 does not define their end_session_endpoint in the well-known/openid-configuration
 
         var federated = _config.FederatedLogout ? "?federated" : string.Empty;
-        var endSessionUrl = $"https://{_config.Authority}/oidc/logout{federated}";
+        var endSessionUrl = $"https://{_config.Domain}/oidc/logout{federated}";
         var endSessionUri = new Uri(endSessionUrl);
         
         return Task.FromResult(endSessionUri);
@@ -40,7 +51,7 @@ public class Auth0IdentityProvider : OpenIdConnectIdentityProvider
     {
         return new OpenIdConnectConfig
         {
-            Authority = $"https://{config.Authority}",
+            Authority = $"https://{config.Domain}",
             ClientId = config.ClientId,
             ClientSecret = config.ClientSecret,
             Scopes = config.Scopes
