@@ -3,25 +3,25 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
 VisualStudioVersion = 17.0.31903.59
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ExampleBff", "src\ExampleBff\ExampleBff.csproj", "{82C63C10-01A4-48B2-B3C9-0DBEB8E02FBD}"
-EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GoCloudNative.Bff.Authentication", "src\GoCloudNative.Bff.Authentication\GoCloudNative.Bff.Authentication.csproj", "{EA906DE5-50E3-4B66-A908-4C2E6D23494D}"
-EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GoCloudNative.Bff.Authentication.OpenIdConnect", "src\GoCloudNative.Bff.Authentication.OpenIdConnect\GoCloudNative.Bff.Authentication.OpenIdConnect.csproj", "{F301446E-5CCF-449D-B847-64DEA8A5B944}"
-EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GoCloudNative.Bff.Authentication.Auth0", "src\GoCloudNative.Bff.Authentication.Auth0\GoCloudNative.Bff.Authentication.Auth0.csproj", "{078CD1FA-94A5-4C8E-A944-8F29F228AF16}"
-EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GoCloudNative.Bff.Authentication.Tests", "tests\GoCloudNative.Bff.Authentication.Tests\GoCloudNative.Bff.Authentication.Tests.csproj", "{A6FFD8F5-0373-4B7E-A27E-3C29C2EE1BC4}"
-EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GoCloudNative.Bff.Authentication.OpenIdConnect.Tests", "tests\GoCloudNative.Bff.Authentication.OpenIdConnect.Tests\GoCloudNative.Bff.Authentication.OpenIdConnect.Tests.csproj", "{F5F22CC3-CBBF-4D1D-98D3-6A2E25E2E469}"
-EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GoCloudNative.Bff.Authentication.OpenIdConnect.Tests.TestServer", "tests\GoCloudNative.Bff.Authentication.OpenIdConnect.Tests.TestServer\GoCloudNative.Bff.Authentication.OpenIdConnect.Tests.TestServer.csproj", "{78D9C66E-4B42-4F7D-BCBF-0CD82D4098CA}"
-EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Auth0", "Auth0", "{38E49F8C-C664-4A1B-8FE7-95F9855AEF1B}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Example", "Example", "{A5BD000C-4C0E-46D9-A56E-E974B744BB98}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "OpenIdConnect", "OpenIdConnect", "{EE04429D-4B0B-4A40-9A32-23A5F159EE32}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GoCloudNative.Bff.Authentication", "GoCloudNative.Bff.Authentication\GoCloudNative.Bff.Authentication.csproj", "{D6501532-390E-4D8A-8650-2B8ED1E6D532}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GoCloudNative.Bff.Authentication.Tests", "GoCloudNative.Bff.Authentication.Tests\GoCloudNative.Bff.Authentication.Tests.csproj", "{04270509-572D-4D70-B2DE-37CF8D573EAC}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GoCloudNative.Bff.Authentication.Auth0", "Auth0\GoCloudNative.Bff.Authentication.Auth0\GoCloudNative.Bff.Authentication.Auth0.csproj", "{EDAABEB7-BBAE-49DA-86A8-EB3C5540B86C}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GoCloudNative.Bff.Authentication.OpenIdConnect", "OpenIdConnect\GoCloudNative.Bff.Authentication.OpenIdConnect\GoCloudNative.Bff.Authentication.OpenIdConnect.csproj", "{939D1A70-69FF-4B49-97F5-7B5358C39246}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GoCloudNative.Bff.Authentication.OpenIdConnect.Tests", "OpenIdConnect\GoCloudNative.Bff.Authentication.OpenIdConnect.Tests\GoCloudNative.Bff.Authentication.OpenIdConnect.Tests.csproj", "{9B73B2AB-1F22-49DE-AB92-574963BD2C4E}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GoCloudNative.Bff.Authentication.OpenIdConnect.Tests.TestServer", "OpenIdConnect\GoCloudNative.Bff.Authentication.OpenIdConnect.Tests.TestServer\GoCloudNative.Bff.Authentication.OpenIdConnect.Tests.TestServer.csproj", "{875271E5-DA4D-4FED-AAE6-E2E3D60D40CA}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ExampleBff", "Example\ExampleBff\ExampleBff.csproj", "{8BE6C43C-61E2-4955-AA4F-6982BFE09423}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -32,40 +32,40 @@ Global
 		HideSolutionNode = FALSE
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
-		{82C63C10-01A4-48B2-B3C9-0DBEB8E02FBD}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{82C63C10-01A4-48B2-B3C9-0DBEB8E02FBD}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{82C63C10-01A4-48B2-B3C9-0DBEB8E02FBD}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{82C63C10-01A4-48B2-B3C9-0DBEB8E02FBD}.Release|Any CPU.Build.0 = Release|Any CPU
-		{EA906DE5-50E3-4B66-A908-4C2E6D23494D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{EA906DE5-50E3-4B66-A908-4C2E6D23494D}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{EA906DE5-50E3-4B66-A908-4C2E6D23494D}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{EA906DE5-50E3-4B66-A908-4C2E6D23494D}.Release|Any CPU.Build.0 = Release|Any CPU
-		{F301446E-5CCF-449D-B847-64DEA8A5B944}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{F301446E-5CCF-449D-B847-64DEA8A5B944}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{F301446E-5CCF-449D-B847-64DEA8A5B944}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{F301446E-5CCF-449D-B847-64DEA8A5B944}.Release|Any CPU.Build.0 = Release|Any CPU
-		{078CD1FA-94A5-4C8E-A944-8F29F228AF16}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{078CD1FA-94A5-4C8E-A944-8F29F228AF16}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{078CD1FA-94A5-4C8E-A944-8F29F228AF16}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{078CD1FA-94A5-4C8E-A944-8F29F228AF16}.Release|Any CPU.Build.0 = Release|Any CPU
-		{A6FFD8F5-0373-4B7E-A27E-3C29C2EE1BC4}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{A6FFD8F5-0373-4B7E-A27E-3C29C2EE1BC4}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{A6FFD8F5-0373-4B7E-A27E-3C29C2EE1BC4}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{A6FFD8F5-0373-4B7E-A27E-3C29C2EE1BC4}.Release|Any CPU.Build.0 = Release|Any CPU
-		{F5F22CC3-CBBF-4D1D-98D3-6A2E25E2E469}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{F5F22CC3-CBBF-4D1D-98D3-6A2E25E2E469}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{F5F22CC3-CBBF-4D1D-98D3-6A2E25E2E469}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{F5F22CC3-CBBF-4D1D-98D3-6A2E25E2E469}.Release|Any CPU.Build.0 = Release|Any CPU
-		{78D9C66E-4B42-4F7D-BCBF-0CD82D4098CA}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{78D9C66E-4B42-4F7D-BCBF-0CD82D4098CA}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{78D9C66E-4B42-4F7D-BCBF-0CD82D4098CA}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{78D9C66E-4B42-4F7D-BCBF-0CD82D4098CA}.Release|Any CPU.Build.0 = Release|Any CPU
+		{D6501532-390E-4D8A-8650-2B8ED1E6D532}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{D6501532-390E-4D8A-8650-2B8ED1E6D532}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{D6501532-390E-4D8A-8650-2B8ED1E6D532}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{D6501532-390E-4D8A-8650-2B8ED1E6D532}.Release|Any CPU.Build.0 = Release|Any CPU
+		{04270509-572D-4D70-B2DE-37CF8D573EAC}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{04270509-572D-4D70-B2DE-37CF8D573EAC}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{04270509-572D-4D70-B2DE-37CF8D573EAC}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{04270509-572D-4D70-B2DE-37CF8D573EAC}.Release|Any CPU.Build.0 = Release|Any CPU
+		{EDAABEB7-BBAE-49DA-86A8-EB3C5540B86C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{EDAABEB7-BBAE-49DA-86A8-EB3C5540B86C}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{EDAABEB7-BBAE-49DA-86A8-EB3C5540B86C}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{EDAABEB7-BBAE-49DA-86A8-EB3C5540B86C}.Release|Any CPU.Build.0 = Release|Any CPU
+		{939D1A70-69FF-4B49-97F5-7B5358C39246}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{939D1A70-69FF-4B49-97F5-7B5358C39246}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{939D1A70-69FF-4B49-97F5-7B5358C39246}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{939D1A70-69FF-4B49-97F5-7B5358C39246}.Release|Any CPU.Build.0 = Release|Any CPU
+		{9B73B2AB-1F22-49DE-AB92-574963BD2C4E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{9B73B2AB-1F22-49DE-AB92-574963BD2C4E}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{9B73B2AB-1F22-49DE-AB92-574963BD2C4E}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{9B73B2AB-1F22-49DE-AB92-574963BD2C4E}.Release|Any CPU.Build.0 = Release|Any CPU
+		{875271E5-DA4D-4FED-AAE6-E2E3D60D40CA}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{875271E5-DA4D-4FED-AAE6-E2E3D60D40CA}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{875271E5-DA4D-4FED-AAE6-E2E3D60D40CA}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{875271E5-DA4D-4FED-AAE6-E2E3D60D40CA}.Release|Any CPU.Build.0 = Release|Any CPU
+		{8BE6C43C-61E2-4955-AA4F-6982BFE09423}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{8BE6C43C-61E2-4955-AA4F-6982BFE09423}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{8BE6C43C-61E2-4955-AA4F-6982BFE09423}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{8BE6C43C-61E2-4955-AA4F-6982BFE09423}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(NestedProjects) = preSolution
-		{078CD1FA-94A5-4C8E-A944-8F29F228AF16} = {38E49F8C-C664-4A1B-8FE7-95F9855AEF1B}
-		{82C63C10-01A4-48B2-B3C9-0DBEB8E02FBD} = {A5BD000C-4C0E-46D9-A56E-E974B744BB98}
-		{F301446E-5CCF-449D-B847-64DEA8A5B944} = {EE04429D-4B0B-4A40-9A32-23A5F159EE32}
-		{F5F22CC3-CBBF-4D1D-98D3-6A2E25E2E469} = {EE04429D-4B0B-4A40-9A32-23A5F159EE32}
-		{78D9C66E-4B42-4F7D-BCBF-0CD82D4098CA} = {EE04429D-4B0B-4A40-9A32-23A5F159EE32}
+		{EDAABEB7-BBAE-49DA-86A8-EB3C5540B86C} = {38E49F8C-C664-4A1B-8FE7-95F9855AEF1B}
+		{939D1A70-69FF-4B49-97F5-7B5358C39246} = {EE04429D-4B0B-4A40-9A32-23A5F159EE32}
+		{9B73B2AB-1F22-49DE-AB92-574963BD2C4E} = {EE04429D-4B0B-4A40-9A32-23A5F159EE32}
+		{875271E5-DA4D-4FED-AAE6-E2E3D60D40CA} = {EE04429D-4B0B-4A40-9A32-23A5F159EE32}
+		{8BE6C43C-61E2-4955-AA4F-6982BFE09423} = {A5BD000C-4C0E-46D9-A56E-E974B744BB98}
 	EndGlobalSection
 EndGlobal
