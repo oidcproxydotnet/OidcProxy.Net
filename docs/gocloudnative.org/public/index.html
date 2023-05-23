@@ -15,7 +15,7 @@
 <link rel="icon" href="/favicon.png" type="image/x-icon">
 <link rel="stylesheet" href="/book.min.33a48f5432973b8ff9a82679d9e45d67f2c15d4399bd2829269455cfe390b5e8.css" integrity="sha256-M6SPVDKXO4/5qCZ52eRdZ/LBXUOZvSgpJpRVz&#43;OQteg=" crossorigin="anonymous">
   <script defer src="/flexsearch.min.js"></script>
-  <script defer src="/en.search.min.53aa967cb1e7c0538d88c00ea2c901c2f129fdf9339d64b904193b915287dd3b.js" integrity="sha256-U6qWfLHnwFONiMAOoskBwvEp/fkznWS5BBk7kVKH3Ts=" crossorigin="anonymous"></script>
+  <script defer src="/en.search.min.2c9daf3dfd3b96b7f51bb57e07b500ffee7ecbe1926534d99d8eaff48f494828.js" integrity="sha256-LJ2vPf07lrf1G7V&#43;B7UA/&#43;5&#43;y&#43;GSZTTZnY6v9I9JSCg=" crossorigin="anonymous"></script>
 <link rel="alternate" type="application/rss+xml" href="https://gocloudnative.org/index.xml" title="GoCloudNative.Bff" />
 <!--
 Made with Book Theme
@@ -54,15 +54,12 @@ https://github.com/alex-shpak/hugo-book
 
 
 
-  
 
-
-
-
-
-
-
-
+<ul>
+  <li><a href="/">Home</a></li>
+  <li><a href="/table-of-content/">Table of contents</a></li>
+  <li><a href="https://github.com/thecloudnativewebapp/GoCloudNative.Bff" target="_blank">GoCloudNative.Bff on GitHub</a></li>
+</ul>
 
 
 
@@ -105,11 +102,7 @@ https://github.com/alex-shpak/hugo-book
   <aside class="hidden clearfix">
     
   
-<nav id="TableOfContents">
-  <ul>
-    <li><a href="#table-of-contents">Table of contents</a></li>
-  </ul>
-</nav>
+<nav id="TableOfContents"></nav>
 
 
 
@@ -120,63 +113,82 @@ https://github.com/alex-shpak/hugo-book
 
       
       
-  <article class="markdown"><h1 id="documentation">
-  Documentation
-  <a class="anchor" href="#documentation">#</a>
+  <article class="markdown"><h1 id="implement-the-bff-security-pattern-in-a-matter-of-minutes">
+  Implement the BFF Security Pattern in a matter of minutes
+  <a class="anchor" href="#implement-the-bff-security-pattern-in-a-matter-of-minutes">#</a>
 </h1>
-<h2 id="table-of-contents">
-  Table of contents
-  <a class="anchor" href="#table-of-contents">#</a>
-</h2>
-<ul>
-<li>Concepts
-<ul>
-<li><a href="/concepts/api-authorization/">API authorization with OAuth2/OpenId Connect</a></li>
-<li>What is Authorization Code with Proof Key for Client Exchange?</li>
-<li>What is a Back-end For Front-End?</li>
-<li>What is a Reverse Proxy?</li>
-<li>Distributed apps</li>
-<li>Horizontal scaling</li>
-</ul>
-</li>
-<li>Architecture
-<ul>
-<li>The BFF Security Pattern</li>
-<li>The GoCloudNative.BFF.Authentication software-architecture</li>
-<li>Horizontal scaling/scaling out</li>
-<li>Extensibility (implementing custom identity providers)</li>
-<li>Aggregating responses from multiple downstream endpoints</li>
-</ul>
-</li>
-<li>Integration Manuals
-<ul>
-<li>Quickstarts
-<ul>
-<li>Implementing the BFF Security Pattern with aspnetcore, Angular, KeyCloack, and the GoCloudNative.Bff</li>
-</ul>
-</li>
-<li>Migrating an Angular Single Page Application with an API</li>
-<li>Infrastructure
-<ul>
-<li>Distributed apps
-<ul>
-<li>Applying a BFF in an Azure Container Apps environment</li>
-<li>Applying a BFF in Kubernetes</li>
-</ul>
-</li>
-</ul>
-</li>
-<li>Integrating with Identity Providers
-<ul>
-<li><a href="/integration-manuals/integrating-with-identity-providers/auth0/quickstart">Auth0</a></li>
-<li>Azure Active Directory</li>
-<li><a href="/integration-manuals/integrating-with-identity-providers/identityserver4/quickstart">IdentityServer4</a></li>
-<li>KeyCloak</li>
-</ul>
-</li>
-</ul>
-</li>
-</ul>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span>dotnet new web
+</span></span><span style="display:flex;"><span>dotnet add package GoCloudNative.Bff.Authentication.OpenIdConnect
+</span></span></code></pre></div><p><code>program.cs</code></p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-csharp" data-lang="csharp"><span style="display:flex;"><span><span style="color:#66d9ef">using</span> GoCloudNative.Bff.Authentication.OpenIdConnect;
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">using</span> GoCloudNative.Bff.Authentication.ModuleInitializers;
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">var</span> builder = WebApplication.CreateBuilder(args);
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>builder.Services.AddSecurityBff(o =&gt;
+</span></span><span style="display:flex;"><span>{
+</span></span><span style="display:flex;"><span>    o.ConfigureOpenIdConnect(builder.Configuration.GetSection(<span style="color:#e6db74">&#34;Oidc&#34;</span>));
+</span></span><span style="display:flex;"><span>    o.LoadYarpFromConfig(builder.Configuration.GetSection(<span style="color:#e6db74">&#34;ReverseProxy&#34;</span>));
+</span></span><span style="display:flex;"><span>});
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">var</span> app = builder.Build();
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>app.UseRouting();
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>app.UseSecurityBff();
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>app.Run();
+</span></span></code></pre></div><p><code>appsettings.json</code></p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-json" data-lang="json"><span style="display:flex;"><span>{
+</span></span><span style="display:flex;"><span>  <span style="color:#f92672">&#34;Logging&#34;</span>: {
+</span></span><span style="display:flex;"><span>    <span style="color:#f92672">&#34;LogLevel&#34;</span>: {
+</span></span><span style="display:flex;"><span>      <span style="color:#f92672">&#34;Default&#34;</span>: <span style="color:#e6db74">&#34;Information&#34;</span>,
+</span></span><span style="display:flex;"><span>      <span style="color:#f92672">&#34;Microsoft.AspNetCore&#34;</span>: <span style="color:#e6db74">&#34;Warning&#34;</span>
+</span></span><span style="display:flex;"><span>    }
+</span></span><span style="display:flex;"><span>  },
+</span></span><span style="display:flex;"><span>  <span style="color:#f92672">&#34;Oidc&#34;</span>: {
+</span></span><span style="display:flex;"><span>    <span style="color:#f92672">&#34;ClientId&#34;</span>: <span style="color:#e6db74">&#34;{YourClientId}&#34;</span>,
+</span></span><span style="display:flex;"><span>    <span style="color:#f92672">&#34;ClientSecret&#34;</span>: <span style="color:#e6db74">&#34;{YourClientSecret}&#34;</span>,
+</span></span><span style="display:flex;"><span>    <span style="color:#f92672">&#34;Authority&#34;</span>: <span style="color:#e6db74">&#34;{YourAuthority}&#34;</span>,
+</span></span><span style="display:flex;"><span>    <span style="color:#f92672">&#34;Scopes&#34;</span>: [
+</span></span><span style="display:flex;"><span>      <span style="color:#e6db74">&#34;openid&#34;</span>, <span style="color:#e6db74">&#34;profile&#34;</span>, <span style="color:#e6db74">&#34;offline_access&#34;</span>
+</span></span><span style="display:flex;"><span>    ]
+</span></span><span style="display:flex;"><span>  },
+</span></span><span style="display:flex;"><span>  <span style="color:#f92672">&#34;AllowedHosts&#34;</span>: <span style="color:#e6db74">&#34;*&#34;</span>,
+</span></span><span style="display:flex;"><span>  <span style="color:#f92672">&#34;ReverseProxy&#34;</span>: {
+</span></span><span style="display:flex;"><span>    <span style="color:#f92672">&#34;Routes&#34;</span>: {
+</span></span><span style="display:flex;"><span>      <span style="color:#f92672">&#34;spa&#34;</span>: {
+</span></span><span style="display:flex;"><span>        <span style="color:#f92672">&#34;ClusterId&#34;</span>: <span style="color:#e6db74">&#34;spa&#34;</span>,
+</span></span><span style="display:flex;"><span>        <span style="color:#f92672">&#34;Match&#34;</span>: {
+</span></span><span style="display:flex;"><span>          <span style="color:#f92672">&#34;Path&#34;</span>: <span style="color:#e6db74">&#34;/{*any}&#34;</span>
+</span></span><span style="display:flex;"><span>        }
+</span></span><span style="display:flex;"><span>      },
+</span></span><span style="display:flex;"><span>      <span style="color:#f92672">&#34;api&#34;</span>: {
+</span></span><span style="display:flex;"><span>        <span style="color:#f92672">&#34;ClusterId&#34;</span>: <span style="color:#e6db74">&#34;api&#34;</span>,
+</span></span><span style="display:flex;"><span>        <span style="color:#f92672">&#34;Match&#34;</span>: {
+</span></span><span style="display:flex;"><span>          <span style="color:#f92672">&#34;Path&#34;</span>: <span style="color:#e6db74">&#34;/api/{*any}&#34;</span>
+</span></span><span style="display:flex;"><span>        }
+</span></span><span style="display:flex;"><span>      },
+</span></span><span style="display:flex;"><span>    },
+</span></span><span style="display:flex;"><span>    <span style="color:#f92672">&#34;Clusters&#34;</span>: {
+</span></span><span style="display:flex;"><span>      <span style="color:#f92672">&#34;spa&#34;</span>: {
+</span></span><span style="display:flex;"><span>        <span style="color:#f92672">&#34;Destinations&#34;</span>: {
+</span></span><span style="display:flex;"><span>          <span style="color:#f92672">&#34;spa&#34;</span>: {
+</span></span><span style="display:flex;"><span>            <span style="color:#f92672">&#34;Address&#34;</span>: <span style="color:#e6db74">&#34;http://localhost:4200/&#34;</span>
+</span></span><span style="display:flex;"><span>          }
+</span></span><span style="display:flex;"><span>        }
+</span></span><span style="display:flex;"><span>      },
+</span></span><span style="display:flex;"><span>      <span style="color:#f92672">&#34;api&#34;</span>: {
+</span></span><span style="display:flex;"><span>        <span style="color:#f92672">&#34;Destinations&#34;</span>: {
+</span></span><span style="display:flex;"><span>          <span style="color:#f92672">&#34;api&#34;</span>: {
+</span></span><span style="display:flex;"><span>            <span style="color:#f92672">&#34;Address&#34;</span>: <span style="color:#e6db74">&#34;http://localhost:8080/&#34;</span>
+</span></span><span style="display:flex;"><span>          }
+</span></span><span style="display:flex;"><span>        }
+</span></span><span style="display:flex;"><span>      },
+</span></span><span style="display:flex;"><span>    }
+</span></span><span style="display:flex;"><span>  }
+</span></span><span style="display:flex;"><span>}
+</span></span></code></pre></div><p>That&rsquo;s it.. <a href="table-of-content">Read more</a></p>
 </article>
  
       
