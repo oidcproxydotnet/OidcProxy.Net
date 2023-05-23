@@ -1,9 +1,7 @@
 ---
 author: Albert Starreveld
 title: API Authorization with OAuth2/OpenId Connect
-date: 2023-05-23
 description: Read how to implement OAuth2/OIDC in a aspnetcore C# application.
-draft: false
 ---
 # API Authorization with OAuth2/OpenId Connect
 

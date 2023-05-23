@@ -2,12 +2,19 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9"
   xmlns:xhtml="http://www.w3.org/1999/xhtml">
   <url>
-    <loc>https://gocloudnative.org/</loc>
-    <priority>0</priority>
+    <loc>https://gocloudnative.org/concepts/api-authorization/</loc>
   </url><url>
     <loc>https://gocloudnative.org/categories/</loc>
   </url><url>
+    <loc>https://gocloudnative.org/concepts/</loc>
+  </url><url>
     <loc>https://gocloudnative.org/</loc>
+  </url><url>
+    <loc>https://gocloudnative.org/integration-manuals/integrating-with-identity-providers/auth0/</loc>
+  </url><url>
+    <loc>https://gocloudnative.org/integration-manuals/integrating-with-identity-providers/identityserver4/</loc>
+  </url><url>
+    <loc>https://gocloudnative.org/integration-manuals/</loc>
   </url><url>
     <loc>https://gocloudnative.org/tags/</loc>
   </url>

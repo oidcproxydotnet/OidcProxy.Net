@@ -1,0 +1,464 @@
+<!DOCTYPE html>
+<html lang="en-us" dir="ltr">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="description" content="Read how to implement the BFF Security Pattern with aspnetcore, Angular, and Auth0">
+<meta name="theme-color" content="#FFFFFF">
+<meta name="color-scheme" content="light dark"><meta property="og:title" content="Implementing the BFF Security Pattern with Auth0" />
+<meta property="og:description" content="Read how to implement the BFF Security Pattern with aspnetcore, Angular, and Auth0" />
+<meta property="og:type" content="article" />
+<meta property="og:url" content="https://gocloudnative.org/integration-manuals/integrating-with-identity-providers/auth0/" /><meta property="article:section" content="integration-manuals" />
+
+
+<title>Implementing the BFF Security Pattern with Auth0 | GoCloudNative.org/bff</title>
+<link rel="manifest" href="/manifest.json">
+<link rel="icon" href="/favicon.png" type="image/x-icon">
+<link rel="stylesheet" href="/book.min.33a48f5432973b8ff9a82679d9e45d67f2c15d4399bd2829269455cfe390b5e8.css" integrity="sha256-M6SPVDKXO4/5qCZ52eRdZ/LBXUOZvSgpJpRVz&#43;OQteg=" crossorigin="anonymous">
+  <script defer src="/flexsearch.min.js"></script>
+  <script defer src="/en.search.min.b940f5e50340290d31079ccfa3fd9e66673165d1dcd8f9de1e473ba1a1bccc5d.js" integrity="sha256-uUD15QNAKQ0xB5zPo/2eZmcxZdHc2PneHkc7oaG8zF0=" crossorigin="anonymous"></script>
+<!--
+Made with Book Theme
+https://github.com/alex-shpak/hugo-book
+-->
+  
+</head>
+<body dir="ltr">
+  <input type="checkbox" class="hidden toggle" id="menu-control" />
+  <input type="checkbox" class="hidden toggle" id="toc-control" />
+  <main class="container flex">
+    <aside class="book-menu">
+      <div class="book-menu-content">
+        
+  <nav>
+<h2 class="book-brand">
+  <a class="flex align-center" href="/"><span>GoCloudNative.org/bff</span>
+  </a>
+</h2>
+
+
+<div class="book-search">
+  <input type="text" id="book-search-input" placeholder="Search" aria-label="Search" maxlength="64" data-hotkeys="s/" />
+  <div class="book-search-spinner hidden"></div>
+  <ul id="book-search-results"></ul>
+</div>
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+</nav>
+
+
+
+
+  <script>(function(){var e=document.querySelector("aside .book-menu-content");addEventListener("beforeunload",function(){localStorage.setItem("menu.scrollTop",e.scrollTop)}),e.scrollTop=localStorage.getItem("menu.scrollTop")})()</script>
+
+
+ 
+      </div>
+    </aside>
+
+    <div class="book-page">
+      <header class="book-header">
+        
+  <div class="flex align-center justify-between">
+  <label for="menu-control">
+    <img src="/svg/menu.svg" class="book-icon" alt="Menu" />
+  </label>
+
+  <strong>Implementing the BFF Security Pattern with Auth0</strong>
+
+  <label for="toc-control">
+    
+    <img src="/svg/toc.svg" class="book-icon" alt="Table of Contents" />
+    
+  </label>
+</div>
+
+
+  
+  <aside class="hidden clearfix">
+    
+  
+<nav id="TableOfContents">
+  <ul>
+    <li><a href="#step-1-configure-auth0">Step 1.) Configure Auth0</a></li>
+    <li><a href="#step-2-build-the-aspnetcore-api">Step 2.) Build the aspnetcore API</a></li>
+    <li><a href="#step-3-build-the-bff">Step 3.) Build the BFF</a>
+      <ul>
+        <li><a href="#endpoints">Endpoints</a></li>
+        <li><a href="#get-accountlogin">[GET] /account/login</a></li>
+        <li><a href="#get-accountlogincallback">[GET] /account/login/callback</a></li>
+        <li><a href="#get-accountme">[GET] /account/me</a></li>
+        <li><a href="#get-accountend-session">[GET] /account/end-session</a></li>
+      </ul>
+    </li>
+    <li><a href="#demo">Demo</a></li>
+    <li><a href="#issues">Issues</a></li>
+  </ul>
+</nav>
+
+
+
+  </aside>
+  
+ 
+      </header>
+
+      
+      
+  <article class="markdown"><h1 id="implementing-the-bff-security-pattern-with-auth0">
+  Implementing the BFF Security Pattern with Auth0
+  <a class="anchor" href="#implementing-the-bff-security-pattern-with-auth0">#</a>
+</h1>
+<p>Complete the following three steps to implement the BFF Security Pattern with Auth0:</p>
+<ol>
+<li>Configure Auth0.</li>
+<li>Create an aspnetcore API</li>
+<li>Build a BFF</li>
+</ol>
+<h2 id="step-1-configure-auth0">
+  Step 1.) Configure Auth0
+  <a class="anchor" href="#step-1-configure-auth0">#</a>
+</h2>
+<p>The GoCloudNatibe.Bff only supports the Authorization Code Flow with Proof Key for Client Exchange. That&rsquo;s why it is important to configure Auth0 in a specific way.</p>
+<p>Follow these steps to configure Auth0 correctly:</p>
+<ul>
+<li>
+<p>Go to <a href="https://manage.auth0.com">https://manage.auth0.com</a> and sign in</p>
+</li>
+<li>
+<p>Go to the <code>Applications</code> section in the menu on the left-hand side and click <code>Applications</code></p>
+</li>
+<li>
+<p>Click <code>+ Create application</code> in the right upper corner</p>
+</li>
+<li>
+<p>Provide a name for your app and select <code>Regular web applications</code></p>
+</li>
+<li>
+<p>Now, click settings, now you&rsquo;ll see the following section: <img src="https://raw.githubusercontent.com/thecloudnativewebapp/GoCloudNative.Bff/main/docs/Integration-Manuals/Integrating-With-Identity-Providers/Auth0/clientid-secret.png" alt="client-id/secret" /></p>
+</li>
+<li>
+<p>Copy the client_id, the secret, and the authority into the <code>appsettings.json</code>, like so:</p>
+</li>
+</ul>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-json" data-lang="json"><span style="display:flex;"><span>{
+</span></span><span style="display:flex;"><span>  <span style="color:#960050;background-color:#1e0010">...</span>
+</span></span><span style="display:flex;"><span>  <span style="color:#f92672">&#34;Auth0&#34;</span>: {
+</span></span><span style="display:flex;"><span>    <span style="color:#f92672">&#34;ClientId&#34;</span>: <span style="color:#e6db74">&#34;iuw4kjwkj34kj3&#34;</span>,
+</span></span><span style="display:flex;"><span>    <span style="color:#f92672">&#34;ClientSecret&#34;</span>: <span style="color:#e6db74">&#34;kjh423j43jkh43jk2443jhsdfgs345te4th&#34;</span>,
+</span></span><span style="display:flex;"><span>    <span style="color:#f92672">&#34;Domain&#34;</span>: <span style="color:#e6db74">&#34;example.eu.auth0.com&#34;</span>,
+</span></span><span style="display:flex;"><span>    <span style="color:#f92672">&#34;Audience&#34;</span>: <span style="color:#e6db74">&#34;https://example.eu.auth0.com/api/v2&#34;</span>,
+</span></span><span style="display:flex;"><span>    <span style="color:#f92672">&#34;Scopes&#34;</span>: [
+</span></span><span style="display:flex;"><span>      <span style="color:#e6db74">&#34;openid&#34;</span>, <span style="color:#e6db74">&#34;profile&#34;</span>, <span style="color:#e6db74">&#34;offline_access&#34;</span>
+</span></span><span style="display:flex;"><span>    ]
+</span></span><span style="display:flex;"><span>  }
+</span></span><span style="display:flex;"><span>  <span style="color:#960050;background-color:#1e0010">...</span>
+</span></span><span style="display:flex;"><span>}
+</span></span></code></pre></div><ul>
+<li>
+<p>Now, configure the redirecturl. When the user has logged into Auth0, Auth0 will redirect the user to this URL. Redirecting will not work unless the redirect URL has been whitelisted: <img src="https://raw.githubusercontent.com/thecloudnativewebapp/GoCloudNative.Bff/main/docs/Integration-Manuals/Integrating-With-Identity-Providers/Auth0/redirect-uri.png" alt="Whitelisting the redirect_uri" /></p>
+</li>
+<li>
+<p>Next, scroll to the <code>Advanced settings</code> and configure the <code>grant_types</code>. Enable <code>Authorization Code</code> and <code>Refresh tokens</code> <img src="https://raw.githubusercontent.com/thecloudnativewebapp/GoCloudNative.Bff/main/docs/Integration-Manuals/Integrating-With-Identity-Providers/Auth0/grant-types.png" alt="grant-types" /></p>
+</li>
+</ul>
+<h2 id="step-2-build-the-aspnetcore-api">
+  Step 2.) Build the aspnetcore API
+  <a class="anchor" href="#step-2-build-the-aspnetcore-api">#</a>
+</h2>
+<p>Create a new project:</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span>dotnet new webapi
+</span></span><span style="display:flex;"><span>dotnet add package Microsoft.AspNetCore.Authentication.JwtBearer
+</span></span></code></pre></div><p>Create the following <code>Program.cs</code> file:</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-csharp" data-lang="csharp"><span style="display:flex;"><span><span style="color:#66d9ef">using</span> System.Security.Claims;
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">using</span> Microsoft.AspNetCore.Authentication.JwtBearer;
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">using</span> Microsoft.IdentityModel.Tokens;
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">var</span> builder = WebApplication.CreateBuilder(args);
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
+</span></span><span style="display:flex;"><span>    .AddJwtBearer(options =&gt;
+</span></span><span style="display:flex;"><span>    {
+</span></span><span style="display:flex;"><span>        options.Authority = <span style="color:#e6db74">$&#34;https://{builder.Configuration[&#34;</span>Auth0:Domain<span style="color:#e6db74">&#34;]}/&#34;</span>;
+</span></span><span style="display:flex;"><span>        options.Audience = builder.Configuration[<span style="color:#e6db74">&#34;Auth0:Audience&#34;</span>];
+</span></span><span style="display:flex;"><span>        options.TokenValidationParameters = <span style="color:#66d9ef">new</span> TokenValidationParameters
+</span></span><span style="display:flex;"><span>        {
+</span></span><span style="display:flex;"><span>            NameClaimType = ClaimTypes.NameIdentifier
+</span></span><span style="display:flex;"><span>        };
+</span></span><span style="display:flex;"><span>    });
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>builder.Services.AddControllers();
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">var</span> app = builder.Build();
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>app.UseHttpsRedirection();
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>app.UseAuthorization();
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>app.MapControllers();
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>app.Run();
+</span></span></code></pre></div><p>Make sure you have configured Auth0 in your <code>appsettings.json</code> file:</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-json" data-lang="json"><span style="display:flex;"><span>{
+</span></span><span style="display:flex;"><span>  <span style="color:#f92672">&#34;Logging&#34;</span>: {
+</span></span><span style="display:flex;"><span>    <span style="color:#f92672">&#34;LogLevel&#34;</span>: {
+</span></span><span style="display:flex;"><span>      <span style="color:#f92672">&#34;Default&#34;</span>: <span style="color:#e6db74">&#34;Information&#34;</span>,
+</span></span><span style="display:flex;"><span>      <span style="color:#f92672">&#34;Microsoft.AspNetCore&#34;</span>: <span style="color:#e6db74">&#34;Warning&#34;</span>
+</span></span><span style="display:flex;"><span>    }
+</span></span><span style="display:flex;"><span>  },
+</span></span><span style="display:flex;"><span>  <span style="color:#f92672">&#34;Auth0&#34;</span>: {
+</span></span><span style="display:flex;"><span>    <span style="color:#f92672">&#34;Domain&#34;</span>: <span style="color:#e6db74">&#34;{yourDomain}&#34;</span>,
+</span></span><span style="display:flex;"><span>    <span style="color:#f92672">&#34;Audience&#34;</span>: <span style="color:#e6db74">&#34;{yourApiIdentifier}&#34;</span>
+</span></span><span style="display:flex;"><span>  },
+</span></span><span style="display:flex;"><span>  <span style="color:#f92672">&#34;AllowedHosts&#34;</span>: <span style="color:#e6db74">&#34;*&#34;</span>
+</span></span><span style="display:flex;"><span>}
+</span></span></code></pre></div><p>In this example, we assume you&rsquo;re running this API on port 8080. To get this API to run on that port, modify your <code>LaunchSettings.json</code> file to like like so:</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-json" data-lang="json"><span style="display:flex;"><span>{
+</span></span><span style="display:flex;"><span>  <span style="color:#f92672">&#34;profiles&#34;</span>: {
+</span></span><span style="display:flex;"><span>    <span style="color:#f92672">&#34;http&#34;</span>: {
+</span></span><span style="display:flex;"><span>      <span style="color:#f92672">&#34;commandName&#34;</span>: <span style="color:#e6db74">&#34;Project&#34;</span>,
+</span></span><span style="display:flex;"><span>      <span style="color:#f92672">&#34;dotnetRunMessages&#34;</span>: <span style="color:#66d9ef">true</span>,
+</span></span><span style="display:flex;"><span>      <span style="color:#f92672">&#34;launchBrowser&#34;</span>: <span style="color:#66d9ef">true</span>,
+</span></span><span style="display:flex;"><span>      <span style="color:#f92672">&#34;launchUrl&#34;</span>: <span style="color:#e6db74">&#34;/&#34;</span>,
+</span></span><span style="display:flex;"><span>      <span style="color:#f92672">&#34;applicationUrl&#34;</span>: <span style="color:#e6db74">&#34;http://localhost:8080&#34;</span>,
+</span></span><span style="display:flex;"><span>      <span style="color:#f92672">&#34;environmentVariables&#34;</span>: {
+</span></span><span style="display:flex;"><span>        <span style="color:#f92672">&#34;ASPNETCORE_ENVIRONMENT&#34;</span>: <span style="color:#e6db74">&#34;Development&#34;</span>
+</span></span><span style="display:flex;"><span>      }
+</span></span><span style="display:flex;"><span>    }
+</span></span><span style="display:flex;"><span>  }
+</span></span><span style="display:flex;"><span>}
+</span></span></code></pre></div><h2 id="step-3-build-the-bff">
+  Step 3.) Build the BFF
+  <a class="anchor" href="#step-3-build-the-bff">#</a>
+</h2>
+<p>To build a BFF with aspnet core, execute the following commands on the command line:</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span>dotnet new web
+</span></span><span style="display:flex;"><span>dotnet add package GoCloudNative.Bff.Authentication.Auth0
+</span></span></code></pre></div><p>Create the following <code>Program.cs</code> file:</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-csharp" data-lang="csharp"><span style="display:flex;"><span><span style="color:#66d9ef">using</span> GoCloudNative.Bff.Authentication.Auth0;
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">using</span> GoCloudNative.Bff.Authentication.ModuleInitializers;
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">var</span> builder = WebApplication.CreateBuilder(args);
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>builder.Services.AddSecurityBff(o =&gt;
+</span></span><span style="display:flex;"><span>{
+</span></span><span style="display:flex;"><span>    o.ConfigureAuth0(builder.Configuration.GetSection(<span style="color:#e6db74">&#34;Auth0&#34;</span>));
+</span></span><span style="display:flex;"><span>    o.LoadYarpFromConfig(builder.Configuration.GetSection(<span style="color:#e6db74">&#34;ReverseProxy&#34;</span>));
+</span></span><span style="display:flex;"><span>});
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">var</span> app = builder.Build();
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>app.UseRouting();
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>app.UseSecurityBff();
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>app.Run();
+</span></span></code></pre></div><p>Create the following <code>appsettings.json</code> file:</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-json" data-lang="json"><span style="display:flex;"><span>{
+</span></span><span style="display:flex;"><span>  <span style="color:#f92672">&#34;Logging&#34;</span>: {
+</span></span><span style="display:flex;"><span>    <span style="color:#f92672">&#34;LogLevel&#34;</span>: {
+</span></span><span style="display:flex;"><span>      <span style="color:#f92672">&#34;Default&#34;</span>: <span style="color:#e6db74">&#34;Information&#34;</span>,
+</span></span><span style="display:flex;"><span>      <span style="color:#f92672">&#34;Microsoft.AspNetCore&#34;</span>: <span style="color:#e6db74">&#34;Warning&#34;</span>
+</span></span><span style="display:flex;"><span>    }
+</span></span><span style="display:flex;"><span>  },
+</span></span><span style="display:flex;"><span>  <span style="color:#f92672">&#34;Auth0&#34;</span>: {
+</span></span><span style="display:flex;"><span>    <span style="color:#f92672">&#34;ClientId&#34;</span>: <span style="color:#e6db74">&#34;{yourClientId}&#34;</span>,
+</span></span><span style="display:flex;"><span>    <span style="color:#f92672">&#34;ClientSecret&#34;</span>: <span style="color:#e6db74">&#34;{yourClientSecret}&#34;</span>,
+</span></span><span style="display:flex;"><span>    <span style="color:#f92672">&#34;Domain&#34;</span>: <span style="color:#e6db74">&#34;{yourDomain}&#34;</span>,
+</span></span><span style="display:flex;"><span>    <span style="color:#f92672">&#34;Audience&#34;</span>: <span style="color:#e6db74">&#34;{yourAudience}&#34;</span>,
+</span></span><span style="display:flex;"><span>    <span style="color:#f92672">&#34;FederatedLogout&#34;</span>: <span style="color:#66d9ef">false</span>,
+</span></span><span style="display:flex;"><span>    <span style="color:#f92672">&#34;Scopes&#34;</span>: [
+</span></span><span style="display:flex;"><span>      <span style="color:#e6db74">&#34;openid&#34;</span>, <span style="color:#e6db74">&#34;profile&#34;</span>, <span style="color:#e6db74">&#34;offline_access&#34;</span>
+</span></span><span style="display:flex;"><span>    ]
+</span></span><span style="display:flex;"><span>  },
+</span></span><span style="display:flex;"><span>  <span style="color:#f92672">&#34;AllowedHosts&#34;</span>: <span style="color:#e6db74">&#34;*&#34;</span>,
+</span></span><span style="display:flex;"><span>  <span style="color:#f92672">&#34;ReverseProxy&#34;</span>: {
+</span></span><span style="display:flex;"><span>    <span style="color:#f92672">&#34;Routes&#34;</span>: {
+</span></span><span style="display:flex;"><span>      <span style="color:#f92672">&#34;spa&#34;</span>: {
+</span></span><span style="display:flex;"><span>        <span style="color:#f92672">&#34;ClusterId&#34;</span>: <span style="color:#e6db74">&#34;spa&#34;</span>,
+</span></span><span style="display:flex;"><span>        <span style="color:#f92672">&#34;Match&#34;</span>: {
+</span></span><span style="display:flex;"><span>          <span style="color:#f92672">&#34;Path&#34;</span>: <span style="color:#e6db74">&#34;/{*any}&#34;</span>
+</span></span><span style="display:flex;"><span>        }
+</span></span><span style="display:flex;"><span>      },
+</span></span><span style="display:flex;"><span>      <span style="color:#f92672">&#34;api&#34;</span>: {
+</span></span><span style="display:flex;"><span>        <span style="color:#f92672">&#34;ClusterId&#34;</span>: <span style="color:#e6db74">&#34;api&#34;</span>,
+</span></span><span style="display:flex;"><span>        <span style="color:#f92672">&#34;Match&#34;</span>: {
+</span></span><span style="display:flex;"><span>          <span style="color:#f92672">&#34;Path&#34;</span>: <span style="color:#e6db74">&#34;/api/{*any}&#34;</span>
+</span></span><span style="display:flex;"><span>        }
+</span></span><span style="display:flex;"><span>      },
+</span></span><span style="display:flex;"><span>    },
+</span></span><span style="display:flex;"><span>    <span style="color:#f92672">&#34;Clusters&#34;</span>: {
+</span></span><span style="display:flex;"><span>      <span style="color:#f92672">&#34;spa&#34;</span>: {
+</span></span><span style="display:flex;"><span>        <span style="color:#f92672">&#34;Destinations&#34;</span>: {
+</span></span><span style="display:flex;"><span>          <span style="color:#f92672">&#34;spa&#34;</span>: {
+</span></span><span style="display:flex;"><span>            <span style="color:#f92672">&#34;Address&#34;</span>: <span style="color:#e6db74">&#34;http://localhost:4200/&#34;</span>
+</span></span><span style="display:flex;"><span>          }
+</span></span><span style="display:flex;"><span>        }
+</span></span><span style="display:flex;"><span>      },
+</span></span><span style="display:flex;"><span>      <span style="color:#f92672">&#34;api&#34;</span>: {
+</span></span><span style="display:flex;"><span>        <span style="color:#f92672">&#34;Destinations&#34;</span>: {
+</span></span><span style="display:flex;"><span>          <span style="color:#f92672">&#34;api&#34;</span>: {
+</span></span><span style="display:flex;"><span>            <span style="color:#f92672">&#34;Address&#34;</span>: <span style="color:#e6db74">&#34;http://localhost:8080/&#34;</span>
+</span></span><span style="display:flex;"><span>          }
+</span></span><span style="display:flex;"><span>        }
+</span></span><span style="display:flex;"><span>      },
+</span></span><span style="display:flex;"><span>    }
+</span></span><span style="display:flex;"><span>  }
+</span></span><span style="display:flex;"><span>}
+</span></span></code></pre></div><p>Use the following <code>Properties/launchSettings.json</code>, this launchSettings file ensures the application url matches the callback url that has been configured in Auth0:</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-json" data-lang="json"><span style="display:flex;"><span>{
+</span></span><span style="display:flex;"><span>  <span style="color:#f92672">&#34;profiles&#34;</span>: {
+</span></span><span style="display:flex;"><span>    <span style="color:#f92672">&#34;https&#34;</span>: {
+</span></span><span style="display:flex;"><span>      <span style="color:#f92672">&#34;commandName&#34;</span>: <span style="color:#e6db74">&#34;Project&#34;</span>,
+</span></span><span style="display:flex;"><span>      <span style="color:#f92672">&#34;dotnetRunMessages&#34;</span>: <span style="color:#66d9ef">true</span>,
+</span></span><span style="display:flex;"><span>      <span style="color:#f92672">&#34;launchBrowser&#34;</span>: <span style="color:#66d9ef">true</span>,
+</span></span><span style="display:flex;"><span>      <span style="color:#f92672">&#34;applicationUrl&#34;</span>: <span style="color:#e6db74">&#34;https://localhost:8443&#34;</span>,
+</span></span><span style="display:flex;"><span>      <span style="color:#f92672">&#34;environmentVariables&#34;</span>: {
+</span></span><span style="display:flex;"><span>        <span style="color:#f92672">&#34;ASPNETCORE_ENVIRONMENT&#34;</span>: <span style="color:#e6db74">&#34;Development&#34;</span>
+</span></span><span style="display:flex;"><span>      }
+</span></span><span style="display:flex;"><span>    }
+</span></span><span style="display:flex;"><span>  }
+</span></span><span style="display:flex;"><span>}
+</span></span></code></pre></div><p>In this example we assume you are running a Single Page Application on localhost on port <code>4200</code> and you have an API running at localhost on port <code>8080</code>. If that is not the case, then update the <code>appsettings.json</code> accordingly.</p>
+<p>To run the BFF, type <code>dotnet run</code> or just hit the &lsquo;play&rsquo;-button in Visual Studio. When you run the BFF, make sure to have your API and your SPA running too.</p>
+<h3 id="endpoints">
+  Endpoints
+  <a class="anchor" href="#endpoints">#</a>
+</h3>
+<p>The BFF relays all requests as configured in the <code>ReverseProxy</code> section in the <code>appsettings.json</code> file, except for four endpoints:</p>
+<h3 id="get-accountlogin">
+  [GET] /account/login
+  <a class="anchor" href="#get-accountlogin">#</a>
+</h3>
+<p>To log a user in and to start a http session, navigate to <code>/account/login</code>. The software will redirect to the login page of the Identity Provider to log the user in. The resulting tokens will be stored in the user session and are not available in the browser.</p>
+<h3 id="get-accountlogincallback">
+  [GET] /account/login/callback
+  <a class="anchor" href="#get-accountlogincallback">#</a>
+</h3>
+<p>This endpoint is used by the IdentityProvider.</p>
+<h3 id="get-accountme">
+  [GET] /account/me
+  <a class="anchor" href="#get-accountme">#</a>
+</h3>
+<p>To see the logged in user, navigate to the <code>/account/me</code> endpoint. This endpoint shows the claims that are in the <code>id_token</code>.</p>
+<h3 id="get-accountend-session">
+  [GET] /account/end-session
+  <a class="anchor" href="#get-accountend-session">#</a>
+</h3>
+<p>To revoke the tokens that have been obtained when the user logged in, navigate to <code>/account/end-session</code> endpoint. This will revoke the tokens that have been stored in the user session. This will also end the user-session on at the Identity Provider</p>
+<h2 id="demo">
+  Demo
+  <a class="anchor" href="#demo">#</a>
+</h2>
+<p>Check out a fully working demo <a href="https://github.com/thecloudnativewebapp/GoCloudNative.Bff/tree/main/docs/Integration-Manuals/Integrating-With-Identity-Providers/Auth0/src">here</a>.</p>
+<h2 id="issues">
+  Issues
+  <a class="anchor" href="#issues">#</a>
+</h2>
+<p>Are you encountering issues? Please let us know at: <a href="https://github.com/thecloudnativewebapp/GoCloudNative.Bff/issues">https://github.com/thecloudnativewebapp/GoCloudNative.Bff/issues</a></p>
+</article>
+ 
+      
+
+      <footer class="book-footer">
+        
+  <div class="flex flex-wrap justify-between">
+
+
+
+
+
+</div>
+
+
+
+  <script>(function(){function e(e){const t=window.getSelection(),n=document.createRange();n.selectNodeContents(e),t.removeAllRanges(),t.addRange(n)}document.querySelectorAll("pre code").forEach(t=>{t.addEventListener("click",function(){if(window.getSelection().toString())return;e(t.parentElement),navigator.clipboard&&navigator.clipboard.writeText(t.parentElement.textContent)})})})()</script>
+
+
+ 
+        
+      </footer>
+
+      
+  
+  <div class="book-comments">
+
+</div>
+  
+ 
+
+      <label for="menu-control" class="hidden book-menu-overlay"></label>
+    </div>
+
+    
+    <aside class="book-toc">
+      <div class="book-toc-content">
+        
+  
+<nav id="TableOfContents">
+  <ul>
+    <li><a href="#step-1-configure-auth0">Step 1.) Configure Auth0</a></li>
+    <li><a href="#step-2-build-the-aspnetcore-api">Step 2.) Build the aspnetcore API</a></li>
+    <li><a href="#step-3-build-the-bff">Step 3.) Build the BFF</a>
+      <ul>
+        <li><a href="#endpoints">Endpoints</a></li>
+        <li><a href="#get-accountlogin">[GET] /account/login</a></li>
+        <li><a href="#get-accountlogincallback">[GET] /account/login/callback</a></li>
+        <li><a href="#get-accountme">[GET] /account/me</a></li>
+        <li><a href="#get-accountend-session">[GET] /account/end-session</a></li>
+      </ul>
+    </li>
+    <li><a href="#demo">Demo</a></li>
+    <li><a href="#issues">Issues</a></li>
+  </ul>
+</nav>
+
+
+ 
+      </div>
+    </aside>
+    
+  </main>
+
+  
+</body>
+</html>
+
+
+
+
+
+
+
+
+
+
+
+
