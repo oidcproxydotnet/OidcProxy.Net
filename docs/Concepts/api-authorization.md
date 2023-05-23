@@ -104,7 +104,65 @@ Find a sample implementation [here](https://github.com/thecloudnativewebapp/GoCl
 
 ## Advanced authorization scenario's
 
+Sometimes, the information stored in the `access_token` is not sufficient to determine whether someone is authorized to access a resource or not. In that case, you need to enritch the context, so you can apply a policy on the information from the `access_token` combined with application specific information. 
+
+Enritching the context as such is called claims-transformation. This can be applied by implementing the `IClaimsTransformation` interface:
+
+```csharp
+using Microsoft.AspNetCore.Authentication;
+using System.Security.Claims;
+
+public class MyClaimsTransformation : IClaimsTransformation
+{
+    public Task<ClaimsPrincipal> TransformAsync(ClaimsPrincipal principal)
+    {
+        ClaimsIdentity claimsIdentity = new ClaimsIdentity();
+        var claimType = "myNewClaim";
+        if (!principal.HasClaim(claim => claim.Type == claimType))
+        {
+            claimsIdentity.AddClaim(new Claim(claimType, "myClaimValue"));
+        }
+
+        principal.AddIdentity(claimsIdentity);
+        return Task.FromResult(principal);
+    }
+}
+```
+
+Register the middleware in `program.cs` as follows:
+
+```csharp
+builder.Services.AddTransient<IClaimsTransformation, MyClaimsTransformation>();
+```
+
+To apply a custom policy on this claim, implement policy-based authorization by adding the following code-snippet to `program.cs`:
+
+```csharp
+builder.Services.AddAuthorization(o =>
+{
+    o.AddPolicy("onlyMyNewClaim", p => p.RequireClaim("myNewClaim", "myClaimValue"));
+});
+```
+
+And apply the policy in your controller:
+```csharp
+[HttpGet]
+[Authorize("onlyMyNewClaim")]
+public IActionResult Get()
+{
+    return Ok("I am authorized!");
+}
+```
+
+### Even more advanced scenario's
+
+As an alternative you may consider implementing [Open Policy Agent](https://www.openpolicyagent.org/).
 
 ## Summary
+Use OpenId for authentication-purposes. Apply a policy in each individual API to determine whether or not the consumer of the API is authorized.
 
 ## Sources
+
+* https://abstarreveld.medium.com/claims-transformation-in-net-6-483c30705e12
+* https://learn.microsoft.com/en-us/aspnet/core/security/authentication/claims?view=aspnetcore-6.0#extend-or-add-custom-claims-using-iclaimstransformationcore-6.0
+* https://learn.microsoft.com/en-us/aspnet/core/security/authorization/policies?view=aspnetcore-7.0
