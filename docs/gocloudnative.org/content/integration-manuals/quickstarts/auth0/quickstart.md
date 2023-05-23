@@ -21,7 +21,7 @@ Follow these steps to configure Auth0 correctly:
 * Go to the `Applications` section in the menu on the left-hand side and click `Applications`
 * Click `+ Create application` in the right upper corner
 * Provide a name for your app and select `Regular web applications`
-* Now, click settings, now you'll see the following section: ![client-id/secret](../clientid-secret.png)
+* Now, click settings, now you'll see the following section: ![client-id/secret](https://raw.githubusercontent.com/thecloudnativewebapp/GoCloudNative.Bff/main/docs/gocloudnative.org/content/Integration-Manuals/quickstarts/Auth0/clientid-secret.png)
 
 * Copy the client_id, the secret, and the authority into the `appsettings.json`, like so:
 
@@ -41,9 +41,9 @@ Follow these steps to configure Auth0 correctly:
 }
 ```
 
-* Now, configure the redirecturl. When the user has logged into Auth0, Auth0 will redirect the user to this URL. Redirecting will not work unless the redirect URL has been whitelisted: ![Whitelisting the redirect_uri](../redirect-uri.png)
+* Now, configure the redirecturl. When the user has logged into Auth0, Auth0 will redirect the user to this URL. Redirecting will not work unless the redirect URL has been whitelisted: ![Whitelisting the redirect_uri](https://raw.githubusercontent.com/thecloudnativewebapp/GoCloudNative.Bff/main/docs/gocloudnative.org/content/Integration-Manuals/quickstarts/Auth0/redirect-uri.png)
 
-* Next, scroll to the `Advanced settings` and configure the `grant_types`. Enable `Authorization Code` and `Refresh tokens` ![grant-types](../grant-types.png)
+* Next, scroll to the `Advanced settings` and configure the `grant_types`. Enable `Authorization Code` and `Refresh tokens` ![grant-types](https://raw.githubusercontent.com/thecloudnativewebapp/GoCloudNative.Bff/main/docs/gocloudnative.org/content/Integration-Manuals/quickstarts/Auth0/grant-types.png)
 
 ## Step 2.) Build the aspnetcore API
 

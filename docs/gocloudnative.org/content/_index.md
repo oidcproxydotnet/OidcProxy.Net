@@ -3,33 +3,89 @@ author: Albert Starreveld
 title: GoCloudNative.BFF - Documentation
 description: Everything you need to know when you implement the GoCloudNative.BFF with your aspnetcore API and your Angular/NX single page application.
 ---
-# Documentation
 
-## Table of contents 
+# Implement the BFF Security Pattern in a matter of minutes
 
-- Concepts
-  - [API authorization with OAuth2/OpenId Connect](/concepts/api-authorization/)
-  - What is Authorization Code with Proof Key for Code Exchange?
-  - What is a Back-end For Front-End?
-  - What is a Reverse Proxy?
-  - Distributed apps
-  - Horizontal scaling
-- Architecture
-  - The BFF Security Pattern  
-  - The GoCloudNative.BFF.Authentication software-architecture
-  - Horizontal scaling/scaling out
-  - Extensibility (implementing custom identity providers)
-  - Aggregating responses from multiple downstream endpoints
-- Integration Manuals
-  - Quickstarts
-    - Implementing the BFF Security Pattern with aspnetcore, Angular, KeyCloack, and the GoCloudNative.Bff
-  - Migrating an Angular Single Page Application with an API
-  - Infrastructure
-    - Distributed apps
-      - Applying a BFF in an Azure Container Apps environment
-      - Applying a BFF in Kubernetes
-  - Integrating with Identity Providers
-    - [Auth0](/integration-manuals/integrating-with-identity-providers/auth0/quickstart)
-    - Azure Active Directory
-    - [IdentityServer4](/integration-manuals/integrating-with-identity-providers/identityserver4/quickstart)
-    - KeyCloak
+```bash
+dotnet new web
+dotnet add package GoCloudNative.Bff.Authentication.OpenIdConnect
+```
+
+`program.cs`
+
+```csharp
+using GoCloudNative.Bff.Authentication.OpenIdConnect;
+using GoCloudNative.Bff.Authentication.ModuleInitializers;
+
+var builder = WebApplication.CreateBuilder(args);
+
+builder.Services.AddSecurityBff(o =>
+{
+    o.ConfigureOpenIdConnect(builder.Configuration.GetSection("Oidc"));
+    o.LoadYarpFromConfig(builder.Configuration.GetSection("ReverseProxy"));
+});
+
+var app = builder.Build();
+
+app.UseRouting();
+
+app.UseSecurityBff();
+
+app.Run();
+```
+
+`appsettings.json`
+
+```json
+{
+  "Logging": {
+    "LogLevel": {
+      "Default": "Information",
+      "Microsoft.AspNetCore": "Warning"
+    }
+  },
+  "Oidc": {
+    "ClientId": "{YourClientId}",
+    "ClientSecret": "{YourClientSecret}",
+    "Authority": "{YourAuthority}",
+    "Scopes": [
+      "openid", "profile", "offline_access"
+    ]
+  },
+  "AllowedHosts": "*",
+  "ReverseProxy": {
+    "Routes": {
+      "spa": {
+        "ClusterId": "spa",
+        "Match": {
+          "Path": "/{*any}"
+        }
+      },
+      "api": {
+        "ClusterId": "api",
+        "Match": {
+          "Path": "/api/{*any}"
+        }
+      },
+    },
+    "Clusters": {
+      "spa": {
+        "Destinations": {
+          "spa": {
+            "Address": "http://localhost:4200/"
+          }
+        }
+      },
+      "api": {
+        "Destinations": {
+          "api": {
+            "Address": "http://localhost:8080/"
+          }
+        }
+      },
+    }
+  }
+}
+```
+
+That's it.. [Read more](table-of-content)

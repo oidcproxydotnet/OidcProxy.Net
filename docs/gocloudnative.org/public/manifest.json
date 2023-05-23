@@ -1,6 +1,6 @@
 {
-  "name": "GoCloudNative.org/bff",
-  "short_name": "GoCloudNative.org/bff",
+  "name": "GoCloudNative.Bff",
+  "short_name": "GoCloudNative.Bff",
   "start_url": "/",
   "scope": "/",
   "display": "standalone",

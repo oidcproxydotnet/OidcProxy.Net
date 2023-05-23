@@ -1,17 +1,17 @@
 <?xml version="1.0" encoding="utf-8" standalone="yes"?>
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
-    <title>Integration-manuals on GoCloudNative.org/bff</title>
+    <title>Integration-manuals on GoCloudNative.Bff</title>
     <link>https://gocloudnative.org/integration-manuals/</link>
-    <description>Recent content in Integration-manuals on GoCloudNative.org/bff</description>
+    <description>Recent content in Integration-manuals on GoCloudNative.Bff</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en-us</language><atom:link href="https://gocloudnative.org/integration-manuals/index.xml" rel="self" type="application/rss+xml" />
     <item>
       <title>Implementing the BFF Security Pattern with Auth0</title>
-      <link>https://gocloudnative.org/integration-manuals/integrating-with-identity-providers/auth0/</link>
+      <link>https://gocloudnative.org/integration-manuals/integrating-with-identity-providers/auth0/quickstart/</link>
       <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
       
-      <guid>https://gocloudnative.org/integration-manuals/integrating-with-identity-providers/auth0/</guid>
+      <guid>https://gocloudnative.org/integration-manuals/integrating-with-identity-providers/auth0/quickstart/</guid>
       <description>Implementing the BFF Security Pattern with Auth0 # Complete the following three steps to implement the BFF Security Pattern with Auth0:
 Configure Auth0. Create an aspnetcore API Build a BFF Step 1.) Configure Auth0 # The GoCloudNatibe.Bff only supports the Authorization Code Flow with Proof Key for Client Exchange. That&amp;rsquo;s why it is important to configure Auth0 in a specific way.
 Follow these steps to configure Auth0 correctly:
@@ -20,10 +20,10 @@ Go to https://manage.</description>
     
     <item>
       <title>Implementing the BFF Security Pattern with IdentityServer4</title>
-      <link>https://gocloudnative.org/integration-manuals/integrating-with-identity-providers/identityserver4/</link>
+      <link>https://gocloudnative.org/integration-manuals/integrating-with-identity-providers/identityserver4/quickstart/</link>
       <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
       
-      <guid>https://gocloudnative.org/integration-manuals/integrating-with-identity-providers/identityserver4/</guid>
+      <guid>https://gocloudnative.org/integration-manuals/integrating-with-identity-providers/identityserver4/quickstart/</guid>
       <description>Implementing the BFF Security Pattern with IdentityServer4 # Complete the following three steps to implement the BFF Security Pattern with IdentityServer4:
 Configure IdentityServer. Create an aspnetcore API Build a BFF Step 1.) Configure IdentityServer4 # The GoCloudNatibe.Bff only supports the Authorization Code Flow with Proof Key for Client Exchange. That&amp;rsquo;s why it is important to configure IdentityServer in a specific way. Configure the Client as follows:
 public static readonly Client Client = new Client { // Set the ClientId and the ClientSecret ClientId = &amp;#34;bff&amp;#34;, ClientSecrets = { new Secret(&amp;#34;secret&amp;#34;.</description>
