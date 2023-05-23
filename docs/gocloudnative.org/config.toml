@@ -1,4 +1,5 @@
 baseURL = 'https://gocloudnative.org/'
 languageCode = 'en-us'
-title = 'GoCloudNative.org/bff'
+title = 'GoCloudNative.Bff'
 theme = 'bookmaster'
+sectionPagesMenu = 'main'

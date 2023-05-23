@@ -20,6 +20,12 @@
   </div>
 {{ end }}
 
+  <div style="width:100%;">
+    <a style="float:right;" href="https://www.linkedin.com/in/albert-starreveld/" target="_blank" rel="noopener">
+      <img src="{{ "svg/edit.svg" | relURL }}" class="book-icon" alt="Edit" />
+      <span><i>by Albert Starreveld</i></span>
+    </a>
+  </div>
 </div>
 
 {{ $script := resources.Get "clipboard.js" | resources.Minify }}

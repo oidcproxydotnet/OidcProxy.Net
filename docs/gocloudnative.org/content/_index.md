@@ -29,7 +29,7 @@ description: Everything you need to know when you implement the GoCloudNative.BF
       - Applying a BFF in an Azure Container Apps environment
       - Applying a BFF in Kubernetes
   - Integrating with Identity Providers
-    - [Auth0](/integration-manuals/integrating-with-identity-providers/auth0/)
+    - [Auth0](/integration-manuals/integrating-with-identity-providers/auth0/quickstart)
     - Azure Active Directory
-    - [IdentityServer4](/integration-manuals/integrating-with-identity-providers/identityserver4)
+    - [IdentityServer4](/integration-manuals/integrating-with-identity-providers/identityserver4/quickstart)
     - KeyCloak

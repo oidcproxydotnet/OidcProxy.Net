@@ -1,49 +1,62 @@
 ---
 author: Albert Starreveld
-title: Implementing the BFF Security Pattern with Auth0
-description: Read how to implement the BFF Security Pattern with aspnetcore, Angular, and Auth0
+title: Implementing the BFF Security Pattern with IdentityServer4
+description: Read how to implement the BFF Security Pattern with aspnetcore, Angular, and IdentityServer4
 ---
-# Implementing the BFF Security Pattern with Auth0
+# Implementing the BFF Security Pattern with IdentityServer4
 
-Complete the following three steps to implement the BFF Security Pattern with Auth0:
+Complete the following three steps to implement the BFF Security Pattern with IdentityServer4:
 
-1. Configure Auth0.
+1. Configure IdentityServer.
 2. Create an aspnetcore API
 3. Build a BFF
 
-## Step 1.) Configure Auth0
+## Step 1.) Configure IdentityServer4
 
-The GoCloudNatibe.Bff only supports the Authorization Code Flow with Proof Key for Client Exchange. That's why it is important to configure Auth0 in a specific way. 
+The GoCloudNatibe.Bff only supports the Authorization Code Flow with Proof Key for Client Exchange. That's why it is important to configure IdentityServer in a specific way. Configure the Client as follows:
 
-Follow these steps to configure Auth0 correctly:
+```csharp
 
-* Go to https://manage.auth0.com and sign in
-* Go to the `Applications` section in the menu on the left-hand side and click `Applications`
-* Click `+ Create application` in the right upper corner
-* Provide a name for your app and select `Regular web applications`
-* Now, click settings, now you'll see the following section: ![client-id/secret](https://raw.githubusercontent.com/thecloudnativewebapp/GoCloudNative.Bff/main/docs/Integration-Manuals/Integrating-With-Identity-Providers/Auth0/clientid-secret.png)
+    public static readonly Client Client = new Client
+    {
+        // Set the ClientId and the ClientSecret
+        ClientId = "bff",
+        ClientSecrets =
+        {
+            new Secret("secret".Sha256())
+        },
 
-* Copy the client_id, the secret, and the authority into the `appsettings.json`, like so:
+        // Configure the Authorization Code flow with PKCE
+        AllowedGrantTypes = GrantTypes.Code,
+        RequirePkce = true,
 
-```json
-{
-  ...
-  "Auth0": {
-    "ClientId": "iuw4kjwkj34kj3",
-    "ClientSecret": "kjh423j43jkh43jk2443jhsdfgs345te4th",
-    "Domain": "example.eu.auth0.com",
-    "Audience": "https://example.eu.auth0.com/api/v2",
-    "Scopes": [
-      "openid", "profile", "offline_access"
-    ]
-  }
-  ...
-}
+        // Configure the access token lifetime (1h by default)
+        AccessTokenLifetime = 3600,
+
+        // Make sure IdentityServer may redirect to the bff
+        RedirectUris = { "https://localhost:8443/account/login/callback" }, 
+        FrontChannelLogoutUri = "https://localhost:8443/",
+        PostLogoutRedirectUris = { "https://localhost:8443/" },
+
+        // Enable offline access, the BFF needs it to refresh the tokens
+        // after they expire. Otherwise the session would end after 1h.
+        AllowOfflineAccess = true,
+
+        // Add the profile claims to the id token so they are available
+        // in the /account/me endpoint of the BFF.
+        AlwaysIncludeUserClaimsInIdToken = true,
+        AllowedScopes = 
+        {
+            IdentityServerConstants.StandardScopes.OpenId,
+            IdentityServerConstants.StandardScopes.Profile,
+            IdentityServerConstants.StandardScopes.Email,
+            // .. other scopes
+        }
+    };
 ```
 
-* Now, configure the redirecturl. When the user has logged into Auth0, Auth0 will redirect the user to this URL. Redirecting will not work unless the redirect URL has been whitelisted: ![Whitelisting the redirect_uri](https://raw.githubusercontent.com/thecloudnativewebapp/GoCloudNative.Bff/main/docs/Integration-Manuals/Integrating-With-Identity-Providers/Auth0/redirect-uri.png)
+Find a sample identity-server implementation here: https://github.com/thecloudnativewebapp/GoCloudNative.Bff/tree/main/docs/Integration-Manuals/Integrating-With-Identity-Providers/IdentityServer4/src/IdentityServer4
 
-* Next, scroll to the `Advanced settings` and configure the `grant_types`. Enable `Authorization Code` and `Refresh tokens` ![grant-types](https://raw.githubusercontent.com/thecloudnativewebapp/GoCloudNative.Bff/main/docs/Integration-Manuals/Integrating-With-Identity-Providers/Auth0/grant-types.png)
 
 ## Step 2.) Build the aspnetcore API
 
@@ -64,13 +77,13 @@ using Microsoft.IdentityModel.Tokens;
 var builder = WebApplication.CreateBuilder(args);
 
 builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
-    .AddJwtBearer(options =>
+    .AddJwtBearer("Bearer", options =>
     {
-        options.Authority = $"https://{builder.Configuration["Auth0:Domain"]}/";
-        options.Audience = builder.Configuration["Auth0:Audience"];
+        options.Authority = builder.Configuration["Oidc:Authority"];
+
         options.TokenValidationParameters = new TokenValidationParameters
         {
-            NameClaimType = ClaimTypes.NameIdentifier
+            ValidateAudience = false
         };
     });
 
@@ -87,7 +100,7 @@ app.MapControllers();
 app.Run();
 ```
 
-Make sure you have configured Auth0 in your `appsettings.json` file:
+Make sure you have configured IdentityServer in your `appsettings.json` file:
 
 ```json
 {
@@ -97,9 +110,8 @@ Make sure you have configured Auth0 in your `appsettings.json` file:
       "Microsoft.AspNetCore": "Warning"
     }
   },
-  "Auth0": {
-    "Domain": "{yourDomain}",
-    "Audience": "{yourApiIdentifier}"
+  "Oidc": {
+    "Authority": "https://{yourAuthority}"
   },
   "AllowedHosts": "*"
 }
@@ -130,20 +142,20 @@ To build a BFF with aspnet core, execute the following commands on the command l
 
 ```bash
 dotnet new web
-dotnet add package GoCloudNative.Bff.Authentication.Auth0
+dotnet add package GoCloudNative.Bff.Authentication.OpenIdConnect
 ```
 
 Create the following `Program.cs` file:
 
 ```csharp
-using GoCloudNative.Bff.Authentication.Auth0;
+using GoCloudNative.Bff.Authentication.OpenIdConnect;
 using GoCloudNative.Bff.Authentication.ModuleInitializers;
 
 var builder = WebApplication.CreateBuilder(args);
 
 builder.Services.AddSecurityBff(o =>
 {
-    o.ConfigureAuth0(builder.Configuration.GetSection("Auth0"));
+    o.ConfigureOpenIdConnect(builder.Configuration.GetSection("Oidc"));
     o.LoadYarpFromConfig(builder.Configuration.GetSection("ReverseProxy"));
 });
 
@@ -167,12 +179,10 @@ Create the following `appsettings.json` file:
       "Microsoft.AspNetCore": "Warning"
     }
   },
-  "Auth0": {
+  "Oidc": {
     "ClientId": "{yourClientId}",
     "ClientSecret": "{yourClientSecret}",
-    "Domain": "{yourDomain}",
-    "Audience": "{yourAudience}",
-    "FederatedLogout": false,
+    "Authority": "https://{yourAuthority}",
     "Scopes": [
       "openid", "profile", "offline_access"
     ]
@@ -214,7 +224,7 @@ Create the following `appsettings.json` file:
 
 ```
 
-Use the following `Properties/launchSettings.json`, this launchSettings file ensures the application url matches the callback url that has been configured in Auth0:
+Use the following `Properties/launchSettings.json`, this launchSettings file ensures the application url matches the callback url that has been configured in IdentityServer:
 
 ```json
 {
@@ -254,7 +264,7 @@ To revoke the tokens that have been obtained when the user logged in, navigate t
 
 ## Demo
 
-Check out a fully working demo [here](https://github.com/thecloudnativewebapp/GoCloudNative.Bff/tree/main/docs/Integration-Manuals/Integrating-With-Identity-Providers/Auth0/src).
+Check out a fully working demo [here](https://github.com/thecloudnativewebapp/GoCloudNative.Bff/tree/main/docs/demos/IdentityServer4/src).
 
 ## Issues
 
