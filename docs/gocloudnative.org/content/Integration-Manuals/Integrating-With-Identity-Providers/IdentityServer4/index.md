@@ -1,3 +1,10 @@
+---
+author: Albert Starreveld
+title: Implementing the BFF Security Pattern with IdentityServer4
+date: 2023-05-23
+description: Read how to implement the BFF Security Pattern with aspnetcore, Angular, and IdentityServer4
+draft: false
+---
 # Implementing the BFF Security Pattern with IdentityServer4
 
 Complete the following three steps to implement the BFF Security Pattern with IdentityServer4:

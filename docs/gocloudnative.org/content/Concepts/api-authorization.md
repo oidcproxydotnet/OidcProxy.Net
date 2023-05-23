@@ -1,3 +1,10 @@
+---
+author: Albert Starreveld
+title: API Authorization with OAuth2/OpenId Connect
+date: 2023-05-23
+description: Read how to implement OAuth2/OIDC in a aspnetcore C# application.
+draft: false
+---
 # API Authorization with OAuth2/OpenId Connect
 
 OAuth2 is an authorization protocol. It is meant to be used to grant or deny access to resources. OpenId Connect extends the OAuth2 protocol. OpenId Connect (OIDC) is an identity protocol. It emits the identity of either a person or a machine.
