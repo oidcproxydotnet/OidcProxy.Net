@@ -3,7 +3,7 @@
 ## Table of contents 
 
 - Concepts
-  - API authorization with OAuth2/OpenId Connect
+  - [API authorization with OAuth2/OpenId Connect](Concepts/api-authorization.md)
   - What is Authorization Code with Proof Key for Client Exchange?
   - What is a Back-end For Front-End?
   - What is a Reverse Proxy?
