@@ -9,7 +9,7 @@ description: Everything you need to know when you implement the GoCloudNative.BF
 
 - Concepts
   - [API authorization with OAuth2/OpenId Connect](/concepts/api-authorization/)
-  - What is Authorization Code with Proof Key for Client Exchange?
+  - What is Authorization Code with Proof Key for Code Exchange?
   - What is a Back-end For Front-End?
   - What is a Reverse Proxy?
   - Distributed apps
