@@ -1,0 +1,6 @@
+baseURL = 'https://gocloudnative.org/'
+languageCode = 'en-us'
+title = 'GoCloudNative.org/bff'
+theme = 'bookmaster'
+ignorefiles = [ "src/.*" ]
+
