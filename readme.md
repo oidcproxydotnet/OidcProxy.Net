@@ -99,10 +99,10 @@ And use the following `appsettings.json`:
 
 This solution supports authentication with
 
-* Auth0 _([Read documentation](https://github.com/thecloudnativewebapp/GoCloudNative.Bff/tree/main/docs/Integration-Manuals/Integrating-With-Identity-Providers/Auth0))_
-* ~~Azure Active Directory~~ (todo..)
-* Identity Server
-* ~~Key Cloak~~ (todo..)
+- [Auth0](https://github.com/thecloudnativewebapp/GoCloudNative.Bff/tree/main/docs/Integration-Manuals/Integrating-With-Identity-Providers/Auth0)
+- ~~Azure Active Directory~~ (not tested yet/todo..)
+- [IdentityServer4](https://github.com/thecloudnativewebapp/GoCloudNative.Bff/tree/main/docs/Integration-Manuals/Integrating-With-Identity-Providers/IdentityServer4)
+- ~~KeyCloak~~ (not tested yet/todo..)
 
 # What problem does this software solve?
 

@@ -26,6 +26,5 @@
   - Integrating with Identity Providers
     - [Auth0](https://github.com/thecloudnativewebapp/GoCloudNative.Bff/tree/main/docs/Integration-Manuals/Integrating-With-Identity-Providers/Auth0)
     - Azure Active Directory
-    - IdentityServer4
+    - [IdentityServer4](https://github.com/thecloudnativewebapp/GoCloudNative.Bff/tree/main/docs/Integration-Manuals/Integrating-With-Identity-Providers/IdentityServer4)
     - KeyCloak
-    - Okta
