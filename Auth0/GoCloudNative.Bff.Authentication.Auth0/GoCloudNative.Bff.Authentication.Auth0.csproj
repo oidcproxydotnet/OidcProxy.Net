@@ -11,6 +11,10 @@
         <Company>GoCloudNative.org</Company>
         <PackageLicenseExpression>GPL-3.0-or-later</PackageLicenseExpression>
         <PackageReadmeFile>Readme.md</PackageReadmeFile>
+        <PackageVersion>0.0.5</PackageVersion>
+        <Description>A yarp-based authentication gateway for your service mesh.</Description>
+        <RepositoryUrl>https://github.com/thecloudnativewebapp/GoCloudNative.Bff</RepositoryUrl>
+        <PackageTags>BFF, Yarp, Auth0, Cloud Native</PackageTags>
     </PropertyGroup>
 
     <ItemGroup>
@@ -22,7 +26,7 @@
     </ItemGroup>
 
     <ItemGroup>
-      <Content Include="..\..\docs\Integration-Manuals\Integrating-With-Identity-Providers\Auth0\Readme.md" Pack="true" PackagePath="\" >
+      <Content Include="..\..\docs\Integration-Manuals\Integrating-With-Identity-Providers\Auth0\Readme.md" Pack="true" PackagePath="\">
         <Link>Readme.md</Link>
       </Content>
     </ItemGroup>

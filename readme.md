@@ -100,7 +100,6 @@ And use the following `appsettings.json`:
 This solution supports authentication with
 
 * Auth0 _([Read documentation](https://github.com/thecloudnativewebapp/GoCloudNative.Bff/tree/main/docs/Integration-Manuals/Integrating-With-Identity-Providers/Auth0))_
-* ~~Okta~~ (todo..)
 * ~~Azure Active Directory~~ (todo..)
 * Identity Server
 * ~~Key Cloak~~ (todo..)
