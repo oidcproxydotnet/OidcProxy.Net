@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>GoCloudNative.org/bff</title>
+    <link>https://gocloudnative.org/</link>
+    <description>Recent content on GoCloudNative.org/bff</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>en-us</language><atom:link href="https://gocloudnative.org/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title></title>
+      <link>https://gocloudnative.org/</link>
+      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
+      
+      <guid>https://gocloudnative.org/</guid>
+      <description>Documentation # Table of contents # Concepts API authorization with OAuth2/OpenId Connect What is Authorization Code with Proof Key for Client Exchange? What is a Back-end For Front-End? What is a Reverse Proxy? Distributed apps Horizontal scaling Architecture The BFF Security Pattern The GoCloudNative.BFF.Authentication software-architecture Horizontal scaling/scaling out Extensibility (implementing custom identity providers) Aggregating responses from multiple downstream endpoints Integration Manuals Quickstarts Implementing the BFF Security Pattern with aspnetcore, Angular, KeyCloack, and the GoCloudNative.</description>
+    </item>
+    
+  </channel>
+</rss>
