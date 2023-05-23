@@ -1,0 +1,41 @@
+@model TestIdentityServer.Models.Account.LogOutInputModel
+
+
+@{
+    Layout = null;
+}
+
+<!DOCTYPE html>
+
+<html>
+<head>
+    <title>Log in!</title>
+    <style>
+        div.main {
+            position: relative;
+            margin-left: auto;
+            margin-right: auto;
+            max-width: 720px;
+        }
+    </style>
+</head>
+<body>
+<div class="main users">
+    
+    <h1>Log out</h1>
+    
+    <h3>Are you sure you want to log out? Confirm to log out.</h3>
+    
+    <form asp-action="Logout" method="post">
+                            
+        <input type="hidden" name="logoutId" value="@Model.LogoutId"  />
+        
+        <button name="confirm" value="yes" id="yes">
+            Yes
+        </button>
+                            
+    </form>
+
+</div>
+</body>
+</html>

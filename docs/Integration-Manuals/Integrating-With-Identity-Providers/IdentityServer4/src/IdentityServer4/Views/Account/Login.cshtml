@@ -1,0 +1,80 @@
+@model TestIdentityServer.Models.Account.LoginViewModel
+
+@{
+    Layout = null;
+}
+
+<!DOCTYPE html>
+
+<html>
+<head>
+    <title>Log in!</title>
+    <style>
+        div.main {
+            position: relative;
+            margin-left: auto;
+            margin-right: auto;
+            max-width: 720px;
+        }
+        
+        div.users button {
+            height: 100px;
+            width: 100px;
+            float: left;
+            margin: 10px;
+            margin-right: 20px;
+            margin-left: 0px;
+            cursor: pointer;
+        }
+    </style>
+</head>
+<body>
+<div class="main users">
+    
+    <h1>Login</h1>
+    
+    <h3>Choose who to impersonate:</h3>
+    
+    <form asp-route="Login" method="post">
+                            
+        <button name="username" value="palpatine" id="palpatine">
+            Sheev Palpatine
+        </button>
+                            
+        <button name="username" value="yoda" id="yoda">
+            Master Yoda
+        </button>
+                            
+        <button name="username" value="bobafett" id="bobafett">
+            Boba Fett
+        </button>
+                            
+        <button name="username" value="lando" id="lando">
+            Lando Calrissian
+        </button>
+                            
+        <button name="username" value="r2d2" id="r2d2">
+            R2D2
+        </button>
+                            
+        <button name="username" value="hansolo" id="hansolo">
+            Han Solo
+        </button>
+                            
+        <button name="username" value="luke" id="luke">
+            Luke Skywalker
+        </button>
+                            
+        <button name="username" value="chewie" id="chewie">
+            Chewbaka
+        </button>
+                            
+        <button name="username" value="obiwan" id="obiwan">
+            Obiwan Kenobi
+        </button>
+                            
+    </form>
+
+</div>
+</body>
+</html>
