@@ -15,6 +15,11 @@
   - Horizontal scaling/scaling out
   - Extensibility (implementing custom identity providers)
   - Aggregating responses from multiple downstream endpoints
+- Alternatives
+  - Blazor
+  - dotnet new Angular
+  - Azure Easy Auth
+  - Duende
 - Integration Manuals
   - Quickstarts
     - [Auth0](/integration-manuals/quickstarts/auth0/quickstart)

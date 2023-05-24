@@ -17,6 +17,9 @@ public class OpenIdConnectIdentityProvider : IIdentityProvider
 
     private readonly OpenIdConnectConfig _configuration;
     
+    protected virtual string DiscoveryEndpointAddress 
+        => $"{_configuration.Authority.TrimEnd('/')}/" + $"{_configuration.DiscoveryEndpoint.TrimStart('/')}";
+    
     public OpenIdConnectIdentityProvider(IMemoryCache cache,
         HttpClient httpClient, 
         OpenIdConnectConfig configuration)
@@ -121,7 +124,6 @@ public class OpenIdConnectIdentityProvider : IIdentityProvider
             ClientId = _configuration.ClientId,
             ClientSecret = _configuration.ClientSecret
         });
-        
         if (response.HttpStatusCode != HttpStatusCode.OK)
         {
             throw new ApplicationException($"Unable to revoke tokens. OIDC server responded {response.HttpStatusCode}:" +
@@ -158,8 +160,7 @@ public class OpenIdConnectIdentityProvider : IIdentityProvider
 
     private async Task<OpenIdConfiguration> GetWellKnownConfiguration()
     {
-        var endpointAddress = $"{_configuration.Authority.TrimEnd('/')}/" +
-                              $"{_configuration.WellKnownEndpoint.TrimStart('/')}";
+        var endpointAddress = DiscoveryEndpointAddress;
 
         if (_cache.TryGetValue(endpointAddress, out var wellKnownDocument))
         {
@@ -178,6 +179,8 @@ public class OpenIdConnectIdentityProvider : IIdentityProvider
 
         _cache.Set(endpointAddress, wellKnownDocument, TimeSpan.FromHours(1));
 
+        // todo: Validate issuer
+        
         return (OpenIdConfiguration)wellKnownDocument;
     }
 }

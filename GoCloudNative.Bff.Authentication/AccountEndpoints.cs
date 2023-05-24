@@ -18,6 +18,8 @@ public static class AccountEndpoints
             {
                 return Results.NotFound();
             }
+            
+            context.Response.Headers.CacheControl = $"no-cache, no-store, must-revalidate";
 
             var idToken = context.Session.GetIdToken();
             return Results.Ok(idToken.ParseJwtPayload());

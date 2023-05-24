@@ -8,7 +8,7 @@ public class OpenIdConnectConfig
     
     public string Authority { get; set; } = string.Empty;
 
-    public string WellKnownEndpoint { get; set; } = "/.well-known/openid-configuration";
+    public string DiscoveryEndpoint { get; set; } = "/.well-known/openid-configuration";
 
     public string[] Scopes { get; set; } = Array.Empty<string>();
 
