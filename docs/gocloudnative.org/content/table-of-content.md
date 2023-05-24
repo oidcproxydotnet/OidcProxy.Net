@@ -23,7 +23,7 @@
 - Integration Manuals
   - Quickstarts
     - [Auth0](/integration-manuals/quickstarts/auth0/quickstart)
-    - [Azure Active Directory](/integration-manuals/quickstarts/AzureAd/quickstart)
+    - [Azure Active Directory](/integration-manuals/quickstarts/azuread/quickstart)
     - [IdentityServer4](/integration-manuals/quickstarts/identityserver4/quickstart)
     - KeyCloak
   - Migrating an Angular Single Page Application with an API
