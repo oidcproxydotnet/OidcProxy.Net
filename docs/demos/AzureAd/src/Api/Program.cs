@@ -1,11 +1,14 @@
 using Microsoft.AspNetCore.Authentication.JwtBearer;
-using Microsoft.IdentityModel.Tokens;
+using Microsoft.Identity.Web;
 
 var builder = WebApplication.CreateBuilder(args);
 
 builder.Services
     .AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
-    .AddMicrosoftIdentityWebApi(o => builder.Configuration.Bind("AzureAd", o), o => builder.Configuration.Bind("AzureAd", o));
+    .AddMicrosoftIdentityWebApi(
+        o => builder.Configuration.Bind("AzureAd", o), 
+        o => builder.Configuration.Bind("AzureAd", o)
+    );
 
 // Add services to the container.
 builder.Services.AddControllers();
@@ -24,6 +27,7 @@ if (app.Environment.IsDevelopment())
 
 app.UseHttpsRedirection();
 
+app.UseAuthentication();
 app.UseAuthorization();
 
 app.MapControllers();

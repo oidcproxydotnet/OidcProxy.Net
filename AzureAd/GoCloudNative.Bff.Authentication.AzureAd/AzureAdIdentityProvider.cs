@@ -27,6 +27,7 @@ public class AzureAdIdentityProvider : OpenIdConnectIdentityProvider
         var startUrl = await app.GetAuthorizationRequestUrl(_configuration.Scopes)
             .WithPkce(out var verifier)
             .WithRedirectUri(redirectUri)
+            .WithTenantId(_configuration.TenantId)
             .ExecuteAsync();
         
         return new AuthorizeRequest(startUrl, verifier);
