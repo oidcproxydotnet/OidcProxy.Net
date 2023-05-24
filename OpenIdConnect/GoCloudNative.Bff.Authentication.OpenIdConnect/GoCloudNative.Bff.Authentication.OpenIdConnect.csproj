@@ -7,11 +7,11 @@
         <RootNamespace>TheCloudNativeWebApp.Bff.Authentication.OpenIdConnect</RootNamespace>
 
         <PackageId>GoCloudNative.Bff.Authentication.OpenIdConnect</PackageId>
-        <Version>0.0.1</Version>
+        <Version>0.0.6</Version>
         <Authors>Albert Starreveld</Authors>
         <Company>GoCloudNative.org</Company>
         <PackageLicenseExpression>GPL-3.0-or-later</PackageLicenseExpression>
-        <PackageVersion>0.0.5</PackageVersion>
+        <PackageVersion>0.0.6</PackageVersion>
     </PropertyGroup>
 
     <ItemGroup>

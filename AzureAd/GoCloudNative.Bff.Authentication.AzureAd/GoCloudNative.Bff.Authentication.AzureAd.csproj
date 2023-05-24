@@ -4,8 +4,18 @@
     <TargetFramework>net6.0</TargetFramework>
     <ImplicitUsings>enable</ImplicitUsings>
     <Nullable>enable</Nullable>
-  </PropertyGroup>
 
+    <PackageId>GoCloudNative.Bff.Authentication.AzureAd</PackageId>
+    <Version>0.0.6</Version>
+    <Authors>Albert Starreveld</Authors>
+    <Company>GoCloudNative.org</Company>
+    <PackageLicenseExpression>GPL-3.0-or-later</PackageLicenseExpression>
+    <PackageVersion>0.0.6</PackageVersion>
+    <Description>A yarp-based authentication gateway for your service mesh.</Description>
+    <RepositoryUrl>https://github.com/thecloudnativewebapp/GoCloudNative.Bff</RepositoryUrl>
+    <PackageTags>BFF, Yarp, AzureAd, Cloud Native</PackageTags>
+  </PropertyGroup>
+  
   <ItemGroup>
     <ProjectReference Include="..\..\GoCloudNative.Bff.Authentication\GoCloudNative.Bff.Authentication.csproj" />
     <ProjectReference Include="..\..\OpenIdConnect\GoCloudNative.Bff.Authentication.OpenIdConnect\GoCloudNative.Bff.Authentication.OpenIdConnect.csproj" />
