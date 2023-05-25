@@ -1,4 +1,4 @@
-baseURL = 'https://gocloudnative.org/'
+baseURL = 'https://bff.gocloudnative.org/'
 languageCode = 'en-us'
 title = 'GoCloudNative.Bff'
 theme = 'bookmaster'
