@@ -6,7 +6,7 @@
   - [API authorization with OAuth2/OpenId Connect](/concepts/api-authorization/)
   - [What is Authorization Code with Proof Key for Code Exchange?](/concepts/what-is-pkce)
   - [What is a Back-end For Front-End?](/concepts/what-is-a-bff)
-  - What is a Reverse Proxy?
+  - [What is a Reverse Proxy?](/concepts/what-is-a-reverse-proxy)
   - Distributed apps
   - Horizontal scaling
 - Architecture
