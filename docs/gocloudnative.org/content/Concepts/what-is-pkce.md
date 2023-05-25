@@ -1,3 +1,9 @@
+---
+author: Albert Starreveld
+title: What is Authorization Code with Proof Key for Code Exchange?
+description: OAuth2 Authorization Code with Proof Key for Code Exchange explained.
+tags: ["OAuth", "OAuth2", "PKCE", "Proof Key for Code Exchange", "OIDC", "OpenId Connect", "Authentication", "Authorization", "Security"]
+---
 # What is Authorization Code with Proof Key for Code Exchange?
 
 The Authorization Code flow with Proof Key for Code Exchange (PKCE) is an authentication method. It's part of OAuth2. It is used to authenticate end-users.
