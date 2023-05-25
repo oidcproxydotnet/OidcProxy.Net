@@ -18,6 +18,7 @@
         <Title>GoCloudNative.Bff.Authentication.Auth0</Title>
         <PackageProjectUrl>https://bff.gocloudnative.org</PackageProjectUrl>
         <PackageReadmeFile>Readme.md</PackageReadmeFile>
+        <PackageIcon>logo.png</PackageIcon>
     </PropertyGroup>
 
     <ItemGroup>
@@ -30,5 +31,11 @@
 
     <ItemGroup>
         <None Include="Readme.md" pack="true" PackagePath="." />
+    </ItemGroup>
+
+    <ItemGroup>
+      <Content Include="..\..\logo.png" pack="true" PackagePath=".">
+        <Link>logo.png</Link>
+      </Content>
     </ItemGroup>
 </Project>
