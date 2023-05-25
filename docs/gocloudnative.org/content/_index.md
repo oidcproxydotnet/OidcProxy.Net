@@ -4,7 +4,11 @@ title: GoCloudNative.BFF - Documentation
 description: Everything you need to know when you implement the GoCloudNative.BFF with your aspnetcore API and your Angular/NX single page application.
 ---
 
-# Implement the BFF Security Pattern in a matter of minutes
+# GoCloudNative.Authentication.Bff
+
+## Secure, scalable, easy to use, and free.
+
+The GoCloudNative.Authenticatio.Bff is a authentication gateway based on YARP. Implementing it should not take more than a couple of minutes:
 
 ```bash
 dotnet new web
@@ -88,4 +92,6 @@ app.Run();
 }
 ```
 
-That's it.. [Read more](table-of-content)
+That's all! 
+
+[Read more.](table-of-content)
