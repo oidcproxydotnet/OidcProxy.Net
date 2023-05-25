@@ -94,4 +94,4 @@ app.Run();
 
 That's all! 
 
-[Read more.](table-of-content)
+[Read more.](table-of-contents)
