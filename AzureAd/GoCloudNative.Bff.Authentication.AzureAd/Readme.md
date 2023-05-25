@@ -1,4 +1,4 @@
-# GoCloudNative.Bff.Authentication.OpenIdConnect
+# GoCloudNative.Bff.Authentication.AzureAd
 
 This package contains the software you need to implement the BFF Security Pattern. This software does three things:
 
@@ -16,20 +16,20 @@ To build a BFF, execute the following commands:
 
 ```bash
 dotnet new web
-dotnet add package GoCloudNative.Bff.Authentication.OpenIdConnect
+dotnet add package GoCloudNative.Bff.Authentication.AzureAd
 ```
 
 Create the following `Program.cs` file:
 
 ```csharp
-using GoCloudNative.Bff.Authentication.OpenIdConnect;
+using GoCloudNative.Bff.Authentication.AzureAd;
 using GoCloudNative.Bff.Authentication.ModuleInitializers;
 
 var builder = WebApplication.CreateBuilder(args);
 
 builder.Services.AddSecurityBff(o =>
 {
-    o.ConfigureOpenIdConnect(builder.Configuration.GetSection("Oidc"));
+    o.ConfigureAzureAd(builder.Configuration.GetSection("AzureAd"));
     o.LoadYarpFromConfig(builder.Configuration.GetSection("ReverseProxy"));
 });
 
@@ -53,12 +53,13 @@ Create the following `appsettings.json` file:
       "Microsoft.AspNetCore": "Warning"
     }
   },
-  "Oidc": {
-    "ClientId": "[InsertClientIdHere]",
-    "ClientSecret": "[InsertClientSecretHere]",
-    "Authority": "https://authority",
+  "AzureAd": {
+    "ClientId": "{yourClientId}",
+    "ClientSecret": "{yourClientSecret}",
+    "TenantId": "{yourTenantId}",
+    "DiscoveryEndpoint": "{https://login.microsoftonline.com/{tenantId}/v2.0/.well-known/openid-configuration}",
     "Scopes": [
-      "openid", "profile", "offline_access"
+      "openid", "profile", "offline_access", "https://yourDomain.onmicrosoft.com/test/api1"
     ]
   },
   "AllowedHosts": "*",

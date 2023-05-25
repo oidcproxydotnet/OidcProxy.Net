@@ -1,4 +1,4 @@
-# GoCloudNative.Bff.Authentication.OpenIdConnect
+# GoCloudNative.Bff.Authentication.Auth0
 
 This package contains the software you need to implement the BFF Security Pattern. This software does three things:
 
@@ -16,20 +16,20 @@ To build a BFF, execute the following commands:
 
 ```bash
 dotnet new web
-dotnet add package GoCloudNative.Bff.Authentication.OpenIdConnect
+dotnet add package GoCloudNative.Bff.Authentication.Auth0
 ```
 
 Create the following `Program.cs` file:
 
 ```csharp
-using GoCloudNative.Bff.Authentication.OpenIdConnect;
+using GoCloudNative.Bff.Authentication.Auth0;
 using GoCloudNative.Bff.Authentication.ModuleInitializers;
 
 var builder = WebApplication.CreateBuilder(args);
 
 builder.Services.AddSecurityBff(o =>
 {
-    o.ConfigureOpenIdConnect(builder.Configuration.GetSection("Oidc"));
+    o.ConfigureAuth0(builder.Configuration.GetSection("Auth0"));
     o.LoadYarpFromConfig(builder.Configuration.GetSection("ReverseProxy"));
 });
 
@@ -52,11 +52,12 @@ Create the following `appsettings.json` file:
       "Default": "Information",
       "Microsoft.AspNetCore": "Warning"
     }
-  },
-  "Oidc": {
-    "ClientId": "[InsertClientIdHere]",
-    "ClientSecret": "[InsertClientSecretHere]",
-    "Authority": "https://authority",
+  },  
+  "Auth0": {
+    "ClientId": "{yourClientId}",
+    "ClientSecret": "{yourClientSecret}",
+    "Domain": "{yourDomain.eu.auth0.com}",
+    "Audience": "{yourAudience}",
     "Scopes": [
       "openid", "profile", "offline_access"
     ]

@@ -6,14 +6,18 @@
         <Nullable>enable</Nullable>
         
         <PackageId>GoCloudNative.Bff.Authentication.Auth0</PackageId>
-        <Version>0.0.6</Version>
+        <Version>0.0.7</Version>
         <Authors>Albert Starreveld</Authors>
         <Company>GoCloudNative.org</Company>
         <PackageLicenseExpression>GPL-3.0-or-later</PackageLicenseExpression>
-        <PackageVersion>0.0.6</PackageVersion>
+        <PackageVersion>0.0.7</PackageVersion>
         <Description>A yarp-based authentication gateway for your service mesh.</Description>
         <RepositoryUrl>https://github.com/thecloudnativewebapp/GoCloudNative.Bff</RepositoryUrl>
         <PackageTags>BFF, Yarp, Auth0, Cloud Native</PackageTags>
+        <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
+        <Title>GoCloudNative.Bff.Authentication.Auth0</Title>
+        <PackageProjectUrl>https://bff.gocloudnative.org</PackageProjectUrl>
+        <PackageReadmeFile>Readme.md</PackageReadmeFile>
     </PropertyGroup>
 
     <ItemGroup>
@@ -23,5 +27,8 @@
     <ItemGroup>
       <ProjectReference Include="..\..\OpenIdConnect\GoCloudNative.Bff.Authentication.OpenIdConnect\GoCloudNative.Bff.Authentication.OpenIdConnect.csproj" />
     </ItemGroup>
-    
+
+    <ItemGroup>
+        <None Include="Readme.md" pack="true" PackagePath="." />
+    </ItemGroup>
 </Project>
