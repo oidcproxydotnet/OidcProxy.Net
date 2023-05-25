@@ -25,9 +25,7 @@ If you want to prevent direct communication with the API, say, for security reas
 
 ![Direct communication with an API](https://raw.githubusercontent.com/thecloudnativewebapp/GoCloudNative.Bff/main/docs/gocloudnative.org/content/Concepts/diagrams/reverse-proxy-one-api.png)
 
-In this situatation the A-record of your domain will point to the reverse proxy. This is the entry-point of your network. By implementing a reverse proxy you can regulate what traffic goes where.
-
-By doing so, what traffic goes where, and is allowed at all, can now be regulated by the reverse proxy.
+In this situatation the A-record of your domain will point to the reverse proxy. This is the entry-point of your network. By implementing a reverse proxy, what traffic goes where or is allowed at all, can now be regulated by the reverse proxy.
 
 ## Using a reverse proxy as load balancer
 Reverse Proxies are particulary usefull when you are scaling your application horizontally. In that case, you'll have multiple webservers with different IP addresses. Scaling will not be effective if the A-record always points to a single server. 
@@ -40,7 +38,7 @@ Instead, the A-record of your domain will point to the reverse proxy and it will
 
 A reverse proxy allows you to route traffic to other components in the network. It does not do so randomly. You must specify what traffic goes where.
 
-A typical example of a reverse proxy is an Ingress Controller in Kubernetes. You define routing rules, and it forward the request accordingly. This is what a typical ingress controller looks like:
+A typical example of a reverse proxy is an Ingress Controller in Kubernetes. You define routing rules and Kubernetes forwards the request accordingly. This is what a typical ingress controller looks like:
 
 ```yaml
 apiVersion: networking.k8s.io/v1
@@ -67,7 +65,7 @@ You can also use a reverse proxy to augment requests to the destination.
 
 ## A typical example of a Load Balancing scenario with Yarp
 
-Another example of a Reverse Proxy is Microsofts YARP (Yet Another Reverse Proxy). It works similarly to an Ingress controller: You define a route, and you tell it where to forward the traffic to:
+Another example of a Reverse Proxy is Microsofts YARP (Yet Another Reverse Proxy). It works similarly to an Ingress controller: You define a route and you tell YARP where to forward the traffic to:
 
 ```json
 {
@@ -96,7 +94,7 @@ Another example of a Reverse Proxy is Microsofts YARP (Yet Another Reverse Proxy
 }
 ```
 
-In this example, traffic to all endpoints is forwarded to either `https://10.0.0.14` and `https://10.0.0.15`. You can extend the list endlessly. That's how you can use a Reverse Proxy to implement horizontal scaling.
+In this example, traffic to all endpoints is forwarded to either `https://10.0.0.14` or `https://10.0.0.15`. You can extend the list of destinations endlessly. That's how you can use a Reverse Proxy as a load balancer.
 
 ## Summary
 A reverse proxy is a mechanism that forwards traffic to other servers. You can use it to route traffic between your servers.
