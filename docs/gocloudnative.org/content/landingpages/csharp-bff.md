@@ -26,7 +26,7 @@ To create a YARP based BFF-project, do the following:
 
 ```powershell
 dotnet new web
-Install-Package Yarp.ReverseProxy
+dotnet add package Yarp.ReverseProxy
 ```
 
 Make sure to have the following `program.cs` file:
