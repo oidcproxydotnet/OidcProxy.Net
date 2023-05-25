@@ -8,9 +8,8 @@
   - [What is a Back-end For Front-End?](/concepts/what-is-a-bff)
   - [What is a Reverse Proxy?](/concepts/what-is-a-reverse-proxy)
   - [Distributed apps](/concepts/distributed-apps)
-  - Horizontal scaling
-- Architecture
   - The BFF Security Pattern  
+- Architecture
   - The GoCloudNative.BFF.Authentication software-architecture
   - Horizontal scaling/scaling out
   - Extensibility (implementing custom identity providers)
