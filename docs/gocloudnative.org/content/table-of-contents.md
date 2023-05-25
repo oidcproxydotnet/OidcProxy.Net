@@ -9,16 +9,6 @@
   - [What is a Reverse Proxy?](/concepts/what-is-a-reverse-proxy)
   - [Distributed apps](/concepts/distributed-apps)
   - The BFF Security Pattern  
-- Architecture
-  - The GoCloudNative.BFF.Authentication software-architecture
-  - Horizontal scaling/scaling out
-  - Extensibility (implementing custom identity providers)
-  - Aggregating responses from multiple downstream endpoints
-- Alternatives
-  - Blazor
-  - dotnet new Angular
-  - Azure Easy Auth
-  - Duende
 - Integration Manuals
   - Quickstarts
     - [Auth0](/integration-manuals/quickstarts/auth0/quickstart)
@@ -30,3 +20,13 @@
     - Distributed apps
       - Applying a BFF in an Azure Container Apps environment
       - Applying a BFF in Kubernetes
+- Architecture
+  - The GoCloudNative.BFF.Authentication software-architecture
+  - Horizontal scaling/scaling out
+  - Extensibility (implementing custom identity providers)
+  - Aggregating responses from multiple downstream endpoints
+- Alternatives
+  - Blazor
+  - dotnet new Angular
+  - Azure Easy Auth
+  - Duende
