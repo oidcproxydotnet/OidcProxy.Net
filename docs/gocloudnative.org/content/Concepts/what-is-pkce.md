@@ -41,7 +41,7 @@ This is an opaque string which can be used to get a new access token.
 
 When a user wants to access a resource (e.g. invoke an API-endpoint), the user must authenticate first. In the earlier versions of OAuth, with Single-Page-Applications specifically, the end-user obtains an `access_token` at the client-side. This authentication method is called the `implicit` grant:
 
-![Authentication with a SPA](diagrams/client-side-token-exchange.png)
+![Authentication with a SPA](https://raw.githubusercontent.com/thecloudnativewebapp/GoCloudNative.Bff/main/docs/gocloudnative.org/content/Concepts/diagrams/client-side-token-exchange.png)
 
 To get an access token, the user uses his browser to navigate to the authorization server via a special endpoint:
 
@@ -105,7 +105,7 @@ The problem with PKCE at the client-side is that the `client_secret` is not used
 
 Therefor, the only way to ensure the token ends up at the intended machine is to move the process of obtaining a token to a trusted machine: your server. As a result, you are going to need some authentication gateway:
 
-![Authentication at the server-side](diagrams/server-side-token-exchange.png)
+![Authentication at the server-side](https://raw.githubusercontent.com/thecloudnativewebapp/GoCloudNative.Bff/main/docs/gocloudnative.org/content/Concepts/diagrams/server-side-token-exchange.png)
 
 ## Summary
 For more secure applications, do not use the Implicit flow nor the PKCE flow at the client-side. Instead use the PKCE-flow with client_secret at the server side.
