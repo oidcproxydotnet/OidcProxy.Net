@@ -7,7 +7,7 @@
   - [What is Authorization Code with Proof Key for Code Exchange?](/concepts/what-is-pkce)
   - [What is a Back-end For Front-End?](/concepts/what-is-a-bff)
   - [What is a Reverse Proxy?](/concepts/what-is-a-reverse-proxy)
-  - Distributed apps
+  - [Distributed apps](/concepts/distributed-apps)
   - Horizontal scaling
 - Architecture
   - The BFF Security Pattern  
