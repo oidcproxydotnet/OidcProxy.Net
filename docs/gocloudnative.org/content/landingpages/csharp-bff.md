@@ -61,11 +61,9 @@ Use the following `appsettings.json` to relay traffic to a downstream API:
     "Routes": {
       "route1": {
           "ClusterId": "weatherForecastApi",
-          "AuthorizationPolicy": "RequireAuthenticatedUserPolicy",
           "Match": {
            "Path": "/weatherforecast/{**catch-all}"
-          },
-          "AllowAnonymous": false
+          }
       }
     },
     "Clusters": {
