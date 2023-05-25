@@ -4,7 +4,7 @@
 
 - Concepts
   - [API authorization with OAuth2/OpenId Connect](/concepts/api-authorization/)
-  - What is Authorization Code with Proof Key for Code Exchange?
+  - [What is Authorization Code with Proof Key for Code Exchange?](/concepts/what-is-pkce)
   - What is a Back-end For Front-End?
   - What is a Reverse Proxy?
   - Distributed apps
