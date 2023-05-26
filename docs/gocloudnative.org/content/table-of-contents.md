@@ -8,7 +8,7 @@
   - [What is a Back-end For Front-End?](/concepts/what-is-a-bff)
   - [What is a Reverse Proxy?](/concepts/what-is-a-reverse-proxy)
   - [Distributed apps](/concepts/distributed-apps)
-  - The BFF Security Pattern  
+  - [The BFF Security Pattern](/concepts/bff-security-pattern)
 - Integration Manuals
   - Quickstarts
     - [Auth0](/integration-manuals/quickstarts/auth0/quickstart)
