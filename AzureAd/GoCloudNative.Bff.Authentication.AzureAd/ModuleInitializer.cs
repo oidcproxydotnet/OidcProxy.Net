@@ -1,22 +1,15 @@
-﻿using GoCloudNative.Bff.Authentication.IdentityProviders;
-using GoCloudNative.Bff.Authentication.ModuleInitializers;
+﻿using GoCloudNative.Bff.Authentication.ModuleInitializers;
 using Microsoft.Extensions.Configuration;
-using Microsoft.Extensions.DependencyInjection;
 
 namespace GoCloudNative.Bff.Authentication.AzureAd;
 
 public static class ModuleInitializer
 {
-    public static void ConfigureAzureAd(this BffOptions options, IConfigurationSection configurationSection)
-        => ConfigureAzureAd(options, configurationSection.Get<AzureAdConfig>());
+    public static void ConfigureAzureAd(this BffOptions options, IConfigurationSection configurationSection, string endpointName = "account")
+        => ConfigureAzureAd(options, configurationSection.Get<AzureAdConfig>(), endpointName);
 
-    public static void ConfigureAzureAd(this BffOptions options, AzureAdConfig config)
+    public static void ConfigureAzureAd(this BffOptions options, AzureAdConfig config, string endpointName = "account")
     {
-        options.IdentityProviderFactory = (serviceCollection) =>
-        {
-            serviceCollection.AddTransient(_ => config);
-
-            serviceCollection.AddHttpClient<IIdentityProvider, AzureAdIdentityProvider>();
-        };
+        options.RegisterIdentityProvider<AzureAdIdentityProvider, AzureAdConfig>(config, endpointName);
     }
 }
