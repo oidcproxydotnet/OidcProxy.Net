@@ -5,21 +5,28 @@ namespace GoCloudNative.Bff.Authentication.ModuleInitializers;
 
 public static class ModuleInitializer
 {
+    private static readonly BffOptions _options = new();
+    
     public static IServiceCollection AddSecurityBff(this IServiceCollection serviceCollection, 
         Action<BffOptions>? configureOptions = null)
     {
-        var options = new BffOptions();
-        configureOptions?.Invoke(options);
+        configureOptions?.Invoke(_options);
         
         var proxyBuilder = serviceCollection
-            .AddReverseProxy()
-            .AddTransforms<HttpHeaderTransformation>();
+            .AddReverseProxy();
 
-        options?.ApplyReverseProxyConfiguration(proxyBuilder);
+        _options?.ApplyReverseProxyConfiguration(proxyBuilder);
+        foreach (var proxyConfiguration in _options?.ProxyConfigurations)
+        {
+            proxyConfiguration.Invoke(proxyBuilder);
+        }
 
-        options?.ApplyDistributedCache(serviceCollection);
+        foreach (var idpRegistration in _options?.IdpRegistrations)
+        {
+            idpRegistration.Invoke(serviceCollection);
+        }
         
-        options?.IdentityProviderFactory(serviceCollection);
+        _options?.ApplyDistributedCache(serviceCollection);
 
         return serviceCollection
             .AddMemoryCache()
@@ -33,7 +40,11 @@ public static class ModuleInitializer
 
     public static WebApplication UseSecurityBff(this WebApplication app)
     {
-        app.MapAuthenticationEndpoints("account");
+        foreach (var endpointRegistration in _options.IdpEndpointRegistrations)
+        {
+            endpointRegistration.Invoke(app);
+        }
+        
         app.MapReverseProxy();
         
         app.UseSession();

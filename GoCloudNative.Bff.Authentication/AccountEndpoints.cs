@@ -9,10 +9,9 @@ namespace GoCloudNative.Bff.Authentication;
 
 public static class AccountEndpoints
 {
-    public static void MapAuthenticationEndpoints(this WebApplication app, string endpointName)
+    public static void MapAuthenticationEndpoints<T>(this WebApplication app, string endpointName) where T : IIdentityProvider
     {
-        app.Map($"/{endpointName}/me", (HttpContext context, 
-            [FromServices] IIdentityProvider identityProvider) =>
+        app.Map($"/{endpointName}/me", (HttpContext context, [FromServices] T identityProvider) =>
         {   
             if (!context.Session.HasIdToken())
             {
@@ -27,7 +26,7 @@ public static class AccountEndpoints
         
         app.Map($"/{endpointName}/login", async (HttpContext context, 
             [FromServices] ILogger<Endpoints> logger, 
-            [FromServices] IIdentityProvider identityProvider) =>
+            [FromServices] T identityProvider) =>
         {
             try
             {            
@@ -53,7 +52,7 @@ public static class AccountEndpoints
 
         app.Map($"/{endpointName}/login/callback", async (HttpContext context, 
             [FromServices] ILogger<Endpoints> logger, 
-            [FromServices] IIdentityProvider identityProvider) =>
+            [FromServices] T identityProvider) =>
         {
             try
             {
@@ -88,7 +87,7 @@ public static class AccountEndpoints
         
         app.MapGet($"/{endpointName}/end-session", async (HttpContext context, 
             [FromServices] ILogger<Endpoints> logger,
-            [FromServices] IIdentityProvider identityProvider) =>
+            [FromServices] T identityProvider) =>
         {
             try
             {

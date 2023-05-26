@@ -1,22 +1,15 @@
-using GoCloudNative.Bff.Authentication.IdentityProviders;
 using GoCloudNative.Bff.Authentication.ModuleInitializers;
 using Microsoft.Extensions.Configuration;
-using Microsoft.Extensions.DependencyInjection;
 
 namespace GoCloudNative.Bff.Authentication.OpenIdConnect;
 
 public static class ModuleInitializer
 {
-    public static void ConfigureOpenIdConnect(this BffOptions options, IConfigurationSection configurationSection)
-        => ConfigureOpenIdConnect(options, configurationSection.Get<OpenIdConnectConfig>());
+    public static void ConfigureOpenIdConnect(this BffOptions options, IConfigurationSection configurationSection, string endpointName = "account")
+        => ConfigureOpenIdConnect(options, configurationSection.Get<OpenIdConnectConfig>(), endpointName);
 
-    public static void ConfigureOpenIdConnect(this BffOptions options, OpenIdConnectConfig config)
+    public static void ConfigureOpenIdConnect(this BffOptions options, OpenIdConnectConfig config, string endpointName = "account")
     {
-        options.IdentityProviderFactory = (serviceCollection) =>
-        {
-            serviceCollection.AddTransient(_ => config);
-
-            serviceCollection.AddHttpClient<IIdentityProvider, OpenIdConnectIdentityProvider>();
-        };
+        options.RegisterIdentityProvider<OpenIdConnectIdentityProvider, OpenIdConnectConfig>(config, endpointName);
     }
 }
