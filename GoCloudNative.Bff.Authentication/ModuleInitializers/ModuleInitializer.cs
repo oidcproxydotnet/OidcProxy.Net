@@ -16,15 +16,10 @@ public static class ModuleInitializer
             .AddReverseProxy();
 
         _options?.ApplyReverseProxyConfiguration(proxyBuilder);
-        foreach (var proxyConfiguration in _options?.ProxyConfigurations)
-        {
-            proxyConfiguration.Invoke(proxyBuilder);
-        }
-
-        foreach (var idpRegistration in _options?.IdpRegistrations)
-        {
-            idpRegistration.Invoke(serviceCollection);
-        }
+        
+        _options.IdpRegistrations.Apply(proxyBuilder);
+        
+        _options.IdpRegistrations.Apply(serviceCollection);
         
         _options?.ApplyDistributedCache(serviceCollection);
 
@@ -40,10 +35,7 @@ public static class ModuleInitializer
 
     public static WebApplication UseSecurityBff(this WebApplication app)
     {
-        foreach (var endpointRegistration in _options.IdpEndpointRegistrations)
-        {
-            endpointRegistration.Invoke(app);
-        }
+        _options.IdpRegistrations.Apply(app);
         
         app.MapReverseProxy();
         
