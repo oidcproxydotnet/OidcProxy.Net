@@ -1,5 +1,4 @@
 using GoCloudNative.Bff.Authentication.IdentityProviders;
-using Microsoft.AspNetCore.Builder;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 
@@ -7,11 +6,7 @@ namespace GoCloudNative.Bff.Authentication.ModuleInitializers;
 
 public class BffOptions
 {
-    internal readonly List<Action<IServiceCollection>> IdpRegistrations = new();
-    
-    internal readonly List<Action<WebApplication>> IdpEndpointRegistrations = new();
-
-    internal readonly List<Action<IReverseProxyBuilder>> ProxyConfigurations = new();
+    internal readonly IdpRegistrations IdpRegistrations = new();
 
     internal Action<IReverseProxyBuilder> ApplyReverseProxyConfiguration = _ => { };
 
@@ -21,18 +16,7 @@ public class BffOptions
         where TIdentityProvider : class, IIdentityProvider 
         where TOptions : class
     {
-        IdpRegistrations.Add(s => s
-            .AddTransient<TIdentityProvider>()
-            .AddSingleton(_ => options)
-            .AddHttpClient<TIdentityProvider>()
-        );
-        
-        ProxyConfigurations.Add(c =>
-        {
-            c.AddTransforms<HttpHeaderTransformation<TIdentityProvider>>();
-        });
-        
-        IdpEndpointRegistrations.Add(app => app.MapAuthenticationEndpoints<TIdentityProvider>(endpointName));
+        IdpRegistrations.Register<TIdentityProvider, TOptions>(options, endpointName);
     }
 
     public void LoadYarpFromConfig(IConfigurationSection configurationSection)
