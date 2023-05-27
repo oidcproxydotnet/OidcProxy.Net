@@ -7,11 +7,17 @@ var builder = WebApplication.CreateBuilder(args);
 
 builder.Services.AddSecurityBff(o =>
 {
-    o.ConfigureOpenIdConnect(builder.Configuration.GetSection("Oidc"), "oidc");
     o.ConfigureAuth0(builder.Configuration.GetSection("auth0"), "auth0");
-    o.ConfigureAzureAd(builder.Configuration.GetSection("AzureAd"), "azure");
+    o.ConfigureOpenIdConnect(builder.Configuration.GetSection("Oidc"));
+    //o.ConfigureAzureAd(builder.Configuration.GetSection("AzureAd"), "aad");
     
     o.LoadYarpFromConfig(builder.Configuration.GetSection("ReverseProxy"));
+});
+
+builder.Services.AddLogging(config =>
+{
+    config.AddDebug();
+    config.AddConsole();
 });
 
 var app = builder.Build();

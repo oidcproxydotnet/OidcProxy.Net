@@ -4,7 +4,7 @@ using Microsoft.Extensions.DependencyInjection;
 
 namespace GoCloudNative.Bff.Authentication.ModuleInitializers;
 
-public class IdpRegistrations
+internal class IdpRegistrations
 {
     private readonly List<string> _endpointNames = new();
     
@@ -30,7 +30,7 @@ public class IdpRegistrations
 
         _idpRegistrations.Add(s => s
             .AddTransient<TIdentityProvider>()
-            .AddSingleton(_ => options)
+            .AddTransient(_ => options)
             .AddHttpClient<TIdentityProvider>()
         );
 
@@ -67,7 +67,8 @@ public class IdpRegistrations
     {
         if (_endpointNames.Any(x => x.Equals(endpointName, StringComparison.InvariantCultureIgnoreCase)))
         {
-            throw new NotSupportedException("Failed to start GoCloudNative.BFF. " +
+            throw new NotSupportedException("GCN-B-f204c0800192: " +
+                                            "Failed to start GoCloudNative.BFF. " +
                                             "Registering multiple TIdentityProvider types on the same endpoint is not supported." +
                                             "Remove one of the IdentityProviderConfigurations or configure another endpointName.");
         }
@@ -79,7 +80,8 @@ public class IdpRegistrations
     {
         if (_endpointTypes.Contains(typeof(TIdentityProvider)))
         {
-            throw new NotSupportedException("Failed to start GoCloudNative.BFF. " +
+            throw new NotSupportedException("GCN-B-66b217e55cd6: " +
+                                            "Failed to start GoCloudNative.BFF. " +
                                             "Registering multiple identity providers of the same type is not supported.");
         }
 
@@ -91,7 +93,8 @@ public class IdpRegistrations
     {
         if (_optionTypes.Contains(typeof(TOptions)))
         {
-            throw new NotSupportedException("Failed to start GoCloudNative.BFF. " +
+            throw new NotSupportedException("GCN-B-7072e626c679: " +
+                                            "Failed to start GoCloudNative.BFF. " +
                                             "Registering the same options type is not supported.");
         }
 

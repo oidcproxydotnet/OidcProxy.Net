@@ -25,7 +25,7 @@ public static class AccountEndpoints
         });
         
         app.Map($"/{endpointName}/login", async (HttpContext context, 
-            [FromServices] ILogger<Endpoints> logger, 
+            [FromServices] ILogger<T> logger, 
             [FromServices] T identityProvider) =>
         {
             try
@@ -51,7 +51,7 @@ public static class AccountEndpoints
         });
 
         app.Map($"/{endpointName}/login/callback", async (HttpContext context, 
-            [FromServices] ILogger<Endpoints> logger, 
+            [FromServices] ILogger<T> logger, 
             [FromServices] T identityProvider) =>
         {
             try
@@ -86,7 +86,7 @@ public static class AccountEndpoints
         });
         
         app.MapGet($"/{endpointName}/end-session", async (HttpContext context, 
-            [FromServices] ILogger<Endpoints> logger,
+            [FromServices] ILogger<T> logger,
             [FromServices] T identityProvider) =>
         {
             try
@@ -142,8 +142,4 @@ public static class AccountEndpoints
         var hostName = DetermineHostName(context);
         return $"{hostName}/{endpointName}/login/callback";
     }
-}
-
-public class Endpoints
-{
 }

@@ -15,13 +15,13 @@ public static class ModuleInitializer
         var proxyBuilder = serviceCollection
             .AddReverseProxy();
 
-        _options?.ApplyReverseProxyConfiguration(proxyBuilder);
+        _options.ApplyReverseProxyConfiguration(proxyBuilder);
         
         _options.IdpRegistrations.Apply(proxyBuilder);
         
         _options.IdpRegistrations.Apply(serviceCollection);
         
-        _options?.ApplyDistributedCache(serviceCollection);
+        _options.ApplyDistributedCache(serviceCollection);
 
         return serviceCollection
             .AddMemoryCache()

@@ -30,7 +30,7 @@ public class TokenFactory
             return false;
         }
 
-        var refreshToken = _session.GetRefreshToken();
+        var refreshToken = _session.GetRefreshToken(); // todo: What is refresh_token is null?
         await Renew(refreshToken, timeoutInSeconds);
         return true;
     }
