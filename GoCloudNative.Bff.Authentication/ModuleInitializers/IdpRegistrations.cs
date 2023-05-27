@@ -6,9 +6,11 @@ namespace GoCloudNative.Bff.Authentication.ModuleInitializers;
 
 public class IdpRegistrations
 {
-    private List<string> _endpointNames = new();
+    private readonly List<string> _endpointNames = new();
     
-    private List<Type> _endpointTypes = new();
+    private readonly List<Type> _endpointTypes = new();
+    
+    private readonly List<Type> _optionTypes = new();
     
     private readonly List<Action<IServiceCollection>> _idpRegistrations = new();
     
@@ -20,9 +22,11 @@ public class IdpRegistrations
         where TIdentityProvider : class, IIdentityProvider
         where TOptions : class
     {
-        AssertEndpointNameNotRegisteredTwice(endpointName);
+        AssertEndpointNameRegisteredOnce(endpointName);
 
-        AssertIdentityProviderTypeNotRegisteredTwice<TIdentityProvider>();
+        AssertIdentityProviderTypeRegisteredOnce<TIdentityProvider>();
+
+        AssertOptionsTypeRegisteredOnce<TOptions>();
 
         _idpRegistrations.Add(s => s
             .AddTransient<TIdentityProvider>()
@@ -59,7 +63,7 @@ public class IdpRegistrations
         }
     }
     
-    private void AssertEndpointNameNotRegisteredTwice(string endpointName)
+    private void AssertEndpointNameRegisteredOnce(string endpointName)
     {
         if (_endpointNames.Any(x => x.Equals(endpointName, StringComparison.InvariantCultureIgnoreCase)))
         {
@@ -71,15 +75,26 @@ public class IdpRegistrations
         _endpointNames.Add(endpointName);
     }
 
-    private void AssertIdentityProviderTypeNotRegisteredTwice<TIdentityProvider>()
+    private void AssertIdentityProviderTypeRegisteredOnce<TIdentityProvider>()
     {
         if (_endpointTypes.Contains(typeof(TIdentityProvider)))
         {
             throw new NotSupportedException("Failed to start GoCloudNative.BFF. " +
-                                            "Registering multiple TIdentityProvider types on the same endpoint is not supported." +
-                                            "Remove one of the IdentityProviderConfigurations or configure another endpointName.");
+                                            "Registering multiple identity providers of the same type is not supported.");
         }
 
         _endpointTypes.Add(typeof(TIdentityProvider));
+    }
+    
+    
+    private void AssertOptionsTypeRegisteredOnce<TOptions>()
+    {
+        if (_optionTypes.Contains(typeof(TOptions)))
+        {
+            throw new NotSupportedException("Failed to start GoCloudNative.BFF. " +
+                                            "Registering the same options type is not supported.");
+        }
+
+        _optionTypes.Add(typeof(TOptions));
     }
 }
