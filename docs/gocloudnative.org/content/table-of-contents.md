@@ -20,6 +20,10 @@
     - Distributed apps
       - Applying a BFF in an Azure Container Apps environment
       - Applying a BFF in Kubernetes
+- Configuration errors
+  - [GCN-B-f204c0800192](/errors/gcn-b-f204c0800192)
+  - [GCN-B-66b217e55cd6](/errors/gcn-b-66b217e55cd6)
+  - [GCN-B-7072e626c679](/errors/gcn-b-7072e626c679)
 - Architecture
   - The GoCloudNative.BFF.Authentication software-architecture
   - Horizontal scaling/scaling out
