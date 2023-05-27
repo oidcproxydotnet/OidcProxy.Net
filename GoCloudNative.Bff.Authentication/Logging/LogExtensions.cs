@@ -36,8 +36,5 @@ public static class LogExtensions
         return $"[{request.Method}] {pathAndQuery}";
     }
 
-    private static string GetClientIpAddress(this HttpContext context)
-    {
-        return context.Connection.RemoteIpAddress?.ToString();
-    }
+    private static string? GetClientIpAddress(this HttpContext context) => context.Connection.RemoteIpAddress?.ToString();
 }
