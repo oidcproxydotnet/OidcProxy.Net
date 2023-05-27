@@ -4,17 +4,17 @@ using GoCloudNative.Bff.Authentication.ModuleInitializers;
 
 namespace GoCloudNative.Bff.Authentication.Tests;
 
-public class IdpRegistrationsTests
+public class OptionsTests
 {
     [Fact]
     public void WhenRegisteringEndpointNameTwice_ShouldThrowNotSupportedException()
     {
         // Arrange
-        var sut = new IdpRegistrations();
-        sut.Register<TestIdp1, TestConfig>(new TestConfig(), "test");
+        var sut = new BffOptions();
+        sut.RegisterIdentityProvider<TestIdp1, TestConfig>(new TestConfig(), "test");
         
         // Act
-        Action actual = () => sut.Register<TestIdp2, TestConfig>(new TestConfig(), "test");
+        Action actual = () => sut.RegisterIdentityProvider<TestIdp2, TestConfig2>(new TestConfig2(), "test");
 
         // Assert
         actual.Should().Throw<NotSupportedException>();
@@ -24,20 +24,38 @@ public class IdpRegistrationsTests
     public void WhenRegisteringTypeTwice_ShouldThrowNotSupportedException()
     {
         // Arrange
-        var sut = new IdpRegistrations();
-        sut.Register<TestIdp1, TestConfig>(new TestConfig(), "test1");
+        var sut = new BffOptions();
+        sut.RegisterIdentityProvider<TestIdp1, TestConfig>(new TestConfig(), "test1");
         
         // Act
-        Action actual = () => sut.Register<TestIdp1, TestConfig>(new TestConfig(), "test2");
+        Action actual = () => sut.RegisterIdentityProvider<TestIdp1, TestConfig2>(new TestConfig2(), "test2");
 
         // Assert
         actual.Should().Throw<NotSupportedException>();
     }
 
+    [Fact]
+    public void WhenRegisteringOptionsTypeTwice_ShouldThrowNotSupportedException()
+    {
+        // Arrange
+        var sut = new BffOptions();
+        sut.RegisterIdentityProvider<TestIdp1, TestConfig>(new TestConfig(), "test1");
+        
+        // Act
+        Action actual = () => sut.RegisterIdentityProvider<TestIdp2, TestConfig>(new TestConfig(), "test2");
+
+        // Assert
+        actual.Should().Throw<NotSupportedException>();
+    }
+    
     private class TestConfig
     {
     }
 
+    private class TestConfig2
+    {
+    }
+    
     private class TestIdp2 : TestIdp1
     {
     }
