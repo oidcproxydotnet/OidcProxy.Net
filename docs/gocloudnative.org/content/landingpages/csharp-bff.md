@@ -1,10 +1,10 @@
 ---
 author: Albert Starreveld
-title: How to build a BFF with C#
+title: How to build a BFF with ASPNETCORE
 description: Read how to implement a BFF with C#
-tags: ["C#", "csharp", "dotnet", "dotnetcore", "BFF", "back-end for front-end"]
+tags: ["C#", "csharp", "dotnet", ".net", "dotnetcore", "BFF", "back-end for front-end"]
 ---
-# How to build a BFF with C#
+# How to build a BFF with ASPNETCORE/C#
 
 To build a Back-end for Front-end with C#, you can choose three approaches:
 
