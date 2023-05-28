@@ -9,24 +9,24 @@ namespace GoCloudNative.Bff.Authentication;
 
 public static class AccountEndpoints
 {
-    public static void MapAuthenticationEndpoints<T>(this WebApplication app, string endpointName) where T : IIdentityProvider
+    public static void MapAuthenticationEndpoints<TIdp>(this WebApplication app, string endpointName) where TIdp : IIdentityProvider
     {
-        app.Map($"/{endpointName}/me", (HttpContext context, [FromServices] T identityProvider) =>
+        app.Map($"/{endpointName}/me", (HttpContext context, [FromServices] TIdp identityProvider) =>
         {   
-            if (!context.Session.HasIdToken())
+            if (!context.Session.HasIdToken<TIdp>())
             {
                 return Results.NotFound();
             }
             
             context.Response.Headers.CacheControl = $"no-cache, no-store, must-revalidate";
 
-            var idToken = context.Session.GetIdToken();
+            var idToken = context.Session.GetIdToken<TIdp>();
             return Results.Ok(idToken.ParseJwtPayload());
         });
         
         app.Map($"/{endpointName}/login", async (HttpContext context, 
-            [FromServices] ILogger<T> logger, 
-            [FromServices] T identityProvider) =>
+            [FromServices] ILogger<TIdp> logger, 
+            [FromServices] TIdp identityProvider) =>
         {
             try
             {            
@@ -36,7 +36,7 @@ public static class AccountEndpoints
 
                 if (!string.IsNullOrEmpty(authorizeRequest.CodeVerifier))
                 {
-                    context.Session.SetCodeVerifier(authorizeRequest.CodeVerifier);
+                    context.Session.SetCodeVerifier<TIdp>(authorizeRequest.CodeVerifier);
                 }
 
                 logger.LogLine(context, new LogLine($"Redirect({authorizeRequest.AuthorizeUri})"));
@@ -51,8 +51,8 @@ public static class AccountEndpoints
         });
 
         app.Map($"/{endpointName}/login/callback", async (HttpContext context, 
-            [FromServices] ILogger<T> logger, 
-            [FromServices] T identityProvider) =>
+            [FromServices] ILogger<TIdp> logger, 
+            [FromServices] TIdp identityProvider) =>
         {
             try
             {
@@ -65,14 +65,14 @@ public static class AccountEndpoints
             
                 var redirectUrl = DetermineRedirectUri(context, endpointName);
 
-                var codeVerifier = context.Session.GetCodeVerifier(); 
+                var codeVerifier = context.Session.GetCodeVerifier<TIdp>(); 
                 
                 logger.LogLine(context, new LogLine($"Exchanging code for access_token."));
                 var tokenResponse = await identityProvider.GetTokenAsync(redirectUrl, code, codeVerifier);
             
-                context.Session.RemoveCodeVerifier();
+                context.Session.RemoveCodeVerifier<TIdp>();
 
-                context.Session.Save(tokenResponse);
+                context.Session.Save<TIdp>(tokenResponse);
 
                 logger.LogLine(context, new LogLine($"Redirect(/)"));
                 
@@ -86,31 +86,31 @@ public static class AccountEndpoints
         });
         
         app.MapGet($"/{endpointName}/end-session", async (HttpContext context, 
-            [FromServices] ILogger<T> logger,
-            [FromServices] T identityProvider) =>
+            [FromServices] ILogger<TIdp> logger,
+            [FromServices] TIdp identityProvider) =>
         {
             try
             {
-                if (context.Session.HasAccessToken())
+                if (context.Session.HasAccessToken<TIdp>())
                 {
-                    var accessToken = context.Session.GetAccessToken();
+                    var accessToken = context.Session.GetAccessToken<TIdp>();
                     
                     logger.LogLine(context, new LogLine($"Revoking access_token."));
                     await identityProvider.Revoke(accessToken);
                 }
             
-                if (context.Session.HasRefreshToken())
+                if (context.Session.HasRefreshToken<TIdp>())
                 {
-                    var refreshToken = context.Session.GetRefreshToken();
+                    var refreshToken = context.Session.GetRefreshToken<TIdp>();
                     
                     logger.LogLine(context, new LogLine($"Revoking refresh_token."));
                     await identityProvider.Revoke(refreshToken);
                 }
 
                 string? idToken = null;
-                if (context.Session.HasIdToken())
+                if (context.Session.HasIdToken<TIdp>())
                 {
-                    idToken = context.Session.GetIdToken();
+                    idToken = context.Session.GetIdToken<TIdp>();
                 }
             
                 context.Session.Clear();

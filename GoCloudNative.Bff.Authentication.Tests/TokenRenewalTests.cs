@@ -13,7 +13,7 @@ public class TokenRenewalTests
 
     public TokenRenewalTests()
     {
-        _session.Save(new TokenResponse(Guid.NewGuid().ToString(),
+        _session.Save<IIdentityProvider>(new TokenResponse(Guid.NewGuid().ToString(),
             Guid.NewGuid().ToString(),
             Guid.NewGuid().ToString(),
             DateTime.Now.AddSeconds(-1)));
@@ -44,7 +44,7 @@ public class TokenRenewalTests
         async Task GetToken()
         {   
             var sut = new TokenFactory(_identityProvider, _session);
-            await sut.RenewAccessTokenIfExpired();
+            await sut.RenewAccessTokenIfExpired<IIdentityProvider>();
         }
     }
     
@@ -55,7 +55,7 @@ public class TokenRenewalTests
         var sut = new TokenFactory(_identityProvider, _session);
         
         // Act
-        await sut.RenewAccessTokenIfExpired();
+        await sut.RenewAccessTokenIfExpired<IIdentityProvider>();
         
         // Assert
         _session.GetString("token_key").Should().NotBeEmpty();
@@ -73,7 +73,7 @@ public class TokenRenewalTests
         _session.SetString(cacheKey, "true");
         
         // Act
-        Func<Task> actual = async () => await sut.RenewAccessTokenIfExpired(2);
+        Func<Task> actual = async () => await sut.RenewAccessTokenIfExpired<IIdentityProvider>(2);
         
         // Assert
         _identityProvider.DidNotReceive().RefreshTokenAsync(Arg.Any<string>());
@@ -98,7 +98,7 @@ public class TokenRenewalTests
             _session.Remove(cacheKey);
         });
 
-        Func<Task> actual = async () => await sut.RenewAccessTokenIfExpired();
+        Func<Task> actual = async () => await sut.RenewAccessTokenIfExpired<IIdentityProvider>();
 
         // Assert
         _identityProvider.DidNotReceive().RefreshTokenAsync(Arg.Any<string>());

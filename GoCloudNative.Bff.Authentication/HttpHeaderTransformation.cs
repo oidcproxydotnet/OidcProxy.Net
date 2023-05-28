@@ -8,13 +8,13 @@ using Yarp.ReverseProxy.Transforms.Builder;
 
 namespace GoCloudNative.Bff.Authentication;
 
-public class HttpHeaderTransformation<T> : ITransformProvider
-    where T : IIdentityProvider
+public class HttpHeaderTransformation<TIdp> : ITransformProvider
+    where TIdp : IIdentityProvider
 {
     private readonly IIdentityProvider _identityProvider;
-    private readonly ILogger<HttpHeaderTransformation<T>> _logger;
+    private readonly ILogger<HttpHeaderTransformation<TIdp>> _logger;
 
-    public HttpHeaderTransformation(T identityProvider, ILogger<HttpHeaderTransformation<T>> logger)
+    public HttpHeaderTransformation(TIdp identityProvider, ILogger<HttpHeaderTransformation<TIdp>> logger)
     {
         _identityProvider = identityProvider;
         _logger = logger;
@@ -34,19 +34,19 @@ public class HttpHeaderTransformation<T> : ITransformProvider
     {
         context.AddRequestTransform(async x =>
         {   
-            if (!x.HttpContext.Session.HasAccessToken())
+            if (!x.HttpContext.Session.HasAccessToken<TIdp>())
             {
                 return;
             }
 
-            var token = x.HttpContext.Session.GetAccessToken();
+            var token = x.HttpContext.Session.GetAccessToken<TIdp>();
             
             var factory = new TokenFactory(_identityProvider, x.HttpContext.Session);
-            if (await factory.RenewAccessTokenIfExpired())
+            if (await factory.RenewAccessTokenIfExpired<TIdp>())
             {   
                 _logger.LogLine(x.HttpContext, new LogLine("Renewed access_token and refresh_token"));
                 
-                token = x.HttpContext.Session.GetAccessToken();
+                token = x.HttpContext.Session.GetAccessToken<TIdp>();
             }
 
             x.ProxyRequest.Headers.Authorization = new AuthenticationHeaderValue("Bearer", token);
