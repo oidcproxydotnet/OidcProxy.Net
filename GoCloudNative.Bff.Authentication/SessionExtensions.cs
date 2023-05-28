@@ -5,58 +5,55 @@ namespace GoCloudNative.Bff.Authentication;
 
 public static class SessionExtensions
 {
-    private static readonly string VerifierKey = "verifier_key";
+    private static string GetVerifierKey<T>() => $"{typeof(T)}-verifier_key";
 
-    private static readonly string TokenKey = "token_key";
+    private static string GetTokenKey<T>() => $"{typeof(T)}-token_key";
 
-    private static readonly string IdTokenKey = "id_token_key";
+    private static string GetIdTokenKey<T>() => $"{typeof(T)}-id_token_key";
     
-    private static readonly string RefreshTokenKey = "refresh_token_key";
+    private static string GetRefreshTokenKey<T>() => $"{typeof(T)}-refresh_token_key";
     
-    private static readonly string ExpiryKey = "expires";
+    private static string GetExpiryKey<T>() => $"{typeof(T)}-expires";
     
-    public static void Save(this ISession session, TokenResponse tokenResponse)
+    public static void Save<T>(this ISession session, TokenResponse tokenResponse)
     {
-        session.Save(TokenKey, tokenResponse.access_token);
-        session.Save(IdTokenKey, tokenResponse.id_token);
-        session.Save(RefreshTokenKey, tokenResponse.refresh_token);
-        session.SetDateTime(ExpiryKey, tokenResponse.ExpiryDate);
+        session.Save(GetTokenKey<T>(), tokenResponse.access_token);
+        session.Save(GetIdTokenKey<T>(), tokenResponse.id_token);
+        session.Save(GetRefreshTokenKey<T>(), tokenResponse.refresh_token);
+        session.SetDateTime(GetExpiryKey<T>(), tokenResponse.ExpiryDate);
     }
     
-    public static void UpdateAccessAndRefreshToken(this ISession session, TokenResponse tokenResponse)
+    public static void UpdateAccessAndRefreshToken<T>(this ISession session, TokenResponse tokenResponse)
     {
-        session.Save(TokenKey, tokenResponse.access_token);
-        session.SetDateTime(ExpiryKey, tokenResponse.ExpiryDate);
+        session.Save(GetTokenKey<T>(), tokenResponse.access_token);
+        session.SetDateTime(GetExpiryKey<T>(), tokenResponse.ExpiryDate);
         
         if (!string.IsNullOrEmpty(tokenResponse.refresh_token))
         {
-            session.Save(RefreshTokenKey, tokenResponse.refresh_token);
+            session.Save(GetRefreshTokenKey<T>(), tokenResponse.refresh_token);
         }
     }
 
-    public static bool HasIdToken(this ISession session) => session.Keys.Contains(IdTokenKey);
-    public static string? GetIdToken(this ISession session) => session?.GetString(IdTokenKey);
-    public static void RemoveIdToken(this ISession session) => session.Remove(IdTokenKey);
+    public static bool HasIdToken<T>(this ISession session) => session.Keys.Contains(GetIdTokenKey<T>());
+    public static string? GetIdToken<T>(this ISession session) => session?.GetString(GetIdTokenKey<T>());
+    public static void RemoveIdToken<T>(this ISession session) => session.Remove(GetIdTokenKey<T>());
     
-    public static bool HasAccessToken(this ISession session) => session.Keys.Contains(TokenKey);
-    public static string? GetAccessToken(this ISession session) => session?.GetString(TokenKey);
-    public static void RemoveAccessToken(this ISession session) => session.Remove(TokenKey);
+    public static bool HasAccessToken<T>(this ISession session) => session.Keys.Contains(GetTokenKey<T>());
+    public static string? GetAccessToken<T>(this ISession session) => session?.GetString(GetTokenKey<T>());
+    public static void RemoveAccessToken<T>(this ISession session) => session.Remove(GetTokenKey<T>());
 
-    public static bool HasRefreshToken(this ISession session) => session.Keys.Contains(RefreshTokenKey);
-    public static string? GetRefreshToken(this ISession session) => session?.GetString(RefreshTokenKey);
-    public static void RemoveRefreshToken(this ISession session) => session.Remove(RefreshTokenKey);
+    public static bool HasRefreshToken<T>(this ISession session) => session.Keys.Contains(GetRefreshTokenKey<T>());
+    public static string? GetRefreshToken<T>(this ISession session) => session?.GetString(GetRefreshTokenKey<T>());
+    public static void RemoveRefreshToken<T>(this ISession session) => session.Remove(GetRefreshTokenKey<T>());
 
-    public static bool HasExpiryDate(this ISession session) => session.Keys.Contains(ExpiryKey);
-    public static DateTime? GetExpiryDate(this ISession session) => session.GetDateTime(ExpiryKey);
+    public static bool HasExpiryDate<T>(this ISession session) => session.Keys.Contains(GetExpiryKey<T>());
+    public static DateTime? GetExpiryDate<T>(this ISession session) => session.GetDateTime(GetExpiryKey<T>());
     
-    public static bool HasCodeVerifier(this ISession session) => session.Keys.Contains(VerifierKey);
-    public static string? GetCodeVerifier(this ISession session) => session?.GetString(VerifierKey);
-    public static void SetCodeVerifier(this ISession session, string codeVerifier) 
-        => session.SetString(VerifierKey, codeVerifier);
-    public static void RemoveCodeVerifier(this ISession session) => session.Remove(VerifierKey);
-    
-    
-
+    public static bool HasCodeVerifier<T>(this ISession session) => session.Keys.Contains(GetVerifierKey<T>());
+    public static string? GetCodeVerifier<T>(this ISession session) => session?.GetString(GetVerifierKey<T>());
+    public static void SetCodeVerifier<T>(this ISession session, string codeVerifier) 
+        => session.SetString(GetVerifierKey<T>(), codeVerifier);
+    public static void RemoveCodeVerifier<T>(this ISession session) => session.Remove(GetVerifierKey<T>());
     
     private static DateTime? GetDateTime(this ISession session, string key)
     {
