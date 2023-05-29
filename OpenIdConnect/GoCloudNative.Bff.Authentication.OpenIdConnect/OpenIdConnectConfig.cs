@@ -23,6 +23,12 @@ public class OpenIdConnectConfig
                         "Configure the client_id in the appsettings.json or program.cs file and try again.");   
         }
         
+        if (string.IsNullOrEmpty(ClientSecret))
+        {
+            results.Add("GCN-O-427413a281d9: Unable to start GoCloudNative.Bff. Invalid client_secret. " +
+                        "Configure the client_secret in the appsettings.json or program.cs file and try again.");   
+        }
+        
         errors = results;
         return !results.Any();
     }

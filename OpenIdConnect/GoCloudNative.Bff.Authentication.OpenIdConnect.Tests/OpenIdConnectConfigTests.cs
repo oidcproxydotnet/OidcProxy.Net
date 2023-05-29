@@ -4,9 +4,10 @@ namespace GoCloudNative.Bff.Authentication.OpenIdConnect.Tests;
 
 public class OpenIdConnectConfigTests
 {
-    public OpenIdConnectConfig _config = new()
+    private readonly OpenIdConnectConfig _config = new()
     { 
-        ClientId = "test"
+        ClientId = "test",
+        ClientSecret = "test"
     };
 
     [Fact]
@@ -29,5 +30,18 @@ public class OpenIdConnectConfigTests
 
         actual.Should().BeFalse();
         errors.Any(x => x.Contains("client_id", StringComparison.InvariantCultureIgnoreCase)).Should().BeTrue();
+    }
+    
+    [Theory]
+    [InlineData(null)]
+    [InlineData("")]
+    public void WhenInvalidClientSecret_ShouldThrowException(string invalid)
+    {
+        _config.ClientSecret = invalid;
+
+        var actual = _config.Validate(out var errors);
+
+        actual.Should().BeFalse();
+        errors.Any(x => x.Contains("client_secret", StringComparison.InvariantCultureIgnoreCase)).Should().BeTrue();
     }
 }
