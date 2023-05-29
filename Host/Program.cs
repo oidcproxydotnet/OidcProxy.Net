@@ -12,8 +12,9 @@ builder.Services.AddSecurityBff(o =>
         o.ConfigureAzureAd(builder.Configuration.GetSection("AzureAd"), "aad");
         
         o.LoadYarpFromConfig(builder.Configuration.GetSection("ReverseProxy"));
-    })
-    .AddLogging();
+    });
+
+builder.Services.AddLogging();
 
 var app = builder.Build();
 

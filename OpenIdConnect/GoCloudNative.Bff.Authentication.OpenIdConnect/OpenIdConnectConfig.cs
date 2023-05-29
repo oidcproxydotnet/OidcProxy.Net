@@ -1,6 +1,3 @@
-using System;
-using System.Collections.Generic;
-
 namespace GoCloudNative.Bff.Authentication.OpenIdConnect;
 
 public class OpenIdConnectConfig
@@ -16,12 +13,4 @@ public class OpenIdConnectConfig
     public string[] Scopes { get; set; } = Array.Empty<string>();
 
     public string PostLogoutRedirectEndpoint { get; set; } = "/";
-
-    public virtual bool Validate(out IEnumerable<string> errors)
-    {
-        var results = new List<string>();
-        errors = results;
-
-        return true;
-    }
 }
