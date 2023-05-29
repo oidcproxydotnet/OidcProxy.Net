@@ -1,6 +1,6 @@
-# GCN-O-427413a281d9
+# GCN-O-e0180c31edd7
 
-> GCN-O-427413a281d9: Unable to start GoCloudNative.Bff. Invalid client_secret. Configure the client_secret in the appsettings.json or program.cs file and try again.
+> GCN-O-e0180c31edd7: Unable to start GoCloudNative.Bff. Invalid authority. Configure the authority in the appsettings.json or program.cs file and try again.
 
 The GoCloudNative BFF is a authentication gateway. As a result, you must configure an identity provider (correctly) in order for it to start.
 
@@ -23,12 +23,12 @@ builder.Services.AddSecurityBff(o =>
 
 ## How to reproduce this error
 
-To reproduce the error, the `ClientSecret` needs to be missing:
+To reproduce the error, the `Authority` needs to be missing:
 
 ```json
   "Oidc": {
     "CliendId": "{yourClientId}",
-    "Authority": "https://{yourAuthority}",
+    "ClientSecret": "{yourClientSecret}",
     "Scopes": [
       "openid", "profile", "offline_access"
     ]
@@ -40,8 +40,8 @@ or empty:
 ```json
   "Oidc": {
     "CliendId": "{yourClientId}",
-    "ClientSecret": "",
-    "Authority": "https://{yourAuthority}",
+    "ClientSecret": "{yourClientSecret}",
+    "Authority": "",
     "Scopes": [
       "openid", "profile", "offline_access"
     ]
@@ -53,8 +53,8 @@ or misspelled:
 ```json
   "Oidc": {
     "CliendId": "{yourClientId}",
-    "Client_Secret": "{yourClientSecret}",
-    "Authority": "https://{yourAuthority}",
+    "ClientSecret": "{yourClientSecret}",
+    "Autority": "https://yourauthority.com",
     "Scopes": [
       "openid", "profile", "offline_access"
     ]
@@ -66,8 +66,36 @@ or incorrect casing:
 ```json
   "Oidc": {
     "CliendId": "{yourClientId}",
-    "Clientsecret": "{yourClientSecret}",
-    "Authority": "https://{yourAuthority}",
+    "ClientSecret": "{yourClientSecret}",
+    "authority": "https://yourauthority.com",
+    "Scopes": [
+      "openid", "profile", "offline_access"
+    ]
+  },
+```
+
+Most importantly: The Authority MUST be a valid URL. If you provide a value that isn't a URL, this exception will be thrown too.
+
+These are invalid Authority values:
+
+```json
+  "Oidc": {
+    "CliendId": "{yourClientId}",
+    "ClientSecret": "{yourClientSecret}",
+    "authority": "yourauthority.com",
+    "Scopes": [
+      "openid", "profile", "offline_access"
+    ]
+  },
+```
+
+and
+
+```json
+  "Oidc": {
+    "CliendId": "{yourClientId}",
+    "ClientSecret": "{yourClientSecret}",
+    "authority": "htp://yourauthority.com",
     "Scopes": [
       "openid", "profile", "offline_access"
     ]
@@ -75,13 +103,13 @@ or incorrect casing:
 ```
 
 ## Solution
-Configure the `ClientSecret` correctly:
+Configure the `Authority` correctly:
 
 ```json
   "Oidc": {
     "CliendId": "{yourClientId}",
     "ClientSecret": "{yourClientSecret}",
-    "Authority": "https://{yourAuthority}",
+    "Authority": "https://yourauthority.com",
     "Scopes": [
       "openid", "profile", "offline_access"
     ]

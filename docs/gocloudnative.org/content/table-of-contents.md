@@ -22,6 +22,8 @@
       - Applying a BFF in Kubernetes
 - Solving configuration errors:
   - [GCN-O-e9ba6693bb0e](/errors/gcn-o-e9ba6693bb0e)
+  - [GCN-O-e0180c31edd7](/errors/gcn-o-e0180c31edd7)
+  - [GCN-O-427413a281d9](/errors/gcn-o-427413a281d9)
   - [GCN-B-f204c0800192](/errors/gcn-b-f204c0800192)
   - [GCN-B-66b217e55cd6](/errors/gcn-b-66b217e55cd6)
   - [GCN-B-7072e626c679](/errors/gcn-b-7072e626c679)

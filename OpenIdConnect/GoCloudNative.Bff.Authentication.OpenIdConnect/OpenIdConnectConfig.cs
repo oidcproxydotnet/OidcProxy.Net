@@ -1,3 +1,5 @@
+using System.Text.RegularExpressions;
+
 namespace GoCloudNative.Bff.Authentication.OpenIdConnect;
 
 public class OpenIdConnectConfig
@@ -28,7 +30,15 @@ public class OpenIdConnectConfig
             results.Add("GCN-O-427413a281d9: Unable to start GoCloudNative.Bff. Invalid client_secret. " +
                         "Configure the client_secret in the appsettings.json or program.cs file and try again.");   
         }
-        
+
+        var urlRegex =
+            @"^https?:\/\/(?:www\.)?[-a-zA-Z0-9@:%._\+~#=]{1,256}\.[a-zA-Z0-9()]{1,6}\b(?:[-a-zA-Z0-9()@:%_\+.~#?&\/=]*)$";
+        if (Authority == null || !Regex.IsMatch(Authority, urlRegex))
+        {
+            results.Add("GCN-O-e0180c31edd7: Unable to start GoCloudNative.Bff. Invalid authority. " +
+                        "Configure the authority in the appsettings.json or program.cs file and try again."); 
+        }
+
         errors = results;
         return !results.Any();
     }

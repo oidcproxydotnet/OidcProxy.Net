@@ -7,7 +7,8 @@ public class OpenIdConnectConfigTests
     private readonly OpenIdConnectConfig _config = new()
     { 
         ClientId = "test",
-        ClientSecret = "test"
+        ClientSecret = "test",
+        Authority = "https://authority.com"
     };
 
     [Fact]
@@ -43,5 +44,35 @@ public class OpenIdConnectConfigTests
 
         actual.Should().BeFalse();
         errors.Any(x => x.Contains("client_secret", StringComparison.InvariantCultureIgnoreCase)).Should().BeTrue();
+    }
+    
+    [Theory]
+    [InlineData("https://authority")]
+    [InlineData("htt://authority.com")]
+    [InlineData("")]
+    [InlineData("null")]
+    public void WhenInvalidAuthority_ShouldThrowException(string invalid)
+    {
+        _config.Authority = invalid;
+
+        var actual = _config.Validate(out var errors);
+
+        actual.Should().BeFalse();
+        errors.Any(x => x.Contains("authority", StringComparison.InvariantCultureIgnoreCase)).Should().BeTrue();
+    }
+    
+    [Theory]
+    [InlineData("https://foo.eu.auth0.com")]
+    [InlineData("https://10.0.0.1")]
+    [InlineData("https://127.0.0.1:5123")]
+    [InlineData("http://10.0.0.1")]
+    public void WhenValidAuthority_ShouldNotThrowException(string valid)
+    {
+        _config.Authority = valid;
+
+        var actual = _config.Validate(out var errors);
+
+        actual.Should().BeTrue();
+        errors.Should().BeEmpty();
     }
 }
