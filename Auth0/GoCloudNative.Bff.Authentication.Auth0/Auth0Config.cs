@@ -1,6 +1,6 @@
 namespace GoCloudNative.Bff.Authentication.Auth0;
 
-public class Auth0Config
+public class  Auth0Config
 {
     public string ClientId { get; set; } = string.Empty;
     
