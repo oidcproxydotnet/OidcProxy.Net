@@ -13,4 +13,17 @@ public class OpenIdConnectConfig
     public string[] Scopes { get; set; } = Array.Empty<string>();
 
     public string PostLogoutRedirectEndpoint { get; set; } = "/";
+
+    public bool Validate(out IEnumerable<string> errors)
+    {
+        var results = new List<string>();
+        if (string.IsNullOrEmpty(ClientId))
+        {
+            results.Add("GCN-O-e9ba6693bb0e: Unable to start GoCloudNative.Bff. Invalid client_id. " +
+                        "Configure the client_id in the appsettings.json or program.cs file and try again.");   
+        }
+        
+        errors = results;
+        return !results.Any();
+    }
 }

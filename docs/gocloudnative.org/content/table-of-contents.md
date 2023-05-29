@@ -20,7 +20,8 @@
     - Distributed apps
       - Applying a BFF in an Azure Container Apps environment
       - Applying a BFF in Kubernetes
-- Configuration errors
+- Solving configuration errors:
+  - [GCN-O-e9ba6693bb0e](/errors/gcn-o-e9ba6693bb0e)
   - [GCN-B-f204c0800192](/errors/gcn-b-f204c0800192)
   - [GCN-B-66b217e55cd6](/errors/gcn-b-66b217e55cd6)
   - [GCN-B-7072e626c679](/errors/gcn-b-7072e626c679)
@@ -29,8 +30,3 @@
   - Horizontal scaling/scaling out
   - Extensibility (implementing custom identity providers)
   - Aggregating responses from multiple downstream endpoints
-- Alternatives
-  - Blazor
-  - dotnet new Angular
-  - Azure Easy Auth
-  - Duende

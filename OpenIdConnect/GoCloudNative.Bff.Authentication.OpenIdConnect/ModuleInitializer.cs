@@ -10,6 +10,11 @@ public static class ModuleInitializer
 
     public static void ConfigureOpenIdConnect(this BffOptions options, OpenIdConnectConfig config, string endpointName = "account")
     {
+        if (!config.Validate(out IEnumerable<string> errors))
+        {
+            throw new NotSupportedException(string.Join(", ", errors));
+        }
+
         options.RegisterIdentityProvider<OpenIdConnectIdentityProvider, OpenIdConnectConfig>(config, endpointName);
     }
 }
