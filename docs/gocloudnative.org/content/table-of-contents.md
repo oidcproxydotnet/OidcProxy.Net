@@ -27,6 +27,7 @@
   - Aggregating responses from multiple downstream endpoints
 - Solving configuration errors:
   - Error [GCN-A-1701a00d8c56](/errors/gcn-a-1701a00d8c56)
+  - Error [GCN-A-fe95cf8c11ae](/errors/gcn-a-fe95cf8c11ae)
   - Error [GCN-B-66b217e55cd6](/errors/gcn-b-66b217e55cd6)
   - Error [GCN-B-7072e626c679](/errors/gcn-b-7072e626c679)
   - Error [GCN-B-f204c0800192](/errors/gcn-b-f204c0800192)
