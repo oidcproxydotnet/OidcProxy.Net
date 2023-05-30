@@ -1,7 +1,7 @@
 ---
 author: Albert Starreveld
 title: GoCloudNative.BFF - Documentation
-description: Everything you need to know when you implement the GoCloudNative.BFF with your aspnetcore API and your Angular/NX single page application.
+description: Everything you need to know to implement the a aspnetcore BFF with. Particulary usefull with microservice and microfrontend architectures.
 ---
 
 # GoCloudNative.Authentication.Bff
