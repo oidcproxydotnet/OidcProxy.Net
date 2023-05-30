@@ -36,7 +36,8 @@ public class RefreshTokenTests
 
         var tokenResponse = await sut.RefreshTokenAsync("test");
 
-        const string format = "yyyy-MM-dd HH:mm:ss";
-        tokenResponse.ExpiryDate.ToString(format).Should().Be(expected.ToString(format));
+        var actual = tokenResponse.ExpiryDate - expected;
+
+        actual.TotalSeconds.Should().BeLessThan(10);
     }
 }

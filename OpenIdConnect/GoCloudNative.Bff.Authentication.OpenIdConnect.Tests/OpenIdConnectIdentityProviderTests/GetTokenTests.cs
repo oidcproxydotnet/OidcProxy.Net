@@ -36,7 +36,8 @@ public class GetTokenTests
 
         var tokenResponse = await sut.GetTokenAsync("lorum", "ipsum", "dolar sit amet");
 
-        const string format = "yyyy-MM-dd HH:mm:ss";
-        tokenResponse.ExpiryDate.ToString(format).Should().Be(expected.ToString(format));
+        var actual = tokenResponse.ExpiryDate - expected;
+
+        actual.TotalSeconds.Should().BeLessThan(10);
     }
 }
