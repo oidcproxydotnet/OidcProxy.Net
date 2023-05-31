@@ -47,10 +47,9 @@ public class OpenIdConnectConfigTests
     }
     
     [Theory]
-    [InlineData("https://authority")]
     [InlineData("htt://authority.com")]
     [InlineData("")]
-    [InlineData("null")]
+    [InlineData(null)]
     public void WhenInvalidAuthority_ShouldThrowException(string invalid)
     {
         _config.Authority = invalid;
@@ -66,6 +65,8 @@ public class OpenIdConnectConfigTests
     [InlineData("https://10.0.0.1")]
     [InlineData("https://127.0.0.1:5123")]
     [InlineData("http://10.0.0.1")]
+    [InlineData("https://localhost")]
+    [InlineData("https://localhost:8443")]
     public void WhenValidAuthority_ShouldNotThrowException(string valid)
     {
         _config.Authority = valid;

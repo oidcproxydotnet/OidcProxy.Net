@@ -2,7 +2,7 @@
 author: Albert Starreveld
 title: API Authorization with OAuth2/OpenId Connect
 description: Read how to implement OAuth2/OIDC in a aspnetcore C# application.
-tags: ["OAuth", "OAuth2", "C#", "API", "aspnetcore", "OpenId Connect", "access_tokens"]
+tags: ["OAuth", "OAuth2", "csharp", "API", "aspnetcore", "OpenId Connect", "access_tokens"]
 ---
 # API Authorization with OAuth2/OpenId Connect
 

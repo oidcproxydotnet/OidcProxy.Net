@@ -33,8 +33,7 @@ public class OpenIdConnectConfig
                         "More info: https://bff.gocloudnative.org/errors/gcn-o-427413a281d9");   
         }
 
-        var urlRegex =
-            @"^https?:\/\/(?:www\.)?[-a-zA-Z0-9@:%._\+~#=]{1,256}\.[a-zA-Z0-9()]{1,6}\b(?:[-a-zA-Z0-9()@:%_\+.~#?&\/=]*)$";
+        var urlRegex = @"^https?:\/\/";
         if (Authority == null || !Regex.IsMatch(Authority, urlRegex))
         {
             results.Add("GCN-O-e0180c31edd7: Unable to start GoCloudNative.Bff. Invalid authority. " +
