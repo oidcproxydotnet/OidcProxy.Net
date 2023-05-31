@@ -27,6 +27,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GoCloudNative.Bff.Authentic
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GoCloudNative.Bff.Authentication.Auth0.Tests", "Auth0\GoCloudNative.Bff.Authentication.Auth0.Tests\GoCloudNative.Bff.Authentication.Auth0.Tests.csproj", "{AEA82840-02BE-4E9D-A506-FD2634D01EF1}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GoCloudNative.Bff.Authentication.AzureAd.Tests", "GoCloudNative.Bff.Authentication.AzureAd.Tests\GoCloudNative.Bff.Authentication.AzureAd.Tests.csproj", "{E0EA9B61-39D3-42F5-ADED-B79FD925E71F}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -72,6 +74,10 @@ Global
 		{AEA82840-02BE-4E9D-A506-FD2634D01EF1}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{AEA82840-02BE-4E9D-A506-FD2634D01EF1}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{AEA82840-02BE-4E9D-A506-FD2634D01EF1}.Release|Any CPU.Build.0 = Release|Any CPU
+		{E0EA9B61-39D3-42F5-ADED-B79FD925E71F}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{E0EA9B61-39D3-42F5-ADED-B79FD925E71F}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{E0EA9B61-39D3-42F5-ADED-B79FD925E71F}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{E0EA9B61-39D3-42F5-ADED-B79FD925E71F}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(NestedProjects) = preSolution
 		{EDAABEB7-BBAE-49DA-86A8-EB3C5540B86C} = {38E49F8C-C664-4A1B-8FE7-95F9855AEF1B}
@@ -80,5 +86,6 @@ Global
 		{875271E5-DA4D-4FED-AAE6-E2E3D60D40CA} = {EE04429D-4B0B-4A40-9A32-23A5F159EE32}
 		{B0427177-EE01-4EBB-A2E7-FF6A4B00F8F9} = {F5DA4BFE-9F56-4B90-B59A-E21DBA24397F}
 		{AEA82840-02BE-4E9D-A506-FD2634D01EF1} = {38E49F8C-C664-4A1B-8FE7-95F9855AEF1B}
+		{E0EA9B61-39D3-42F5-ADED-B79FD925E71F} = {F5DA4BFE-9F56-4B90-B59A-E21DBA24397F}
 	EndGlobalSection
 EndGlobal

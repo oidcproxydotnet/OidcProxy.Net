@@ -10,6 +10,11 @@ public static class ModuleInitializer
     
     public static void ConfigureAuth0(this BffOptions options, Auth0Config config, string endpointName = "account")
     {
+        if (!config.Validate(out var errors))
+        {
+            throw new NotSupportedException(string.Join(", ", errors));
+        }
+        
         options.RegisterIdentityProvider<Auth0IdentityProvider, Auth0Config>(config, endpointName);
     }
 }

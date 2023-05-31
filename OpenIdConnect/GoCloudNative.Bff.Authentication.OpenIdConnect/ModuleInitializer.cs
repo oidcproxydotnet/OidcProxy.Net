@@ -10,7 +10,7 @@ public static class ModuleInitializer
 
     public static void ConfigureOpenIdConnect(this BffOptions options, OpenIdConnectConfig config, string endpointName = "account")
     {
-        if (!config.Validate(out IEnumerable<string> errors))
+        if (!config.Validate(out var errors))
         {
             throw new NotSupportedException(string.Join(", ", errors));
         }
