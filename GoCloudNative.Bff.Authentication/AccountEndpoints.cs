@@ -72,7 +72,7 @@ public static class AccountEndpoints
             
                 await context.Session.RemoveCodeVerifierAsync<TIdp>();
 
-                context.Session.SaveAsync<TIdp>(tokenResponse);
+                await context.Session.SaveAsync<TIdp>(tokenResponse);
 
                 logger.LogLine(context, new LogLine($"Redirect(/)"));
                 

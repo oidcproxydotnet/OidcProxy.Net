@@ -47,9 +47,9 @@ public class TokenRenewalTests : IAsyncLifetime
             tasks.Add(GetToken());
         }
 
-        Task.WhenAll(tasks);
+        await Task.WhenAll(tasks);
 
-        _identityProvider.Received(1).RefreshTokenAsync(Arg.Any<string>());
+        await _identityProvider.Received(1).RefreshTokenAsync(Arg.Any<string>());
 
         async Task GetToken()
         {   
@@ -101,7 +101,7 @@ public class TokenRenewalTests : IAsyncLifetime
         _session.SetString(cacheKey, "true");
 
         // Act
-        Task.Run(async () =>
+        await Task.Run(async () =>
         {
             await Task.Delay(1000);
 

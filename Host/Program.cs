@@ -12,7 +12,6 @@ var auth0Config = builder.Configuration.GetSection("auth0").Get<Auth0Config>();
 var aadConfig = builder.Configuration.GetSection("AzureAd").Get<AzureAdConfig>();
 
 var redisConnectionString = builder.Configuration.GetSection("ConnectionStrings:Redis").Get<string>();
-
 if (!string.IsNullOrEmpty(redisConnectionString))
 {
     var redis = ConnectionMultiplexer.Connect(redisConnectionString);
