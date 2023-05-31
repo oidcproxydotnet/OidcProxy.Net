@@ -1,12 +1,13 @@
-# GCN-AZ-427413a281d9
+# GCN-AZ-e9ba6693bb0e
 
-> GCN-AZ-427413a281d9: Unable to start GoCloudNative.Bff. Invalid client_secret. Configure the client_secret in the appsettings.json or program.cs file and try again.
+> GCN-AZ-e9ba6693bb0e: Unable to start GoCloudNative.Bff. Invalid client_id. Configure the client_id in the appsettings.json or program.cs file and try again.
 
 The GoCloudNative BFF is a authentication gateway. As a result, you must configure an identity provider (correctly) in order for it to start.
 
 To bootstrap the BFF, it's recommended to load the identity provider confiuration from the `appsettings.json`:
 
 ```csharp
+
 //...
 var builder = WebApplication.CreateBuilder(args);
 
@@ -22,11 +23,11 @@ builder.Services.AddSecurityBff(o =>
 
 ## How to reproduce this error
 
-To reproduce the error, the `ClientSecret` needs to be missing:
+To reproduce the error, the `ClientId` needs to be missing:
 
 ```json
   "Oidc": {
-    "CliendId": "{yourClientId}",
+    "ClientSecret": "{yourClientSecret}",
     "Authority": "https://{yourAuthority}",
     "TenantId": "{yourTenantId}",
     "Scopes": [
@@ -39,8 +40,8 @@ or empty:
 
 ```json
   "Oidc": {
-    "CliendId": "{yourClientId}",
-    "ClientSecret": "",
+    "ClientId": "",
+    "ClientSecret": "{yourClientSecret}",
     "Authority": "https://{yourAuthority}",
     "Scopes": [
       "openid", "profile", "offline_access"
@@ -52,8 +53,8 @@ or misspelled:
 
 ```json
   "Oidc": {
-    "CliendId": "{yourClientId}",
-    "Client_Secret": "{yourClientSecret}",
+    "Client_Id": "{yourClientId}",
+    "ClientSecret": "{yourClientSecret}",
     "Authority": "https://{yourAuthority}",
     "Scopes": [
       "openid", "profile", "offline_access"
@@ -65,8 +66,8 @@ or incorrect casing:
 
 ```json
   "Oidc": {
-    "CliendId": "{yourClientId}",
-    "Clientsecret": "{yourClientSecret}",
+    "Cliendid": "{yourClientId}",
+    "ClientSecret": "{yourClientSecret}",
     "Authority": "https://{yourAuthority}",
     "Scopes": [
       "openid", "profile", "offline_access"
@@ -75,7 +76,7 @@ or incorrect casing:
 ```
 
 ## Solution
-Configure the `ClientSecret` correctly:
+Configure the `ClientId` correctly:
 
 ```json
   "Oidc": {
@@ -91,13 +92,12 @@ Configure the `ClientSecret` correctly:
 
 and restart the BFF.
 
-### How to find the ClientSecret in Azure
+### How to find the ClientId in Azure
 
-To find the correct value for the `ClientSecret` variable, 
+To find the correct value for the `ClientId` variable, 
 
 * navigate to the Azure Portal, navigate to Azure Active Directory, and click `App Registrations` in the menu on the left. 
 * Select your app registrations or create one. (If you don't have an app registration yet, follow [the Azure Active Directory Quickstart](https://bff.gocloudnative.org/integration-manuals/quickstarts/azuread/quickstart/))
 * This is what the overview page of an `App registration` looks like:
 ![App Registration overview page](https://raw.githubusercontent.com/thecloudnativewebapp/GoCloudNative.Bff/main/docs/gocloudnative.org/content/integration-manuals/quickstarts/azuread/app-registration-overview.png)
-* To create an app secret, click `Add a certificate or secret`. If you have done so already in the past, this link says `x certificates, x secrets`. Click it.
-* Click `+ New client secret`, and copy the secret value to the `appsettings.json` file.
+* Copy the `Application (client) ID` value to the `appsettings.json` file.
