@@ -8,14 +8,14 @@ namespace GoCloudNative.Bff.Authentication.IdentityProviders;
 public interface IIdentityProvider
 {
     /// <summary>
-    /// Generates the /authorize URI of the Identity Server. /authorize URI must be as defined in section 4.1.1. of the OAuth2 spec: https://www.rfc-editor.org/rfc/rfc6749#section-4.1.1 
+    /// Generates the /authorize URI of the Identity Server. /authorize URI must be as defined in section 3.1.2.1. of the OpenId Connect spec: https://openid.net/specs/openid-connect-core-1_0.html#AuthRequest
     /// </summary>
     /// <param name="redirectUri">The URI the identity server will redirect to after the user has logged in successfully.</param>
     /// <returns>The /authorize URI with all parameters required for the Authorization Code flow.</returns>
     public Task<AuthorizeRequest> GetAuthorizeUrlAsync(string redirectUri);
 
     /// <summary>
-    /// Exchanges the "code" (as defined in section 3.1.2.1. of the OpenId Connect spec: https://openid.net/specs/openid-connect-core-1_0.html#AuthRequest) for an access token
+    /// Exchanges the "code" (as defined in section 3.1.2.5. of the OpenId Connect spec: https://openid.net/specs/openid-connect-core-1_0.html#AuthResponse) for an access token
     /// </summary>
     /// <param name="redirectUri">The URI the identity server must redirect to after the user has logged in successfully.</param>
     /// <param name="code">The querystring parameter "code" that was returned by the OIDC server in the redirect URI as defined in the OpenId Connect spec, section 3.1.2.5.: https://openid.net/specs/openid-connect-core-1_0.html#AuthResponse</param>
@@ -35,7 +35,7 @@ public interface IIdentityProvider
     /// </summary>
     /// <param name="token">Either an access_token or a refresh_token</param>
     /// <returns>Void</returns>
-    public Task Revoke(string token);
+    public Task RevokeAsync(string token);
     
     /// <summary>
     /// Returns the endpoint the end-user must be redirected to, to end the session at the OIDC server.
@@ -43,5 +43,5 @@ public interface IIdentityProvider
     /// <param name="idToken">The id_token that must be revoked</param>
     /// <param name="baseAddress">The base address of the OIDC server</param>
     /// <returns>The endpoint the end-user must be redirected to, to end the session at the OIDC server.</returns>
-    public Task<Uri> GetEndSessionEndpoint(string? idToken, string baseAddress);
+    public Task<Uri> GetEndSessionEndpointAsync(string? idToken, string baseAddress);
 }

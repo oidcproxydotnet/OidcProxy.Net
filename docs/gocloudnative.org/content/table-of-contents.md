@@ -22,7 +22,7 @@
       - Applying a BFF in an Azure Container Apps environment
       - Applying a BFF in Kubernetes
 - Architecture
-  - The GoCloudNative.BFF.Authentication software-architecture
+  - [The GoCloudNative.BFF.Authentication software-architecture](/architecture/software-architecture)
   - Horizontal scaling/scaling out
   - Extensibility (implementing custom identity providers)
   - Aggregating responses from multiple downstream endpoints

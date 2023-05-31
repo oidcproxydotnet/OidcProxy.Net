@@ -29,7 +29,7 @@ public class Auth0IdentityProvider : OpenIdConnectIdentityProvider
         return new AuthorizeRequest(new Uri(authorizeRequestWithAudience), result.CodeVerifier);
     }
 
-    public override Task Revoke(string token)
+    public override Task RevokeAsync(string token)
     {
         // I.l.e.: Auth0 does not support token revocation
         

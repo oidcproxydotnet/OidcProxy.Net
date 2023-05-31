@@ -96,7 +96,7 @@ public static class AccountEndpoints
                     var accessToken = context.Session.GetAccessToken<TIdp>();
                     
                     logger.LogLine(context, new LogLine($"Revoking access_token."));
-                    await identityProvider.Revoke(accessToken);
+                    await identityProvider.RevokeAsync(accessToken);
                 }
             
                 if (context.Session.HasRefreshToken<TIdp>())
@@ -104,7 +104,7 @@ public static class AccountEndpoints
                     var refreshToken = context.Session.GetRefreshToken<TIdp>();
                     
                     logger.LogLine(context, new LogLine($"Revoking refresh_token."));
-                    await identityProvider.Revoke(refreshToken);
+                    await identityProvider.RevokeAsync(refreshToken);
                 }
 
                 string? idToken = null;
@@ -117,7 +117,7 @@ public static class AccountEndpoints
 
                 var baseAddress = $"{DetermineHostName(context)}";
                 
-                var endSessionEndpoint = await identityProvider.GetEndSessionEndpoint(idToken, baseAddress);
+                var endSessionEndpoint = await identityProvider.GetEndSessionEndpointAsync(idToken, baseAddress);
                 
                 logger.LogLine(context, new LogLine($"Redirect to {endSessionEndpoint}"));
 

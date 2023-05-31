@@ -113,7 +113,7 @@ public class OpenIdConnectIdentityProvider : IIdentityProvider
         return new TokenResponse(response.AccessToken, response.IdentityToken, response.RefreshToken, expiresIn);
     }
 
-    public virtual async Task Revoke(string token)
+    public virtual async Task RevokeAsync(string token)
     {
         var openIdConfiguration = await GetWellKnownConfiguration();
 
@@ -131,7 +131,7 @@ public class OpenIdConnectIdentityProvider : IIdentityProvider
         }
     }
 
-    public async Task<Uri> GetEndSessionEndpoint(string? idToken, string baseAddress)
+    public async Task<Uri> GetEndSessionEndpointAsync(string? idToken, string baseAddress)
     {        
         // Determine redirect URL
         var logOutRedirectEndpoint = _configuration.PostLogoutRedirectEndpoint.StartsWith('/')

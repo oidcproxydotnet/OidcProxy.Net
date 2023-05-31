@@ -33,7 +33,7 @@ public class AzureAdIdentityProvider : OpenIdConnectIdentityProvider
         return new AuthorizeRequest(startUrl, verifier);
     }
 
-    public override Task Revoke(string token)
+    public override Task RevokeAsync(string token)
     {
         return Task.CompletedTask; // not supported by Azure
     }

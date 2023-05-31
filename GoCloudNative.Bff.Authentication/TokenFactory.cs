@@ -55,7 +55,7 @@ public class TokenFactory
                 // in case of static refresh_tokens requesting a new access token will not always yield a refresh_token
                 if (!string.IsNullOrEmpty(tokenResponse.refresh_token) && refreshToken != tokenResponse.refresh_token) 
                 {
-                    await _identityProvider.Revoke(refreshToken);
+                    await _identityProvider.RevokeAsync(refreshToken);
                 }
 
                 return;

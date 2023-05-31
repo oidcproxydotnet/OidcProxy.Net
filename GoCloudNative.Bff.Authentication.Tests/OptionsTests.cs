@@ -77,12 +77,12 @@ public class OptionsTests
             throw new NotImplementedException();
         }
 
-        public Task Revoke(string token)
+        public Task RevokeAsync(string token)
         {
             throw new NotImplementedException();
         }
 
-        public Task<Uri> GetEndSessionEndpoint(string? idToken, string baseAddress)
+        public Task<Uri> GetEndSessionEndpointAsync(string? idToken, string baseAddress)
         {
             throw new NotImplementedException();
         }
