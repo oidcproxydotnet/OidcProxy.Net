@@ -35,7 +35,7 @@ public static class Configuration
         AccessTokenLifetime = 75,
         AlwaysIncludeUserClaimsInIdToken = true,
 
-        RedirectUris = { "https://localhost:8443/account/login/callback" },
+        RedirectUris = { "https://localhost:8443/account/login/callback", "https://localhost:8443/oidc/login/callback" },
         FrontChannelLogoutUri = "https://localhost:8443/",
         PostLogoutRedirectUris = { "https://localhost:8443/" },
 
