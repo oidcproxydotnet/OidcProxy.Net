@@ -36,7 +36,7 @@ public static class AccountEndpoints
 
                 if (!string.IsNullOrEmpty(authorizeRequest.CodeVerifier))
                 {
-                    context.Session.SetCodeVerifier<TIdp>(authorizeRequest.CodeVerifier);
+                    await context.Session.SetCodeVerifierAsync<TIdp>(authorizeRequest.CodeVerifier);
                 }
 
                 logger.LogLine(context, new LogLine($"Redirect({authorizeRequest.AuthorizeUri})"));
@@ -70,9 +70,9 @@ public static class AccountEndpoints
                 logger.LogLine(context, new LogLine($"Exchanging code for access_token."));
                 var tokenResponse = await identityProvider.GetTokenAsync(redirectUrl, code, codeVerifier);
             
-                context.Session.RemoveCodeVerifier<TIdp>();
+                await context.Session.RemoveCodeVerifierAsync<TIdp>();
 
-                context.Session.Save<TIdp>(tokenResponse);
+                context.Session.SaveAsync<TIdp>(tokenResponse);
 
                 logger.LogLine(context, new LogLine($"Redirect(/)"));
                 

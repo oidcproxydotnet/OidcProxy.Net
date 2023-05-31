@@ -14,7 +14,7 @@ public class TokenFactory
         _session = session;
     }
     
-    public async Task<bool> RenewAccessTokenIfExpired<T>(int timeoutInSeconds = 90)
+    public async Task<bool> RenewAccessTokenIfExpiredAsync<T>(int timeoutInSeconds = 90)
     {
         var expiryDateInSession = _session.GetExpiryDate<T>();
         if (!expiryDateInSession.HasValue)
@@ -31,11 +31,11 @@ public class TokenFactory
         }
 
         var refreshToken = _session.GetRefreshToken<T>(); // todo: What is refresh_token is null?
-        await Renew<T>(refreshToken, timeoutInSeconds);
+        await RenewAsync<T>(refreshToken, timeoutInSeconds);
         return true;
     }
     
-    private async Task Renew<T>(string refreshToken, int timeoutInSeconds = 90)
+    private async Task RenewAsync<T>(string refreshToken, int timeoutInSeconds = 90)
     {
         var cacheKey = $"refreshing_token_{_session.Id}";
         var valueInSession = _session.GetString(cacheKey);
@@ -50,7 +50,7 @@ public class TokenFactory
             {
                 var tokenResponse = await _identityProvider.RefreshTokenAsync(refreshToken);
             
-                _session.UpdateAccessAndRefreshToken<T>(tokenResponse);
+                await _session.UpdateAccessAndRefreshTokenAsync<T>(tokenResponse);
 
                 // in case of static refresh_tokens requesting a new access token will not always yield a refresh_token
                 if (!string.IsNullOrEmpty(tokenResponse.refresh_token) && refreshToken != tokenResponse.refresh_token) 
@@ -62,7 +62,7 @@ public class TokenFactory
             }
             finally
             {
-                _session.Remove(cacheKey);
+                await _session.RemoveAsync(cacheKey);
             }
         }
 

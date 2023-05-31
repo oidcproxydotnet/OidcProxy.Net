@@ -40,6 +40,12 @@ public static class ModuleInitializer
         app.MapReverseProxy();
         
         app.UseSession();
+        
+        app.Use(async (context, next) =>
+        {
+            await context.Session.LoadAsync();
+            await next();
+        });
 
         return app;
     }

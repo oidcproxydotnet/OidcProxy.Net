@@ -42,7 +42,7 @@ public class HttpHeaderTransformation<TIdp> : ITransformProvider
             var token = x.HttpContext.Session.GetAccessToken<TIdp>();
             
             var factory = new TokenFactory(_identityProvider, x.HttpContext.Session);
-            if (await factory.RenewAccessTokenIfExpired<TIdp>())
+            if (await factory.RenewAccessTokenIfExpiredAsync<TIdp>())
             {   
                 _logger.LogLine(x.HttpContext, new LogLine("Renewed access_token and refresh_token"));
                 

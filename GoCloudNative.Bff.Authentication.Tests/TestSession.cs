@@ -8,12 +8,12 @@ public class TestSession : ISession
 
     public Task LoadAsync(CancellationToken cancellationToken = new CancellationToken())
     {
-        throw new NotImplementedException();
+        return Task.CompletedTask;
     }
 
     public Task CommitAsync(CancellationToken cancellationToken = new CancellationToken())
     {
-        throw new NotImplementedException();
+        return Task.CompletedTask;
     }
 
     public bool TryGetValue(string key, out byte[]? value)
