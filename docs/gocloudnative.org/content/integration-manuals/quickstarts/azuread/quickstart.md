@@ -3,8 +3,9 @@
 author: Albert Starreveld
 title: Implementing the BFF Security Pattern with AzureAd
 description: Read how to implement the BFF Security Pattern with aspnetcore, Angular, and AzureAd
+tags: ["C#", "API", "aspnetcore", "OpenId Connect", "access_tokens", "Azure Active Directory", "Azure", "Azure B2c"]
 ---
-# Implementing the BFF Security Pattern with AzureAd
+# Implementing the BFF Security Pattern with AzureAd (B2c)
 
 Complete the following three steps to implement the BFF Security Pattern with AzureAd:
 
@@ -12,34 +13,53 @@ Complete the following three steps to implement the BFF Security Pattern with Az
 2. Create an aspnetcore API
 3. Build a BFF
 
-## Step 1.) Create an App Registration in Azure
+## Step 1.) Create an App Registration in Azure (B2c)
 
-To be able to authenticate users via Azure Active Directory, you must create an App Registration. Do so by executing the following commands:
+To be able to authenticate users via Azure Active Directory, you must create an App Registration. Go to https://portal.azure.com, and follow these steps:
 
-```powershell
-az ad app create --display-name bff --web-redirect-uris https://localhost:8443/account/login/callback https://localhost:8443/
+- Create an app registration
+- Create a secret
+- Create an Application ID URI and a scope
+- Request API permissions for the scope, and grant it
 
-az ad app credential reset --id {yourAppId} | ConvertFrom-Json
+### 1. Create an app registration
+* Navigate to `Azure Active Directory`, and click `App registrations` in the menu on the left (or click [here](https://portal.azure.com/#view/Microsoft_AAD_IAM/ActiveDirectoryMenuBlade/~/RegisteredApps)).
+* Click `+ New registration`, and fill out the form as displayed in the screenshot: ![](https://raw.githubusercontent.com/thecloudnativewebapp/GoCloudNative.Bff/main/docs/gocloudnative.org/content/integration-manuals/quickstarts/azuread/new-app-registration.png)\
+Make sure to register the `redirect url` correctly. This is typically `https://{where-you-host-the-bff}/account/login/redirect`. You can add multiple values here. Be sure to ___never register a localhost redirect url for your production environment!!!___
+* When you have completed the form, click the `Register` button at the bottom of the form.
+* Now, you see the following overview: ![App registration overview](https://raw.githubusercontent.com/thecloudnativewebapp/GoCloudNative.Bff/main/docs/gocloudnative.org/content/integration-manuals/quickstarts/azuread/app-registration-overview.png)
+  * Important: Copy the `application ID` to `appsettings.json`. This is the `ClientId`.
+  * Important: Copy the `Directory ID` to `appsettings.json`. This is the `TenantId`.
+
+### 2. Create a secret
+* Click `Add a certificate or secret`, and create a new secret: ![New secret](https://raw.githubusercontent.com/thecloudnativewebapp/GoCloudNative.Bff/main/docs/gocloudnative.org/content/integration-manuals/quickstarts/azuread/new-client-secret.png)\
+Copy the `secret` to the `appsettings.json`. This is the `ClientSecret`.
+
+### 3. Create an application ID URI
+* Now, click `Add an Application ID URI` to create a scope. You'll see the following page: ![New App ID URI](https://raw.githubusercontent.com/thecloudnativewebapp/GoCloudNative.Bff/main/docs/gocloudnative.org/content/integration-manuals/quickstarts/azuread/adding-scope-1.png)
+* Click `add a scope`: ![Create a new scope](https://raw.githubusercontent.com/thecloudnativewebapp/GoCloudNative.Bff/main/docs/gocloudnative.org/content/integration-manuals/quickstarts/azuread/adding-scope-2.png)
+* When you click `Add scope`, Azure will ask for an Application URI first: ![Create app URI](https://raw.githubusercontent.com/thecloudnativewebapp/GoCloudNative.Bff/main/docs/gocloudnative.org/content/integration-manuals/quickstarts/azuread/adding-scope-3.png)\
+Choose any name you like here.
+* After the `scope` has been created succesfully, you'll be redirected to the `Expose an API` overview page: ![](https://raw.githubusercontent.com/thecloudnativewebapp/GoCloudNative.Bff/main/docs/gocloudnative.org/content/integration-manuals/quickstarts/azuread/added-scope.png)\
+Copy the url that's displayed here, copy it to the `appsettings.json`, to the `scopes` section.
+
+### 4. Request permission and grant consent
+* Now, navigate to `API Permissions` in the main menu on the left. You will see this screen: ![](https://raw.githubusercontent.com/thecloudnativewebapp/GoCloudNative.Bff/main/docs/gocloudnative.org/content/integration-manuals/quickstarts/azuread/initial-permissions.png)
+* Click `+ Add a permission`, and fill out the form like so: ![Add a permission](https://raw.githubusercontent.com/thecloudnativewebapp/GoCloudNative.Bff/main/docs/gocloudnative.org/content/integration-manuals/quickstarts/azuread/request-api-permissions.png)
+* Now, the permission will be added to the list. But it hasn't been approved yet. Click `Grant admin consent for B2c` ![Grant consent](https://raw.githubusercontent.com/thecloudnativewebapp/GoCloudNative.Bff/main/docs/gocloudnative.org/content/integration-manuals/quickstarts/azuread/approve-permission.png)
+* As a result of all of the above, you'll need the following section in your BFFs `appsettings.json`:
+
+```json
+  "AzureAd": {
+    "ClientId": "abaedd26-ba6f-4d45-a123-415a23b32756",
+    "ClientSecret": "xkd8Q~UkPKI-wc2_AMvxmXyL-152I0JF4PSZZdpb",
+    "TenantId": "983356be-7fda-4f41-887c-a6a87e9fcf34",
+    "DiscoveryEndpoint": "https://login.microsoftonline.com/983356be-7fda-4f41-887c-a6a87e9fcf34/v2.0/.well-known/openid-configuration",
+    "Scopes": [
+      "openid", "profile", "offline_access", "https://example.onmicrosoft.com/api1/weatherforecast.read"
+    ]
+  },
 ```
-
-The output of these commands contains the client_id and the client_secret you need to configure the API and the BFF. 
-
-Can't find them? Run this command:
-
-```powershell
-$app = az ad app create --display-name bff --web-redirect-uris https://localhost:8443/account/login/callback https://localhost:8443/ | ConvertFrom-Json
-
-$credential = az ad app credential reset --id $app.appId | ConvertFrom-Json
-
-$clientId = $app.appId;
-$clientSecret = $credential.password;
-
-Write-Host "--- Successfully created app registration ---"
-Write-Host "ClientId: $clientId"
-Write-Host "ClientSecret: $clientSecret"
-```
-
-Use the client_id and the client_secret to configure the BFF.
 
 
 ## Step 2.) Build the aspnetcore API
