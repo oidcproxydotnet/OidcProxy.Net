@@ -15,6 +15,7 @@
     - [Azure Active Directory](/integration-manuals/quickstarts/azuread/quickstart)
     - [IdentityServer4](/integration-manuals/quickstarts/identityserver4/quickstart)
     - KeyCloak
+  - How to configure horizontal scaling/scaling out
   - Migrating an Angular Single Page Application with an API
   - Infrastructure
     - Distributed apps
