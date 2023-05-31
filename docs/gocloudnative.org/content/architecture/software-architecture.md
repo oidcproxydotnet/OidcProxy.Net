@@ -1,7 +1,5 @@
 # Software architecture
 
-## Context
-
 The GoCloudNative.Bff.Authentication is a gateway. It interacts with the user, the identity provider, and downstream services. This is schematically displayed in the following diagram:
 
 ![Containers](https://raw.githubusercontent.com/thecloudnativewebapp/GoCloudNative.Bff/main/docs/gocloudnative.org/content/Diagrams/containers.png)

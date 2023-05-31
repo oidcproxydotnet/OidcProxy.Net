@@ -1,5 +1,3 @@
-using Microsoft.AspNetCore.Http;
-
 namespace GoCloudNative.Bff.Authentication.IdentityProviders;
 
 /// <summary>
