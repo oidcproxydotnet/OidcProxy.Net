@@ -4,11 +4,11 @@
     <TargetFramework>net7.0</TargetFramework>
     <Nullable>enable</Nullable>
     <ImplicitUsings>enable</ImplicitUsings>
-    <UserSecretsId>8b63b47a-bbd3-4015-8024-3a15a7648c72</UserSecretsId>
+    <UserSecretsId>24fcb61b-16ce-490f-92ba-f50086283188</UserSecretsId>
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="GoCloudNative.Bff.Authentication.AzureAd" Version="0.0.6" />
+    <PackageReference Include="GoCloudNative.Bff.Authentication.AzureAd" Version="0.0.9" />
   </ItemGroup>
 
 </Project>

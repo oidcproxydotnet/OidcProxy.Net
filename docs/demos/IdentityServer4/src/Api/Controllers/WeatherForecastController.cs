@@ -4,7 +4,7 @@ using Microsoft.AspNetCore.Mvc;
 namespace Api.Controllers;
 
 [ApiController]
-[Route("api/WeatherForecast")]
+[Route("api/weatherforecast")]
 public class WeatherForecastController : ControllerBase
 {
     private static readonly string[] Summaries = new[]
@@ -19,19 +19,33 @@ public class WeatherForecastController : ControllerBase
         _logger = logger;
     }
 
-    [HttpGet]
+    [HttpGet("usa")]
     [Authorize]
     public IEnumerable<WeatherForecast> Get()
     {
         return Enumerable.Range(1, 5).Select(index => new WeatherForecast
         {
+            Region = "USA",
             Date = DateOnly.FromDateTime(DateTime.Now.AddDays(index)),
             TemperatureC = Random.Shared.Next(-20, 55),
             Summary = Summaries[Random.Shared.Next(Summaries.Length)]
         })
         .ToArray();
     }
-
+    
+    [HttpGet("sahara")]
+    [Authorize]
+    public IEnumerable<WeatherForecast> GetDesertForecast()
+    {
+        return Enumerable.Range(1, 5).Select(index => new WeatherForecast
+            {
+                Region = "Sahara",
+                Date = DateOnly.FromDateTime(DateTime.Now.AddDays(index)),
+                TemperatureC = Random.Shared.Next(80, 120),
+                Summary = "Scorching"
+            })
+            .ToArray();
+    }
 
     [HttpGet("headers")]
     public ActionResult GetHeaders(){

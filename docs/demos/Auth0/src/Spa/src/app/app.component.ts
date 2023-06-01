@@ -17,8 +17,8 @@ export class AppComponent {
 
   }
 
-  getWeatherForecast() {
-    this.http.get('/api/weatherforecast')
+  getWeatherForecast(endpoint: string) {
+    this.http.get('/api/weatherforecast/' + endpoint)
       .pipe(
         tap((response) => {
           this.forecastSubject.next(response);
