@@ -13,7 +13,7 @@ Nowadays, autoscaling is easy to configure. The container platform will automati
 
 Unfortunately, when you apply the BFF Security Pattern, it's not that simple. For scaling to be that easy, the application needs to be stateless and the GoCloudNative.Bff is not.
 
-## Scaling out stateful web-apps causes problems when not configured correctly
+## Scaling out may cause issues
 
 When you deploy another instance of the GoCloudNative.Bff without configuring it properly, the following situation will probably occur:
 
