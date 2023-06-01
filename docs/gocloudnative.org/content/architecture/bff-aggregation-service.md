@@ -78,13 +78,14 @@ app.Map("/api/weatherforecast", async (HttpContext context, HttpClient httpClien
         return;
     }
 
-    httpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", accessToken);
+    httpClient.DefaultRequestHeaders.Authorization 
+       = new AuthenticationHeaderValue("Bearer", accessToken);
 
     var usa = await httpClient.GetAsStringAsync("http://localhost:8080/api/weatherforecast/usa");
     var sahara = await httpClient.GetAsStringAsync("http://localhost:8080/api/weatherforecast/sahara");
 
     await context.Response.WriteAsJsonAsync("{ " +
-                                            $"\"usa\": { usa }, " +
+                                            $"\"usa\": {usa}, " +
                                             $"\"sahara\": {sahara} " +
                                             "}");
 });
