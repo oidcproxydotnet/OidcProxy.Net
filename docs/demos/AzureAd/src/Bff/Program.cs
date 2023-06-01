@@ -1,6 +1,5 @@
 using System.Net.Http.Headers;
 using Bff;
-using GoCloudNative.Bff.Authentication;
 using GoCloudNative.Bff.Authentication.AzureAd;
 using GoCloudNative.Bff.Authentication.ModuleInitializers;
 

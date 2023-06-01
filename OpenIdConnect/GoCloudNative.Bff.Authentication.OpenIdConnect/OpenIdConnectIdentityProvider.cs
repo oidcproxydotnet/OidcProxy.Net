@@ -181,21 +181,21 @@ public class OpenIdConnectIdentityProvider : IIdentityProvider
     {
         var endpointAddress = DiscoveryEndpointAddress;
 
-        if (_cache.TryGetValue(endpointAddress, out var wellKnownDocument))
+        if (_cache.TryGetValue(DiscoveryEndpointAddress, out var discoveryDocument))
         {
-            return (OpenIdConfiguration)wellKnownDocument;
+            return (OpenIdConfiguration)discoveryDocument;
         }
         
-        wellKnownDocument = await ObtainDiscoveryDocument(endpointAddress);
+        discoveryDocument = await ObtainDiscoveryDocument(endpointAddress);
 
-        if (wellKnownDocument == null)
+        if (discoveryDocument == null)
         {
             throw new ApplicationException(
                 "Unable to login. Unable to find a well-known/openid-configuration document " +
                 $"at {endpointAddress}");
         }
 
-        _cache.Set(endpointAddress, wellKnownDocument, TimeSpan.FromHours(1));
-        return (OpenIdConfiguration)wellKnownDocument;
+        _cache.Set(endpointAddress, discoveryDocument, TimeSpan.FromHours(1));
+        return (OpenIdConfiguration)discoveryDocument;
     }
 }

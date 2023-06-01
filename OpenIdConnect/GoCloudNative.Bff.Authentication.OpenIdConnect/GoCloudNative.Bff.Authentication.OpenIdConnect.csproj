@@ -14,7 +14,7 @@
         <PackageLicenseExpression>GPL-3.0-or-later</PackageLicenseExpression>
         <Description>A yarp-based authentication gateway for your service mesh.</Description>
         <RepositoryUrl>https://github.com/thecloudnativewebapp/GoCloudNative.Bff</RepositoryUrl>
-        <PackageTags>BFF, Yarp, Auth0, Cloud Native</PackageTags>
+        <PackageTags>BFF, Yarp, OpenId Connect, Identity Server, KeyCloak, Cloud Native</PackageTags>
         <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
         <Title>GoCloudNative.Bff.Authentication.AzureAd</Title>
         <PackageProjectUrl>https://bff.gocloudnative.org</PackageProjectUrl>
