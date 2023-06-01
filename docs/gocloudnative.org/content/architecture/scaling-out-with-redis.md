@@ -1,7 +1,7 @@
 ---
 author: Albert Starreveld
 title: Scaling out with Redis
-description: Implement scaling out the GoCloudNative.Bff with Redis.
+description: Implement a scalable GoCloudNative.Bff backed by Redis.
 tags: ["C#", "csharp", "dotnet", ".net", "dotnetcore", "BFF", "back-end for front-end", "Redis", "Azure", "AKS", "Kubernetes"]
 ---
 
@@ -38,7 +38,7 @@ This picture shows the user session is no longer stored on a node. Instead, it's
 * The user initiates the second HTTP request
 * The HTTP request is handled by another node, and it retrieves the session variables from Redis.
 
-## How to configure this
+## How to configure HTTP Sessions backed by Redis
 
 To configure this, deploy a Redis instance. There are various ways to do this:
 
