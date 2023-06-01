@@ -2,12 +2,12 @@
 
 Reverse proxies are used to route traffic to servers in a network. Or, from a Kubernetes perspective: A reverse proxy is used to route traffic to the correct Pod.
 
-A reverse proxy is a machanism that prevents direct access to components in the network. Instead, it forwards it.
+A reverse proxy is a mechanism that prevents direct access to components in the network. Instead, it forwards it.
 
 This article describes the following:
 
 * How to expose a single webserver to the internet, directly
-* How to prevent direct access to the webserver by implementing a Reverse Proxy
+* How to prevent direct access to the web server by implementing a Reverse Proxy
 * How you can use a Reverse Proxy as a load balancer
 * Typical reverse proxies
 
@@ -21,16 +21,16 @@ When you configure your DNS this way, then the webserver is exposed to the inter
 ![Direct communication with an API](https://raw.githubusercontent.com/thecloudnativewebapp/GoCloudNative.Bff/main/docs/gocloudnative.org/content/Concepts/diagrams/api.png)
 
 ## Preventing direct access by implementing a reverse proxy
-If you want to prevent direct communication with the API, say, for security reasons, then the traffic must be relayed to it's destination. This is schematically displayed in the following diagram:
+If you want to prevent direct communication with the API, say, for security reasons, then the traffic must be relayed to its destination. This is schematically displayed in the following diagram:
 
 ![Direct communication with an API](https://raw.githubusercontent.com/thecloudnativewebapp/GoCloudNative.Bff/main/docs/gocloudnative.org/content/Concepts/diagrams/reverse-proxy-one-api.png)
 
-In this situatation the A-record of your domain will point to the reverse proxy. This is the entry-point of your network. By implementing a reverse proxy, what traffic goes where or is allowed at all, can now be regulated by the reverse proxy.
+In this situatation, the A-record of your domain will point to the reverse proxy. This is the entry point of your network. By implementing a reverse proxy, what traffic goes where or is allowed at all, can now be regulated by the reverse proxy.
 
-## Using a reverse proxy as load balancer
-Reverse Proxies are particulary usefull when you are scaling your application horizontally. In that case, you'll have multiple webservers with different IP addresses. Scaling will not be effective if the A-record always points to a single server. 
+## Using a reverse proxy as load-balancer
+Reverse Proxies are particularly useful when you are scaling your application horizontally. In that case, you'll have multiple web servers with different IP addresses. Scaling will not be effective if the A-record always points to a single server. 
 
-Instead, the A-record of your domain will point to the reverse proxy and it will decide how to devide the load between the two instances of the API. This is schematically displayed in the following diagram:
+Instead, the A-record of your domain will point to the reverse proxy and it will decide how to divide the load between the two instances of the API. This is schematically displayed in the following diagram:
 
 ![Direct communication with an API](https://raw.githubusercontent.com/thecloudnativewebapp/GoCloudNative.Bff/main/docs/gocloudnative.org/content/Concepts/diagrams/reverse-proxy-two-apis.png)
 

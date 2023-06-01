@@ -18,7 +18,7 @@ To obtain these tokens, the components in the landscape interact as follows:
 * The user logs in
 * After the user has logged in successfully, the user is redirected back to the BFF, to the `/account/login/callback?code=xyz` endpoint
 * The BFF reads the code from the query string and exchanges it for an `access_token`, an `id_token`, and a `refresh_token` by invoking the `/token` endpoint of the Identity Provider.
-* The BFF stores this information in the http-session
+* The BFF stores this information in the HTTP-session
 
 ## The GoCloudNative.Bff.Authentication Modules
 In essence, the GoCloudNative.Bff.Authentication as an aspnetcore site. The GoCloudNative.Bff.Authentication module adds authentication endpoints to it, it obtains tokens, augments http requests to downstream services, and it enables the HTTP session.

@@ -2,9 +2,9 @@
 
 > GCN-A-fe95cf8c11ae: Unable to start GoCloudNative.Bff. Invalid audience. Configure the audience in the appsettings.json or program.cs file and try again.
 
-The GoCloudNative BFF is a authentication gateway. As a result, you must configure an identity provider (correctly) in order for it to start.
+The GoCloudNative BFF is an authentication gateway. As a result, you must configure an identity provider (correctly) for it to start.
 
-To bootstrap the BFF, it's recommended to load the identity provider confiuration from the `appsettings.json`:
+To bootstrap the BFF, load the identity provider configuration from the `appsettings.json`:
 
 ```csharp
 

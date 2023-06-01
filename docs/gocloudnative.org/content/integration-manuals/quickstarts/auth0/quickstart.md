@@ -21,7 +21,7 @@ Follow these steps to configure Auth0 correctly:
 * Go to https://manage.auth0.com and sign in
 * Go to the `Applications` section in the menu on the left-hand side and click `Applications`
 * Click `+ Create application` in the right upper corner
-* Provide a name for your app and select `Regular web applications`
+* Provide a name for your app and select `Regular web applications
 * Now, click settings, now you'll see the following section: ![client-id/secret](https://raw.githubusercontent.com/thecloudnativewebapp/GoCloudNative.Bff/main/docs/gocloudnative.org/content/integration-manuals/quickstarts/auth0/clientid-secret.png)
 
 * Copy the client_id, the secret, and the authority into the `appsettings.json`, like so:
@@ -42,7 +42,7 @@ Follow these steps to configure Auth0 correctly:
 }
 ```
 
-* Now, configure the redirecturl. When the user has logged into Auth0, Auth0 will redirect the user to this URL. Redirecting will not work unless the redirect URL has been whitelisted: ![Whitelisting the redirect_uri](https://raw.githubusercontent.com/thecloudnativewebapp/GoCloudNative.Bff/main/docs/gocloudnative.org/content/integration-manuals/quickstarts/auth0/redirect-uri.png)
+* Now, configure the `redirect_url`. When the user has logged into Auth0, Auth0 will redirect the user to this URL. Redirecting will not work unless the redirect URL has been whitelisted: ![Whitelisting the redirect_uri](https://raw.githubusercontent.com/thecloudnativewebapp/GoCloudNative.Bff/main/docs/gocloudnative.org/content/integration-manuals/quickstarts/auth0/redirect-uri.png)
 
 * Next, scroll to the `Advanced settings` and configure the `grant_types`. Enable `Authorization Code` and `Refresh tokens` ![grant-types](https://raw.githubusercontent.com/thecloudnativewebapp/GoCloudNative.Bff/main/docs/gocloudnative.org/content/integration-manuals/quickstarts/auth0/grant-types.png)
 
@@ -106,7 +106,7 @@ Make sure you have configured Auth0 in your `appsettings.json` file:
 }
 ```
 
-In this example, we assume you're running this API on port 8080. To get this API to run on that port, modify your `LaunchSettings.json` file to like like so:
+In this example, we assume you're running this API on port 8080. To get this API to run on that port, modify your `LaunchSettings.json` file to like so:
 
 ```json
 {
@@ -127,7 +127,7 @@ In this example, we assume you're running this API on port 8080. To get this API
 
 ## Step 3.) Build the BFF
 
-To build a BFF with aspnet core, execute the following commands on the command line:
+To build a BFF with `aspnetcore`, execute the following commands on the command line:
 
 ```bash
 dotnet new web
@@ -242,16 +242,16 @@ To run the BFF, type `dotnet run` or just hit the 'play'-button in Visual Studio
 The BFF relays all requests as configured in the `ReverseProxy` section in the `appsettings.json` file, except for four endpoints:
 
 ### [GET] /account/login
-To log a user in and to start a http session, navigate to `/account/login`. The software will redirect to the login page of the Identity Provider to log the user in. The resulting tokens will be stored in the user session and are not available in the browser.
+To log a user in and to start an HTTP session, navigate to `/account/login`. The software will redirect to the login page of the Identity Provider to log the user in. The resulting tokens will be stored in the user session and are not available in the browser.
 
 ### [GET] /account/login/callback
 This endpoint is used by the IdentityProvider.
 
 ### [GET] /account/me
-To see the logged in user, navigate to the `/account/me` endpoint. This endpoint shows the claims that are in the `id_token`.
+To see the logged-in user, navigate to the `/account/me` endpoint. This endpoint shows the claims that are in the `id_token`.
 
 ### [GET] /account/end-session
-To revoke the tokens that have been obtained when the user logged in, navigate to `/account/end-session` endpoint. This will revoke the tokens that have been stored in the user session. This will also end the user-session on at the Identity Provider
+To revoke the tokens that have been obtained when the user logs in, navigate to `/account/end-session` endpoint. This will revoke the tokens that have been stored in the user session. This will also end the user-session on at the Identity Provider
 
 ## Demo
 

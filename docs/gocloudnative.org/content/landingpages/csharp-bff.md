@@ -9,18 +9,18 @@ tags: ["C#", "csharp", "dotnet", ".net", "dotnetcore", "BFF", "back-end for fron
 To build a Back-end for Front-end with C#, you can choose three approaches:
 
 ## Use the `dotnet angular` template
-The easiest way to build a BFF in the dotnet ecosystem, is to use the standard dotnet Angular template. 
+The easiest way to build a BFF in the dotnet-ecosystem is to use the standard dotnet Angular template. 
 
-This template creates a dotnet aspnetcore web project with an Angular app bootstrapped in it. This API runs at the server-side, and the SPA runs at the client-side. 
+This template creates a dotnet `aspnetcore` web project with an Angular app bootstrapped in it. This API runs on the server side, and the SPA runs on the client side. 
 
 By simply adding the endpoints you need, by implementing a controller, you can forward these requests further downstream.
 
-Use this approach when you are building a relatively simple web-application which is maintained by a small group of people.
+Use this approach when you are building a relatively simple web application that is maintained by a small group of people.
 
 ## Build an ASPNETCORE Reverse Proxy with YARP. 
-Choose for this option if you have a complex Single-Page Application, like an NX-application, and when you have no authentication requirement.
+Choose this option if you have a complex Single-Page Application, like an NX application, and when you have no authentication requirement.
 
-Use YARP to relay traffic to downstream API's. You can use Minimal-APIs to implement custom endpoints to invoke requests to multiple downstream APIs and aggregate the results.
+Use YARP to relay traffic to downstream APIs. You can use Minimal-APIs to implement custom endpoints to invoke requests to multiple downstream APIs and aggregate the results.
 
 To create a YARP based BFF-project, do the following:
 
@@ -99,7 +99,7 @@ Use the following `appsettings.json` to relay traffic to a downstream API:
 ## GoCloudNative.Authentication.Bff
 Do you have a complex micro-front-end architecture? Do you have multiple teams working on the same site? Do you have an authentication requirement? Then, you might consider using GoCloudNative.Authentication.Bff.
 
-The GoCloudNative.Authentication.Bff project utilizes YARP to relay traffic to downstream services. It has authentication endpoints built into it which are compatible with Azure Active Directory, Auth0, IdentityServer4, and any other OpenId Connect compliant authentication server.
+The GoCloudNative.Authentication.Bff project utilizes YARP to relay traffic to downstream services. It has authentication endpoints built into it which are compatible with Azure Active Directory, Auth0, IdentityServer4, and any other OpenId Connect-compliant authentication server.
 
 To set up a GoCloudNative.Authentication.Bff project, do the following:
 
@@ -164,7 +164,7 @@ And add the following section to your `appsettings.json`:
 }
 ```
 
-Read quickstarts to see how to configure the BFF, the APIs. Also refer to the quickstarts for working demos:
+Read quickstarts to see how to configure the BFF, and the APIs. Also, refer to the quickstarts for working demos:
 
 - [How to implement a C# BFF with Auth0](/integration-manuals/quickstarts/auth0/quickstart)
 - [How to implement a C# BFF with Azure Active Directory](/integration-manuals/quickstarts/azuread/quickstart)

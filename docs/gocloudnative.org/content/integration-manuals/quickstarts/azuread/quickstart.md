@@ -25,7 +25,7 @@ To be able to authenticate users via Azure Active Directory, you must create an 
 ### 1. Create an app registration
 * Navigate to `Azure Active Directory`, and click `App registrations` in the menu on the left (or click [here](https://portal.azure.com/#view/Microsoft_AAD_IAM/ActiveDirectoryMenuBlade/~/RegisteredApps)).
 * Click `+ New registration`, and fill out the form as displayed in the screenshot: ![](https://raw.githubusercontent.com/thecloudnativewebapp/GoCloudNative.Bff/main/docs/gocloudnative.org/content/integration-manuals/quickstarts/azuread/new-app-registration.png)\
-Make sure to register the `redirect url` correctly. This is typically `https://{where-you-host-the-bff}/account/login/redirect`. You can add multiple values here. Be sure to ___never register a localhost redirect url for your production environment!!!___
+Make sure to register the `redirect_url` correctly. Usually, that's something like `https://{where-you-host-the-bff}/account/login/redirect`. You can add multiple values here. Be sure to ___never register a localhost `redirect_url` for your production environment!!!___
 * When you have completed the form, click the `Register` button at the bottom of the form.
 * Now, you see the following overview: ![App registration overview](https://raw.githubusercontent.com/thecloudnativewebapp/GoCloudNative.Bff/main/docs/gocloudnative.org/content/integration-manuals/quickstarts/azuread/app-registration-overview.png)
   * Important: Copy the `application ID` to `appsettings.json`. This is the `ClientId`.
@@ -40,12 +40,12 @@ Copy the `secret` to the `appsettings.json`. This is the `ClientSecret`.
 * Click `add a scope`: ![Create a new scope](https://raw.githubusercontent.com/thecloudnativewebapp/GoCloudNative.Bff/main/docs/gocloudnative.org/content/integration-manuals/quickstarts/azuread/adding-scope-2.png)
 * When you click `Add scope`, Azure will ask for an Application URI first: ![Create app URI](https://raw.githubusercontent.com/thecloudnativewebapp/GoCloudNative.Bff/main/docs/gocloudnative.org/content/integration-manuals/quickstarts/azuread/adding-scope-3.png)\
 Choose any name you like here.
-* After the `scope` has been created succesfully, you'll be redirected to the `Expose an API` overview page: ![](https://raw.githubusercontent.com/thecloudnativewebapp/GoCloudNative.Bff/main/docs/gocloudnative.org/content/integration-manuals/quickstarts/azuread/added-scope.png)\
-Copy the url that's displayed here, copy it to the `appsettings.json`, to the `scopes` section.
+* After the `scope` has been created successfully, you'll be redirected to the `Expose an API` overview page: ![](https://raw.githubusercontent.com/thecloudnativewebapp/GoCloudNative.Bff/main/docs/gocloudnative.org/content/integration-manuals/quickstarts/azuread/added-scope.png)\
+Copy the URL that's displayed here, copy it to the `appsettings.json`, to the `scopes` section.
 
 ### 4. Request permission and grant consent
 * Now, navigate to `API Permissions` in the main menu on the left. You will see this screen: ![](https://raw.githubusercontent.com/thecloudnativewebapp/GoCloudNative.Bff/main/docs/gocloudnative.org/content/integration-manuals/quickstarts/azuread/initial-permissions.png)
-* Click `+ Add a permission`, and fill out the form like so: ![Add a permission](https://raw.githubusercontent.com/thecloudnativewebapp/GoCloudNative.Bff/main/docs/gocloudnative.org/content/integration-manuals/quickstarts/azuread/request-api-permissions.png)
+* Click `+ Add a permission`, and fill out the form like so: ![Add permission](https://raw.githubusercontent.com/thecloudnativewebapp/GoCloudNative.Bff/main/docs/gocloudnative.org/content/integration-manuals/quickstarts/azuread/request-api-permissions.png)
 * Now, the permission will be added to the list. But it hasn't been approved yet. Click `Grant admin consent for B2c` ![Grant consent](https://raw.githubusercontent.com/thecloudnativewebapp/GoCloudNative.Bff/main/docs/gocloudnative.org/content/integration-manuals/quickstarts/azuread/approve-permission.png)
 * As a result of all of the above, you'll need the following section in your BFFs `appsettings.json`:
 
@@ -132,7 +132,7 @@ Make sure you have configured Azure in your `appsettings.json` file:
 }
 ```
 
-In this example, we assume you're running this API on port 8080. To get this API to run on that port, modify your `LaunchSettings.json` file to like like so:
+In this example, we assume you're running this API on port 8080. To get this API to run on that port, modify your `LaunchSettings.json` file to like so:
 
 ```json
 {
@@ -153,7 +153,7 @@ In this example, we assume you're running this API on port 8080. To get this API
 
 ## Step 3.) Build the BFF
 
-To build a BFF with aspnet core, execute the following commands on the command line:
+To build a BFF with `aspnetcore`, execute the following commands on the command line:
 
 ```bash
 dotnet new web
@@ -273,10 +273,10 @@ To log a user in and to start a http session, navigate to `/account/login`. The 
 This endpoint is used by the IdentityProvider.
 
 ### [GET] /account/me
-To see the logged in user, navigate to the `/account/me` endpoint. This endpoint shows the claims that are in the `id_token`.
+To see the logged-in user, navigate to the `/account/me` endpoint. This endpoint shows the claims that are in the `id_token`.
 
 ### [GET] /account/end-session
-To revoke the tokens that have been obtained when the user logged in, navigate to `/account/end-session` endpoint. This will revoke the tokens that have been stored in the user session. This will also end the user-session on at the Identity Provider
+To revoke the tokens that have been obtained when the user logs in, navigate to `/account/end-session` endpoint. This will revoke the tokens that have been stored in the user session. This will also end the user-session on at the Identity Provider
 
 ## Demo
 
