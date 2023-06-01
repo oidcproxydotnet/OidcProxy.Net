@@ -3,7 +3,7 @@ using Microsoft.AspNetCore.Http;
 
 namespace GoCloudNative.Bff.Authentication;
 
-public static class SessionExtensions
+public static class ISessionExtensions
 {
     private static string GetVerifierKey<T>() => $"{typeof(T)}-verifier_key";
 
