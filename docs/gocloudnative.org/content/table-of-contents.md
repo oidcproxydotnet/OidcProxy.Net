@@ -15,7 +15,7 @@
     - [Azure Active Directory](/integration-manuals/quickstarts/azuread/quickstart)
     - [IdentityServer4](/integration-manuals/quickstarts/identityserver4/quickstart)
     - KeyCloak
-  - How to configure horizontal scaling/scaling out
+  - [How to configure horizontal scaling/scaling out](/architecture/scaling-out-with-redis)
   - Migrating an Angular Single Page Application with an API
   - Infrastructure
     - Distributed apps
@@ -23,7 +23,7 @@
       - Applying a BFF in Kubernetes
 - Architecture
   - [The GoCloudNative.BFF.Authentication software-architecture](/architecture/software-architecture)
-  - Horizontal scaling/scaling out
+  - [Horizontal scaling/scaling out](/architecture/scaling-out-with-redis)
   - Extensibility (implementing custom identity providers)
   - Aggregating responses from multiple downstream endpoints
 - Solving configuration errors:
