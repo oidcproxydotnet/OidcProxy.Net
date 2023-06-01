@@ -1,3 +1,4 @@
+using System.Net.Http.Json;
 using GoCloudNative.Bff.Authentication.IdentityProviders;
 using GoCloudNative.Bff.Authentication.OpenIdConnect;
 using Microsoft.Extensions.Caching.Memory;
@@ -7,6 +8,7 @@ namespace GoCloudNative.Bff.Authentication.AzureAd;
 
 public class AzureAdIdentityProvider : OpenIdConnectIdentityProvider
 {
+    private readonly HttpClient _httpClient;
     private readonly AzureAdConfig _configuration;
 
     protected override string DiscoveryEndpointAddress => _configuration.DiscoveryEndpoint;
@@ -15,6 +17,7 @@ public class AzureAdIdentityProvider : OpenIdConnectIdentityProvider
     public AzureAdIdentityProvider(IMemoryCache cache, HttpClient httpClient, AzureAdConfig configuration) 
         : base(cache, httpClient, configuration)
     {
+        _httpClient = httpClient;
         _configuration = configuration;
     }
 
@@ -36,5 +39,12 @@ public class AzureAdIdentityProvider : OpenIdConnectIdentityProvider
     public override Task RevokeAsync(string token)
     {
         return Task.CompletedTask; // not supported by Azure
+    }
+
+    protected override async Task<OpenIdConfiguration?> ObtainDiscoveryDocument(string endpointAddress)
+    {
+        var httpResponse = await _httpClient.GetAsync(endpointAddress);
+        var document = await httpResponse.Content.ReadFromJsonAsync<OpenIdConfiguration>();
+        return document;
     }
 }

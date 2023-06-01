@@ -55,7 +55,7 @@ public class OpenIdConnectIdentityProvider : IIdentityProvider
 
     public virtual async Task<TokenResponse> GetTokenAsync(string redirectUri, string code, string? codeVerifier)
     {
-        var wellKnown = await GetWellKnownConfiguration();
+        var wellKnown = await GetDiscoveryDocument();
 
         if (wellKnown.token_endpoint == null)
         {
@@ -92,7 +92,7 @@ public class OpenIdConnectIdentityProvider : IIdentityProvider
 
     public async Task<TokenResponse> RefreshTokenAsync(string refreshToken)
     {
-        var openIdConfiguration = await GetWellKnownConfiguration();
+        var openIdConfiguration = await GetDiscoveryDocument();
 
         var response = await _httpClient.RequestRefreshTokenAsync(new RefreshTokenRequest
         {
@@ -115,7 +115,7 @@ public class OpenIdConnectIdentityProvider : IIdentityProvider
 
     public virtual async Task RevokeAsync(string token)
     {
-        var openIdConfiguration = await GetWellKnownConfiguration();
+        var openIdConfiguration = await GetDiscoveryDocument();
 
         var response = await _httpClient.RevokeTokenAsync(new TokenRevocationRequest
         {
@@ -145,7 +145,7 @@ public class OpenIdConnectIdentityProvider : IIdentityProvider
     
     protected virtual async Task<Uri> BuildEndSessionUri(string? idToken, string redirectUri)
     {        
-        var openIdConfiguration = await GetWellKnownConfiguration();
+        var openIdConfiguration = await GetDiscoveryDocument();
 
         var endSessionUrEndpoint = openIdConfiguration.end_session_endpoint;
         if (endSessionUrEndpoint == null)
@@ -157,8 +157,28 @@ public class OpenIdConnectIdentityProvider : IIdentityProvider
         var endSessionUrl  = $"{endSessionUrEndpoint}?id_token_hint={idToken}&post_logout_redirect_uri={urlEncodedRedirectUri}";
         return new Uri(endSessionUrl);
     }
+    
+    protected virtual async Task<OpenIdConfiguration?> ObtainDiscoveryDocument(string endpointAddress)
+    {
+        var discoveryDocument = await _httpClient.GetDiscoveryDocumentAsync(endpointAddress);
+        if (discoveryDocument == null)
+        {
+            return null;
+        }
 
-    private async Task<OpenIdConfiguration> GetWellKnownConfiguration()
+        return new OpenIdConfiguration
+        {
+            authorization_endpoint = discoveryDocument.AuthorizeEndpoint,
+            end_session_endpoint = discoveryDocument.EndSessionEndpoint,
+            issuer = discoveryDocument.Issuer,
+            jwks_uri = discoveryDocument.JwksUri,
+            revocation_endpoint = discoveryDocument.RevocationEndpoint,
+            token_endpoint = discoveryDocument.TokenEndpoint,
+            userinfo_endpoint = discoveryDocument.UserInfoEndpoint
+        };
+    }
+
+    private async Task<OpenIdConfiguration> GetDiscoveryDocument()
     {
         var endpointAddress = DiscoveryEndpointAddress;
 
@@ -167,9 +187,8 @@ public class OpenIdConnectIdentityProvider : IIdentityProvider
             return (OpenIdConfiguration)wellKnownDocument;
         }
         
-        var httpResponse = await _httpClient.GetAsync(endpointAddress);
-        wellKnownDocument = await httpResponse.Content.ReadFromJsonAsync<OpenIdConfiguration>();
-        
+        wellKnownDocument = await ObtainDiscoveryDocument(endpointAddress);
+
         if (wellKnownDocument == null)
         {
             throw new ApplicationException(
@@ -178,9 +197,6 @@ public class OpenIdConnectIdentityProvider : IIdentityProvider
         }
 
         _cache.Set(endpointAddress, wellKnownDocument, TimeSpan.FromHours(1));
-
-        // todo: Validate issuer
-        
         return (OpenIdConfiguration)wellKnownDocument;
     }
 }
