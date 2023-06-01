@@ -18,7 +18,8 @@
     <Title>GoCloudNative.Bff.Authentication.AzureAd</Title>
     <PackageProjectUrl>https://bff.gocloudnative.org</PackageProjectUrl>
     <PackageReadmeFile>Readme.md</PackageReadmeFile>        
-    <PackageIcon>logo.png</PackageIcon>
+    <PackageIcon>logo.png</PackageIcon>        
+    <SignAssembly>true</SignAssembly>
   </PropertyGroup>
   
   <ItemGroup>

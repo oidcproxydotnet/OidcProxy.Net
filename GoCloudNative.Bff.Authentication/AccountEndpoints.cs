@@ -7,7 +7,7 @@ using Microsoft.Extensions.Logging;
 
 namespace GoCloudNative.Bff.Authentication;
 
-public static class AccountEndpoints
+internal static class AccountEndpoints
 {
     public static void MapAuthenticationEndpoints<TIdp>(this WebApplication app, string endpointName) where TIdp : IIdentityProvider
     {

@@ -2,7 +2,7 @@ using Microsoft.Extensions.Logging;
 
 namespace GoCloudNative.Bff.Authentication;
 
-public class LogLine
+internal class LogLine
 {
     public LogLine()
     {

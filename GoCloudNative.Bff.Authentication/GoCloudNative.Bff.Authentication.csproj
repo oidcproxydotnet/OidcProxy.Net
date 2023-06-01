@@ -18,6 +18,7 @@
         <Title>GoCloudNative.Bff.Authentication</Title>
         <PackageProjectUrl>https://bff.gocloudnative.org</PackageProjectUrl>
         <PackageIcon>logo.png</PackageIcon>
+        <SignAssembly>true</SignAssembly>
     </PropertyGroup>
 
     <ItemGroup>

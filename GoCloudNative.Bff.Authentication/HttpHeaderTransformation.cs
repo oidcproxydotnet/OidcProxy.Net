@@ -8,7 +8,7 @@ using Yarp.ReverseProxy.Transforms.Builder;
 
 namespace GoCloudNative.Bff.Authentication;
 
-public class HttpHeaderTransformation<TIdp> : ITransformProvider
+internal class HttpHeaderTransformation<TIdp> : ITransformProvider
     where TIdp : IIdentityProvider
 {
     private readonly IIdentityProvider _identityProvider;

@@ -3,7 +3,7 @@ using Microsoft.Extensions.Logging;
 
 namespace GoCloudNative.Bff.Authentication.Logging;
 
-public static class LogExtensions
+internal static class LogExtensions
 {
     public static void LogLine<T>(this ILogger<T> logger, HttpContext context, LogLine line)
     {

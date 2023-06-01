@@ -3,7 +3,7 @@ using Microsoft.AspNetCore.Http;
 
 namespace GoCloudNative.Bff.Authentication;
 
-public class TokenFactory
+internal class TokenFactory
 {
     private readonly IIdentityProvider _identityProvider;
     private readonly ISession _session;

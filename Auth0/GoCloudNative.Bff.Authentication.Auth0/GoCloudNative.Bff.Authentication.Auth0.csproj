@@ -19,6 +19,7 @@
         <PackageProjectUrl>https://bff.gocloudnative.org</PackageProjectUrl>
         <PackageReadmeFile>Readme.md</PackageReadmeFile>
         <PackageIcon>logo.png</PackageIcon>
+        <SignAssembly>true</SignAssembly>
     </PropertyGroup>
 
     <ItemGroup>

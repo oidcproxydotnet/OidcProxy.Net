@@ -3,7 +3,7 @@ using System.Text;
 
 namespace GoCloudNative.Bff.Authentication;
 
-public static class JwtParser
+internal static class JwtParser
 {   
     public static JwtPayload ParseJwtPayload(this string token)
     {
