@@ -4,11 +4,11 @@ title: GoCloudNative.BFF - Documentation
 description: Everything you need to know to implement the a aspnetcore BFF with. Particulary usefull with microservice and microfrontend architectures.
 ---
 
-# GoCloudNative.Authentication.Bff
+# GoCloudNative.Bff
 
 ## Secure, scalable, easy to use, and free.
 
-The GoCloudNative.Authenticatio.Bff is a authentication gateway based on YARP. Implementing it should not take more than a couple of minutes:
+The GoCloudNative.Bff is a authentication gateway based on YARP. Implementing it should not take more than a couple of minutes:
 
 ```bash
 dotnet new web
