@@ -1,5 +1,5 @@
 ---
-tags: ["troubleshooting", "OIDC"]
+tags: ["Troubleshooting", "OIDC"]
 ---
 
 # GCN-O-e0180c31edd7

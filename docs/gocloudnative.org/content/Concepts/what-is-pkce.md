@@ -2,7 +2,7 @@
 author: Albert Starreveld
 title: What is Authorization Code with Proof Key for Code Exchange?
 description: OAuth2 Authorization Code with Proof Key for Code Exchange explained.
-tags: ["OAuth2", "PKCE", "OIDC", "Authentication", "Authorization", "Security"]
+tags: ["OAuth2", "PKCE", "OIDC", "Authentication", "Authorization"]
 ---
 # What is Authorization Code with Proof Key for Code Exchange?
 

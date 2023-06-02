@@ -1,5 +1,5 @@
 ---
-tags: ["BFF", "microservices"]
+tags: ["BFF", "Microservices"]
 ---
 
 # The Back-End for Front-End (BFF) Pattern: A Paradigm for Flexible and Efficient Front-End Development

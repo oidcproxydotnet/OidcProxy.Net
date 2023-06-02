@@ -1,5 +1,5 @@
 ---
-tags: ["troubleshooting", "Auth0"]
+tags: ["Troubleshooting", "Auth0"]
 ---
 
 # GCN-A-fe95cf8c11ae

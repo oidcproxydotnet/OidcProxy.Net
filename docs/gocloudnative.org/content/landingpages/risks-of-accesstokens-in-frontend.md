@@ -1,5 +1,5 @@
 ---
-tags: ["front-end", "access_tokens", "OIDC"]
+tags: ["Microfrontends", "access_tokens", "OIDC"]
 ---
 
 # The risks of Access Tokens in the Front-End

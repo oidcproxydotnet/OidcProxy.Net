@@ -2,7 +2,7 @@
 author: Albert Starreveld
 title: The Back-end For Front-end Security Pattern
 description: The Back-end For Front-end Security pattern is an a stateful BFF. It augments requests to the downstream services by adding Bearer tokens to the requests. 
-tags: ["BFF", "microfrontends", "microservices", "authentication"]
+tags: ["BFF", "Microfrontends", "Microservices", "Authentication"]
 ---
 # Back-end For Front-end Security Pattern
 

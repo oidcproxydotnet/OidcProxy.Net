@@ -1,5 +1,5 @@
 ---
-tags: ["troubleshooting", "Azure"]
+tags: ["Troubleshooting", "Azure"]
 ---
 
 # GCN-AZ-e9ba6693bb0e
