@@ -2,7 +2,7 @@
 author: Albert Starreveld
 title: Implementing the BFF Security Pattern with AzureAd
 description: Read how to implement the BFF Security Pattern with aspnetcore, Angular, and AzureAd
-tags: ["C#", "API", "aspnetcore", "OIDC", "access_tokens", "Azure"]
+tags: ["API", "aspnetcore", "OIDC", "access_tokens", "Azure"]
 ---
 # Implementing the BFF Security Pattern with AzureAd (B2c)
 
