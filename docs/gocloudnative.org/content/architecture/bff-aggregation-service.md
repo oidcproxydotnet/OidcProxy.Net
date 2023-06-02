@@ -156,7 +156,21 @@ Check out fully working examples here:
 - [Auth0](https://github.com/thecloudnativewebapp/GoCloudNative.Bff/tree/main/docs/demos/Auth0/src)
 - [AzureAd](https://github.com/thecloudnativewebapp/GoCloudNative.Bff/tree/main/docs/demos/AzureAd/src)
 
-## Ramping it up
+## Cost of a BFF as an Aggregation Service
 
-When your Front-end grows, so does the BFF. As a result, there will be several API-endpoints that aggregate results. Tthe front-end teams will have to perform maintenance on both their Front-ends and the BFF to register the aggregation endpoints.
+Every architectural decision comes at a price. Depending on context it either makes sense to choose such an approach or not. In a web-context, there are two common use cases where BFFs are applied:
 
+1. One Single-Page Application with one or several back-end APIs.
+2. A micro-front-end architecture with multiple micro-front-ends, a micro-frontend host, and several APIs. 
+
+Assuming scenario 1, consider the following cost:
+
+* Implementing a back-end call will, in some cases, require changes in the BFF. This means the front-end team and the BFF-team will have to work closely together. Or it means the front-end team must maintain both the SPA and the BFF which will require them to learn both front-end programming languages (like TypeScript or Javascript) and back-end programming languages (C#).
+* This approach does not scale well with large amounts of data. Assume you are building a webshop. Assume a list of 100 orders. They come from the order-service and this service does not contain any product-information. As a result, to display the name of the ordered product, the BFF must first query the order-service and then query the product-service for each and every order to get the product-name.
+
+Assuming scenario 2, consider the following cost:
+
+* Since, in a micro-front-end context, there are several front-ends, there must be one team who is "owner" of the BFF. When a micro-front-end requires aggregating responses of multiple downstream services, these changes must be implemented in the BFF.
+    * Who will implement these changes?
+    * This means a deployment of a micro-service and a micro-service might require a new version of the BFF to be delpoyed too
+* This approach does not scale well with large amounts of data.
