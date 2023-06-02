@@ -1,3 +1,7 @@
+---
+tags: ["troubleshooting", "Azure"]
+---
+
 # GCN-AZ-e9ba6693bb0e
 
 > GCN-AZ-e9ba6693bb0e: Unable to start GoCloudNative.Bff. Invalid client_id. Configure the client_id in the appsettings.json or program.cs file and try again.

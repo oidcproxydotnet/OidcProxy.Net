@@ -1,3 +1,7 @@
+---
+tags: ["troubleshooting", "Auth0"]
+---
+
 # GCN-A-fe95cf8c11ae
 
 > GCN-A-fe95cf8c11ae: Unable to start GoCloudNative.Bff. Invalid audience. Configure the audience in the appsettings.json or program.cs file and try again.

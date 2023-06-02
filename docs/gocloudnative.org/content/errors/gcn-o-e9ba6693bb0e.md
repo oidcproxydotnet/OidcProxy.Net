@@ -1,3 +1,7 @@
+---
+tags: ["troubleshooting", "OIDC"]
+---
+
 # GCN-O-e9ba6693bb0e
 
 > GCN-O-e9ba6693bb0e: Unable to start GoCloudNative.Bff. Invalid client_id. Configure the client_id in the appsettings.json or program.cs file and try again.

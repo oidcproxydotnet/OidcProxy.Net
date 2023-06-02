@@ -1,3 +1,7 @@
+---
+tags: ["troubleshooting", "OIDC"]
+---
+
 # GCN-O-e0180c31edd7
 
 > GCN-O-e0180c31edd7: Unable to start GoCloudNative.Bff. Invalid authority. Configure the authority in the appsettings.json or program.cs file and try again.
