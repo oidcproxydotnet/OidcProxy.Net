@@ -1,3 +1,7 @@
+---
+tags: ["front-end", "access_tokens", "OIDC"]
+---
+
 # The risks of Access Tokens in the Front-End
 
 Access tokens play a crucial role in securing front-end applications by providing authorized access to protected resources. However, improper handling and management of access tokens can expose applications to significant security risks. This article explores the potential risks associated with access tokens in front-end development. We discuss common vulnerabilities, such as token leakage, cross-site scripting (XSS) attacks, and token storage concerns. Additionally, we explore best practices to mitigate these risks and enhance the overall security posture of front-end applications.
