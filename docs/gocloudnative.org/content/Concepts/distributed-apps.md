@@ -2,7 +2,7 @@
 author: Albert Starreveld
 title: Distributed apps
 description: A distributed app is an app that runs on a number of machines in a network. A distributed app processes workload by delegating parts of the work to a number of machines which process their workload in parallel.
-tags: ["cloud native", "distributed apps", "cloud native apps", "microservices", "microfrontends"]
+tags: ["cloud native", "distributed apps", "cloud native apps", "microservices", "microfrontends", "Kubernetes"]
 ---
 # Distributed apps
 

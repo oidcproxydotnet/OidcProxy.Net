@@ -2,7 +2,7 @@
 author: Albert Starreveld
 title: Implementing the BFF Security Pattern with Auth0
 description: Read how to implement the BFF Security Pattern with aspnetcore, Angular, and Auth0
-tags: ["C#", "API", "aspnetcore", "OpenId Connect", "access_tokens", "Auth0"]
+tags: ["C#", "API", "aspnetcore", "OIDC", "access_tokens"]
 ---
 # Implementing the BFF Security Pattern with Auth0
 

@@ -1,3 +1,9 @@
+---
+author: Albert Starreveld
+title: What is a reverse proxy?
+tags: ["microservices", "Kubernetes"]
+---
+
 # What is a reverse proxy?
 
 Reverse proxies are used to route traffic to servers in a network. Or, from a Kubernetes perspective: A reverse proxy is used to route traffic to the correct Pod.

@@ -2,7 +2,7 @@
 author: Albert Starreveld
 title: Scaling out with Redis
 description: Implement a scalable GoCloudNative.Bff backed by Redis.
-tags: ["C#", "csharp", "dotnet", ".net", "dotnetcore", "BFF", "back-end for front-end", "Redis", "Azure", "AKS", "Kubernetes"]
+tags: ["C#", "csharp", "dotnet", ".net", "dotnetcore", "BFF", "Redis", "Azure", "Kubernetes", "microservices"]
 ---
 
 # Scaling out with Redis
