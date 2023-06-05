@@ -6,9 +6,19 @@ description: Everything you need to know to implement the a aspnetcore BFF with.
 
 # GoCloudNative.Bff
 
-## Secure, scalable, easy to use, and free.
+Secure, scalable, developer-friendly, and free.
 
-Implement the [BFF Security Pattern](https://bff.gocloudnative.org/concepts/bff-security-pattern/) in a matter of minutes. The GoCloudNative.Bff is a authentication gateway based on YARP. Follow these steps to implement it:
+## Our mission
+
+The development of our product was driven by our clients' need for a straightforward authentication gateway. Existing market options introduced complexities in terms of pricing and licensing, or proved to be overly intricate for beginners to comprehend and utilize effectively.
+
+Consequently, organizations are forced to make a trade-off between maintainability and security. In today's automated society, this compromise is unacceptable.
+
+Hence, our mission is to offer an affordable, developer-friendly, and secure BFF component that can be implemented by anyone.
+
+## Getting started
+
+You can swiftly implement the [BFF Security Pattern](https://bff.gocloudnative.org/concepts/bff-security-pattern/) within minutes using the GoCloudNative.Bff, an authentication gateway built on YARP. Just follow these steps to get started:
 
 ```bash
 dotnet new web
