@@ -102,6 +102,7 @@ app.Run();
 }
 ```
 
-That's all! 
+To gain a comprehensive understanding of API security, reverse proxies, horizontal scaling or the implementation process of the GoCloudNative BFF, we recommend referring to [our documentation](table-of-contents). It provides detailed information and guidance on these topics.
 
-[Read more.](table-of-contents)
+## We need your support
+
