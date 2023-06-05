@@ -1,16 +1,28 @@
 _<div style="text-align: right">by Albert Starreveld</div>_
 
-# Use a secure Back-end For Frontend
 
-This repository contains a Back-end For Front-end written in C#. It authenticates users, it forwards requests to down-stream API's and adds the access_token to the forwarded requests by adding the `Authentication` header with value `Bearer xyz` to it. You can also use this BFF as a BFF is intended to be used: to invoke down-stream endpoints 'manually' and aggregate the results.
+## Our mission
+The development of our product was driven by our clients’ need for a straightforward authentication gateway. Existing market options introduced complexities in terms of pricing and licensing, or proved to be overly intricate for beginners to comprehend and utilize effectively.
 
-## !! Work in progress !!
+Consequently, organizations are forced to make a trade-off between maintainability and security. In today’s automated society, this compromise is unacceptable.
 
-_This software is still in an expirimental phase. Please take some time to test this software and to provide feedback (by creating [issues](https://github.com/thecloudnativewebapp/GoCloudNative.Bff/issues)!). The more feedback we get, the faster we can release a 1.0.0 version._
+Hence, our mission is to offer an affordable, developer-friendly, and secure BFF Framework that can be implemented by anyone.
+
+## About this repository
+
+Inside this repository, you will find a C# implementation of a Back-end For Front-end (BFF). Its functionality includes user authentication, forwarding requests to downstream APIs, and appending the `access_token` to the forwarded requests by including the `Authentication` header with the value Bearer xyz. Additionally, you can leverage this BFF as intended, employing it to manually invoke downstream endpoints and consolidate the outcomes.
+
+## We need your support
+GoCloudNative.BFF is an open-source project, emphasizing its community-driven nature. It is a free product and will continue to be freely accessible. Safeguarding the World Wide Web is a collective endeavor, necessitating your assistance. You can contribute by:
+
+* Sharing your valuable feedback
+  * By filling out [this Google Form](https://docs.google.com/forms/d/e/1FAIpQLSehCYcBI8YM4An2XxxBu-CcaujtWxpeP1E9W8Dn_S3vWKVPVg/viewform).
+  * By creating [issues](https://github.com/thecloudnativewebapp/GoCloudNative.Bff/issues) for missing features or bugs.
+* Writing about the GoCloudNative.BFF, spreading awareness
 
 ## Getting started
 
-To implement the BFF Security Pattern, execute the following commands:
+You can swiftly implement the BFF Security Pattern within minutes using the GoCloudNative.Bff, an authentication gateway built on YARP. Just follow these steps to get started:
 
 ```bash
 dotnet new web
