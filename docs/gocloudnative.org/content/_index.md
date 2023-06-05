@@ -1,7 +1,7 @@
 ---
 author: Albert Starreveld
-title: GoCloudNative.BFF - A free, simple Backend-For-Frontend Security Infra Component
-description: Everything you need to know to implement the a aspnetcore BFF with. Particulary usefull with microservice and microfrontend architectures.
+title: GoCloudNative.BFF - A free, developer-friendly Backend-For-Frontend Security Framework
+description: Elevate the security of your web application to the most up-to-date standards by incorporating the BFF Security Pattern using GoCloudNative.BFF.
 ---
 
 # GoCloudNative.Bff
@@ -14,7 +14,7 @@ The development of our product was driven by our clients' need for a straightfor
 
 Consequently, organizations are forced to make a trade-off between maintainability and security. In today's automated society, this compromise is unacceptable.
 
-Hence, our mission is to offer an affordable, developer-friendly, and secure BFF component that can be implemented by anyone.
+Hence, our mission is to offer an affordable, developer-friendly, and secure BFF Framework that can be implemented by anyone.
 
 ## Getting started
 
