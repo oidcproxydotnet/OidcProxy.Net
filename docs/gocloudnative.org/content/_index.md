@@ -103,3 +103,11 @@ app.Run();
 ```
 
 To gain a comprehensive understanding of API security, reverse proxies, horizontal scaling or the implementation process of the GoCloudNative BFF, we recommend referring to [our documentation](table-of-contents). It provides detailed information and guidance on these topics.
+
+## We need your support
+
+GoCloudNative.BFF is an open-source project, emphasizing its community-driven nature. It is a free product and will continue to be freely accessible. Safeguarding the World Wide Web is a collective endeavor, necessitating your assistance. You can contribute by:
+
+* [Sharing your valuable feedback](/feedback)
+* [Contributing to our GitHub project](/github)
+* Writing about the GoCloudNative.BFF, spreading awareness
