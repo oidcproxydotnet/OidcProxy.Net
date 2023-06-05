@@ -1,6 +1,4 @@
-# Documentation
-
-## Table of contents 
+# Table of contents 
 
 - Concepts
   - [API authorization with OAuth2/OpenId Connect](/concepts/api-authorization/)
