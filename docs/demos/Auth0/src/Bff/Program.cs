@@ -31,13 +31,19 @@ app.Map("/api/weatherforecast", async (HttpContext context, HttpClient httpClien
 
     httpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", accessToken);
 
-    var usa = await httpClient.GetAsStringAsync("http://localhost:8080/api/weatherforecast/usa");
-    var sahara = await httpClient.GetAsStringAsync("http://localhost:8080/api/weatherforecast/sahara");
+    var apiBaseAddress = builder.Configuration
+        .GetSection("ReverseProxy:Clusters:api:Destinations:api:Address")
+        .Get<string>()
+        .EnsureUrlEndsWithSlash();
 
-    await context.Response.WriteAsJsonAsync("{ " +
-                                            $"\"usa\": { usa }, " +
-                                            $"\"sahara\": {sahara} " +
-                                            "}");
+    var usa = await httpClient.GetAsStringAsync($"{apiBaseAddress}api/weatherforecast/usa");
+    var sahara = await httpClient.GetAsStringAsync($"{apiBaseAddress}api/weatherforecast/sahara");
+
+    context.Response.ContentType = "application/json";
+    await context.Response.WriteAsync("{ " +
+                                        $"\"usa\": {usa}, " + 
+                                        $"\"sahara\": {sahara} " +
+                                      "}");
 });
 
 app.Run();

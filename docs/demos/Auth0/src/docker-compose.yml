@@ -1,0 +1,44 @@
+version: '3.4'
+services:
+  bff:
+    image: gocloudnative-demo-bff:1.0
+    container_name: bff
+    ports:
+      - 8443:80
+    networks:
+      testnet:
+        ipv4_address: 10.5.0.2
+    environment:
+      - Auth0__ClientSecret={yourSecret}
+      - Auth0__ClientId={yourClientId}
+      - Auth0__Domain={yourDomain}
+      - Auth0__Audience={yourAudience}
+      - ASPNETCORE_ENVIRONMENT=Development
+      - ReverseProxy__Clusters__spa__Destinations__spa__Address=http://host.docker.internal:4200
+      - ReverseProxy__Clusters__api__Destinations__api__Address=http://host.docker.internal:8080
+  spa:
+    image: gocloudnative-demo-spa:1.0
+    container_name: spa
+    ports:
+      - "4200:80"
+    networks:
+      testnet:
+        ipv4_address: 10.5.0.3
+  api:
+    image: gocloudnative-demo-api:1.0
+    container_name: api
+    ports:
+      - 8080:80
+    networks:
+      testnet:
+        ipv4_address: 10.5.0.4
+    environment:
+      - Auth0__Domain={yourDomain}
+      - Auth0__Audience={yourAudience}
+networks:
+  testnet:
+    ipam:
+      driver: default
+      config:
+        - subnet: 10.5.0.0/16
+          gateway: 10.5.0.1

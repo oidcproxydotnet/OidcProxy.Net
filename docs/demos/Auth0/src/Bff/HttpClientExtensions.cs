@@ -7,4 +7,6 @@ public static class HttpClientExtensions
         var response = await httpClient.GetAsync(uri);
         return await response.Content.ReadAsStringAsync();
     }
+
+    public static string? EnsureUrlEndsWithSlash(this string? url) => url.EndsWith("/") ? url : $"{url}/";
 }
