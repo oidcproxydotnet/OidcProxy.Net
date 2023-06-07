@@ -29,7 +29,8 @@ public static class ModuleInitializer
             {
                 options.IdleTimeout = TimeSpan.FromMinutes(15);
                 options.Cookie.HttpOnly = true;
-                options.Cookie.IsEssential = true;
+                options.Cookie.IsEssential = true;    
+                options.Cookie.Name = _options.SessionCookieName;
             });
     }
 

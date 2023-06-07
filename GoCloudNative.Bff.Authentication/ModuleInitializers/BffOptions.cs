@@ -12,6 +12,8 @@ public class BffOptions
 
     internal Action<IServiceCollection> ApplyDistributedCache => (s) => s.AddDistributedMemoryCache();
 
+    public string SessionCookieName { get; set; } = "bff.cookie";
+
     public void RegisterIdentityProvider<TIdentityProvider, TOptions>(TOptions options, string endpointName = "account") 
         where TIdentityProvider : class, IIdentityProvider 
         where TOptions : class
