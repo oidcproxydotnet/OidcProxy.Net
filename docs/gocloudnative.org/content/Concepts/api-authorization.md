@@ -4,30 +4,29 @@ title: API Authorization with OAuth2/OpenId Connect
 description: Read how to implement OAuth2/OIDC in a aspnetcore C# application.
 tags: ["OAuth2", "API", "aspnetcore", "OIDC", "Authorization"]
 ---
-# API Authorization with OAuth2/OpenId Connect
+# Implementing API Authorization with OAuth2 and OpenId Connect (OIDC)
 
-OAuth2 is an authorization protocol. It is meant to be used to grant or deny access to resources. OpenId Connect extends the OAuth2 protocol. OpenId Connect (OIDC) is an identity protocol. It emits the identity of either a person or a machine.
+OAuth2 and OpenID Connect (OIDC) protocols are robust and reliable solutions for establishing secure access control and verifying identities. While OAuth2 focuses on authorization, granting or denying access to valuable resources, OpenID Connect extends OAuth2 by providing an identity protocol that emits the identity of individuals or machines.
 
-An important aspect of both OAuth2 and OIDC is that both protocols authenticate a person decentrally. This allows the application landscape which uses an OAuth2- or an OIDC-server to scale. 
+One notable advantage of both OAuth2 and OIDC is their decentralized authentication approach. This decentralized authentication enables seamless scalability within application landscapes utilizing OAuth2 or OIDC servers.
 
-To get the benefits that go with decentralized authentication, there are certain concepts to keep in mind when you're implementing authorization in an API:
+When implementing authorization in an API, it is advisable to follow these key concepts to leverage the benefits of decentralized authentication:
 
-1. Use the OIDC-server for authentication purposes
-2. Make sure the OIDC-server is application agnostic
-3. Apply policies
-4. Do not store Personal Identifiable Information in your APIs
+* Utilize the OIDC-server for efficient and reliable authentication purposes.
+Ensure the OIDC-server remains application agnostic, promoting flexibility and adaptability.
+* Apply well-defined policies to enforce robust authorization rules.
+* Safeguard sensitive data by refraining from storing Personally Identifiable Information (PII) within your APIs.
+* By adhering to these principles, you can establish a highly secure and scalable API ecosystem empowered by OAuth2 and OIDC.
 
-## Implications
+## Leveraging the OpenID Connect Protocol for enhanced Authentication and Authorization
 
-The OpenId Connect protocol is built in such a way that it solves several common authentication- and authorization problems. If you want to profit from this, keep in mind the following things when you implement authorization in your API:
+The OpenID Connect protocol offers effective solutions to address various authentication and authorization challenges. To fully benefit from its capabilities, consider the following aspects when implementing authorization in your API:
 
 ### Identity and Access Management
 
-Implementing authorization in an API is means to an end. When you are implementing OIDC-based authentication, you're delegating the responsibility to authenticate users to another application.
+When implementing OIDC-based authentication in your API, you delegate user authentication to another application, simplifying the process. However, there are inherent risks in this delegation. The more information the OIDC server has about other applications, the more complex releasing them becomes. Additionally, as new applications emerge, the OIDC server's data storage requirements increase, leading to scalability issues.
 
-Delegating this responsibility comes with a risk. The more the OIDC-server "knows" about another application, the harder it gets to release the two. Also, when more applications are 'born', the OIDC-server will have to store more and more data. This does not scale well. 
-
-Therefore, as a common rule of thumb, try to reduce what the OIDC-server knows about other applications to a minimum. Stick to common OIDC-claims as much as you can.
+To optimize scalability, follow a rule of thumb: minimize the OIDC server's knowledge of other applications. Focus on common OIDC claims to enhance efficiency and simplify integration.
 
 _Example: Common scenario's to avoid:_
 
@@ -38,10 +37,11 @@ _Example: Common scenario's to avoid:_
 _Examples: Instead do this:_
 * _role: "hr_secretary", applications may decide what authorization applies for users in such a role._
 
-### PII
-An OIDC server exchanges identity information with an application through access- and id-tokens. These tokens contain Personal Identifyable Information. When the front-end uses the id_token to display a user's name, for example, and when the back-end uses nothing but roles, user-ids, and scopes, then there is no need for an API to store Personal Identifiable Information. 
+### Streamline Identity Exchange and Ensure GDPR Compliance with OIDC
 
-As a result, Personal Identifiable Information is always in one place: The OIDC Server. This is very convenient when you want to be GDPR-compliant.
+In an OIDC server, the exchange of identity information between applications occurs seamlessly through `id_tokens`. These tokens encompass Personal Identifiable Information (PII). By leveraging these tokens appropriately, you can optimize data handling while maintaining GDPR compliance.
+
+When the front-end utilizes the `id_token` solely for displaying user names and the back-end exclusively relies on roles, user IDs, and scopes, there is no necessity for the API to store any Personal Identifiable Information. Consequently, all PII remains centralized within the OIDC server. This centralized approach simplifies GDPR compliance efforts and ensures the convenience of managing sensitive data in one secure location.
 
 ## How to implement authorization in your API
 So, to implement authorization in a scalable, safe way, make sure to do the following:
@@ -52,6 +52,7 @@ So, to implement authorization in a scalable, safe way, make sure to do the foll
 * Do not build your own authorization middleware, instead use `Microsoft.AspNetCore.Authentication`.
 
 Given an API does not have a user interface, it does not care how the consumer of the API obtained an `access_token`. All it should care about is if it is a valid token. So, in your `program.cs`, implement the following code:
+
 
 .NET 6:
 
@@ -108,11 +109,11 @@ public class WeatherForecastController : ControllerBase
 
 Find a sample implementation [here](https://github.com/thecloudnativewebapp/GoCloudNative.Bff/blob/main/docs/Integration-Manuals/Integrating-With-Identity-Providers/IdentityServer4/src/Api/Program.cs).
 
-## Advanced authorization scenarios
+## Enhance Authorization with Claims Transformation
 
-Sometimes, the information stored in the `access_token` is not sufficient to determine whether someone is authorized to access a resource or not. In that case, you need to enrich the context, so you can apply a policy on the information from the `access_token` combined with application-specific information. 
+In certain cases, the information contained within the access token may not provide sufficient details to determine authorization for resource access. To address this, it becomes necessary to enrich the context by combining the information from the access token with application-specific data, enabling the application to apply custom policies.
 
-Enriching the context as such is called claims transformation. This can be applied by implementing the `IClaimsTransformation` interface:
+This process of enriching the context is known as claims transformation. To implement claims transformation effectively, consider utilizing the IClaimsTransformation interface, which allows you to seamlessly integrate and customize this functionality within your application.
 
 ```csharp
 using Microsoft.AspNetCore.Authentication;
@@ -165,7 +166,16 @@ public IActionResult Get()
 As an alternative, you may consider implementing [Open Policy Agent](https://www.openpolicyagent.org/).
 
 ## Summary
-Use OpenId for authentication purposes. Apply a policy in each API to determine whether or not the consumer of the API is authorized.
+
+Consider the following key concepts when implementing API authorization with OAuth2 and OIDC:
+
+* Utilize the OIDC-server for _authentication_.
+* Build _policies_ in the APIs to determine a users' permissions
+* Add more context if need be, by utilizing a concept called `claims transformation`
+* Refraining from storing Personally Identifiable Information (PII) in APIs.
+
+To ensure maintainability of the application landscape, it is important to keep the OIDC server application agnostic. This can be achieved by adhering to common OIDC claims whenever possible.
+
 
 ## Sources
 
