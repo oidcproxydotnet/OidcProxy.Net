@@ -26,11 +26,12 @@ internal static class AccountEndpoints
         
         app.Map($"/{endpointName}/login", async (HttpContext context, 
             [FromServices] ILogger<TIdp> logger, 
+            [FromServices] IRedirectUriFactory redirectUriFactory,
             [FromServices] TIdp identityProvider) =>
         {
             try
             {            
-                var redirectUri = DetermineRedirectUri(context, endpointName);
+                var redirectUri = redirectUriFactory.DetermineRedirectUri(context, endpointName);
             
                 var authorizeRequest = await identityProvider.GetAuthorizeUrlAsync(redirectUri);
 
@@ -52,6 +53,7 @@ internal static class AccountEndpoints
 
         app.Map($"/{endpointName}/login/callback", async (HttpContext context, 
             [FromServices] ILogger<TIdp> logger, 
+            [FromServices] IRedirectUriFactory redirectUriFactory,
             [FromServices] TIdp identityProvider) =>
         {
             try
@@ -63,7 +65,7 @@ internal static class AccountEndpoints
                     return Results.BadRequest();
                 }
             
-                var redirectUrl = DetermineRedirectUri(context, endpointName);
+                var redirectUrl = redirectUriFactory.DetermineRedirectUri(context, endpointName);
 
                 var codeVerifier = context.Session.GetCodeVerifier<TIdp>(); 
                 
@@ -87,6 +89,7 @@ internal static class AccountEndpoints
         
         app.MapGet($"/{endpointName}/end-session", async (HttpContext context, 
             [FromServices] ILogger<TIdp> logger,
+            [FromServices] IRedirectUriFactory redirectUriFactory,
             [FromServices] TIdp identityProvider) =>
         {
             try
@@ -115,7 +118,7 @@ internal static class AccountEndpoints
             
                 context.Session.Clear();
 
-                var baseAddress = $"{DetermineHostName(context)}";
+                var baseAddress = $"{redirectUriFactory.DetermineHostName(context)}";
                 
                 var endSessionEndpoint = await identityProvider.GetEndSessionEndpointAsync(idToken, baseAddress);
                 
@@ -129,17 +132,5 @@ internal static class AccountEndpoints
                 throw;
             }
         });
-    }
-
-    private static string DetermineHostName(HttpContext context)
-    {
-        var protocol = context.Request.IsHttps ? "https://" : "http://";
-        return $"{protocol}{context.Request.Host}";
-    }
-
-    private static string DetermineRedirectUri(HttpContext context, string endpointName)
-    {
-        var hostName = DetermineHostName(context);
-        return $"{hostName}/{endpointName}/login/callback";
     }
 }

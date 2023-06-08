@@ -13,6 +13,8 @@ public static class ModuleInitializer
         configureOptions?.Invoke(_options);
         
         var proxyBuilder = serviceCollection
+            .AddTransient(_ => _options)
+            .AddTransient<IRedirectUriFactory, RedirectUriFactory>()
             .AddReverseProxy();
 
         _options.ApplyReverseProxyConfiguration(proxyBuilder);
