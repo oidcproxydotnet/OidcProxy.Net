@@ -7,30 +7,28 @@ tags: ["dotnetcore", ".net", "BFF", "Redis", "Azure", "Kubernetes", "Microservic
 
 # Scaling out with Redis
 
-The GoCloudNative.Bff is the entry point of a web application. Potentially, it processes a lot of requests. In a cloud-native web application, ideally, when there are too many requests to handle, new instances will automatically be deployed until the system has enough capacity to process the requests.
+The GoCloudNative.Bff acts as the primary gateway for a web application. It is commonly utilized in microservices architectures hosted on container platforms like Kubernetes or Azure Container Apps, which support automatic scaling by deploying additional instances to handle increased request loads.
 
-Nowadays, autoscaling is easy to configure. The container platform will automatically deploy as many containers as need be.
+Nevertheless, implementing the BFF Security Pattern introduces complexities to scaling. The application cannot be fully stateless, impeding the straightforward auto-scaling features typically provided by container platforms.
 
-Unfortunately, when you apply the BFF Security Pattern, it's not that simple. For scaling to be that easy, the application needs to be stateless and the GoCloudNative.Bff is not.
+## The problem
 
-## Scaling out may cause issues
-
-When you deploy another instance of the GoCloudNative.Bff without configuring it properly, the following situation will probably occur:
+If more than one instance of the GoCloudNative.Bff is deployed without proper configuration, it is likely that the following situation will arise:
 
 ![Scaling problems](https://raw.githubusercontent.com/thecloudnativewebapp/GoCloudNative.Bff/main/docs/gocloudnative.org/content/Diagrams/scaling-problem.png)
 
-* When the user first navigates to the BFF, the user session is initiated. Some HTTP session values are set.
-* When the user initiates the second HTTP request to the BFF, this request might very well be processed by another node. Without extra configuration, this node will not 'know' this session variable. As a result, the request will fail.
+* Upon the user's initial navigation to the BFF, the user session is initiated, and certain HTTP session values are established.
+* However, when the user makes a subsequent HTTP request to the BFF, it may be processed by a different node. Without additional configuration, this node will not be aware of the session variables, leading to a failed request.
 
-_Note: If you are trying to reproduce the test case in the picture, beware of this: by default, traffic is divided randomly between nodes. So, the fewer nodes you have, the longer it might take for a request to fail. To test this properly, be sure to execute several HTTP requests. Some will fail, some will not._
+_Note: If you are attempting to replicate the test case depicted in the image, please be cautious of the following: by default, traffic is randomly distributed among nodes. Consequently, with fewer nodes, it may take longer for a request to fail. To conduct a thorough test, make sure to execute multiple HTTP requests, as some will fail while others will not._
 
 ## How to scale a stateful web-app
 
-The GoCloudNative.Bff supports scaling out. It uses the `Microsoft.AspNetCore.Session` to manage the session state. To scale an `aspnetcore` app out, the session must be backed by a Redis cache:
+The GoCloudNative.Bff is designed to facilitate scaling out and utilizes `Microsoft.AspNetCore.Session` to manage session state. To effectively scale out an `aspnet core` app, it is crucial to configure the session to be backed by a Redis cache.
 
 ![Scaling out with Redis](https://raw.githubusercontent.com/thecloudnativewebapp/GoCloudNative.Bff/main/docs/gocloudnative.org/content/Diagrams/sessions-backed-by-redis.png)
 
-This picture shows the user session is no longer stored on a node. Instead, it's stored in a Redis cache which is available to all nodes. The following situation occurs:
+In this picture, the user session is no longer stored on a specific node but rather in a Redis cache that is accessible to all nodes. As a result, the following scenario unfolds:
 
 * The user navigates to the BFF. 
 * The BFF sets a session variable.
@@ -40,12 +38,14 @@ This picture shows the user session is no longer stored on a node. Instead, it's
 
 ## How to configure HTTP Sessions backed by Redis
 
-To configure this, deploy a Redis instance. There are various ways to do this:
+To set up this configuration, you need to deploy a Redis instance, and there are multiple methods available to achieve this, including:
 
 * [Deploy Azure Cache for Redis](https://learn.microsoft.com/en-us/azure/azure-cache-for-redis/cache-configure)
 * [Deploy a Redis container](https://collabnix.com/how-to-setup-and-run-redis-in-a-docker-container/)
 
-After you've set up the Redis Cache, you can start building the BFF. For the BFF to work properly, several NuGet packages are required. Execute the following commands to create the BFF:
+Once the Redis Cache is set up, you can proceed with building the BFF. You will need to install several required NuGet packages. 
+
+Execute the following commands to create the BFF:
 
 ```powershell
 dotnet new web
