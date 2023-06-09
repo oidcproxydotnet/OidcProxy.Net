@@ -2,28 +2,28 @@
 
 - Concepts
   - [API authorization with OAuth2/OpenId Connect](/concepts/api-authorization/)
-  - [What is Authorization Code with Proof Key for Code Exchange?](/concepts/what-is-pkce)
-  - [What is a Back-end For Front-End?](/concepts/what-is-a-bff)
-  - [What is a Reverse Proxy?](/concepts/what-is-a-reverse-proxy)
-  - [Distributed apps](/concepts/distributed-apps)
-  - [The BFF Security Pattern](/concepts/bff-security-pattern)
+  - [What is Authorization Code with Proof Key for Code Exchange?](/concepts/what-is-pkce/)
+  - [What is a Back-end For Front-End?](/concepts/what-is-a-bff/)
+  - [What is a Reverse Proxy?](/concepts/what-is-a-reverse-proxy/)
+  - [Distributed apps](/concepts/distributed-apps/)
+  - [The BFF Security Pattern](/concepts/bff-security-pattern/)
 - Integration Manuals
   - Quickstarts
-    - [Auth0](/integration-manuals/quickstarts/auth0/quickstart)
-    - [Azure Active Directory](/integration-manuals/quickstarts/azuread/quickstart)
-    - [IdentityServer4](/integration-manuals/quickstarts/identityserver4/quickstart)
+    - [Auth0](/integration-manuals/quickstarts/auth0/quickstart/)
+    - [Azure Active Directory](/integration-manuals/quickstarts/azuread/quickstart/)
+    - [IdentityServer4](/integration-manuals/quickstarts/identityserver4/quickstart/)
     - KeyCloak
-  - [How to configure horizontal scaling/scaling out](/architecture/scaling-out-with-redis)
+  - [How to configure horizontal scaling/scaling out](/architecture/scaling-out-with-redis/)
   - Migrating an Angular Single Page Application with an API
   - Infrastructure
     - Distributed apps
-      - Applying a BFF in an Azure Container Apps environment
+      - [Applying a BFF in an Azure Container Apps environment](/integration-manuals/azure-container-apps/)
       - Applying a BFF in Kubernetes
 - Architecture
-  - [The GoCloudNative.BFF.Authentication software-architecture](/architecture/software-architecture)
-  - [Horizontal scaling/scaling out](/architecture/scaling-out-with-redis)
-  - [Extensibility (implementing custom identity providers)](/architecture/diy-identity-provider)
-  - [Aggregating responses from multiple downstream endpoints](/architecture/bff-aggregation-service)
+  - [The GoCloudNative.BFF.Authentication software-architecture](/architecture/software-architecture/)
+  - [Horizontal scaling/scaling out](/architecture/scaling-out-with-redis/)
+  - [Extensibility (implementing custom identity providers)](/architecture/diy-identity-provider/)
+  - [Aggregating responses from multiple downstream endpoints](/architecture/bff-aggregation-service/)
 - Troubleshooting:
   - Error [GCN-A-1701a00d8c56](/errors/gcn-a-1701a00d8c56)
   - Error [GCN-A-fe95cf8c11ae](/errors/gcn-a-fe95cf8c11ae)
