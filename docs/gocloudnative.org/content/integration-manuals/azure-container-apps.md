@@ -1,4 +1,4 @@
-# Implementing the BFF Security Pattern in Azure Container Apps
+# Implementing the BFF Security Pattern with Azure Container Apps
 
 In many cases, it is desirable to use a BFF (Backend For Frontend) as an Authentication Gateway when you have a microservices architecture. Microservices are often hosted on a Kubernetes-based platform, like Azure Container.
 
