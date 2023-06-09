@@ -17,8 +17,8 @@
   - Migrating an Angular Single Page Application with an API
   - Infrastructure
     - Distributed apps
-      - [Implementing the BFF Security Pattern in Azure Container Apps](/integration-manuals/azure-container-apps/)
-      - Implementing the BFF Security Pattern in Kubernetes
+      - [Implementing the BFF Security Pattern with Azure Container Apps](/integration-manuals/azure-container-apps/)
+      - Implementing the BFF Security Pattern with Kubernetes
 - Architecture
   - [The GoCloudNative.BFF.Authentication software-architecture](/architecture/software-architecture/)
   - [Horizontal scaling/scaling out](/architecture/scaling-out-with-redis/)
