@@ -208,7 +208,7 @@ As shown in the diagram at the beginning of this article, the BFF acts as a prox
 You can use the following commands to accomplish this:
 
 ```powershell
-$yourAppName = "yourappname3"
+$yourAppName = "yourappname"
 
 $rgName = "rg-$yourAppName"
 $acrLoginServer = "???" # look this up in the Azure portal
