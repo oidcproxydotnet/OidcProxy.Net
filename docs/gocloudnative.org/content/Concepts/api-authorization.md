@@ -176,6 +176,9 @@ Consider the following key concepts when implementing API authorization with OAu
 
 To ensure maintainability of the application landscape, it is important to keep the OIDC server application agnostic. This can be achieved by adhering to common OIDC claims whenever possible.
 
+## Next steps
+
+Once you've integrated API authorization into your API, the client-app needs to acquire an access token to be able to access it. If you're currently developing a Single Page Application, [follow this guide](/integration-manuals/quickstarts/auth0/quickstart/), which outlines the step-by-step process to implement API Authorization with Auth0, a Back-end for Front-end (BFF), and an Angular app. 
 
 ## Sources
 
