@@ -257,6 +257,10 @@ To revoke the tokens that have been obtained when the user logs in, navigate to 
 
 Check out a fully working demo [here](https://github.com/thecloudnativewebapp/GoCloudNative.Bff/tree/main/docs/demos/Auth0/src).
 
+## Deploying to Azure Container Apps
+
+Read how to deploy this demo to an Azure Container Apps Environment [here](/integration-manuals/azure-container-apps/).
+
 ## Issues
 
 Are you encountering issues? Please let us know at: https://github.com/thecloudnativewebapp/GoCloudNative.Bff/issues
