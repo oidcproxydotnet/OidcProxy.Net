@@ -1,3 +1,8 @@
+---
+author: Albert Starreveld
+title: What is a Back-end For Front-end?
+tags: ["BFF"]
+---
 # What is a Back-end For Front-end?
 
 The BFF pattern originates from SoundCloud. They had an app that drained phone batteries. The cause: their microservices. The app had to invoke requests to so many different APIs that the number of open HTTP-connections ended up draining batteries.

@@ -1,3 +1,8 @@
+---
+author: Albert Starreveld
+title: What is a Back-end For Front-end?
+tags: ["BFF", "Redis", "Azure Container Apps", "Microservices", "Azure"]
+---
 # Implementing the BFF Security Pattern with Azure Container Apps
 
 In many cases, it is desirable to use a BFF (Backend For Frontend) as an Authentication Gateway when you have a microservices architecture. Microservices are often hosted on a Kubernetes-based platform, like Azure Container.

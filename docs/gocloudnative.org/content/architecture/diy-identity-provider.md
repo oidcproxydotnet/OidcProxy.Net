@@ -1,3 +1,8 @@
+---
+author: Albert Starreveld
+title: Connecting GoCloudNative.BFF with a custom OIDC/OAuth2 server
+tags: ["dotnetcore", "OIDC", "Authentication", "Authorization"]
+---
 # Connecting GoCloudNative.BFF with a custom OIDC/OAuth2 server
 
 The GoCloudNative.Bff does not support all identity providers out of the box. Also, it does not encourage to use the `authorization code flow` without PKCE. 
