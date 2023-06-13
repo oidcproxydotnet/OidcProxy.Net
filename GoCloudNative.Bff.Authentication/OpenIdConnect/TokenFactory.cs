@@ -1,7 +1,7 @@
 using GoCloudNative.Bff.Authentication.IdentityProviders;
 using Microsoft.AspNetCore.Http;
 
-namespace GoCloudNative.Bff.Authentication;
+namespace GoCloudNative.Bff.Authentication.OpenIdConnect;
 
 internal class TokenFactory
 {

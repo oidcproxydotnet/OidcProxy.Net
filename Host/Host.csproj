@@ -11,7 +11,7 @@
   <ItemGroup>
     <PackageReference Include="Microsoft.AspNetCore.DataProtection.StackExchangeRedis" Version="7.0.5" />
     <PackageReference Include="Microsoft.Extensions.Caching.StackExchangeRedis" Version="7.0.5" />
-    <PackageReference Include="Microsoft.Identity.Client" Version="4.53.0" />
+    <PackageReference Include="Microsoft.Identity.Client" Version="4.54.1" />
     <PackageReference Include="Yarp.ReverseProxy" Version="2.0.0" />
   </ItemGroup>
 

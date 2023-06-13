@@ -1,6 +1,7 @@
 using System.Text;
 using System.Text.RegularExpressions;
 using FluentAssertions;
+using GoCloudNative.Bff.Authentication.OpenIdConnect;
 
 namespace GoCloudNative.Bff.Authentication.Tests;
 

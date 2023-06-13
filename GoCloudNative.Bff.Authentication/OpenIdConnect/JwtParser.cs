@@ -1,7 +1,7 @@
 using System.IdentityModel.Tokens.Jwt;
 using System.Text;
 
-namespace GoCloudNative.Bff.Authentication;
+namespace GoCloudNative.Bff.Authentication.OpenIdConnect;
 
 internal static class JwtParser
 {   

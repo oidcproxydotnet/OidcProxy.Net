@@ -1,5 +1,6 @@
 using GoCloudNative.Bff.Authentication.IdentityProviders;
 using GoCloudNative.Bff.Authentication.Logging;
+using GoCloudNative.Bff.Authentication.OpenIdConnect;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -11,7 +12,9 @@ internal static class AccountEndpoints
 {
     public static void MapAuthenticationEndpoints<TIdp>(this WebApplication app, string endpointName) where TIdp : IIdentityProvider
     {
-        app.Map($"/{endpointName}/me", (HttpContext context, [FromServices] TIdp identityProvider) =>
+        app.Map($"/{endpointName}/me", async (HttpContext context, 
+            [FromServices] TIdp identityProvider, 
+            [FromServices] IClaimsTransformation claimsTransformation) =>
         {   
             if (!context.Session.HasIdToken<TIdp>())
             {
@@ -21,7 +24,9 @@ internal static class AccountEndpoints
             context.Response.Headers.CacheControl = $"no-cache, no-store, must-revalidate";
 
             var idToken = context.Session.GetIdToken<TIdp>();
-            return Results.Ok(idToken.ParseJwtPayload());
+            var payload = idToken.ParseJwtPayload();
+            var claims = await claimsTransformation.Transform(payload);
+            return Results.Ok(claims);
         });
         
         app.Map($"/{endpointName}/login", async (HttpContext context, 

@@ -1,8 +1,7 @@
-using System.Text.RegularExpressions;
 using GoCloudNative.Bff.Authentication.ModuleInitializers;
 using Microsoft.AspNetCore.Http;
 
-namespace GoCloudNative.Bff.Authentication;
+namespace GoCloudNative.Bff.Authentication.OpenIdConnect;
 
 internal class RedirectUriFactory : IRedirectUriFactory
 {

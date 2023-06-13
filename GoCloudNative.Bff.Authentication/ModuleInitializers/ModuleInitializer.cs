@@ -1,3 +1,4 @@
+using GoCloudNative.Bff.Authentication.OpenIdConnect;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.Extensions.DependencyInjection;
 
@@ -22,10 +23,11 @@ public static class ModuleInitializer
         _options.IdpRegistrations.Apply(proxyBuilder);
         
         _options.IdpRegistrations.Apply(serviceCollection);
-        
-        _options.ApplyDistributedCache(serviceCollection);
 
+        _options.ApplyClaimsTransformation(serviceCollection);
+        
         return serviceCollection
+            .AddDistributedMemoryCache()
             .AddMemoryCache()
             .AddSession(options =>
             {

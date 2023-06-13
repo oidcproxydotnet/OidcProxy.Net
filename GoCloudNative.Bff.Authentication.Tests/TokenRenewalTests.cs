@@ -1,5 +1,6 @@
 using FluentAssertions;
 using GoCloudNative.Bff.Authentication.IdentityProviders;
+using GoCloudNative.Bff.Authentication.OpenIdConnect;
 using Microsoft.AspNetCore.Http;
 using NSubstitute;
 
