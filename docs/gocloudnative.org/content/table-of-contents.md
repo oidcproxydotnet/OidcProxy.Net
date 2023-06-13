@@ -24,6 +24,7 @@
   - [Horizontal scaling/scaling out](/architecture/scaling-out-with-redis/)
   - [Extensibility (implementing custom identity providers)](/architecture/diy-identity-provider/)
   - [Aggregating responses from multiple downstream endpoints](/architecture/bff-aggregation-service/)
+  - [The `/account/me` endpoint](/architecture/me-endpoint/)
 - Troubleshooting:
   - Error [GCN-A-1701a00d8c56](/errors/gcn-a-1701a00d8c56)
   - Error [GCN-A-fe95cf8c11ae](/errors/gcn-a-fe95cf8c11ae)
