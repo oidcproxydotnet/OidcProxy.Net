@@ -12,7 +12,7 @@ Additionally, there may be cases where the claims within the `id_token` are insu
 
 To overcome these challenges, the `/account/me` endpoint offers customization options to tailor its behavior according to specific needs.
 
-## Customizing the content of the `/account/me` endpoint
+## Customizing the contents of the `/account/me` endpoint
 
 The `/account/me` endpoint, by default, performs the decoding and parsing of the `id_token` payload. It utilizes the `JwtPayload.Parse` method from the `System.IdentityModel.Tokens.Jwt` package to accomplish this. The resulting parsed payload is then returned by the `/account/me` endpoint in JSON format.
 
