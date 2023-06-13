@@ -7,7 +7,7 @@ tags: ["BFF"]
 
 The BFF pattern originates from SoundCloud. They had an app that drained phone batteries. The cause: their microservices. The app had to invoke requests to so many different APIs that the number of open HTTP-connections ended up draining batteries.
 
-The solution was simple: Build a server-side API with one single endpoint, specifically built for a front-end, which collects all the data from all microservices in one go. That way, there's only one HTTP-connection to be kept open by the app.
+The solution was simple: Build a server-side API specifically for one front-end, which collects all the data from all microservices in one go. That way, there's only one HTTP-connection to be kept open by the app.
 
 So, this is what that looks like:
 
