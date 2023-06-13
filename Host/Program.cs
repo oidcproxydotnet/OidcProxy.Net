@@ -47,7 +47,7 @@ builder.Services.AddSecurityBff(o =>
             o.ConfigureAzureAd(aadConfig, "aad");
         }
 
-        o.AddClaimsTransformation<MeEndpointClaimsTransformation>();
+        //o.AddClaimsTransformation<MyClaimsTransformation>();
         o.LoadYarpFromConfig(builder.Configuration.GetSection("ReverseProxy"));
     });
 

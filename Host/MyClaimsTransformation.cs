@@ -3,7 +3,7 @@ using GoCloudNative.Bff.Authentication.OpenIdConnect;
 
 namespace Host;
 
-public class MeEndpointClaimsTransformation : IClaimsTransformation
+public class MyClaimsTransformation : IClaimsTransformation
 {
     public Task<object> Transform(JwtPayload payload)
     {
