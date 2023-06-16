@@ -261,6 +261,9 @@ Check out a fully working demo [here](https://github.com/thecloudnativewebapp/Go
 
 Read how to deploy this demo to an Azure Container Apps Environment [here](/integration-manuals/azure-container-apps/).
 
-## Issues
+## Feedback
 
-Are you encountering issues? Please let us know at: https://github.com/thecloudnativewebapp/GoCloudNative.Bff/issues
+Help us build better software. Your feedback is valuable to us. We would like to inquire about your success in setting up this demo.
+
+- Were you able to successfully set up a BFF with Auth0? Please share your thoughts on the overall experience by answering the questions in our [feedback form](/feedback/).
+- Did you face any difficulties or encounter missing features? Kindly inform us at: https://github.com/thecloudnativewebapp/GoCloudNative.Bff/issues

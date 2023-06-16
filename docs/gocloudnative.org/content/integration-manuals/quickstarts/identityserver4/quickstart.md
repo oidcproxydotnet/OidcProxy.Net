@@ -267,6 +267,9 @@ To revoke the tokens that have been obtained when the user logs in, navigate to 
 
 Check out a fully working demo [here](https://github.com/thecloudnativewebapp/GoCloudNative.Bff/tree/main/docs/demos/IdentityServer4/src).
 
-## Issues
+## Feedback
 
-Are you encountering issues? Please let us know at: https://github.com/thecloudnativewebapp/GoCloudNative.Bff/issues
+Help us build better software. Your feedback is valuable to us. We would like to inquire about your success in setting up this demo.
+
+- Were you able to successfully set up a BFF with IdentityServer? Please share your thoughts on the overall experience by answering the questions in our [feedback form](/feedback/).
+- Did you face any difficulties or encounter missing features? Kindly inform us at: https://github.com/thecloudnativewebapp/GoCloudNative.Bff/issues
