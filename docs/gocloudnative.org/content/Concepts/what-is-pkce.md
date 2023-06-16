@@ -115,3 +115,6 @@ Therefore, the only way to ensure the token ends up at the intended machine is t
 
 ## Summary
 For more secure applications, do not use the Implicit flow or the PKCE flow on the client-side. Instead, use the PKCE-flow with client_secret at the server side.
+
+## Implementing API Authorization
+If you have acquired an `access_token`, you can use it to grant users authorization to access resources. To understand how this process works and how to implement it in ASP.NET Core, [read this article](/concepts/api-authorization/).

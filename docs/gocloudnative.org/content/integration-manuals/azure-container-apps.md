@@ -266,3 +266,10 @@ To deploy an application utilizing the BFF Security Pattern on Azure Container A
     *  Configure the URLs to the downstream services.
 
 For detailed instructions on executing these steps, refer to [this script](https://github.com/thecloudnativewebapp/GoCloudNative.Bff/blob/main/docs/demos/Auth0/src/deploy-to-azure.ps1).
+
+## Feedback
+
+Help us build better software. Your feedback is valuable to us. We would like to inquire about your success in setting up this demo.
+
+- Were you able to successfully deploy the application with Azure Container Apps? Please share your thoughts on the overall experience by answering the questions in our [feedback form](/feedback/).
+- Did you face any difficulties or encounter missing features? Kindly inform us at: https://github.com/thecloudnativewebapp/GoCloudNative.Bff/issues
