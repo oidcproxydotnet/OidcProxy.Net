@@ -6,9 +6,9 @@ tags: ["BFF", "Microservices", "Authentication"]
 ---
 
 # The Back-end For Front-end Security Pattern
-In today's digital landscape, delivering exceptional user experiences while ensuring robust security measures is paramount for the success of web applications. Enter the Back-end For Front-end (BFF) pattern—an architectural approach that not only enhances user experience but also bolsters the security of front-end applications.
+In today's digital landscape, delivering exceptional user experiences while ensuring robust security measures is paramount for the success of web applications.
 
-By shifting the responsibility of aggregating data from multiple sources to the BFF, and thereby minimizing HTTP requests made by the front-end, the BFF pattern significantly improves the overall user experience. However, the benefits don't end there. Recognizing the need for stringent security measures, the BFF pattern can be extended to incorporate authentication and authorization mechanisms, making it a powerful tool to safeguard sensitive user information.
+By shifting the responsibility of aggregating data from multiple sources to the BFF, and thereby minimizing HTTP requests made by the front-end, the BFF pattern improves the overall user experience. However, the benefits don't end there. Recognizing the need for stringent security measures, the BFF pattern can be extended to incorporate authentication and authorization mechanisms, making it a powerful tool to safeguard sensitive user information.
 
 This article explores the Back-end For Front-end pattern and its security extension, shedding light on their implementation, benefits, and implications. We will delve into the inner workings of the BFF pattern, illustrating how it optimizes front-end communication with downstream services. Additionally, we will examine the Back-end For Front-end Security pattern, which augments the BFF with authentication endpoints and token-based security measures.
 
@@ -24,15 +24,10 @@ The following picture illustrates it:
 
 ![BFF pattern](https://raw.githubusercontent.com/thecloudnativewebapp/GoCloudNative.Bff/main/docs/gocloudnative.org/content/Concepts/diagrams/bff.png)
 
-Learn more about the BFF pattern here:
-
-* https://samnewman.io/patterns/architectural/bff/
-* https://abstarreveld.medium.com/what-is-a-bff-and-how-to-build-one-e2a2b78cfc43
-
 ## The BFF Security Pattern
-Initially, the BFF pattern does not address security concerns directly. However, since, with the BFF Pattern,  the front-end has a dedicated back-end, it is sensible to use it to authenticate users on the server side.
+Initially, the BFF pattern does not address security concerns directly. However, since, with the BFF Pattern, the front-end has a dedicated back-end, it is sensible to use it to authenticate users on the server side.
 
-The Back-end For Front-end Security pattern extends the BFF by adding authentication endpoints. It handles user sessions on the server side and enhances requests to downstream services by including a Bearer token. Here's how it operates:
+The Back-end For Front-end Security pattern extends the BFF by adding authentication functionality. It handles user sessions on the server side, allows them to authenticate, and enhances requests to downstream services by including a Bearer token. Here's how it works:
 
 ### BFF Security Pattern:
 
@@ -61,7 +56,7 @@ The image below depicts the process of forwarding HTTP requests to downstream se
 ### Implications
 Implementing the Back-end for Front-end has the following implications:
 
-* BFF and SPA must be hosted on the same domain. This means the BFF must serve the index.html page.
+* BFF and SPA must be hosted on the same domain. This means the BFF must serve HTML pages.
 * BFF is no longer stateless.
 
 As a result, from a network perspective, this is what the application architecture will look like:
@@ -87,7 +82,7 @@ In this diagram there is a:
     * Protected with access_tokes. Typically, the resources in this API can only be accessed with a valid access_token.
     * The APIs apply a rule to determine whether a user is authorized to use/see a resource or not. In other words: It applies a policy.
 
-To implement the BFF pattern, refer to the following resources and quickstarts for configuration and working demos:
+To implement the BFF pattern, and investigate how this works in dept, refer to the following resources and quickstarts for configuration and working demos:
 
 - [How to implement a C# BFF with Auth0](/integration-manuals/quickstarts/auth0/quickstart)
 - [How to implement a C# BFF with Azure Active Directory](/integration-manuals/quickstarts/azuread/quickstart)
