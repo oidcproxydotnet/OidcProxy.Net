@@ -18,3 +18,7 @@ Read more about the BFF pattern here:
 * https://martinfowler.com/articles/micro-frontends.html
 * https://medium.com/@abstarreveld/what-is-a-bff-and-how-to-build-one-e2a2b78cfc43
 
+## The BFF Security Pattern
+If you have a dedicated back-end for your front-end, a sensable option is to allow the users of your site to log in there. This makes the back-end slightly more complex, but it makes the web application more secure.
+
+Enriching the BFF with authentication is known as the BFF Security Pattern. [Read about what the BFF Security Pattern is exactly, and how to implement it](/concepts/bff-security-pattern/).
