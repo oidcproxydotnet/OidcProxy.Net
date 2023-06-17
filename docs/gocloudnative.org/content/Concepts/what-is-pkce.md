@@ -1,7 +1,6 @@
 ---
 author: Albert Starreveld
 title: What is Authorization Code with Proof Key for Code Exchange?
-description: OAuth2 Authorization Code with Proof Key for Code Exchange explained.
 tags: ["OAuth2", "PKCE", "OIDC", "Authentication", "Authorization"]
 ---
 # What is Authorization Code with Proof Key for Code Exchange?
@@ -72,7 +71,7 @@ Later, `PKCE` was introduced: [rfc7636](https://www.rfc-editor.org/rfc/rfc7636).
 
 Just like with the Implicit flow, the user navigates to the `/authorize` endpoint. But unlike Implicit, the Single-Page Application generates a password first and adds it to the authorize-request. Also, note that the response type is no longer `token`. Instead, the Single-Page Application requests a `Code` which it will exchange for a `token` with the password it just generated:
 
-`https://{your_auth_server}/authorize?client_id={your_client_id}redirect_uri=http://localhost/callback&response_type=code&code_challenge=elU6u5zyqQT2f92GRQUq6PautAeNDf4DQPayyR0ek_c&code_challenge_method=S256`
+`https://{your_auth_server}/authorize?client_id={your_client_id}&redirect_uri=http://localhost/callback&response_type=code&code_challenge=elU6u5zyqQT2f92GRQUq6PautAeNDf4DQPayyR0ek_c&code_challenge_method=S256`
 
 Just like with the implicit flow, when the user navigates to this URL, the user will see a log-in page. After a successful log-in, the authorization server redirects to the provided redirect URL. Unlike the implicit flow, the URL will not contain an access token. Instead, it contains a code that can be exchanged for an access token:
 

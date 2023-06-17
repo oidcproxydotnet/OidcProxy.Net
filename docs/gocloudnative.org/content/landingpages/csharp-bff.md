@@ -1,7 +1,6 @@
 ---
 author: Albert Starreveld
 title: How to build a BFF with ASPNETCORE
-description: Read how to implement a BFF with C#
 tags: ["dotnetcore", "BFF"]
 ---
 # How to build a BFF with C#
