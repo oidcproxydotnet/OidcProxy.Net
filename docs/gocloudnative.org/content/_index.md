@@ -1,6 +1,6 @@
 ---
 author: Albert Starreveld
-title: GoCloudNative.BFF - A free, developer-friendly Backend-For-Frontend Security Framework
+title: GoCloudNative.BFF - A scalable, free OIDC Authentication Gateway
 description: Elevate the security of your web application to the most up-to-date standards by incorporating the BFF Security Pattern using GoCloudNative.BFF.
 ---
 

@@ -1,7 +1,5 @@
 ---
 author: Albert Starreveld
-title: How to set up an authenticated C# BFF that aggregates the responses of downstream requests.
-description: A BFF is meant to delegate requests downstream and aggregate the results. When these APIs require authentication and when the authentication is handled by the BFF, than the BFF must include the access_token in the downstream requests. This article describes how this works and how to implement it.
 tags: ["dotnetcore", "BFF", "Authentication", "access_tokens", "Microservices"]
 ---
 
