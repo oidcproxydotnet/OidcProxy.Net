@@ -25,14 +25,23 @@
 </footer>
 
 <script>
-    var header = document.getElementById("nav-border");
+  var header = document.getElementById("nav-border");
 
-    window.onscroll = function() {
-      var sticky = header.offsetTop;
-      if (window.pageYOffset > sticky) {
-        header.classList.add("sticky");
-      } else {
-        header.classList.remove("sticky");
-      }
-    };
+  window.onscroll = function() {
+    var sticky = header.offsetTop;
+    if (window.pageYOffset > sticky) {
+      header.classList.add("sticky");
+    } else {
+      header.classList.remove("sticky");
+    }
+  };
+</script>
+
+<script async src="https://www.googletagmanager.com/gtag/js?id=GT-NNM8VFV"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'GT-NNM8VFV');
 </script>
