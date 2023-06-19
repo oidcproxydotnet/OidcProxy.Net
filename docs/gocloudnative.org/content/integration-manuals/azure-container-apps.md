@@ -136,7 +136,7 @@ az containerapp env create
 
 ## Configuring Auth0 and deploying the API and the Single Page Application
 
-In order for the BFF application we are about to deploy to authenticate using Auth0, you need to configure Auth0 following the instructions provided in the [Auth0 quickstart](/integration-manuals/quickstarts/auth0/quickstart).
+In order for the BFF application we are about to deploy to authenticate using Auth0, you need to configure Auth0 following the instructions provided in the [Auth0 quickstart](/integration-manuals/quickstarts/auth0/quickstart/).
 
 Within the quickstart, you will find the necessary details such as the Auth0 Domain, Audience, ClientId, and Secret. These values are required for the successful configuration of the BFF and the API.
 
