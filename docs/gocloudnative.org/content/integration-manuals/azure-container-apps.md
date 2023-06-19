@@ -254,7 +254,7 @@ It's important to note that unlike the other Container Apps, the BFF has its `in
 ## Summary
 To deploy an application utilizing the BFF Security Pattern on Azure Container Apps, follow the steps outlined below:
 
-* Configure Auth0 by referring to the [provided quickstart guide](/integration-manuals/quickstarts/auth0/quickstart).
+* Configure Auth0 by referring to the [provided quickstart guide](/integration-manuals/quickstarts/auth0/quickstart/).
 * Deploy an Azure Container Registry.
 * Upload the container images to the Azure Container Registry.
 * Deploy an Azure Cache for Redis instance.
