@@ -83,6 +83,6 @@ In this diagram there is a:
 
 To implement the BFF pattern, and investigate how this works in dept, refer to the following resources and quickstarts for configuration and working demos:
 
-- [How to implement a C# BFF with Auth0](/integration-manuals/quickstarts/auth0/quickstart)
-- [How to implement a C# BFF with Azure Active Directory](/integration-manuals/quickstarts/azuread/quickstart)
-- [How to implement a C# BFF with IdentityServer4](/integration-manuals/quickstarts/identityserver4/quickstart)
+- [How to implement a C# BFF with Auth0](/integration-manuals/quickstarts/auth0/quickstart/)
+- [How to implement a C# BFF with Azure Active Directory](/integration-manuals/quickstarts/azuread/quickstart/)
+- [How to implement a C# BFF with IdentityServer4](/integration-manuals/quickstarts/identityserver4/quickstart/)

@@ -165,6 +165,6 @@ And add the following section to your `appsettings.json`:
 
 Read quickstarts to see how to configure the BFF, and the APIs. Also, refer to the quickstarts for working demos:
 
-- [How to implement a C# BFF with Auth0](/integration-manuals/quickstarts/auth0/quickstart)
-- [How to implement a C# BFF with Azure Active Directory](/integration-manuals/quickstarts/azuread/quickstart)
-- [How to implement a C# BFF with IdentityServer4](/integration-manuals/quickstarts/identityserver4/quickstart)
+- [How to implement a C# BFF with Auth0](/integration-manuals/quickstarts/auth0/quickstart/)
+- [How to implement a C# BFF with Azure Active Directory](/integration-manuals/quickstarts/azuread/quickstart/)
+- [How to implement a C# BFF with IdentityServer4](/integration-manuals/quickstarts/identityserver4/quickstart/)
