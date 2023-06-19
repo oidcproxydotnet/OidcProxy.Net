@@ -58,12 +58,15 @@ div.main.list a.readmore {
     color: black;
     padding-left: 45px;
     line-height: 30.5px;
-    display: inline-block;
-    margin-left: 50px;
+    display: block;
+
+    position: absolute;
+    left: 50px;
+    
 }
 
 #nav {
-    float:right;
+    text-align: center;
 }
 
 /* Style the header */
@@ -80,6 +83,11 @@ div.main.list a.readmore {
     padding: 0;
     margin: 0;
     display: flex; 
+    position: relative;
+    margin-left: auto;
+    margin-right: auto;
+    width: 200px;
+    width: 500px;
 }
 
 #nav-border ul li {
@@ -101,21 +109,11 @@ div.main.list a.readmore {
 #nav-border ul.submenu.visible {
     display: block;
     position: absolute;
-    left: 0px;
+    left: -100px;
     width: 300px;
     padding-top: 20px;
     padding: 10px;
     padding-bottom: 0;
-}
-
-#nav-border ul#submenu-architecture.submenu.visible {
-    left: auto;
-    left: -86px;
-}
-#nav-border ul#submenu-troubleshooting.submenu.visible {
-    left: auto;
-    right: 0;
-    width: 250px;
 }
 
 #nav-border a {
@@ -123,25 +121,13 @@ div.main.list a.readmore {
     text-decoration: none;
 }
 
-div.banner {
-    background-image: url("/road.avif");
-    background-position: center;
-    height: 400px;
+.banner {
+    text-align: center;
     padding: 50px;
-    color: white;
 }
 
-div.banner h1 {
-    margin-top: 150px;
-    text-align: center;
-    font-size: 48pt;
-    text-shadow: 1px 1px 2px #bbb;
-}
-
-div.banner h2 {
-    text-align: center;
-    font-size: 18pt;
-    text-shadow: 1px 1px 2px #bbb;
+.banner h1 {
+    font-size: 38pt;
 }
   
 .sticky {
