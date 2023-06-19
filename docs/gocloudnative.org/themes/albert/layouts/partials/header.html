@@ -2,61 +2,64 @@
     <a href="/">
         <span id="logo">GoCloudNative.org</span>
     </a>
-  
-    <nav id="nav" class="nav justify-content-center">
-        <ul>
-            <li onmouseover="show('submenu-concepts')" onmouseout="hide('submenu-concepts')">Concepts
-                <ul id="submenu-concepts" class="submenu">
-                    <li><a href="/concepts/api-authorization/">API authorization with OAuth2/OpenId Connect</a></li>
-                    <li><a href="/concepts/what-is-pkce/">What is Authorization Code with Proof Key for Code Exchange?</a></li>
-                    <li><a href="/concepts/what-is-a-bff/">What is a Back-end For Front-End?</a></li>
-                    <li><a href="/concepts/what-is-a-reverse-proxy/">What is a Reverse Proxy?</a></li>
-                    <li><a href="/concepts/distributed-apps/">Distributed apps</a></li>
-                    <li><a href="/concepts/bff-security-pattern/">The BFF Security Pattern</a></li>
-                </ul>
-            </li>
-            <li onmouseover="show('submenu-integration-manuals')" onmouseout="hide('submenu-integration-manuals')">Integration Manuals
-                <ul id="submenu-integration-manuals" class="submenu">
-                    <li><a href="/integration-manuals/quickstarts/auth0/quickstart/">Auth0 quickstart</a></li>
-                    <li><a href="/integration-manuals/quickstarts/azuread/quickstart/">Azure Active Directory quickstart</a></li>
-                    <li><a href="/integration-manuals/quickstarts/identityserver4/quickstart/">IdentityServer4 quickstart</a></li>
-                    <li><a href="/integration-manuals/azure-container-apps/">Implementing the BFF Security Pattern with Azure Container Apps</a></li>
-                </ul>
-            </li>
-            <li onmouseover="show('submenu-architecture')" onmouseout="hide('submenu-architecture')">Architecture
-                <ul id="submenu-architecture" class="submenu">
-                    <li><a href="/architecture/software-architecture/">The GoCloudNative.BFF.Authentication software-architecture</a></li>
-                    <li><a href="/architecture/scaling-out-with-redis/">Horizontal scaling/scaling out</a></li>
-                    <li><a href="/architecture/diy-identity-provider/">Extensibility (implementing custom identity providers)</a></li>
-                    <li><a href="/architecture/bff-aggregation-service/">Aggregating responses from multiple downstream endpoints</a></li>
-                    <li><a href="/architecture/me-endpoint/">The <code>/account/me</code> endpoint</a></li>
-                </ul>
-            </li>
-            <li onmouseover="show('submenu-troubleshooting')" onmouseout="hide('submenu-troubleshooting')">Troubleshooting
-                <ul id="submenu-troubleshooting" class="submenu">
-                    <li>Error <a href="/errors/gcn-a-1701a00d8c56/">GCN-A-1701a00d8c56</a></li>
-                    <li>Error <a href="/errors/gcn-a-fe95cf8c11ae/">GCN-A-fe95cf8c11ae</a></li>
-                    <li>Error <a href="/errors/gcn-az-427413a281d9/">GCN-AZ-427413a281d9</a></li>
-                    <li>Error <a href="/errors/gcn-az-e9ba6693bb0e/">GCN-AZ-e9ba6693bb0e</a></li>
-                    <li>Error <a href="/errors/gcn-az-42d458c58299/">GCN-AZ-42d458c58299</a></li>
-                    <li>Error <a href="/errors/gcn-b-66b217e55cd6/">GCN-B-66b217e55cd6</a></li>
-                    <li>Error <a href="/errors/gcn-b-7072e626c679/">GCN-B-7072e626c679</a></li>
-                    <li>Error <a href="/errors/gcn-b-f204c0800192/">GCN-B-f204c0800192</a></li>
-                    <li>Error <a href="/errors/gcn-o-427413a281d9/">GCN-O-427413a281d9</a></li>
-                    <li>Error <a href="/errors/gcn-o-e0180c31edd7/">GCN-O-e0180c31edd7</a></li>
-                    <li>Error <a href="/errors/gcn-o-e9ba6693bb0e/">GCN-O-e9ba6693bb0e</a></li>
-                </ul>
-            </li>
-        </ul>
-    </nav>
+
+    <a id="hamburger">
+        <span onclick="toggle('nav')">menu</span>
+
+        <nav id="nav" class="nav justify-content-center">
+            <ul>
+                <li onclick="toggleForMobile('submenu-concepts'); hideForMobile('submenu-integration-manuals', 'submenu-architecture', 'submenu-troubleshooting')" 
+                    onmouseover="show('submenu-concepts')" 
+                    onmouseout="hide('submenu-concepts')">
+                    Concepts
+                    <ul id="submenu-concepts" class="submenu">
+                        <li><a href="/concepts/api-authorization/">API authorization with OAuth2/OpenId Connect</a></li>
+                        <li><a href="/concepts/what-is-pkce/">What is Authorization Code with Proof Key for Code Exchange?</a></li>
+                        <li><a href="/concepts/what-is-a-bff/">What is a Back-end For Front-End?</a></li>
+                        <li><a href="/concepts/what-is-a-reverse-proxy/">What is a Reverse Proxy?</a></li>
+                        <li><a href="/concepts/distributed-apps/">Distributed apps</a></li>
+                        <li><a href="/concepts/bff-security-pattern/">The BFF Security Pattern</a></li>
+                    </ul>
+                </li>
+                <li onclick="toggleForMobile('submenu-integration-manuals'); hideForMobile('submenu-concepts', 'submenu-architecture', 'submenu-troubleshooting')" 
+                    onmouseover="show('submenu-integration-manuals')" 
+                    onmouseout="hide('submenu-integration-manuals')">Integration Manuals
+                    <ul id="submenu-integration-manuals" class="submenu">
+                        <li><a href="/integration-manuals/quickstarts/auth0/quickstart/">Auth0 quickstart</a></li>
+                        <li><a href="/integration-manuals/quickstarts/azuread/quickstart/">Azure Active Directory quickstart</a></li>
+                        <li><a href="/integration-manuals/quickstarts/identityserver4/quickstart/">IdentityServer4 quickstart</a></li>
+                        <li><a href="/integration-manuals/azure-container-apps/">Implementing the BFF Security Pattern with Azure Container Apps</a></li>
+                    </ul>
+                </li>
+                <li onclick="toggleForMobile('submenu-architecture'); hideForMobile('submenu-concepts', 'submenu-integration-manuals', 'submenu-troubleshooting')" 
+                    onmouseover="show('submenu-architecture')" 
+                    onmouseout="hide('submenu-architecture')">Architecture
+                    <ul id="submenu-architecture" class="submenu">
+                        <li><a href="/architecture/software-architecture/">The GoCloudNative.BFF.Authentication software-architecture</a></li>
+                        <li><a href="/architecture/scaling-out-with-redis/">Horizontal scaling/scaling out</a></li>
+                        <li><a href="/architecture/diy-identity-provider/">Extensibility (implementing custom identity providers)</a></li>
+                        <li><a href="/architecture/bff-aggregation-service/">Aggregating responses from multiple downstream endpoints</a></li>
+                        <li><a href="/architecture/me-endpoint/">The <code>/account/me</code> endpoint</a></li>
+                    </ul>
+                </li>
+                <li onclick="toggleForMobile('submenu-troubleshooting'); hideForMobile('submenu-concepts', 'submenu-integration-manuals', 'submenu-architecture')" 
+                    onmouseover="show('submenu-troubleshooting')" 
+                    onmouseout="hide('submenu-troubleshooting')">Troubleshooting
+                    <ul id="submenu-troubleshooting" class="submenu">
+                        <li>Error <a href="/errors/gcn-a-1701a00d8c56/">GCN-A-1701a00d8c56</a></li>
+                        <li>Error <a href="/errors/gcn-a-fe95cf8c11ae/">GCN-A-fe95cf8c11ae</a></li>
+                        <li>Error <a href="/errors/gcn-az-427413a281d9/">GCN-AZ-427413a281d9</a></li>
+                        <li>Error <a href="/errors/gcn-az-e9ba6693bb0e/">GCN-AZ-e9ba6693bb0e</a></li>
+                        <li>Error <a href="/errors/gcn-az-42d458c58299/">GCN-AZ-42d458c58299</a></li>
+                        <li>Error <a href="/errors/gcn-b-66b217e55cd6/">GCN-B-66b217e55cd6</a></li>
+                        <li>Error <a href="/errors/gcn-b-7072e626c679/">GCN-B-7072e626c679</a></li>
+                        <li>Error <a href="/errors/gcn-b-f204c0800192/">GCN-B-f204c0800192</a></li>
+                        <li>Error <a href="/errors/gcn-o-427413a281d9/">GCN-O-427413a281d9</a></li>
+                        <li>Error <a href="/errors/gcn-o-e0180c31edd7/">GCN-O-e0180c31edd7</a></li>
+                        <li>Error <a href="/errors/gcn-o-e9ba6693bb0e/">GCN-O-e9ba6693bb0e</a></li>
+                    </ul>
+                </li>
+            </ul>
+        </nav>
+    </a>
   </div>
-
-  <script>
-    function show(id) {
-        document.getElementById(id).classList.add("visible");    
-    }
-
-    function hide(id) {
-        document.getElementById(id).classList.remove("visible");    
-    }
-  </script>

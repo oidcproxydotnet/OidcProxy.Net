@@ -35,6 +35,66 @@
       header.classList.remove("sticky");
     }
   };
+
+  function getPageWidth() {
+    return Math.max(
+      document.body.scrollWidth,
+      document.documentElement.scrollWidth,
+      document.body.offsetWidth,
+      document.documentElement.offsetWidth,
+      document.documentElement.clientWidth
+    );
+  }
+
+  function show(id) {
+      if(getPageWidth() > 920) {
+        document.getElementById(id).classList.add("visible");   
+      }
+  }
+
+
+  function hideForMobile(id1, id2, id3) {
+    if(getPageWidth() <= 920) {
+      hideTheDamnThing(id1);
+      hideTheDamnThing(id2);
+      hideTheDamnThing(id3);
+    }
+
+  }
+
+  function hide(id) {
+    if(!id) {
+      return;
+    }
+
+    if(getPageWidth() > 920) {
+      hideTheDamnThing(id);
+    }
+  }
+
+  function hideTheDamnThing(id) {
+    if(!id) {
+      return;
+    }
+
+    document.getElementById(id).classList.remove("visible");    
+  }
+
+  function toggleForMobile(id) {
+    if(getPageWidth() <= 920) {
+      toggle(id);
+    }
+  }
+
+  function toggle(id) {
+      const className = "visible";
+      var elem = document.getElementById(id);
+      if (!elem.classList.contains(className)){
+        elem.classList.add(className);
+      } else {
+        elem.classList.remove(className);
+      }
+  }
 </script>
 
 <script async src="https://www.googletagmanager.com/gtag/js?id=GT-NNM8VFV"></script>

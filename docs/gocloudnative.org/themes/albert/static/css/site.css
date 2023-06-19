@@ -26,7 +26,7 @@ span, p, h2, h3, li { font-size: 15px; }
 
 h1 { font-size: 18px; }
 
-pre { padding: 10px; }
+pre { padding: 10px; overflow-x: scroll; }
 
 div.main {
     max-width: 800px;
@@ -57,16 +57,29 @@ div.main.list a.readmore {
     height: 30px;
     color: black;
     padding-left: 45px;
+    margin-left: 45px;
+    margin-bottom: 10px;
     line-height: 30.5px;
     display: block;
-
-    position: absolute;
-    left: 50px;
-    
 }
 
 #nav {
+    display: none;
     text-align: center;
+}
+
+#nav.visible {
+    display: block;
+}
+
+#hamburger span {
+    display: block;
+    position: absolute;
+    right: 45px;
+    width: 41px;
+    top: 16px;
+    font-size: 16px;
+    cursor: pointer;
 }
 
 /* Style the header */
@@ -82,12 +95,9 @@ div.main.list a.readmore {
     list-style: none;
     padding: 0;
     margin: 0;
-    display: flex; 
     position: relative;
     margin-left: auto;
     margin-right: auto;
-    width: 200px;
-    width: 500px;
 }
 
 #nav-border ul li {
@@ -102,15 +112,14 @@ div.main.list a.readmore {
     display: none;
     background-color: #fff;
     border: 1px solid silver;
-    border-top-width: 0;
     z-index: 999
 }
 
 #nav-border ul.submenu.visible {
     display: block;
     position: absolute;
-    left: -100px;
-    width: 300px;
+    left: 0;
+    width: 100%;
     padding-top: 20px;
     padding: 10px;
     padding-bottom: 0;
@@ -128,6 +137,7 @@ div.main.list a.readmore {
 
 .banner h1 {
     font-size: 38pt;
+    line-height: 48px;
 }
   
 .sticky {
@@ -151,8 +161,8 @@ footer {
     background-color: #333;
     color: #aaa;
     padding: 10px;
-    padding-left: 200px;
-    padding-right: 200px;
+    padding-left: 20px;
+    padding-right: 20px;
     text-align: right;
 }
 
@@ -194,4 +204,44 @@ footer hr {
 footer .copyright {
     float:left;
     line-height: 40px;
+}
+
+article {
+    padding-left: 10px;
+    padding-right: 10px;
+}
+
+@media screen and (min-width: 920px) {
+
+    #nav {
+        display: block;
+    }
+
+    #hamburger span {
+        display: none;
+    }
+
+    #logo {
+        margin-left: 0;
+        position: absolute;
+        left: 50px;
+    }
+
+    #nav-border ul {
+        display: flex; 
+        margin-bottom: 0;
+        width: 500px;
+    }
+
+    #nav-border ul.submenu.visible {
+        width: 300px;
+        left: -100px;
+        border-top-width: 0;
+    }
+
+
+    footer {
+        padding-left: 200px;
+        padding-right: 200px;
+    }
 }
