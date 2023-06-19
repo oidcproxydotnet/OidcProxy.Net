@@ -1,7 +1,6 @@
 ---
 author: Albert Starreveld
 title: API Authorization with OAuth2/OpenId Connect
-tags: ["OAuth2", "API", "aspnetcore", "OIDC", "Authorization"]
 ---
 # Implementing API Authorization with OAuth2 and OpenId Connect (OIDC)
 

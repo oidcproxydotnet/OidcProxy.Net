@@ -1,7 +1,6 @@
 ---
 author: Albert Starreveld
 title: Connecting GoCloudNative.BFF with a custom OIDC/OAuth2 server
-tags: ["dotnetcore", "OIDC", "Authentication", "Authorization"]
 ---
 # Connecting GoCloudNative.BFF with a custom OIDC/OAuth2 server
 

@@ -1,6 +1,5 @@
 ---
 author: Albert Starreveld
-tags: ["dotnetcore", "BFF", "Authentication", "access_tokens", "Microservices"]
 ---
 
 # Using your BFF as an aggregation service

@@ -1,7 +1,6 @@
 ---
 author: Albert Starreveld
 title: The Back-end For Front-end Security Pattern
-tags: ["BFF", "Microservices", "Authentication"]
 ---
 
 # The Back-end For Front-end Security Pattern

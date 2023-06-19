@@ -1,7 +1,6 @@
 ---
 author: Albert Starreveld
 title: What is Authorization Code with Proof Key for Code Exchange?
-tags: ["OAuth2", "PKCE", "OIDC", "Authentication", "Authorization"]
 ---
 # What is Authorization Code with Proof Key for Code Exchange?
 

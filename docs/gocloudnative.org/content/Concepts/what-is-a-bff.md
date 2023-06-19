@@ -1,7 +1,6 @@
 ---
 author: Albert Starreveld
 title: What is a Back-end For Front-end?
-tags: ["BFF"]
 ---
 # What is a Back-end For Front-end?
 

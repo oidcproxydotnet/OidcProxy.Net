@@ -1,7 +1,6 @@
 ---
 author: Albert Starreveld
 title: Distributed apps
-tags: ["Microservices", "Microfrontends", "Kubernetes"]
 ---
 # Distributed apps
 

@@ -1,7 +1,6 @@
 ---
 author: Albert Starreveld
 title: What is a reverse proxy?
-tags: ["Microservices", "Kubernetes"]
 ---
 
 # What is a reverse proxy?

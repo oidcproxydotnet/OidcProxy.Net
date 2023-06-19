@@ -1,7 +1,6 @@
 ---
 author: Albert Starreveld
 title: Implementing the BFF Security Pattern with AzureAd
-tags: ["API", "aspnetcore", "OIDC", "access_tokens", "Azure"]
 ---
 # Implementing the BFF Security Pattern with AzureAd (B2c)
 
