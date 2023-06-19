@@ -2,6 +2,7 @@ baseURL = 'https://bff.gocloudnative.org/'
 languageCode = 'en-us'
 title = 'GoCloudNative.org'
 theme = 'albert'
+enableRobotsTXT = true
 
 [menu]
 [[menu.main]]

@@ -1,13 +1,13 @@
 # Table of contents 
 
-- Concepts
+- [Concepts](/concepts/)
   - [API authorization with OAuth2/OpenId Connect](/concepts/api-authorization/)
   - [What is Authorization Code with Proof Key for Code Exchange?](/concepts/what-is-pkce/)
   - [What is a Back-end For Front-End?](/concepts/what-is-a-bff/)
   - [What is a Reverse Proxy?](/concepts/what-is-a-reverse-proxy/)
   - [Distributed apps](/concepts/distributed-apps/)
   - [The BFF Security Pattern](/concepts/bff-security-pattern/)
-- Integration Manuals
+- [Integration Manuals](/integration-manuals/)
   - Quickstarts
     - [Auth0](/integration-manuals/quickstarts/auth0/quickstart/)
     - [Azure Active Directory](/integration-manuals/quickstarts/azuread/quickstart/)
@@ -19,13 +19,13 @@
     - Distributed apps
       - [Implementing the BFF Security Pattern with Azure Container Apps](/integration-manuals/azure-container-apps/)
       - Implementing the BFF Security Pattern with Kubernetes
-- Architecture
+- [Architecture](/architecture/)
   - [The GoCloudNative.BFF.Authentication software-architecture](/architecture/software-architecture/)
   - [Horizontal scaling/scaling out](/architecture/scaling-out-with-redis/)
   - [Extensibility (implementing custom identity providers)](/architecture/diy-identity-provider/)
   - [Aggregating responses from multiple downstream endpoints](/architecture/bff-aggregation-service/)
   - [The `/account/me` endpoint](/architecture/me-endpoint/)
-- Troubleshooting:
+- [Troubleshooting](/errors/)
   - Error [GCN-A-1701a00d8c56](/errors/gcn-a-1701a00d8c56/)
   - Error [GCN-A-fe95cf8c11ae](/errors/gcn-a-fe95cf8c11ae/)
   - Error [GCN-AZ-427413a281d9](/errors/gcn-az-427413a281d9/)
