@@ -4,7 +4,7 @@ title: GoCloudNative.BFF - A scalable, free OIDC Authentication Gateway
 description: Elevate the security of your web application to the most up-to-date standards by incorporating the BFF Security Pattern using GoCloudNative.BFF.
 ---
 
-## Our mission
+## Why?
 
 The development of our product was driven by our clients' need for a straightforward authentication gateway. Existing market options introduced complexities in terms of pricing and licensing, or proved to be overly intricate for beginners to comprehend and utilize effectively.
 
