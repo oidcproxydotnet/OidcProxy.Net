@@ -3,6 +3,7 @@ using System.Web;
 using GoCloudNative.Bff.Authentication.IdentityProviders;
 using GoCloudNative.Bff.Authentication.OpenIdConnect;
 using Microsoft.Extensions.Caching.Memory;
+using TheCloudNativeWebApp.Bff.Authentication.OpenIdConnect;
 
 namespace GoCloudNative.Bff.Authentication.Auth0;
 

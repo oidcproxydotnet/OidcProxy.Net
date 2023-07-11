@@ -1,5 +1,6 @@
 using FluentAssertions;
 using Microsoft.AspNetCore.Mvc.Testing;
+using TheCloudNativeWebApp.Bff.Authentication.OpenIdConnect;
 
 namespace GoCloudNative.Bff.Authentication.OpenIdConnect.Tests.OpenIdConnectIdentityProviderTests;
 
@@ -13,8 +14,11 @@ public class RefreshTokenTests
     {
         _httpClient = new WebApplicationFactory<TestProgram>()
             .CreateClient();
-
-        _config = new OpenIdConnectConfig();
+        
+        _config = new OpenIdConnectConfig
+        {
+            Authority = _httpClient.BaseAddress?.ToString()
+        };
         
         _cache = new TestCache();
     }

@@ -8,7 +8,15 @@ var app = builder.Build();
 app.Map("/.well-known/openid-configuration", () =>
 {
     TestProgram.Requests.Add(new Request("/.well-known/openid-configuration"));
-    return File.ReadAllText("Content/WellKnown.json").ToOkResult();
+    var contents = File.ReadAllText("Content/WellKnown.json");
+    return contents.ToOkResult();
+});
+
+app.Map("/.well-known/jwks", () =>
+{
+    TestProgram.Requests.Add(new Request("/.well-known/jwks"));
+    var contents = File.ReadAllText("Content/Jwks.json");
+    return contents.ToOkResult();
 });
 
 app.MapPost("/oauth/token", () =>

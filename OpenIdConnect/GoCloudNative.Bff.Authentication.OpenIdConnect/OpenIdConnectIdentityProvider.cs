@@ -1,13 +1,14 @@
 using System.Net;
 using System.Web;
 using GoCloudNative.Bff.Authentication.IdentityProviders;
+using GoCloudNative.Bff.Authentication.OpenIdConnect;
 using IdentityModel;
 using IdentityModel.Client;
 using IdentityModel.OidcClient;
 using Microsoft.Extensions.Caching.Memory;
 using TokenResponse = GoCloudNative.Bff.Authentication.IdentityProviders.TokenResponse;
 
-namespace GoCloudNative.Bff.Authentication.OpenIdConnect;
+namespace TheCloudNativeWebApp.Bff.Authentication.OpenIdConnect;
 
 public class OpenIdConnectIdentityProvider : IIdentityProvider
 {

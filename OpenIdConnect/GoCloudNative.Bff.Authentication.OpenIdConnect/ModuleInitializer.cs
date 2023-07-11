@@ -1,5 +1,6 @@
 using GoCloudNative.Bff.Authentication.ModuleInitializers;
 using Microsoft.Extensions.Configuration;
+using TheCloudNativeWebApp.Bff.Authentication.OpenIdConnect;
 
 namespace GoCloudNative.Bff.Authentication.OpenIdConnect;
 
