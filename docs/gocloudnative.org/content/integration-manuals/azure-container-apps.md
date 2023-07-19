@@ -1,6 +1,6 @@
 ---
 author: Albert Starreveld
-title: What is a Back-end For Front-end?
+title: Implementing the BFF Security Pattern with Azure Container Apps
 ---
 # Implementing the BFF Security Pattern with Azure Container Apps
 
