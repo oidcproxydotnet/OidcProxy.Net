@@ -22,7 +22,7 @@ To be able to authenticate users via Azure Active Directory, you must create an 
 ### 1. Create an app registration
 * Navigate to `Azure Active Directory`, and click `App registrations` in the menu on the left (or click [here](https://portal.azure.com/#view/Microsoft_AAD_IAM/ActiveDirectoryMenuBlade/~/RegisteredApps)).
 * Click `+ New registration`, and fill out the form as displayed in the screenshot: ![](https://raw.githubusercontent.com/thecloudnativewebapp/GoCloudNative.Bff/main/docs/gocloudnative.org/content/integration-manuals/quickstarts/azuread/new-app-registration.png)\
-Make sure to register the `redirect_url` correctly. Usually, that's something like `https://{where-you-host-the-bff}/account/login/redirect`. You can add multiple values here. Be sure to ___never register a localhost `redirect_url` for your production environment!!!___
+Make sure to register the `redirect_url` correctly. Usually, that's something like `https://{where-you-host-the-bff}/account/login/callback`. You can add multiple values here. Be sure to ___never register a localhost `redirect_url` for your production environment!!!___
 * When you have completed the form, click the `Register` button at the bottom of the form.
 * Now, you see the following overview: ![App registration overview](https://raw.githubusercontent.com/thecloudnativewebapp/GoCloudNative.Bff/main/docs/gocloudnative.org/content/integration-manuals/quickstarts/azuread/app-registration-overview.png)
   * Important: Copy the `application ID` to `appsettings.json`. This is the `ClientId`.
