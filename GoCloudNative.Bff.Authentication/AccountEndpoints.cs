@@ -69,7 +69,7 @@ internal static class AccountEndpoints
                 var code = context.Request.Query["code"].SingleOrDefault();
                 if (string.IsNullOrEmpty(code))
                 {
-                    logger.LogLine(context, new LogLine($"Warning: Unable to obtain access token. Querystring parameter 'code' has no value."));
+                    logger.LogLine(context, new LogLine($"Unable to obtain access token. Querystring parameter 'code' has no value."));
 
                     var errorPage = bffOptions.ErrorPage ?? $"/{endpointName}/login/callback/error";
                     var redirectUri = $"{errorPage}{context.Request.QueryString}";
