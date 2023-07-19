@@ -32,7 +32,10 @@ public class BffOptions
     /// <param name="errorPage">A relative path to the error page</param>
     public void SetAuthenticationErrorPage(string errorPage)
     {
-        const string errorMessage = "Invalid error page. The path to the error page must be relative and may not have a querystring.";
+        const string errorMessage = "GNC-B-faa80ff1e452: " +
+                                    "Cannot initialize GoCloudNative.BFF. " +
+                                    "Invalid error page. " +
+                                    "The path to the error page must be relative and may not have a querystring.";
 
         if (string.IsNullOrEmpty(errorPage))
         {
