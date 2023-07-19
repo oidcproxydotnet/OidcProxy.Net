@@ -1,4 +1,5 @@
 using FluentAssertions;
+using TheCloudNativeWebApp.Bff.Authentication.OpenIdConnect;
 
 namespace GoCloudNative.Bff.Authentication.OpenIdConnect.Tests;
 

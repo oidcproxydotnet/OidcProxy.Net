@@ -2,9 +2,9 @@ using GoCloudNative.Bff.Authentication.Auth0;
 using GoCloudNative.Bff.Authentication.AzureAd;
 using GoCloudNative.Bff.Authentication.ModuleInitializers;
 using GoCloudNative.Bff.Authentication.OpenIdConnect;
-using Host;
 using Microsoft.AspNetCore.DataProtection;
 using StackExchange.Redis;
+using TheCloudNativeWebApp.Bff.Authentication.OpenIdConnect;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -46,8 +46,11 @@ builder.Services.AddSecurityBff(o =>
         {
             o.ConfigureAzureAd(aadConfig, "aad");
         }
+        
+        //o.SetAuthenticationErrorPage("/whoopsiedaisies");
 
         //o.AddClaimsTransformation<MyClaimsTransformation>();
+        
         o.LoadYarpFromConfig(builder.Configuration.GetSection("ReverseProxy"));
     });
 

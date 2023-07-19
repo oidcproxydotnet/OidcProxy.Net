@@ -1,3 +1,4 @@
+using System.Text.RegularExpressions;
 using GoCloudNative.Bff.Authentication.IdentityProviders;
 using GoCloudNative.Bff.Authentication.OpenIdConnect;
 using Microsoft.Extensions.Configuration;
@@ -8,12 +9,14 @@ namespace GoCloudNative.Bff.Authentication.ModuleInitializers;
 public class BffOptions
 {
     internal readonly IdpRegistrations IdpRegistrations = new();
-
+    
     internal Action<IReverseProxyBuilder> ApplyReverseProxyConfiguration = _ => { };
 
     internal Action<IServiceCollection> ApplyClaimsTransformation = (s) => s.AddTransient<IClaimsTransformation, DefaultClaimsTransformation>();
     
     internal Uri? CustomHostName = null;
+
+    internal string? ErrorPage = null;
 
     /// <summary>
     /// The name of the cookie
@@ -21,6 +24,38 @@ public class BffOptions
     public string SessionCookieName { get; set; } = "bff.cookie";
     
     public bool AlwaysRedirectToHttps { get; set; } = true;
+
+    /// <summary>
+    /// Sets a custom page to redirect to when the authentication on the OIDC Server failed.
+    /// The url will be augmented with an additional query string parameter to indicate what error occured.
+    /// </summary>
+    /// <param name="errorPage">A relative path to the error page</param>
+    public void SetAuthenticationErrorPage(string errorPage)
+    {
+        const string errorMessage = "Invalid error page. The path to the error page must be relative and may not have a querystring.";
+
+        if (string.IsNullOrEmpty(errorPage))
+        {
+            throw new NotSupportedException(errorMessage);
+        }
+        
+        Uri path;
+        try
+        {
+            path = new Uri(errorPage, UriKind.Relative);
+        }
+        catch (Exception)
+        {
+            throw new NotSupportedException(errorMessage);
+        }
+        
+        if (path.IsAbsoluteUri || errorPage.Contains('?') || errorPage.Contains('#'))
+        {
+            throw new NotSupportedException(errorMessage);
+        }
+
+        ErrorPage = errorPage;
+    }
 
     /// <summary>
     /// The GoCloudNative.BFF typically derives the redirect URL from the request context as a default behavior. However, in cases where the hosting of an image with the GoCloudNative.BFF involves proxies or different configurations, the automatically inferred redirect URL may be incorrect. To address this issue, you can utilize the following method to override the default value of the redirect URL.

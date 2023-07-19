@@ -1,6 +1,6 @@
 using System.Text.RegularExpressions;
 
-namespace GoCloudNative.Bff.Authentication.OpenIdConnect;
+namespace TheCloudNativeWebApp.Bff.Authentication.OpenIdConnect;
 
 public class OpenIdConnectConfig
 {

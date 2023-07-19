@@ -1,7 +1,9 @@
 using GoCloudNative.Bff.Authentication.IdentityProviders;
 using GoCloudNative.Bff.Authentication.Logging;
+using GoCloudNative.Bff.Authentication.ModuleInitializers;
 using GoCloudNative.Bff.Authentication.OpenIdConnect;
 using Microsoft.AspNetCore.Builder;
+using Microsoft.AspNetCore.Html;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
@@ -59,6 +61,7 @@ internal static class AccountEndpoints
         app.Map($"/{endpointName}/login/callback", async (HttpContext context, 
             [FromServices] ILogger<TIdp> logger, 
             [FromServices] IRedirectUriFactory redirectUriFactory,
+            [FromServices] BffOptions bffOptions,
             [FromServices] TIdp identityProvider) =>
         {
             try
@@ -66,8 +69,13 @@ internal static class AccountEndpoints
                 var code = context.Request.Query["code"].SingleOrDefault();
                 if (string.IsNullOrEmpty(code))
                 {
-                    logger.LogLine(context, new LogLine($"BadRequest (querystring parameter 'code' has is required)"));
-                    return Results.BadRequest();
+                    logger.LogLine(context, new LogLine($"Warning: Unable to obtain access token. Querystring parameter 'code' has no value."));
+
+                    var errorPage = bffOptions.ErrorPage ?? $"/{endpointName}/login/callback/error";
+                    var redirectUri = $"{errorPage}{context.Request.QueryString}";
+                    logger.LogLine(context, new LogLine($"Redirect({redirectUri})"));
+                    
+                    return Results.Redirect(redirectUri);
                 }
             
                 var redirectUrl = redirectUriFactory.DetermineRedirectUri(context, endpointName);
@@ -91,6 +99,8 @@ internal static class AccountEndpoints
                 throw;
             }
         });
+        
+        app.MapGet($"/{endpointName}/login/callback/error", () => Results.Text("Login failed."));
         
         app.MapGet($"/{endpointName}/end-session", async (HttpContext context, 
             [FromServices] ILogger<TIdp> logger,
@@ -137,5 +147,6 @@ internal static class AccountEndpoints
                 throw;
             }
         });
+
     }
 }

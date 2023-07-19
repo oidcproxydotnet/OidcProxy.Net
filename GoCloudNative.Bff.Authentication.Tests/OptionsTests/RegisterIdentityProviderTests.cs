@@ -2,9 +2,9 @@ using FluentAssertions;
 using GoCloudNative.Bff.Authentication.IdentityProviders;
 using GoCloudNative.Bff.Authentication.ModuleInitializers;
 
-namespace GoCloudNative.Bff.Authentication.Tests;
+namespace GoCloudNative.Bff.Authentication.Tests.OptionsTests;
 
-public class OptionsTests
+public class RegisterIdentityProviderTests
 {
     [Fact]
     public void WhenRegisteringEndpointNameTwice_ShouldThrowNotSupportedException()
@@ -14,7 +14,7 @@ public class OptionsTests
         sut.RegisterIdentityProvider<TestIdp1, TestConfig>(new TestConfig(), "test");
         
         // Act
-        Action actual = () => sut.RegisterIdentityProvider<TestIdp2, TestConfig2>(new TestConfig2(), "test");
+        var actual = () => sut.RegisterIdentityProvider<TestIdp2, TestConfig2>(new TestConfig2(), "test");
 
         // Assert
         actual.Should().Throw<NotSupportedException>();

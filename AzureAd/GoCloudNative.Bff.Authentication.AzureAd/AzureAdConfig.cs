@@ -1,4 +1,5 @@
 using GoCloudNative.Bff.Authentication.OpenIdConnect;
+using TheCloudNativeWebApp.Bff.Authentication.OpenIdConnect;
 
 namespace GoCloudNative.Bff.Authentication.AzureAd;
 

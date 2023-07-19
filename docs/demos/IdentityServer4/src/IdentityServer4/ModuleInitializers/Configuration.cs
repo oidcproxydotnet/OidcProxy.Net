@@ -31,6 +31,7 @@ public static class Configuration
 
         AllowedGrantTypes = GrantTypes.Code,
         RequirePkce = true,
+        RequireConsent = true,
 
         AccessTokenLifetime = 75,
         AlwaysIncludeUserClaimsInIdToken = true,
@@ -38,8 +39,6 @@ public static class Configuration
         RedirectUris = { "https://localhost:8443/account/login/callback", "https://localhost:8443/oidc/login/callback" },
         FrontChannelLogoutUri = "https://localhost:8443/",
         PostLogoutRedirectUris = { "https://localhost:8443/" },
-
-        AllowOfflineAccess = true,
 
         AllowedScopes = 
         {
