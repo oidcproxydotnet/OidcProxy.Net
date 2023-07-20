@@ -1,3 +1,4 @@
+using GoCloudNative.Bff.Authentication.Endpoints;
 using GoCloudNative.Bff.Authentication.IdentityProviders;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.Extensions.DependencyInjection;
@@ -36,7 +37,7 @@ internal class IdpRegistrations
 
         _proxyConfigurations.Add(c => { c.AddTransforms<HttpHeaderTransformation<TIdentityProvider>>(); });
 
-        _idpEndpointRegistrations.Add(app => app.MapAuthenticationEndpoints<TIdentityProvider>(endpointName));
+        _idpEndpointRegistrations.Add(app => app.MapAccountEndpoints<TIdentityProvider>(endpointName));
     }
     
     public void Apply(IServiceCollection serviceCollection)

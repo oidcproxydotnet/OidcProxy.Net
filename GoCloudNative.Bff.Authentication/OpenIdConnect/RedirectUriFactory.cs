@@ -34,9 +34,9 @@ internal class RedirectUriFactory : IRedirectUriFactory
     /// <param name="context">The current http context. Needed to determine the current host name.</param>
     /// <param name="endpointName">The name of the endpoint you have configured. By default, the value is 'account'. The default redirect url is '/account/login/callback'.</param>
     /// <returns>The redirect uri the identity provider will return the auth code to.</returns>
-    public string DetermineRedirectUri(HttpContext context, string endpointName)
+    public string DetermineRedirectUri(HttpContext context, PathString endpointName)
     {
         var hostName = DetermineHostName(context);
-        return $"{hostName}/{endpointName}/login/callback";
+        return $"{hostName}{endpointName}/login/callback";
     }
 }
