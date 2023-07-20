@@ -24,7 +24,7 @@ internal static class JwtParser
 
     private static string GetSection(string token, int section)
     {
-        var chunks = token.Split(".", StringSplitOptions.None);
+        var chunks = token.Split(".");
         if (chunks.Length != 3)
         {
             throw new NotSupportedException($"Invalid token: {token}");

@@ -47,8 +47,9 @@ builder.Services.AddSecurityBff(o =>
             o.ConfigureAzureAd(aadConfig, "aad");
         }
         
-        //o.SetAuthenticationErrorPage("/whoopsiedaisies");
-
+        //o.SetAuthenticationErrorPage("/error.html");
+        //o.SetLandingPage("/welcome.html");
+        
         //o.AddClaimsTransformation<MyClaimsTransformation>();
         
         o.LoadYarpFromConfig(builder.Configuration.GetSection("ReverseProxy"));

@@ -15,7 +15,9 @@ public class BffOptions
     
     internal Uri? CustomHostName = null;
 
-    internal string? ErrorPage = null;
+    internal ErrorPage ErrorPage;
+        
+    internal LandingPage LandingPage;
 
     /// <summary>
     /// The name of the cookie
@@ -31,32 +33,36 @@ public class BffOptions
     /// <param name="errorPage">A relative path to the error page</param>
     public void SetAuthenticationErrorPage(string errorPage)
     {
-        const string errorMessage = "GNC-B-faa80ff1e452: " +
-                                    "Cannot initialize GoCloudNative.BFF. " +
-                                    "Invalid error page. " +
-                                    "The path to the error page must be relative and may not have a querystring.";
-
-        if (string.IsNullOrEmpty(errorPage))
+        if (!ErrorPage.TryParse(errorPage, out var value))
         {
-            throw new NotSupportedException(errorMessage);
-        }
-        
-        Uri path;
-        try
-        {
-            path = new Uri(errorPage, UriKind.Relative);
-        }
-        catch (Exception)
-        {
-            throw new NotSupportedException(errorMessage);
-        }
-        
-        if (path.IsAbsoluteUri || errorPage.Contains('?') || errorPage.Contains('#'))
-        {
+            const string errorMessage = "GNC-B-faa80ff1e452: " +
+                                        "Cannot initialize GoCloudNative.BFF. " +
+                                        "Invalid error page. " +
+                                        "The path to the error page must be relative and may not have a querystring.";
+            
             throw new NotSupportedException(errorMessage);
         }
 
-        ErrorPage = errorPage;
+        ErrorPage = value;
+    }
+
+    /// <summary>
+    /// 
+    /// </summary>
+    /// <param name="landingPage"></param>
+    public void SetLandingPage(string landingPage)
+    {
+        if (!LandingPage.TryParse(landingPage, out var value))
+        {
+            const string errorMessage = "GNC-B-f30ab76dde63: " +
+                                        "Cannot initialize GoCloudNative.BFF. " +
+                                        "Invalid landing page. " +
+                                        "The path to the landing page must be relative and may not have a querystring.";
+            
+            throw new NotSupportedException(errorMessage);
+        }
+        
+        LandingPage = value;
     }
 
     /// <summary>

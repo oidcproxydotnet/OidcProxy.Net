@@ -3,7 +3,6 @@ using GoCloudNative.Bff.Authentication.Logging;
 using GoCloudNative.Bff.Authentication.ModuleInitializers;
 using GoCloudNative.Bff.Authentication.OpenIdConnect;
 using Microsoft.AspNetCore.Builder;
-using Microsoft.AspNetCore.Html;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
@@ -71,8 +70,7 @@ internal static class AccountEndpoints
                 {
                     logger.LogLine(context, new LogLine($"Unable to obtain access token. Querystring parameter 'code' has no value."));
 
-                    var errorPage = bffOptions.ErrorPage ?? $"/{endpointName}/login/callback/error";
-                    var redirectUri = $"{errorPage}{context.Request.QueryString}";
+                    var redirectUri = $"{bffOptions.ErrorPage}{context.Request.QueryString}";
                     logger.LogLine(context, new LogLine($"Redirect({redirectUri})"));
                     
                     return Results.Redirect(redirectUri);
@@ -88,10 +86,10 @@ internal static class AccountEndpoints
                 await context.Session.RemoveCodeVerifierAsync<TIdp>();
 
                 await context.Session.SaveAsync<TIdp>(tokenResponse);
-
-                logger.LogLine(context, new LogLine($"Redirect(/)"));
                 
-                return Results.Redirect("/");
+                logger.LogLine(context, new LogLine($"Redirect({bffOptions.LandingPage})"));
+                
+                return Results.Redirect(bffOptions.LandingPage.ToString());
             }
             catch (Exception e)
             {

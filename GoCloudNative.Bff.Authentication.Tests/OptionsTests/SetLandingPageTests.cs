@@ -3,7 +3,7 @@ using GoCloudNative.Bff.Authentication.ModuleInitializers;
 
 namespace GoCloudNative.Bff.Authentication.Tests.OptionsTests;
 
-public class SetAuthenticationErrorPageTests
+public class SetLandingPageTests
 {
     [Theory]
     [InlineData("/")]
@@ -12,28 +12,28 @@ public class SetAuthenticationErrorPageTests
     [InlineData("/error/")]
     [InlineData("/error.html")]
     [InlineData("/oh/my/something%20really-bad has_happened")]
-    public void ValidRelativePath_ShouldSetErrorPage(string relativePath)
+    [InlineData("/error?")]
+    [InlineData("/error?q=x")]
+    [InlineData("/error#")]
+    [InlineData("/error#q=x")]
+    public void ValidRelativePath_ShouldSetLandingPage(string relativePath)
     {
         var sut = new BffOptions();
         
-        sut.SetAuthenticationErrorPage(relativePath);
+        sut.SetLandingPage(relativePath);
 
-        sut.ErrorPage.ToString().Should().Be(relativePath);
+        sut.LandingPage.ToString().Should().Be(relativePath);
     }
 
     [Theory]
     [InlineData("")]
     [InlineData(null)]
     [InlineData("https://external.domain.com")]
-    [InlineData("/error?")]
-    [InlineData("/error?q=x")]
-    [InlineData("/error#")]
-    [InlineData("/error#q=x")]
     public void InvalidRelativePath_ShouldThrowNotSupportedException(string path)
     {
         var sut = new BffOptions();
         
-        var actual = () => sut.SetAuthenticationErrorPage(path);
+        var actual = () => sut.SetLandingPage(path);
 
         actual.Should().Throw<NotSupportedException>();
     }
