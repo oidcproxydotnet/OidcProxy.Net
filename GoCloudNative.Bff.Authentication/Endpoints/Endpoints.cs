@@ -6,7 +6,7 @@ namespace GoCloudNative.Bff.Authentication.Endpoints;
 
 internal static class Endpoints
 {
-    public static void MapAccountEndpoints<TIdp>(this WebApplication app, string endpointName) where TIdp : IIdentityProvider
+    public static void MapAuthenticationEndpoints<TIdp>(this WebApplication app, string endpointName) where TIdp : IIdentityProvider
     {
         app.MapGet($"/{endpointName}/me", MeEndpoint<TIdp>.Get);
         

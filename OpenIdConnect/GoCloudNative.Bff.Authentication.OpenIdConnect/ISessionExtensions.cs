@@ -1,7 +1,7 @@
+using GoCloudNative.Bff.Authentication;
 using Microsoft.AspNetCore.Http;
-using TheCloudNativeWebApp.Bff.Authentication.OpenIdConnect;
 
-namespace GoCloudNative.Bff.Authentication.OpenIdConnect;
+namespace TheCloudNativeWebApp.Bff.Authentication.OpenIdConnect;
 
 public static class ISessionExtensions
 {
