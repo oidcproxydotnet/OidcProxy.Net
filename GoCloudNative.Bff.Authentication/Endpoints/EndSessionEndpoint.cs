@@ -21,7 +21,7 @@ internal static class EndSessionEndpoint<TIdp>
             {
                 var accessToken = context.Session.GetAccessToken<TIdp>();
 
-                logger.LogLine(context, new LogLine($"Revoking access_token."));
+                logger.LogLine(context, $"Revoking access_token.");
                 await identityProvider.RevokeAsync(accessToken);
             }
 
@@ -29,7 +29,7 @@ internal static class EndSessionEndpoint<TIdp>
             {
                 var refreshToken = context.Session.GetRefreshToken<TIdp>();
 
-                logger.LogLine(context, new LogLine($"Revoking refresh_token."));
+                logger.LogLine(context, $"Revoking refresh_token.");
                 await identityProvider.RevokeAsync(refreshToken);
             }
 
@@ -45,7 +45,7 @@ internal static class EndSessionEndpoint<TIdp>
 
             var endSessionEndpoint = await identityProvider.GetEndSessionEndpointAsync(idToken, baseAddress);
 
-            logger.LogLine(context, new LogLine($"Redirect to {endSessionEndpoint}"));
+            logger.LogLine(context, $"Redirect to {endSessionEndpoint}");
 
             return Results.Redirect(endSessionEndpoint.ToString());
         }

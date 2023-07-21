@@ -28,7 +28,7 @@ internal static class LoginEndpoint<TIdp> where TIdp : IIdentityProvider
                 await context.Session.SetCodeVerifierAsync<TIdp>(authorizeRequest.CodeVerifier);
             }
 
-            logger.LogLine(context, new LogLine($"Redirect({authorizeRequest.AuthorizeUri})"));
+            logger.LogLine(context, $"Redirect({authorizeRequest.AuthorizeUri})");
 
             context.Response.Redirect(authorizeRequest.AuthorizeUri.ToString());
         }

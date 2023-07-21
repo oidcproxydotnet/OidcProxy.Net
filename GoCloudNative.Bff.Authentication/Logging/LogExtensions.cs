@@ -5,14 +5,14 @@ namespace GoCloudNative.Bff.Authentication.Logging;
 
 internal static class LogExtensions
 {
-    public static void LogLine<T>(this ILogger<T> logger, HttpContext context, LogLine line)
+    public static void LogLine<T>(this ILogger<T> logger, HttpContext context, string line)
     {
-        logger.Log(line.Severity, "{0} [{1}] TraceId: {2} \"{3}\" \"{4}\"",
+        logger.Log(LogLevel.Information, "{0} [{1}] TraceId: {2} \"{3}\" \"{4}\"",
             context.GetClientIpAddress(),
             DateTime.Now, 
             context.TraceIdentifier,
             context.Request.GetEndpointAddress(),
-            line.Response);
+            line);
     }
     
     public static void LogException<T>(this ILogger<T> logger, HttpContext context,  Exception e)

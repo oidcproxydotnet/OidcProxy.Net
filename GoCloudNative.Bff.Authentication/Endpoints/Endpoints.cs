@@ -12,7 +12,7 @@ internal static class Endpoints
         
         app.MapGet($"/{endpointName}/login", LoginEndpoint<TIdp>.Get);
 
-        app.MapGet($"/{endpointName}/login/callback", CallBackEndpoint<TIdp>.Get);
+        app.MapGet($"/{endpointName}/login/callback", CallbackEndpoint<TIdp>.Get);
 
         app.MapGet($"/{endpointName}/login/callback/error", () => Results.Text("Login failed."));
 

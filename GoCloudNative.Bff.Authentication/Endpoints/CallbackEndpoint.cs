@@ -8,7 +8,7 @@ using Microsoft.Extensions.Logging;
 
 namespace GoCloudNative.Bff.Authentication.Endpoints;
 
-internal static class CallBackEndpoint<TIdp> where TIdp : IIdentityProvider
+internal static class CallbackEndpoint<TIdp> where TIdp : IIdentityProvider
 {
     public static async Task<IResult> Get(HttpContext context,
         [FromServices] ILogger<TIdp> logger,
@@ -21,12 +21,10 @@ internal static class CallBackEndpoint<TIdp> where TIdp : IIdentityProvider
             var code = context.Request.Query["code"].SingleOrDefault();
             if (string.IsNullOrEmpty(code))
             {
-                logger.LogLine(context,
-                    new LogLine($"Unable to obtain access token. Querystring parameter 'code' has no value."));
+                logger.LogLine(context, "Unable to obtain access token. Querystring parameter 'code' has no value.");
 
                 var redirectUri = $"{bffOptions.ErrorPage}{context.Request.QueryString}";
-                logger.LogLine(context, new LogLine($"Redirect({redirectUri})"));
-
+                logger.LogLine(context, $"Redirect({redirectUri})");
                 return Results.Redirect(redirectUri);
             }
             
@@ -35,14 +33,14 @@ internal static class CallBackEndpoint<TIdp> where TIdp : IIdentityProvider
 
             var codeVerifier = context.Session.GetCodeVerifier<TIdp>();
 
-            logger.LogLine(context, new LogLine($"Exchanging code for access_token."));
+            logger.LogLine(context, "Exchanging code for access_token.");
             var tokenResponse = await identityProvider.GetTokenAsync(redirectUrl, code, codeVerifier);
 
             await context.Session.RemoveCodeVerifierAsync<TIdp>();
 
             await context.Session.SaveAsync<TIdp>(tokenResponse);
 
-            logger.LogLine(context, new LogLine($"Redirect({bffOptions.LandingPage})"));
+            logger.LogLine(context, $"Redirect({bffOptions.LandingPage})");
 
             return Results.Redirect(bffOptions.LandingPage.ToString());
         }

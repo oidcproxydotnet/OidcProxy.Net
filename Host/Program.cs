@@ -47,8 +47,8 @@ builder.Services.AddSecurityBff(o =>
             o.ConfigureAzureAd(aadConfig, "aad");
         }
         
-        //o.SetAuthenticationErrorPage("/error.html");
-        //o.SetLandingPage("/welcome.html");
+        o.SetAuthenticationErrorPage("/error.html");
+        o.SetLandingPage("/welcome.html");
         
         //o.AddClaimsTransformation<MyClaimsTransformation>();
         
