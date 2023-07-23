@@ -2,6 +2,7 @@ using GoCloudNative.Bff.Authentication.Auth0;
 using GoCloudNative.Bff.Authentication.AzureAd;
 using GoCloudNative.Bff.Authentication.ModuleInitializers;
 using GoCloudNative.Bff.Authentication.OpenIdConnect;
+using Host;
 using Microsoft.AspNetCore.DataProtection;
 using StackExchange.Redis;
 using TheCloudNativeWebApp.Bff.Authentication.OpenIdConnect;
@@ -47,8 +48,9 @@ builder.Services.AddSecurityBff(o =>
             o.ConfigureAzureAd(aadConfig, "aad");
         }
         
-        o.SetAuthenticationErrorPage("/error.html");
-        o.SetLandingPage("/welcome.html");
+        o.SetAuthenticationErrorPage("/account/oops");
+        
+        o.SetLandingPage("/account/welcome");
         
         //o.AddClaimsTransformation<MyClaimsTransformation>();
         
@@ -63,6 +65,12 @@ app.UseRouting();
 
 app.UseSecurityBff();
 
+// Test endpoints
 app.MapHealthChecks("/health");
+
+if (builder.Environment.IsDevelopment())
+{
+    app.AddTestingEndpoints();
+}
 
 app.Run();
