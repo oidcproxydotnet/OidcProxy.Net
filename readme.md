@@ -1,5 +1,6 @@
-_<div style="text-align: right">by Albert Starreveld</div>_
+# GoCloudNative.BFF
 
+![](https://github.com/thecloudnativewebapp/GoCloudNative.Bff/actions/workflows/ci.yml/badge.svg)
 
 ## Our mission
 The development of our product was driven by our clients’ need for a straightforward authentication gateway. Existing market options introduced complexities in terms of pricing and licensing, or proved to be overly intricate for beginners to comprehend and utilize effectively.
