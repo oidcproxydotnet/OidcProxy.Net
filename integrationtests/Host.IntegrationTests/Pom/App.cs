@@ -19,6 +19,8 @@ public class App
             Headless = true
         });
         
+        _page.Browser.IgnoreHTTPSErrors  = true;
+        
         _page = await _browser.NewPageAsync();
         await _page.GoToAsync(BaseAddress);
     }
