@@ -23,7 +23,7 @@
     </ItemGroup>
 
     <ItemGroup>
-      <ProjectReference Include="..\AzureAd\GoCloudNative.Bff.Authentication.AzureAd\GoCloudNative.Bff.Authentication.AzureAd.csproj" />
+      <ProjectReference Include="..\..\src\GoCloudNative.Bff.Authentication.AzureAd\GoCloudNative.Bff.Authentication.AzureAd.csproj" />
     </ItemGroup>
 
 </Project>

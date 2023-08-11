@@ -4,9 +4,8 @@
         <TargetFramework>net6.0</TargetFramework>
         <ImplicitUsings>enable</ImplicitUsings>
         <Nullable>enable</Nullable>
-        <RootNamespace>TheCloudNativeWebApp.Bff.Authentication.OpenIdConnect</RootNamespace>
-
-        <PackageId>GoCloudNative.Bff.Authentication.OpenIdConnect</PackageId>
+        
+        <PackageId>GoCloudNative.Bff.Authentication.Auth0</PackageId>
         <Version>0.0.14</Version>
         <PackageVersion>0.0.14</PackageVersion>
         <Authors>Albert Starreveld</Authors>
@@ -14,9 +13,9 @@
         <PackageLicenseExpression>GPL-3.0-or-later</PackageLicenseExpression>
         <Description>A yarp-based authentication gateway for your service mesh.</Description>
         <RepositoryUrl>https://github.com/thecloudnativewebapp/GoCloudNative.Bff</RepositoryUrl>
-        <PackageTags>BFF, Yarp, OpenId Connect, Identity Server, KeyCloak, Cloud Native</PackageTags>
+        <PackageTags>BFF, Yarp, Auth0, Cloud Native</PackageTags>
         <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
-        <Title>GoCloudNative.Bff.Authentication.AzureAd</Title>
+        <Title>GoCloudNative.Bff.Authentication.Auth0</Title>
         <PackageProjectUrl>https://bff.gocloudnative.org</PackageProjectUrl>
         <PackageReadmeFile>Readme.md</PackageReadmeFile>
         <PackageIcon>logo.png</PackageIcon>
@@ -24,17 +23,11 @@
     </PropertyGroup>
 
     <ItemGroup>
-        <PackageReference Include="IdentityModel.OidcClient" Version="5.2.1" />
-        <PackageReference Include="Microsoft.AspNetCore.Http" Version="2.2.2" />
-        <PackageReference Include="Microsoft.AspNetCore.Mvc.Core" Version="2.2.5" />
-    </ItemGroup>
-
-    <ItemGroup>
         <FrameworkReference Include="Microsoft.AspNetCore.App" />
     </ItemGroup>
 
     <ItemGroup>
-      <ProjectReference Include="..\..\GoCloudNative.Bff.Authentication\GoCloudNative.Bff.Authentication.csproj" />
+      <ProjectReference Include="..\..\src\GoCloudNative.Bff.Authentication.OpenIdConnect\GoCloudNative.Bff.Authentication.OpenIdConnect.csproj" />
     </ItemGroup>
 
     <ItemGroup>
@@ -43,7 +36,7 @@
 
     <ItemGroup>
         <Content Include="..\..\logo.png" pack="true" PackagePath=".">
-            <Link>logo.png</Link>
-        </Content>
+        <Link>logo.png</Link>
+      </Content>
     </ItemGroup>
 </Project>

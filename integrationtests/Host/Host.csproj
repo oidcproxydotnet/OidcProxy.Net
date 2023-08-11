@@ -16,8 +16,8 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\Auth0\GoCloudNative.Bff.Authentication.Auth0\GoCloudNative.Bff.Authentication.Auth0.csproj" />
-    <ProjectReference Include="..\AzureAd\GoCloudNative.Bff.Authentication.AzureAd\GoCloudNative.Bff.Authentication.AzureAd.csproj" />
+    <ProjectReference Include="..\..\src\GoCloudNative.Bff.Authentication.Auth0\GoCloudNative.Bff.Authentication.Auth0.csproj" />
+    <ProjectReference Include="..\..\src\GoCloudNative.Bff.Authentication.AzureAd\GoCloudNative.Bff.Authentication.AzureAd.csproj" />
   </ItemGroup>
 
 </Project>

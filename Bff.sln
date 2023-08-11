@@ -3,31 +3,35 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
 VisualStudioVersion = 17.0.31903.59
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Bff.Auth0", "Bff.Auth0", "{38E49F8C-C664-4A1B-8FE7-95F9855AEF1B}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GoCloudNative.Bff.Authentication", "src\GoCloudNative.Bff.Authentication\GoCloudNative.Bff.Authentication.csproj", "{D6501532-390E-4D8A-8650-2B8ED1E6D532}"
 EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Bff.OpenIdConnect", "Bff.OpenIdConnect", "{EE04429D-4B0B-4A40-9A32-23A5F159EE32}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GoCloudNative.Bff.Authentication.Tests", "unittests\GoCloudNative.Bff.Authentication.Tests\GoCloudNative.Bff.Authentication.Tests.csproj", "{04270509-572D-4D70-B2DE-37CF8D573EAC}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GoCloudNative.Bff.Authentication", "GoCloudNative.Bff.Authentication\GoCloudNative.Bff.Authentication.csproj", "{D6501532-390E-4D8A-8650-2B8ED1E6D532}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GoCloudNative.Bff.Authentication.Auth0", "src\GoCloudNative.Bff.Authentication.Auth0\GoCloudNative.Bff.Authentication.Auth0.csproj", "{EDAABEB7-BBAE-49DA-86A8-EB3C5540B86C}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GoCloudNative.Bff.Authentication.Tests", "GoCloudNative.Bff.Authentication.Tests\GoCloudNative.Bff.Authentication.Tests.csproj", "{04270509-572D-4D70-B2DE-37CF8D573EAC}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GoCloudNative.Bff.Authentication.OpenIdConnect", "src\GoCloudNative.Bff.Authentication.OpenIdConnect\GoCloudNative.Bff.Authentication.OpenIdConnect.csproj", "{939D1A70-69FF-4B49-97F5-7B5358C39246}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GoCloudNative.Bff.Authentication.Auth0", "Auth0\GoCloudNative.Bff.Authentication.Auth0\GoCloudNative.Bff.Authentication.Auth0.csproj", "{EDAABEB7-BBAE-49DA-86A8-EB3C5540B86C}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GoCloudNative.Bff.Authentication.OpenIdConnect.Tests", "unittests\GoCloudNative.Bff.Authentication.OpenIdConnect.Tests\GoCloudNative.Bff.Authentication.OpenIdConnect.Tests.csproj", "{9B73B2AB-1F22-49DE-AB92-574963BD2C4E}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GoCloudNative.Bff.Authentication.OpenIdConnect", "OpenIdConnect\GoCloudNative.Bff.Authentication.OpenIdConnect\GoCloudNative.Bff.Authentication.OpenIdConnect.csproj", "{939D1A70-69FF-4B49-97F5-7B5358C39246}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GoCloudNative.Bff.Authentication.OpenIdConnect.Tests.TestServer", "unittests\GoCloudNative.Bff.Authentication.OpenIdConnect.Tests.TestServer\GoCloudNative.Bff.Authentication.OpenIdConnect.Tests.TestServer.csproj", "{875271E5-DA4D-4FED-AAE6-E2E3D60D40CA}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GoCloudNative.Bff.Authentication.OpenIdConnect.Tests", "OpenIdConnect\GoCloudNative.Bff.Authentication.OpenIdConnect.Tests\GoCloudNative.Bff.Authentication.OpenIdConnect.Tests.csproj", "{9B73B2AB-1F22-49DE-AB92-574963BD2C4E}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Host", "integrationtests\Host\Host.csproj", "{789D484D-ECF3-46B4-8DDE-6DF13074CF24}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GoCloudNative.Bff.Authentication.OpenIdConnect.Tests.TestServer", "OpenIdConnect\GoCloudNative.Bff.Authentication.OpenIdConnect.Tests.TestServer\GoCloudNative.Bff.Authentication.OpenIdConnect.Tests.TestServer.csproj", "{875271E5-DA4D-4FED-AAE6-E2E3D60D40CA}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GoCloudNative.Bff.Authentication.AzureAd", "src\GoCloudNative.Bff.Authentication.AzureAd\GoCloudNative.Bff.Authentication.AzureAd.csproj", "{B0427177-EE01-4EBB-A2E7-FF6A4B00F8F9}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Host", "Host\Host.csproj", "{789D484D-ECF3-46B4-8DDE-6DF13074CF24}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GoCloudNative.Bff.Authentication.Auth0.Tests", "unittests\GoCloudNative.Bff.Authentication.Auth0.Tests\GoCloudNative.Bff.Authentication.Auth0.Tests.csproj", "{AEA82840-02BE-4E9D-A506-FD2634D01EF1}"
 EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Bff.AzureAd", "Bff.AzureAd", "{F5DA4BFE-9F56-4B90-B59A-E21DBA24397F}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GoCloudNative.Bff.Authentication.AzureAd.Tests", "unittests\GoCloudNative.Bff.Authentication.AzureAd.Tests\GoCloudNative.Bff.Authentication.AzureAd.Tests.csproj", "{E0EA9B61-39D3-42F5-ADED-B79FD925E71F}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GoCloudNative.Bff.Authentication.AzureAd", "AzureAd\GoCloudNative.Bff.Authentication.AzureAd\GoCloudNative.Bff.Authentication.AzureAd.csproj", "{B0427177-EE01-4EBB-A2E7-FF6A4B00F8F9}"
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "src", "src", "{7438F193-5991-4E44-8B54-8C4431278291}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GoCloudNative.Bff.Authentication.Auth0.Tests", "Auth0\GoCloudNative.Bff.Authentication.Auth0.Tests\GoCloudNative.Bff.Authentication.Auth0.Tests.csproj", "{AEA82840-02BE-4E9D-A506-FD2634D01EF1}"
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "unittests", "unittests", "{A865FC0F-47B5-48AD-9848-719693B6E467}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GoCloudNative.Bff.Authentication.AzureAd.Tests", "GoCloudNative.Bff.Authentication.AzureAd.Tests\GoCloudNative.Bff.Authentication.AzureAd.Tests.csproj", "{E0EA9B61-39D3-42F5-ADED-B79FD925E71F}"
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "integrationtests", "integrationtests", "{26033EED-BDE3-4F1F-B71D-3175D7D156DB}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TestIdentityServer", "docs\demos\IdentityServer4\src\IdentityServer4\TestIdentityServer.csproj", "{D3C458AB-F2E9-491A-8DF4-387BCFA6E440}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Host.IntegrationTests", "integrationtests\Host.IntegrationTests\Host.IntegrationTests.csproj", "{3A4917BF-3835-4A5B-A508-C3895D0B35DF}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -78,14 +82,27 @@ Global
 		{E0EA9B61-39D3-42F5-ADED-B79FD925E71F}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{E0EA9B61-39D3-42F5-ADED-B79FD925E71F}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{E0EA9B61-39D3-42F5-ADED-B79FD925E71F}.Release|Any CPU.Build.0 = Release|Any CPU
+		{D3C458AB-F2E9-491A-8DF4-387BCFA6E440}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{D3C458AB-F2E9-491A-8DF4-387BCFA6E440}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{D3C458AB-F2E9-491A-8DF4-387BCFA6E440}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{D3C458AB-F2E9-491A-8DF4-387BCFA6E440}.Release|Any CPU.Build.0 = Release|Any CPU
+		{3A4917BF-3835-4A5B-A508-C3895D0B35DF}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{3A4917BF-3835-4A5B-A508-C3895D0B35DF}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{3A4917BF-3835-4A5B-A508-C3895D0B35DF}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{3A4917BF-3835-4A5B-A508-C3895D0B35DF}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(NestedProjects) = preSolution
-		{EDAABEB7-BBAE-49DA-86A8-EB3C5540B86C} = {38E49F8C-C664-4A1B-8FE7-95F9855AEF1B}
-		{939D1A70-69FF-4B49-97F5-7B5358C39246} = {EE04429D-4B0B-4A40-9A32-23A5F159EE32}
-		{9B73B2AB-1F22-49DE-AB92-574963BD2C4E} = {EE04429D-4B0B-4A40-9A32-23A5F159EE32}
-		{875271E5-DA4D-4FED-AAE6-E2E3D60D40CA} = {EE04429D-4B0B-4A40-9A32-23A5F159EE32}
-		{B0427177-EE01-4EBB-A2E7-FF6A4B00F8F9} = {F5DA4BFE-9F56-4B90-B59A-E21DBA24397F}
-		{AEA82840-02BE-4E9D-A506-FD2634D01EF1} = {38E49F8C-C664-4A1B-8FE7-95F9855AEF1B}
-		{E0EA9B61-39D3-42F5-ADED-B79FD925E71F} = {F5DA4BFE-9F56-4B90-B59A-E21DBA24397F}
+		{D6501532-390E-4D8A-8650-2B8ED1E6D532} = {7438F193-5991-4E44-8B54-8C4431278291}
+		{EDAABEB7-BBAE-49DA-86A8-EB3C5540B86C} = {7438F193-5991-4E44-8B54-8C4431278291}
+		{B0427177-EE01-4EBB-A2E7-FF6A4B00F8F9} = {7438F193-5991-4E44-8B54-8C4431278291}
+		{939D1A70-69FF-4B49-97F5-7B5358C39246} = {7438F193-5991-4E44-8B54-8C4431278291}
+		{AEA82840-02BE-4E9D-A506-FD2634D01EF1} = {A865FC0F-47B5-48AD-9848-719693B6E467}
+		{E0EA9B61-39D3-42F5-ADED-B79FD925E71F} = {A865FC0F-47B5-48AD-9848-719693B6E467}
+		{9B73B2AB-1F22-49DE-AB92-574963BD2C4E} = {A865FC0F-47B5-48AD-9848-719693B6E467}
+		{875271E5-DA4D-4FED-AAE6-E2E3D60D40CA} = {A865FC0F-47B5-48AD-9848-719693B6E467}
+		{04270509-572D-4D70-B2DE-37CF8D573EAC} = {A865FC0F-47B5-48AD-9848-719693B6E467}
+		{789D484D-ECF3-46B4-8DDE-6DF13074CF24} = {26033EED-BDE3-4F1F-B71D-3175D7D156DB}
+		{D3C458AB-F2E9-491A-8DF4-387BCFA6E440} = {26033EED-BDE3-4F1F-B71D-3175D7D156DB}
+		{3A4917BF-3835-4A5B-A508-C3895D0B35DF} = {26033EED-BDE3-4F1F-B71D-3175D7D156DB}
 	EndGlobalSection
 EndGlobal

@@ -34,7 +34,7 @@
     </ItemGroup>
 
     <ItemGroup>
-        <Content Include="..\logo.png" pack="true" PackagePath=".">
+        <Content Include="..\..\logo.png" pack="true" PackagePath=".">
             <Link>logo.png</Link>
         </Content>
     </ItemGroup>
