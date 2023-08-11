@@ -21,7 +21,9 @@ jobs:
       with:
         dotnet-version: 6.0.x
     - name: Configure Self-Signed HTTPS certificates
-      run: | 
+      run: |
+        apt-get update       
+        apt-get install libnss3-tools 
         dotnet dev-certs https 
         sudo dotnet dev-certs https -ep /usr/local/share/ca-certificates/aspnet/https.crt --format PEM 
         certutil -d sql:$HOME/.pki/nssdb -A -t "P,," -n localhost -i /usr/local/share/ca-certificates/aspnet/https.crt 
