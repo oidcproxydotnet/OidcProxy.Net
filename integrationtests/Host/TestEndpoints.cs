@@ -15,7 +15,7 @@ public static class TestEndpoints
 
         app.Map("account/welcome", () => HtmlResult
             .WithHtml("<h1>Welcome</h1>")
-            .AddHtml("<p><a href=\"/echo\">Echo</a></p>")
+            .AddHtml("<p><a href=\"/echo\" id=\"btn-echo\">Echo</a></p>")
             .AddHtml("<h2>Auth0</h2>")
             .AddHtml("<ul>")
             .AddHtml("<li><a href=\"/auth0/me\">/auth0/me</a></li>")
@@ -23,7 +23,7 @@ public static class TestEndpoints
             .AddHtml("</ul>")
             .AddHtml("<h2>IdentityServer4</h2>")
             .AddHtml("<ul>")
-            .AddHtml("<li><a href=\"/oidc/me\">/oidc/me</a></li>")
+            .AddHtml("<li><a href=\"/oidc/me\" id=\"btn-oidc-me\">/oidc/me</a></li>")
             .AddHtml("<li><a href=\"/oidc/end-session\">/oidc/end-session</a></li>")
             .AddHtml("</ul>")
             .AddHtml("<h2>Azure Ad</h2>")
