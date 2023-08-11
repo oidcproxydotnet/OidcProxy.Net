@@ -26,6 +26,8 @@ jobs:
         sudo apt-get install libnss3-tools 
         dotnet dev-certs https 
         sudo dotnet dev-certs https -ep /usr/local/share/ca-certificates/aspnet/https.crt --format PEM 
+        mkdir -p $HOME/.pki/nssdb
+        sudo certutil -d $HOME/.pki/nssdb -N
         sudo certutil -d sql:$HOME/.pki/nssdb -A -t "P,," -n localhost -i /usr/local/share/ca-certificates/aspnet/https.crt 
         sudo certutil -d sql:$HOME/.pki/nssdb -A -t "C,," -n localhost -i /usr/local/share/ca-certificates/aspnet/https.crt 
     - name: Restore dependencies
