@@ -16,10 +16,9 @@ public class App
         
         _browser = await Puppeteer.LaunchAsync(new LaunchOptions
         {
-            Headless = true
+            Headless = true,
+            IgnoreHTTPSErrors = true
         });
-        
-        _page.Browser.IgnoreHTTPSErrors  = true;
         
         _page = await _browser.NewPageAsync();
         await _page.GoToAsync(BaseAddress);
