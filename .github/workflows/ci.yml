@@ -23,11 +23,11 @@ jobs:
     - name: Restore dependencies
       run: dotnet restore
     - name: Configure Self-Signed HTTPS certificates
-      run: > 
-        dotnet dev-certs https
-        dotnet dev-certs https -ep /usr/local/share/ca-certificates/aspnet/https.crt --format PEM
-        certutil -d sql:$HOME/.pki/nssdb -A -t "P,," -n localhost -i /usr/local/share/ca-certificates/aspnet/https.crt
-        certutil -d sql:$HOME/.pki/nssdb -A -t "C,," -n localhost -i /usr/local/share/ca-certificates/aspnet/https.crt 
+      run: | 
+        dotnet dev-certs https \
+        dotnet dev-certs https -ep /usr/local/share/ca-certificates/aspnet/https.crt --format PEM \
+        certutil -d sql:$HOME/.pki/nssdb -A -t "P,," -n localhost -i /usr/local/share/ca-certificates/aspnet/https.crt \
+        certutil -d sql:$HOME/.pki/nssdb -A -t "C,," -n localhost -i /usr/local/share/ca-certificates/aspnet/https.crt \
 
     - name: Build
       run: dotnet build --no-restore
