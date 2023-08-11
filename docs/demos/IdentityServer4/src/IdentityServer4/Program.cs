@@ -1,29 +1,47 @@
 using TestIdentityServer.ModuleInitializers;
 using Microsoft.AspNetCore.HttpOverrides;
 
-var builder = WebApplication.CreateBuilder(args);
+namespace TestIdentityServer;
 
-builder.Services.AddControllersWithViews();
-builder.Services.AddIdentityServer4();
-
-var app = builder.Build();
-
-app.UseForwardedHeaders(new ForwardedHeadersOptions
+public class Program
 {
-    ForwardedHeaders = ForwardedHeaders.XForwardedFor | ForwardedHeaders.XForwardedProto
-});
+    public static void Main(string[] args)
+    {
+        var builder = WebApplication.CreateBuilder(args);
 
-app.UseCertificateForwarding();
-app.UseCookiePolicy();
+        ConfigureServices(builder);
 
-app.UseDeveloperExceptionPage();
-app.UseStaticFiles();
+        var app = builder.Build();
 
-app.UseRouting();
-app.UseIdentityServer();
+        ConfigureApp(app);
 
-app.UseAuthorization();
+        app.Run();
+    }
 
-app.MapDefaultControllerRoute();
+    public static void ConfigureServices(WebApplicationBuilder builder)
+    {
+        builder.Services.AddControllersWithViews();
+        builder.Services.AddIdentityServer4();
+    }
+    
+    public static void ConfigureApp(WebApplication app)
+    {
+        app.UseForwardedHeaders(new ForwardedHeadersOptions
+        {
+            ForwardedHeaders = ForwardedHeaders.XForwardedFor | ForwardedHeaders.XForwardedProto
+        });
 
-app.Run();
+        app.UseCertificateForwarding();
+        app.UseCookiePolicy();
+
+        app.UseDeveloperExceptionPage();
+        app.UseStaticFiles();
+
+        app.UseRouting();
+        app.UseIdentityServer();
+
+        app.UseAuthorization();
+
+        app.MapDefaultControllerRoute();
+    }
+}

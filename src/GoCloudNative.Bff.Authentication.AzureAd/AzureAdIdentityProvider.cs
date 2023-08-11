@@ -3,7 +3,6 @@ using GoCloudNative.Bff.Authentication.IdentityProviders;
 using GoCloudNative.Bff.Authentication.OpenIdConnect;
 using Microsoft.Extensions.Caching.Memory;
 using Microsoft.Identity.Client;
-using TheCloudNativeWebApp.Bff.Authentication.OpenIdConnect;
 
 namespace GoCloudNative.Bff.Authentication.AzureAd;
 

@@ -6,9 +6,9 @@ public static class TestEndpoints
     {
         app.Map("/", () => HtmlResult.WithHtml("<h1>Welcome</h1>")
             .AddHtml("<ul>")    
-            .AddHtml("<li><a href=\"/auth0/login\">/auth0/login</a></li>")
-            .AddHtml("<li><a href=\"/oidc/login\">/oidc/login</a></li>")
-            .AddHtml("<li><a href=\"/aad/login\">/aad/login</a></li>")
+            .AddHtml("<li><a href=\"/auth0/login\" id=\"btn-auth0-login\">/auth0/login</a></li>")
+            .AddHtml("<li><a href=\"/oidc/login\" id=\"btn-oidc-login\">/oidc/login</a></li>")
+            .AddHtml("<li><a href=\"/aad/login\" id=\"btn-aad-login\">/aad/login</a></li>")
             .AddHtml("</ul>"));
 
         app.Map("account/oops", () => Results.Text("Oops..."));

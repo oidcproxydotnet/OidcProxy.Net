@@ -1,6 +1,6 @@
 using FluentAssertions;
 using Microsoft.AspNetCore.Mvc.Testing;
-using TheCloudNativeWebApp.Bff.Authentication.OpenIdConnect;
+using GoCloudNative.Bff.Authentication.OpenIdConnect;
 
 namespace GoCloudNative.Bff.Authentication.OpenIdConnect.Tests.OpenIdConnectIdentityProviderTests;
 

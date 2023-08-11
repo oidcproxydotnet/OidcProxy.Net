@@ -2,75 +2,95 @@ using GoCloudNative.Bff.Authentication.Auth0;
 using GoCloudNative.Bff.Authentication.AzureAd;
 using GoCloudNative.Bff.Authentication.ModuleInitializers;
 using GoCloudNative.Bff.Authentication.OpenIdConnect;
-using Host;
 using Microsoft.AspNetCore.DataProtection;
 using StackExchange.Redis;
-using TheCloudNativeWebApp.Bff.Authentication.OpenIdConnect;
 
-var builder = WebApplication.CreateBuilder(args);
+namespace Host;
 
-var oidcConfig = builder.Configuration.GetSection("Oidc").Get<OpenIdConnectConfig>();
-var auth0Config = builder.Configuration.GetSection("auth0").Get<Auth0Config>();
-var aadConfig = builder.Configuration.GetSection("AzureAd").Get<AzureAdConfig>();
-
-var redisConnectionString = builder.Configuration.GetSection("ConnectionStrings:Redis").Get<string>();
-if (!string.IsNullOrEmpty(redisConnectionString))
+public class Program
 {
-    var redis = ConnectionMultiplexer.Connect(redisConnectionString);
-
-    builder.Services
-        .AddDataProtection()
-        .PersistKeysToStackExchangeRedis(redis, "bff");
-
-    builder.Services.AddStackExchangeRedisCache(options =>
+    public static void Main(string[] args)
     {
-        options.Configuration = redis.Configuration;
-        options.InstanceName = "bff";
-    });
-}
+        var builder = WebApplication.CreateBuilder(args);
 
-builder.Services.AddHealthChecks();
+        var redisConnectionString = builder.Configuration.GetSection("ConnectionStrings:Redis").Get<string>();
+        ConfigureRedis(builder, redisConnectionString);
+        
+        var oidcConfig = builder.Configuration.GetSection("Oidc").Get<OpenIdConnectConfig>();
+        var auth0Config = builder.Configuration.GetSection("auth0").Get<Auth0Config>();
+        var aadConfig = builder.Configuration.GetSection("AzureAd").Get<AzureAdConfig>();
+        
+        ConfigureBff(builder, oidcConfig, auth0Config, aadConfig);
 
-builder.Services.AddSecurityBff(o =>
+        var app = builder.Build();
+
+        ConfigureApp(app, builder);
+
+        app.Run();
+    }
+
+    public static void ConfigureRedis(WebApplicationBuilder builder, string? redisConnectionString)
     {
-        if (oidcConfig != null)
+        if (string.IsNullOrEmpty(redisConnectionString))
         {
-            o.ConfigureOpenIdConnect(oidcConfig, "oidc");
-        }
-
-        if (auth0Config != null)
-        {
-            o.ConfigureAuth0(auth0Config, "auth0");
-        }
-
-        if (aadConfig != null)
-        {
-            o.ConfigureAzureAd(aadConfig, "aad");
+            return;
         }
         
-        o.SetAuthenticationErrorPage("/account/oops");
-        
-        o.SetLandingPage("/account/welcome");
-        
-        //o.AddClaimsTransformation<MyClaimsTransformation>();
-        
-        o.LoadYarpFromConfig(builder.Configuration.GetSection("ReverseProxy"));
-    });
+        var redis = ConnectionMultiplexer.Connect(redisConnectionString);
 
-builder.Services.AddLogging();
+        builder.Services
+            .AddDataProtection()
+            .PersistKeysToStackExchangeRedis(redis, "bff");
 
-var app = builder.Build();
+        builder.Services.AddStackExchangeRedisCache(options =>
+        {
+            options.Configuration = redis.Configuration;
+            options.InstanceName = "bff";
+        });
+    }
 
-app.UseRouting();
+    public static void ConfigureBff(WebApplicationBuilder builder, OpenIdConnectConfig? oidcConfig, Auth0Config? auth0Config, AzureAdConfig? aadConfig)
+    {
+        builder.Services.AddHealthChecks();
 
-app.UseSecurityBff();
+        builder.Services.AddSecurityBff(o =>
+        {
+            if (oidcConfig != null)
+            {
+                o.ConfigureOpenIdConnect(oidcConfig, "oidc");
+            }
 
-// Test endpoints
-app.MapHealthChecks("/health");
+            if (auth0Config != null)
+            {
+                o.ConfigureAuth0(auth0Config, "auth0");
+            }
 
-if (builder.Environment.IsDevelopment())
-{
-    app.AddTestingEndpoints();
+            if (aadConfig != null)
+            {
+                o.ConfigureAzureAd(aadConfig, "aad");
+            }
+
+            o.SetAuthenticationErrorPage("/account/oops");
+
+            o.SetLandingPage("/account/welcome");
+
+            //o.AddClaimsTransformation<MyClaimsTransformation>();
+
+            o.LoadYarpFromConfig(builder.Configuration.GetSection("ReverseProxy"));
+        });
+
+        builder.Services.AddLogging();
+    }
+
+    public static void ConfigureApp(WebApplication app, WebApplicationBuilder builder)
+    {
+        app.UseRouting();
+
+        app.UseSecurityBff();
+
+        // Test endpoints
+        app.MapHealthChecks("/health");
+
+        app.AddTestingEndpoints();
+    }
 }
-
-app.Run();
