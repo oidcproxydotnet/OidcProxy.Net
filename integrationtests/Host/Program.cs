@@ -76,7 +76,14 @@ public class Program
 
             //o.AddClaimsTransformation<MyClaimsTransformation>();
 
-            o.LoadYarpFromConfig(builder.Configuration.GetSection("ReverseProxy"));
+            o.ConfigureYarp(y =>
+            {
+                y.LoadFromConfig(builder.Configuration.GetSection("ReverseProxy"));
+                
+                // suppress ssl errors (i should be ashamed of myself..) todo: make sure certificate is trusted in pipeline
+                y.ConfigureHttpClient((_, h) =>
+                    h.SslOptions.RemoteCertificateValidationCallback = (_, _, _, _) => true);
+            });
         });
 
         builder.Services.AddLogging();

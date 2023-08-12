@@ -16,7 +16,7 @@ public class App
         
         _browser = await Puppeteer.LaunchAsync(new LaunchOptions
         {
-            Headless = true,
+            Headless = false,
             IgnoreHTTPSErrors = true,
             Args = new []{ "--no-sandbox" }
         });

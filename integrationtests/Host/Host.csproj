@@ -20,4 +20,13 @@
     <ProjectReference Include="..\..\src\GoCloudNative.Bff.Authentication.AzureAd\GoCloudNative.Bff.Authentication.AzureAd.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <None Update="cert.pem">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Update="key.pem">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+  </ItemGroup>
+
 </Project>
