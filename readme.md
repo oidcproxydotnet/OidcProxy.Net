@@ -106,10 +106,9 @@ And use the following `appsettings.json`:
 
 This solution supports authentication with
 
-- [Auth0](https://bff.gocloudnative.org/integration-manuals/quickstarts/auth0/quickstart/)
-- [Azure Active Directory](https://bff.gocloudnative.org/integration-manuals/quickstarts/azuread/quickstart/)
-- [IdentityServer4](https://bff.gocloudnative.org/integration-manuals/quickstarts/identityserver4/quickstart/)
-- ~~KeyCloak~~ (not tested yet/todo..)
+- [Auth0](https://medium.com/web-security/implementing-the-bff-security-pattern-with-gocloudnative-bff-and-auth0-773a888979c)
+- [Azure Active Directory](https://medium.com/web-security/implementing-the-bff-security-pattern-with-azuread-b2c-4f340cafecfb)
+- [IdentityServer4](https://medium.com/web-security/implementing-the-bff-security-pattern-with-identityserver4-and-gocloudnative-bff-a8b594308363)
 
 # What problem does this software solve?
 

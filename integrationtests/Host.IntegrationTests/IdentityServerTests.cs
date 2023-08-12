@@ -8,7 +8,7 @@ namespace Host.IntegrationTests;
 public class IdentityServerTests : IClassFixture<HostFixture>
 {
     [Fact]
-    public async Task ItShouldWork()
+    public async Task ShouldLoginAndForwardTokenDownstreamAndSignout()
     {
         const string subYoda = "test-user-2";
         const string protocol = "oidc";
