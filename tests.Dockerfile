@@ -25,10 +25,10 @@ FROM mcr.microsoft.com/dotnet/sdk:7.0
  && apt-get purge --auto-remove -y curl \
  && rm -rf /var/lib/apt/lists/*
 
-RUN dotnet dev-certs https
-RUN dotnet dev-certs https --trust
-
 COPY . .
 
+RUN dotnet dev-certs https
+RUN dotnet dev-certs https --clean
+RUN dotnet dev-certs https --trust
 RUN dotnet restore
 RUN dotnet test
