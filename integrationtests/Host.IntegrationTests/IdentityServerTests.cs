@@ -5,11 +5,9 @@ using Xunit;
 
 namespace Host.IntegrationTests;
 
-public class IdentityServerTests : IClassFixture<HostAndIdsvrFixture>
+public class IdentityServerTests : IClassFixture<HostFixture>
 {
-    [Fact (Skip = "WIP: Chrome, Dotnet, Puppeteer work in CI and locally, but test fails due to " +
-                  "error in certificate chain. " +
-                  "Todo: Host identity server somewhere with a valid ssl certificate.")]
+    [Fact]
     public async Task ItShouldWork()
     {
         const string subYoda = "test-user-2";
