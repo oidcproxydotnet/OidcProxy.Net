@@ -20,16 +20,5 @@ jobs:
       uses: actions/setup-dotnet@v3
       with:
         dotnet-version: 6.0.x
-    - name: Configure Self-Signed HTTPS certificates
-      run: |
-        sudo apt-get update
-        sudo apt-get install libnss3-tools 
-        dotnet dev-certs https 
-        sudo dotnet dev-certs https -ep /usr/local/share/ca-certificates/aspnet/https.crt --format PEM 
-        sudo update-ca-certificates
-    - name: Restore dependencies
-      run: dotnet restore
-    - name: Build
-      run: dotnet build --no-restore
-    - name: Test
-      run: dotnet test --no-build --verbosity normal
+    - name: Run tests
+      run: docker build -f tests.Dockerfile . 
