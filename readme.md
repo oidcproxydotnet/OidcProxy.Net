@@ -15,14 +15,6 @@ Hence, our mission is to offer an affordable, developer-friendly, and secure BFF
 
 Inside this repository, you will find a C# implementation of a Back-end For Front-end (BFF). Its functionality includes user authentication, forwarding requests to downstream APIs, and appending the `access_token` to the forwarded requests by including the `Authentication` header with the value Bearer xyz. Additionally, you can leverage this BFF as intended, employing it to manually invoke downstream endpoints and consolidate the outcomes.
 
-## We need your support
-GoCloudNative.BFF is an open-source project, emphasizing its community-driven nature. It is a free product and will continue to be freely accessible. Safeguarding the World Wide Web is a collective endeavor, necessitating your assistance. You can contribute by:
-
-* Sharing your valuable feedback
-  * By filling out [this Google Form](https://docs.google.com/forms/d/e/1FAIpQLSehCYcBI8YM4An2XxxBu-CcaujtWxpeP1E9W8Dn_S3vWKVPVg/viewform).
-  * By creating [issues](https://github.com/thecloudnativewebapp/GoCloudNative.Bff/issues) for missing features or bugs.
-* Writing about the GoCloudNative.BFF, spreading awareness
-
 ## Getting started
 
 You can swiftly implement the BFF Security Pattern within minutes using the GoCloudNative.Bff, an authentication gateway built on YARP. Just follow these steps to get started:
