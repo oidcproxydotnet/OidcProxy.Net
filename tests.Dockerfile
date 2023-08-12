@@ -1,7 +1,5 @@
 FROM mcr.microsoft.com/dotnet/sdk:7.0
 
-
- # Install Chrome
  # Install Chrome
  RUN apt-get update && apt-get install -y \
  apt-transport-https \
@@ -27,6 +25,6 @@ FROM mcr.microsoft.com/dotnet/sdk:7.0
 
 COPY . .
 
-RUN dotnet dev-certs clean && dotnet dev-certs https && dotnet dev-certs https -ep /https/aspnetapp.pfx -p F00B@rrrXyz09761 && dotnet dev-certs https --trust
+RUN dotnet dev-certs https --clean && dotnet dev-certs https && dotnet dev-certs https -ep /https/aspnetapp.pfx -p F00B@rrrXyz09761 && dotnet dev-certs https --trust
 RUN dotnet restore
 RUN dotnet test
