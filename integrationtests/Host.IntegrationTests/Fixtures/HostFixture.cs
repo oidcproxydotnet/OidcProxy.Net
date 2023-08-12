@@ -7,7 +7,6 @@ public class HostFixture : IAsyncLifetime, IDisposable
 {
     private WebApplication? _app = null;
 
-    
     public virtual Task InitializeAsync()
     {
         var builder = WebApplication.CreateBuilder(Array.Empty<string>());
