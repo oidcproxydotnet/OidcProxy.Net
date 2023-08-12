@@ -1,4 +1,8 @@
-FROM mcr.microsoft.com/dotnet/sdk:7.0.100-preview.3-focal
+FROM ubuntu:22.04 AS builder
+
+# install the .NET 6 SDK from the Ubuntu archive
+# (no need to clean the apt cache as this is an unpublished stage)
+RUN apt-get update && apt-get install -y dotnet7 ca-certificates
 
  # Install Chrome
  RUN apt-get update && apt-get install -y \
