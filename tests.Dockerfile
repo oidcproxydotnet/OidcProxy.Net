@@ -1,4 +1,4 @@
-FROM mcr.microsoft.com/dotnet/sdk:7.0-focal
+FROM mcr.microsoft.com/dotnet/sdk:7.0.100-preview.3-focal
 
  # Install Chrome
  RUN apt-get update && apt-get install -y \
