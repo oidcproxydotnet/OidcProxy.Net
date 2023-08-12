@@ -1,8 +1,4 @@
-FROM ubuntu:22.04 AS builder
-
-# install the .NET 6 SDK from the Ubuntu archive
-# (no need to clean the apt cache as this is an unpublished stage)
-RUN apt-get update && apt-get install -y dotnet7 ca-certificates
+FROM mcr.microsoft.com/dotnet/sdk:7.0
 
  # Install Chrome
  RUN apt-get update && apt-get install -y \
@@ -29,6 +25,5 @@ RUN apt-get update && apt-get install -y dotnet7 ca-certificates
 
 COPY . .
 
-RUN dotnet dev-certs https --clean && dotnet dev-certs https && dotnet dev-certs https -ep /https/aspnetapp.pfx -p F00B@rrrXyz09761 && dotnet dev-certs https --trust
 RUN dotnet restore
 RUN dotnet test
