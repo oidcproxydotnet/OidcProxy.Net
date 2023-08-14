@@ -22,7 +22,7 @@ jobs:
         dotnet-version: 6.0.x
     - name: Install chromium
       run: >
-         RUN apt-get update && apt-get install -y \
+         apt-get update && apt-get install -y \
           apt-transport-https \
           ca-certificates \
           curl \
