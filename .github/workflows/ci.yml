@@ -15,10 +15,12 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-    - uses: actions/checkout@v3
+    - uses: browser-actions/setup-chrome@v1
+      with:
+        chrome-version: beta
     - name: Setup .NET
       uses: actions/setup-dotnet@v3
       with:
         dotnet-version: 6.0.x
     - name: Run tests
-      run: docker build -f tests.Dockerfile . 
+      run: dotnet test
