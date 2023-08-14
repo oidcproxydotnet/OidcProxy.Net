@@ -5,10 +5,10 @@ using Xunit;
 
 namespace Host.IntegrationTests;
 
-public class IdentityServerTests : IClassFixture<HostFixture>
+public class IntegrationTests : IClassFixture<HostFixture>
 {
     [Fact]
-    public async Task ShouldLoginAndForwardTokenDownstreamAndSignout()
+    public async Task ShouldLoginAndForwardTokenDownstreamAndSignOut()
     {
         const string subYoda = "test-user-2";
         const string protocol = "oidc";
