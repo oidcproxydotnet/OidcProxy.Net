@@ -12,6 +12,8 @@ public class IdentityServerTests : IClassFixture<HostFixture>
     {
         const string subYoda = "test-user-2";
         const string protocol = "oidc";
+
+        const string endSessionEndpoint = "/oidc/end-session";
         
         var app = new App();
         await app.NavigateToBff();
@@ -24,20 +26,20 @@ public class IdentityServerTests : IClassFixture<HostFixture>
             await app.IdSvrLoginPage.BtnYodaLogin.ClickAsync();
             await app.WaitForNavigationAsync();
 
-            // Assert token is being forwarded to downstream api's
+            // Assert token is being forwarded to downstream apis
             await app.GoTo(EchoEndpoint.Uri);
             await Task.Delay(1000);
         
-            app.EchoEndpoint.Text.Should().MatchRegex(@"Bearer\ ey");
+            app.EchoEndpoint.Text.Should().Contain("Bearer ey");
         
             // Assert the user was logged in
             await app.GoTo(MeEndpoint.GetUri(protocol));
             await Task.Delay(1000);
 
-            app.MeEndpoint.Text.Should().Contain(subYoda); // yoda
+            app.MeEndpoint.Text.Should().Contain(subYoda);
 
             // Log out
-            await app.GoTo("/oidc/end-session");
+            await app.GoTo(endSessionEndpoint);
             await Task.Delay(1000);
         
             await app.IdSvrSignOutPage.BtnYes.ClickAsync();
@@ -46,7 +48,7 @@ public class IdentityServerTests : IClassFixture<HostFixture>
             await app.GoTo(MeEndpoint.GetUri(protocol));
             await Task.Delay(1000);
 
-            app.MeEndpoint.Text.Should().NotContain(subYoda); // yoda
+            app.MeEndpoint.Text.Should().NotContain(subYoda);
         }
         finally
         {
