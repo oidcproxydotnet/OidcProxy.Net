@@ -1,3 +1,5 @@
+name: Automatic updates
+
 on:
   schedule:
     - cron:  '0 8 * * *'
