@@ -1,4 +1,4 @@
-<Project Sdk="Microsoft.NET.Sdk">
+﻿<Project Sdk="Microsoft.NET.Sdk">
 
     <PropertyGroup>
         <TargetFramework>net7.0</TargetFramework>
@@ -6,7 +6,8 @@
         <Nullable>enable</Nullable>
 
         <IsPackable>false</IsPackable>
-    </PropertyGroup>
+      <UserSecretsId>04f3167f-189b-4e5c-9e32-f6ff7eb36c3c</UserSecretsId>
+  </PropertyGroup>
 
     <ItemGroup>
         <PackageReference Include="FluentAssertions" Version="6.11.0" />

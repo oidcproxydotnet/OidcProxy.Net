@@ -16,7 +16,7 @@ public class App
         
         _browser = await Puppeteer.LaunchAsync(new LaunchOptions
         {
-            Headless = true,
+            Headless = false,
             IgnoreHTTPSErrors = true,
             Args = new []{ "--no-sandbox" }
         });
@@ -49,6 +49,9 @@ public class App
     
     public IdSvrLoginPage IdSvrLoginPage => new (_page);
     public IdSvrSignOutPage IdSvrSignOutPage => new (_page);
+
+    public Auth0LoginPage Auth0LoginPage => new(_page);
+    public Auth0SignOutPage Auth0SignOutPage => new(_page);
     
     
     public MeEndpoint MeEndpoint => new(_page);

@@ -11,5 +11,9 @@ public class HomePage
         _page = page;
     }
 
-    public IElementHandle BtnOidcLogin => _page.QuerySelectorAsync("#btn-oidc-login").GetAwaiter().GetResult();
+    public IElementHandle BtnOidcLogin => GetElementHandle("#btn-oidc-login");
+    public IElementHandle BtnAuth0Login => GetElementHandle("#btn-auth0-login");
+
+    private IElementHandle GetElementHandle(string selector) 
+        => _page.QuerySelectorAsync(selector).GetAwaiter().GetResult();
 }
