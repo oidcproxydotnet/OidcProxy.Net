@@ -12,12 +12,13 @@ jobs:
 
     steps:
     - uses: actions/checkout@v3
-    - uses: browser-actions/setup-chrome@v1
     - name: Setup .NET
       uses: actions/setup-dotnet@v3
       with:
         dotnet-version: 6.0.x
+    - uses: browser-actions/setup-chrome@v1
     - name: Run tests
+      run: dotnet test 
       env: 
         AUTH0__AUDIENCE: ${{ secrets.AUTH0__AUDIENCE }}
         AUTH0__CLIENTID: ${{ secrets.AUTH0__CLIENTID }}
@@ -25,4 +26,3 @@ jobs:
         AUTH0__DOMAIN: ${{ secrets.AUTH0__DOMAIN }}
         AUTH0__PASSWORD: ${{ secrets.AUTH0__PASSWORD }}
         AUTH0__USERNAME: ${{ secrets.AUTH0__USERNAME }}
-      run: dotnet test 
