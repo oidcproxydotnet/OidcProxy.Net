@@ -18,4 +18,11 @@ jobs:
       with:
         dotnet-version: 6.0.x
     - name: Run tests
+      env: 
+        AUTH0__AUDIENCE: ${{ secrets.AUTH0__AUDIENCE }}
+        AUTH0__CLIENTID: ${{ secrets.AUTH0__CLIENTID }
+        AUTH0__CLIENTSECRET: ${{ secrets.AUTH0__CLIENTSECRET }}
+        AUTH0__DOMAIN: ${{ secrets.AUTH0__DOMAIN }}
+        AUTH0__PASSWORD: ${{ secrets.AUTH0__PASSWORD }
+        AUTH0__USERNAME: ${{ secrets.AUTH0__USERNAME }}
       run: dotnet test 
