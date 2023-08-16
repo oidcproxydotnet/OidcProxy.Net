@@ -11,6 +11,9 @@ public class App
 
     public async Task NavigateToBff()
     {
+        using var browserFetcher = new BrowserFetcher(SupportedBrowser.Chrome);
+        await browserFetcher.DownloadAsync();
+
         _browser = await Puppeteer.LaunchAsync(new LaunchOptions
         {
             Headless = true,
