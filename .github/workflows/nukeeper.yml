@@ -1,6 +1,18 @@
 name: Automatic updates
 
 on:
+  workflow_dispatch:
+    inputs:
+      logLevel:
+        description: 'Log level'
+        required: true
+        default: 'debug'
+        type: choice
+        options:
+        - info
+        - warning
+        - debug
+        
   schedule:
     - cron:  '0 8 * * *'
 
