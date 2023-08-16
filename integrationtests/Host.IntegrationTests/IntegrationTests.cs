@@ -73,6 +73,7 @@ public class IntegrationTests : IClassFixture<HostApplication>
         
         var configuration = new ConfigurationBuilder()
             .AddUserSecrets(GetType().Assembly)
+            .AddEnvironmentVariables()
             .Build();
 
         var username = configuration.GetSection("Auth0:Username").Get<string>();
