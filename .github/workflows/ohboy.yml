@@ -16,6 +16,8 @@ jobs:
       with:
         dotnet-version: 6.0.x
     - name: Run tests
-      run: dotnet build 
-      env: 
+      run: dotnet build
+      env:
         AUTH0__AUDIENCE: ${{ secrets.AUTH0__AUDIENCE }}
+    - name: echo HelloWorld
+      run: ls
