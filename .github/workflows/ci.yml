@@ -6,44 +6,45 @@ on:
     types:
       - completed
 
-      upload:
-        runs-on: ubuntu-latest
-        if: >
-          github.event.workflow_run.event == 'pull_request' &&
-          github.event.workflow_run.conclusion == 'success'
-        steps:
-          - uses: browser-actions/setup-chrome@v1
-          - name: 'Download artifact'
-            uses: actions/github-script@v3.1.0
-            with:
-              script: |
-                var artifacts = await github.actions.listWorkflowRunArtifacts({
-                   owner: context.repo.owner,
-                   repo: context.repo.repo,
-                   run_id: ${{github.event.workflow_run.id }},
-                });
-                var matchArtifact = artifacts.data.artifacts.filter((artifact) => {
-                  return artifact.name == "pr"
-                })[0];
-                var download = await github.actions.downloadArtifact({
-                   owner: context.repo.owner,
-                   repo: context.repo.repo,
-                   artifact_id: matchArtifact.id,
-                   archive_format: 'zip',
-                });
-                var fs = require('fs');
-                fs.writeFileSync('${{github.workspace}}/pr.zip', Buffer.from(download.data));
-          - run: unzip pr.zip
-          - name: Setup .NET
-            uses: actions/setup-dotnet@v3
-            with:
-              dotnet-version: 6.0.x
-          - name: Run tests
-            run: dotnet test 
-            env: 
-            AUTH0__AUDIENCE: ${{ secrets.AUTH0__AUDIENCE }}
-            AUTH0__CLIENTID: ${{ secrets.AUTH0__CLIENTID }}
-            AUTH0__CLIENTSECRET: ${{ secrets.AUTH0__CLIENTSECRET }}
-            AUTH0__DOMAIN: ${{ secrets.AUTH0__DOMAIN }}
-            AUTH0__PASSWORD: ${{ secrets.AUTH0__PASSWORD }}
-            AUTH0__USERNAME: ${{ secrets.AUTH0__USERNAME }}
+jobs:
+  upload:
+    runs-on: ubuntu-latest
+    if: >
+      github.event.workflow_run.event == 'pull_request' &&
+      github.event.workflow_run.conclusion == 'success'
+    steps:
+      - uses: browser-actions/setup-chrome@v1
+      - name: 'Download artifact'
+        uses: actions/github-script@v3.1.0
+        with:
+          script: |
+            var artifacts = await github.actions.listWorkflowRunArtifacts({
+                owner: context.repo.owner,
+                repo: context.repo.repo,
+                run_id: ${{github.event.workflow_run.id }},
+            });
+            var matchArtifact = artifacts.data.artifacts.filter((artifact) => {
+              return artifact.name == "pr"
+            })[0];
+            var download = await github.actions.downloadArtifact({
+                owner: context.repo.owner,
+                repo: context.repo.repo,
+                artifact_id: matchArtifact.id,
+                archive_format: 'zip',
+            });
+            var fs = require('fs');
+            fs.writeFileSync('${{github.workspace}}/pr.zip', Buffer.from(download.data));
+      - run: unzip pr.zip
+      - name: Setup .NET
+        uses: actions/setup-dotnet@v3
+        with:
+          dotnet-version: 6.0.x
+      - name: Run tests
+        run: dotnet test 
+        env: 
+          AUTH0__AUDIENCE: ${{ secrets.AUTH0__AUDIENCE }}
+          AUTH0__CLIENTID: ${{ secrets.AUTH0__CLIENTID }}
+          AUTH0__CLIENTSECRET: ${{ secrets.AUTH0__CLIENTSECRET }}
+          AUTH0__DOMAIN: ${{ secrets.AUTH0__DOMAIN }}
+          AUTH0__PASSWORD: ${{ secrets.AUTH0__PASSWORD }}
+          AUTH0__USERNAME: ${{ secrets.AUTH0__USERNAME }}
