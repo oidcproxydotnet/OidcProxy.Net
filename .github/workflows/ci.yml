@@ -35,13 +35,13 @@ jobs:
             var fs = require('fs');
             fs.writeFileSync('${{github.workspace}}/pr.zip', Buffer.from(download.data));
       - run: unzip pr.zip      
-      - run: ls src
+      - run: ls
       - name: Setup .NET
         uses: actions/setup-dotnet@v3
         with:
           dotnet-version: 6.0.x
       - name: Run tests
-        run: dotnet test src/Bff.sln
+        run: dotnet test
         env: 
           AUTH0__AUDIENCE: ${{ secrets.AUTH0__AUDIENCE }}
           AUTH0__CLIENTID: ${{ secrets.AUTH0__CLIENTID }}
