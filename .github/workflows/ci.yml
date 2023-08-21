@@ -35,6 +35,7 @@ jobs:
             var fs = require('fs');
             fs.writeFileSync('${{github.workspace}}/pr.zip', Buffer.from(download.data));
       - run: unzip pr.zip
+      - run: ls
       - name: Setup .NET
         uses: actions/setup-dotnet@v3
         with:
