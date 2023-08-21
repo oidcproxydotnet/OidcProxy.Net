@@ -13,7 +13,7 @@ public static class Configuration
         {
             ClientId = "bff",
             ClientSecret = "secret",
-            Authority = "https://idsvr.azurewebsites.net/"
+            Authority = "https://idsvrtst.azurewebsites.net/"
         };
     }
     
