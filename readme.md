@@ -7,7 +7,7 @@
 ## Our mission
 The development of our product was driven by our clients’ need for a straightforward authentication gateway. Existing market options introduced complexities in terms of pricing and licensing, or proved to be overly intricate for beginners to comprehend and utilize effectively.
 
-Consequently, organizations are forced to make a trade-off between maintainability and security. In today’s automated society, this compromise is unacceptable.
+Consequently, organizations are forced to make a trade-off between maintainability and security. In today’s automated society, this compromise is unacceptable. 
 
 Hence, our mission is to offer an affordable, developer-friendly, and secure BFF Framework that can be implemented by anyone.
 
