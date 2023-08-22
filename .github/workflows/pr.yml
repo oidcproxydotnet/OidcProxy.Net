@@ -1,0 +1,19 @@
+name: PR
+
+on:
+  pull_request:
+    types: [opened, reopened]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+    - uses: actions/checkout@v3
+    - name: Setup .NET
+      uses: actions/setup-dotnet@v3
+      with:
+        dotnet-version: 6.0.x
+    - uses: browser-actions/setup-chrome@v1
+    - name: Run tests
+      run: dotnet test --filter 'FullyQualifiedName!~ShouldIntegrateWithAuth0'
