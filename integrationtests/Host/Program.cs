@@ -71,10 +71,9 @@ public class Program
             }
 
             o.SetAuthenticationErrorPage("/account/oops");
-
             o.SetLandingPage("/account/welcome");
 
-            //o.AddClaimsTransformation<MyClaimsTransformation>();
+            o.AddClaimsTransformation<MyClaimsTransformation>();
 
             o.ConfigureYarp(y =>
             {

@@ -6,41 +6,41 @@ namespace GoCloudNative.Bff.Authentication.ModuleInitializers;
 
 public static class ModuleInitializer
 {
-    private static readonly BffOptions _options = new();
+    private static readonly BffOptions Options = new();
     
     public static IServiceCollection AddSecurityBff(this IServiceCollection serviceCollection, 
         Action<BffOptions>? configureOptions = null)
     {
-        configureOptions?.Invoke(_options);
+        configureOptions?.Invoke(Options);
         
         var proxyBuilder = serviceCollection
-            .AddTransient(_ => _options)
+            .AddTransient(_ => Options)
             .AddTransient<IRedirectUriFactory, RedirectUriFactory>()
             .AddReverseProxy();
 
-        _options.ApplyReverseProxyConfiguration(proxyBuilder);
+        Options.ApplyReverseProxyConfiguration(proxyBuilder);
         
-        _options.IdpRegistrations.Apply(proxyBuilder);
+        Options.IdpRegistrations.Apply(proxyBuilder);
         
-        _options.IdpRegistrations.Apply(serviceCollection);
+        Options.IdpRegistrations.Apply(serviceCollection);
 
-        _options.ApplyClaimsTransformation(serviceCollection);
+        Options.ApplyClaimsTransformation(serviceCollection);
         
         return serviceCollection
             .AddDistributedMemoryCache()
             .AddMemoryCache()
             .AddSession(options =>
             {
-                options.IdleTimeout = TimeSpan.FromMinutes(15);
+                options.IdleTimeout = Options.SessionIdleTimeout;
                 options.Cookie.HttpOnly = true;
                 options.Cookie.IsEssential = true;    
-                options.Cookie.Name = _options.SessionCookieName;
+                options.Cookie.Name = Options.SessionCookieName;
             });
     }
 
     public static WebApplication UseSecurityBff(this WebApplication app)
     {
-        _options.IdpRegistrations.Apply(app);
+        Options.IdpRegistrations.Apply(app);
         
         app.MapReverseProxy();
         

@@ -20,10 +20,19 @@ public class BffOptions
     internal LandingPage LandingPage;
 
     /// <summary>
-    /// The name of the cookie
+    /// Gets or sets the name of the cookie.
     /// </summary>
     public string SessionCookieName { get; set; } = "bff.cookie";
+
+    /// <summary>
+    /// Get or set a value that indicates the amount of time of inactivity after which the session will be abandoned.
+    /// </summary>
+    public TimeSpan SessionIdleTimeout { get; set; } = TimeSpan.FromMinutes(15);
     
+    /// <summary>
+    /// Gets ors sets a value which indicates whether or not the redirect_uri will automatically be rewritten to http
+    /// instead of https. This feature might come in handy when hosting the software in a Docker image.
+    /// </summary>
     public bool AlwaysRedirectToHttps { get; set; } = true;
 
     /// <summary>

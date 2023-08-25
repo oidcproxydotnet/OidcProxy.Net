@@ -4,7 +4,6 @@
         <TargetFramework>net6.0</TargetFramework>
         <ImplicitUsings>enable</ImplicitUsings>
         <Nullable>enable</Nullable>
-        <RootNamespace>TheCloudNativeWebApp.Bff.Authentication.OpenIdConnect</RootNamespace>
 
         <PackageId>GoCloudNative.Bff.Authentication.OpenIdConnect</PackageId>
         <Version>0.0.15</Version>
