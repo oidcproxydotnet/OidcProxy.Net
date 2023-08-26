@@ -31,6 +31,8 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "integrationtests", "integra
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Host.IntegrationTests", "integrationtests\Host.IntegrationTests\Host.IntegrationTests.csproj", "{3A4917BF-3835-4A5B-A508-C3895D0B35DF}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Host.IdentityServerTest", "integrationtests\Host.IdentityServerTest\Host.IdentityServerTest.csproj", "{A9C3DD1F-CB88-4054-B205-E53B77839AA2}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -84,6 +86,10 @@ Global
 		{3A4917BF-3835-4A5B-A508-C3895D0B35DF}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{3A4917BF-3835-4A5B-A508-C3895D0B35DF}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{3A4917BF-3835-4A5B-A508-C3895D0B35DF}.Release|Any CPU.Build.0 = Release|Any CPU
+		{A9C3DD1F-CB88-4054-B205-E53B77839AA2}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{A9C3DD1F-CB88-4054-B205-E53B77839AA2}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{A9C3DD1F-CB88-4054-B205-E53B77839AA2}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{A9C3DD1F-CB88-4054-B205-E53B77839AA2}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(NestedProjects) = preSolution
 		{D6501532-390E-4D8A-8650-2B8ED1E6D532} = {7438F193-5991-4E44-8B54-8C4431278291}
@@ -97,5 +103,6 @@ Global
 		{04270509-572D-4D70-B2DE-37CF8D573EAC} = {A865FC0F-47B5-48AD-9848-719693B6E467}
 		{789D484D-ECF3-46B4-8DDE-6DF13074CF24} = {26033EED-BDE3-4F1F-B71D-3175D7D156DB}
 		{3A4917BF-3835-4A5B-A508-C3895D0B35DF} = {26033EED-BDE3-4F1F-B71D-3175D7D156DB}
+		{A9C3DD1F-CB88-4054-B205-E53B77839AA2} = {26033EED-BDE3-4F1F-B71D-3175D7D156DB}
 	EndGlobalSection
 EndGlobal

@@ -41,10 +41,10 @@ public class AzureAdIdentityProvider : OpenIdConnectIdentityProvider
         return Task.CompletedTask; // not supported by Azure
     }
 
-    protected override async Task<OpenIdConfiguration?> ObtainDiscoveryDocument(string endpointAddress)
+    protected override async Task<DiscoveryDocument?> ObtainDiscoveryDocument(string endpointAddress)
     {
         var httpResponse = await _httpClient.GetAsync(endpointAddress);
-        var document = await httpResponse.Content.ReadFromJsonAsync<OpenIdConfiguration>();
+        var document = await httpResponse.Content.ReadFromJsonAsync<DiscoveryDocument>();
         return document;
     }
 }

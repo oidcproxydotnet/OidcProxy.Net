@@ -1,4 +1,3 @@
-using GoCloudNative.Bff.Authentication.OpenIdConnect;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.Extensions.DependencyInjection;
 
@@ -7,38 +6,27 @@ namespace GoCloudNative.Bff.Authentication.ModuleInitializers;
 public static class ModuleInitializer
 {
     private static readonly BffOptions Options = new();
+
+    [Obsolete("Will be removed. Has been renamed to services.AddBff(o => {  }). Migrate to " +
+              "services.AddBff(config, o => { }) for an easier way to configure the bff.")]
+    public static IServiceCollection AddSecurityBff(this IServiceCollection serviceCollection,
+        Action<BffOptions>? configureOptions = null) => AddBff(serviceCollection, configureOptions);
     
-    public static IServiceCollection AddSecurityBff(this IServiceCollection serviceCollection, 
+    /// <summary>
+    /// Initialises the BFF
+    /// </summary>
+    public static IServiceCollection AddBff(this IServiceCollection serviceCollection,
         Action<BffOptions>? configureOptions = null)
     {
         configureOptions?.Invoke(Options);
-        
-        var proxyBuilder = serviceCollection
-            .AddTransient(_ => Options)
-            .AddTransient<IRedirectUriFactory, RedirectUriFactory>()
-            .AddReverseProxy();
-
-        Options.ApplyReverseProxyConfiguration(proxyBuilder);
-        
-        Options.IdpRegistrations.Apply(proxyBuilder);
-        
-        Options.IdpRegistrations.Apply(serviceCollection);
-
-        Options.ApplyClaimsTransformation(serviceCollection);
-        
-        return serviceCollection
-            .AddDistributedMemoryCache()
-            .AddMemoryCache()
-            .AddSession(options =>
-            {
-                options.IdleTimeout = Options.SessionIdleTimeout;
-                options.Cookie.HttpOnly = true;
-                options.Cookie.IsEssential = true;    
-                options.Cookie.Name = Options.SessionCookieName;
-            });
+        Options.Apply(serviceCollection);
+        return serviceCollection;
     }
 
-    public static WebApplication UseSecurityBff(this WebApplication app)
+    /// <summary>
+    /// Bootstraps the BFF.
+    /// </summary>
+    public static WebApplication UseBff(this WebApplication app)
     {
         Options.IdpRegistrations.Apply(app);
         
@@ -54,4 +42,7 @@ public static class ModuleInitializer
 
         return app;
     }
+
+    [Obsolete("Will be removed. Migrate to app.UseBff()")]
+    public static WebApplication UseSecurityBff(this WebApplication app) => UseBff(app);
 }

@@ -1,7 +1,9 @@
+using System.Collections.Immutable;
 using GoCloudNative.Bff.Authentication.IdentityProviders;
 using GoCloudNative.Bff.Authentication.OpenIdConnect;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using Yarp.ReverseProxy.Configuration;
 
 namespace GoCloudNative.Bff.Authentication.ModuleInitializers;
 
@@ -112,16 +114,47 @@ public class BffOptions
     /// <summary>
     /// Initialize YARP with the values provided in a configuration-section.
     /// </summary>
+    [Obsolete("Will be removed. Migrate to options.ConfigureYarp(..).")]
     public void LoadYarpFromConfig(IConfigurationSection configurationSection)
     {
         ApplyReverseProxyConfiguration = b => b.LoadFromConfig(configurationSection);
     }
-
+    
     /// <summary>
     /// YARP is initially set up to forward traffic based on the predefined configuration. However, if you require additional configuration options, you can utilize this method to extend the configuration.
     /// </summary>
     public void ConfigureYarp(Action<IReverseProxyBuilder> configuration)
     {
         ApplyReverseProxyConfiguration = configuration;
+    }
+
+    /// <summary>
+    /// Apply the options to the service collection
+    /// </summary>
+    public void Apply(IServiceCollection serviceCollection)
+    {
+        var proxyBuilder = serviceCollection
+            .AddTransient(_ => this)
+            .AddTransient<IRedirectUriFactory, RedirectUriFactory>()
+            .AddReverseProxy();
+
+        ApplyReverseProxyConfiguration(proxyBuilder);
+        
+        IdpRegistrations.Apply(proxyBuilder);
+        
+        IdpRegistrations.Apply(serviceCollection);
+
+        ApplyClaimsTransformation(serviceCollection);
+        
+        serviceCollection
+            .AddDistributedMemoryCache()
+            .AddMemoryCache()
+            .AddSession(options =>
+            {
+                options.IdleTimeout = SessionIdleTimeout;
+                options.Cookie.HttpOnly = true;
+                options.Cookie.IsEssential = true;    
+                options.Cookie.Name = SessionCookieName;
+            });
     }
 }

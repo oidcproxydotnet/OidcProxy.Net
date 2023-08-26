@@ -1,6 +1,6 @@
 namespace GoCloudNative.Bff.Authentication.OpenIdConnect;
 
-public class OpenIdConfiguration
+public class DiscoveryDocument
 {
     public string? issuer { get; set; }
     

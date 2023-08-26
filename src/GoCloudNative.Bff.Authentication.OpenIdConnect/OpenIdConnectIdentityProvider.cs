@@ -158,7 +158,7 @@ public class OpenIdConnectIdentityProvider : IIdentityProvider
         return new Uri(endSessionUrl);
     }
     
-    protected virtual async Task<OpenIdConfiguration?> ObtainDiscoveryDocument(string endpointAddress)
+    protected virtual async Task<DiscoveryDocument?> ObtainDiscoveryDocument(string endpointAddress)
     {
         var discoveryDocument = await _httpClient.GetDiscoveryDocumentAsync(endpointAddress);
         if (discoveryDocument == null)
@@ -166,7 +166,7 @@ public class OpenIdConnectIdentityProvider : IIdentityProvider
             return null;
         }
 
-        return new OpenIdConfiguration
+        return new DiscoveryDocument
         {
             authorization_endpoint = discoveryDocument.AuthorizeEndpoint,
             end_session_endpoint = discoveryDocument.EndSessionEndpoint,
@@ -178,13 +178,13 @@ public class OpenIdConnectIdentityProvider : IIdentityProvider
         };
     }
 
-    private async Task<OpenIdConfiguration> GetDiscoveryDocument()
+    private async Task<DiscoveryDocument> GetDiscoveryDocument()
     {
         var endpointAddress = DiscoveryEndpointAddress;
 
         if (_cache.TryGetValue(DiscoveryEndpointAddress, out var discoveryDocument))
         {
-            return (OpenIdConfiguration)discoveryDocument;
+            return (DiscoveryDocument)discoveryDocument;
         }
         
         discoveryDocument = await ObtainDiscoveryDocument(endpointAddress);
@@ -197,6 +197,6 @@ public class OpenIdConnectIdentityProvider : IIdentityProvider
         }
 
         _cache.Set(endpointAddress, discoveryDocument, TimeSpan.FromHours(1));
-        return (OpenIdConfiguration)discoveryDocument;
+        return (DiscoveryDocument)discoveryDocument;
     }
 }
