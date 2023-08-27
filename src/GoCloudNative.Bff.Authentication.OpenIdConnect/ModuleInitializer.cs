@@ -25,7 +25,8 @@ public static class ModuleInitializer
     /// <param name="serviceCollection"></param>
     /// <param name="config"></param>
     /// <returns></returns>
-    public static IServiceCollection AddBff(this IServiceCollection serviceCollection, OidcBffConfig config)
+    public static IServiceCollection AddBff(this IServiceCollection serviceCollection, OidcBffConfig config,
+        Action<BffOptions>? configureOptions = null)
     {
         if (config == null)
         {
@@ -74,6 +75,8 @@ public static class ModuleInitializer
             options.ConfigureOpenIdConnect(oidcConfig, endpointName);
         
             options.ConfigureYarp(yarp => yarp.LoadFromMemory(routes, clusters));
+            
+            configureOptions?.Invoke(options);
         });
     }
         

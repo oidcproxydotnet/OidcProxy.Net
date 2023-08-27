@@ -17,12 +17,12 @@ public class OpenIdConnectBffConfigurationTests
     [Fact]
     public void ItShouldReadOidcProperties()
     {
-        _deserializedObject?.ClientId.Should().NotBeNullOrEmpty();
-        _deserializedObject?.ClientSecret.Should().NotBeNullOrEmpty();
-        _deserializedObject?.Authority.Should().NotBeNullOrEmpty();
-        _deserializedObject?.DiscoveryEndpoint.Should().NotBeNullOrEmpty();
-        _deserializedObject?.Scopes.Should().NotBeNullOrEmpty();
-        _deserializedObject?.PostLogoutRedirectEndpoint.Should().NotBeNullOrEmpty();
+        _deserializedObject?.Oidc.ClientId.Should().NotBeNullOrEmpty();
+        _deserializedObject?.Oidc.ClientSecret.Should().NotBeNullOrEmpty();
+        _deserializedObject?.Oidc.Authority.Should().NotBeNullOrEmpty();
+        _deserializedObject?.Oidc.DiscoveryEndpoint.Should().NotBeNullOrEmpty();
+        _deserializedObject?.Oidc.Scopes.Should().NotBeNullOrEmpty();
+        _deserializedObject?.Oidc.PostLogoutRedirectEndpoint.Should().NotBeNullOrEmpty();
         _deserializedObject?.EndpointName.Should().NotBeNullOrEmpty();
     }
     

@@ -1,18 +1,20 @@
 {
-  "ClientId": "clientId",
-  "ClientSecret": "clientSecret",
-  "Authority": "https://test.com",
-  "Scopes": [
-    "openid",
-    "profile",
-    "offline_access"
-  ],
+  "Oidc": {
+    "ClientId": "clientId",
+    "ClientSecret": "clientSecret",
+    "Authority": "https://test.com",
+    "Scopes": [
+      "openid",
+      "profile",
+      "offline_access"
+    ],
+    "DiscoveryEndpoint": "https://disco.com/.well-known/openid-configuration"
+  },
   "ErrorPage": "/error.aspx",
   "LandingPage": "/welcome.aspx",
   "CustomHostName": "www.foobar.org",
   "SessionCookieName": "bff.custom.cookie",
   "SessionIdleTimeout": "00:30:00",
-  "DiscoveryEndpoint": "https://disco.com/.well-known/openid-configuration",
   "PostLogoutRedirectEndpoint": "bye.aspx",
   "EndpointName": "auth",
   "ReverseProxy": {
