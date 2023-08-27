@@ -19,7 +19,6 @@ public static class ModuleInitializer
         options.RegisterIdentityProvider<Auth0IdentityProvider, Auth0Config>(config, endpointName);
     }
     
-    
     /// <summary>
     /// Initialises the BFF. Also use app.UseBff();
     /// </summary>

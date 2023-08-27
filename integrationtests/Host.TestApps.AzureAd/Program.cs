@@ -7,6 +7,7 @@ using StackExchange.Redis;
 var builder = WebApplication.CreateBuilder(args);
 
 var redisConnectionString = builder.Configuration.GetSection("ConnectionStrings:Redis").Get<string>();
+var aadConfig = builder.Configuration.GetSection("bff").Get<AzureAdBffConfig>();
 
 if (!string.IsNullOrEmpty(redisConnectionString))
 {
@@ -23,34 +24,14 @@ if (!string.IsNullOrEmpty(redisConnectionString))
     });
 }
 
-var aadConfig = builder.Configuration.GetSection("AzureAd").Get<AzureAdConfig>();
-
-builder.Services.AddHealthChecks();
-
-builder.Services.AddBff(o =>
+builder.Services.AddBff(aadConfig, o =>
 {
-    o.ConfigureAzureAd(aadConfig, "aad");
-
-    o.SetAuthenticationErrorPage("/account/oops");
-    o.SetLandingPage("/account/welcome");
-
     o.AddClaimsTransformation<MyClaimsTransformation>();
-    
-    o.ConfigureYarp(y =>
-    {
-        y.LoadFromConfig(builder.Configuration.GetSection("ReverseProxy"));
-    });
 });
 
-builder.Services.AddLogging();
 var app = builder.Build();
 
-app.UseRouting();
-
 app.UseBff();
-
-// Test endpoints
-app.MapHealthChecks("/health");
 
 app.Run();
  
