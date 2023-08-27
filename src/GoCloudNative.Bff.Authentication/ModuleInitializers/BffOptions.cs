@@ -29,7 +29,7 @@ public class BffOptions
     /// <summary>
     /// Get or set a value that indicates the amount of time of inactivity after which the session will be abandoned.
     /// </summary>
-    public TimeSpan SessionIdleTimeout { get; set; } = TimeSpan.FromMinutes(15);
+    public TimeSpan SessionIdleTimeout { get; set; } = TimeSpan.FromMinutes(20);
     
     /// <summary>
     /// Gets ors sets a value which indicates whether or not the redirect_uri will automatically be rewritten to http
