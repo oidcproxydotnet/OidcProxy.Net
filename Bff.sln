@@ -15,7 +15,7 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GoCloudNative.Bff.Authentic
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GoCloudNative.Bff.Authentication.OpenIdConnect.Tests.TestServer", "unittests\GoCloudNative.Bff.Authentication.OpenIdConnect.Tests.TestServer\GoCloudNative.Bff.Authentication.OpenIdConnect.Tests.TestServer.csproj", "{875271E5-DA4D-4FED-AAE6-E2E3D60D40CA}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Host", "integrationtests\Host\Host.csproj", "{789D484D-ECF3-46B4-8DDE-6DF13074CF24}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Host.TestApps.AzureAd", "integrationtests\Host.TestApps.AzureAd\Host.TestApps.AzureAd.csproj", "{789D484D-ECF3-46B4-8DDE-6DF13074CF24}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GoCloudNative.Bff.Authentication.AzureAd", "src\GoCloudNative.Bff.Authentication.AzureAd\GoCloudNative.Bff.Authentication.AzureAd.csproj", "{B0427177-EE01-4EBB-A2E7-FF6A4B00F8F9}"
 EndProject
@@ -28,8 +28,6 @@ EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "unittests", "unittests", "{A865FC0F-47B5-48AD-9848-719693B6E467}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "integrationtests", "integrationtests", "{26033EED-BDE3-4F1F-B71D-3175D7D156DB}"
-EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Host.IntegrationTests", "integrationtests\Host.IntegrationTests\Host.IntegrationTests.csproj", "{3A4917BF-3835-4A5B-A508-C3895D0B35DF}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Host.TestApps.Oidc", "integrationtests\Host.TestApps.Oidc\Host.TestApps.Oidc.csproj", "{A9C3DD1F-CB88-4054-B205-E53B77839AA2}"
 EndProject
@@ -90,10 +88,6 @@ Global
 		{E0EA9B61-39D3-42F5-ADED-B79FD925E71F}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{E0EA9B61-39D3-42F5-ADED-B79FD925E71F}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{E0EA9B61-39D3-42F5-ADED-B79FD925E71F}.Release|Any CPU.Build.0 = Release|Any CPU
-		{3A4917BF-3835-4A5B-A508-C3895D0B35DF}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{3A4917BF-3835-4A5B-A508-C3895D0B35DF}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{3A4917BF-3835-4A5B-A508-C3895D0B35DF}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{3A4917BF-3835-4A5B-A508-C3895D0B35DF}.Release|Any CPU.Build.0 = Release|Any CPU
 		{A9C3DD1F-CB88-4054-B205-E53B77839AA2}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{A9C3DD1F-CB88-4054-B205-E53B77839AA2}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{A9C3DD1F-CB88-4054-B205-E53B77839AA2}.Release|Any CPU.ActiveCfg = Release|Any CPU
@@ -126,7 +120,6 @@ Global
 		{875271E5-DA4D-4FED-AAE6-E2E3D60D40CA} = {A865FC0F-47B5-48AD-9848-719693B6E467}
 		{04270509-572D-4D70-B2DE-37CF8D573EAC} = {A865FC0F-47B5-48AD-9848-719693B6E467}
 		{789D484D-ECF3-46B4-8DDE-6DF13074CF24} = {26033EED-BDE3-4F1F-B71D-3175D7D156DB}
-		{3A4917BF-3835-4A5B-A508-C3895D0B35DF} = {26033EED-BDE3-4F1F-B71D-3175D7D156DB}
 		{A9C3DD1F-CB88-4054-B205-E53B77839AA2} = {26033EED-BDE3-4F1F-B71D-3175D7D156DB}
 		{3D19853D-0BC0-4569-BCEE-B2DF5F591449} = {26033EED-BDE3-4F1F-B71D-3175D7D156DB}
 		{17681953-5668-4969-8D5A-198F358A3B66} = {26033EED-BDE3-4F1F-B71D-3175D7D156DB}
