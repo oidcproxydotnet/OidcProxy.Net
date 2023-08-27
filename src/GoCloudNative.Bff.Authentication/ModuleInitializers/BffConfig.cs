@@ -2,6 +2,7 @@ namespace GoCloudNative.Bff.Authentication.ModuleInitializers;
 
 public class BffConfig
 {
+    public string? EndpointName { get; set; }
     public string? ErrorPage { get; set; }
     public string? LandingPage { get; set; }
     public Uri? CustomHostName { get; set; }

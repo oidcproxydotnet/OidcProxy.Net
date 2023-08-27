@@ -1,7 +1,8 @@
+using GoCloudNative.Bff.Authentication.ModuleInitializers;
+
 namespace GoCloudNative.Bff.Authentication.OpenIdConnect;
 
-public class OidcBffConfig : ModuleInitializers.BffConfig
+public class OidcBffConfig : BffConfig
 {
-    public string? EndpointName { get; set; }
     public OpenIdConnectConfig Oidc { get; set; }
 }
