@@ -27,20 +27,17 @@ using GoCloudNative.Bff.Authentication.ModuleInitializers;
 
 var builder = WebApplication.CreateBuilder(args);
 
-builder.Services.AddSecurityBff(o =>
-{
-    o.ConfigureAuth0(builder.Configuration.GetSection("Auth0"));
-    o.LoadYarpFromConfig(builder.Configuration.GetSection("ReverseProxy"));
-});
+var config = builder.Configuration
+    .GetSection("Bff")
+    .Get<Auth0BffConfig>();
+
+builder.Services.AddBff(config);
 
 var app = builder.Build();
 
-app.UseRouting();
-
-app.UseSecurityBff();
+app.UseBff();
 
 app.Run();
-
 ```
 
 Create the following `appsettings.json` file:
@@ -52,51 +49,41 @@ Create the following `appsettings.json` file:
       "Default": "Information",
       "Microsoft.AspNetCore": "Warning"
     }
-  },  
-  "Auth0": {
-    "ClientId": "{yourClientId}",
-    "ClientSecret": "{yourClientSecret}",
-    "Domain": "{yourDomain.eu.auth0.com}",
-    "Audience": "{yourAudience}",
-    "Scopes": [
-      "openid", "profile", "offline_access"
-    ]
   },
   "AllowedHosts": "*",
-  "ReverseProxy": {
-    "Routes": {
-      "spa": {
-        "ClusterId": "spa",
-        "Match": {
-          "Path": "/{*any}"
-        }
-      },
-      "api": {
-        "ClusterId": "api",
-        "Match": {
-          "Path": "/api/{*any}"
-        }
-      },
+  "Bff": {
+    "Auth0": {
+      "ClientId": "{yourClientId}",
+      "ClientSecret": "{yourClientSecret}",
+      "Domain": "{yourDomain}",
+      "Audience": "{yourAudience}",
+      "Scopes": [
+        "openid",
+        "profile",
+        "email"
+      ]
     },
-    "Clusters": {
-      "spa": {
-        "Destinations": {
-          "spa": {
-            "Address": "http://localhost:4200/"
+    "ReverseProxy": {
+      "Routes": {
+        "api": {
+          "ClusterId": "api",
+          "Match": {
+            "Path": "/api/{*any}"
           }
         }
       },
-      "api": {
-        "Destinations": {
-          "api": {
-            "Address": "http://localhost:8080/"
+      "Clusters": {
+        "api": {
+          "Destinations": {
+            "api/node1": {
+              "Address": "http://localhost:8080/"
+            }
           }
         }
-      },
+      }
     }
   }
 }
-
 ```
 
 In this example we assume you are running a Single Page Application on localhost on port `4200` and you have an API running at localhost on port `8080`. If that is not the case, then update the `appsettings.json` accordingly.
