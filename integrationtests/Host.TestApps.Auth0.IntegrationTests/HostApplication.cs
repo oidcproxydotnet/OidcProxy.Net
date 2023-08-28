@@ -22,7 +22,8 @@ public class HostApplication : IAsyncLifetime, IDisposable
         
         // Add config
         var configuration = new ConfigurationBuilder()
-            .AddUserSecrets(typeof(HostApplication).Assembly)
+            .AddJsonFile("appsettings.json", false, true)
+            .AddUserSecrets(typeof(Dummy).Assembly)
             .AddEnvironmentVariables()
             .Build();
 
