@@ -11,6 +11,11 @@ public static class ModuleInitializer
 
     public static void ConfigureAzureAd(this BffOptions options, AzureAdConfig config, string endpointName = "account")
     {
+        if (!config.Validate(out var errors))
+        {
+            throw new NotSupportedException(string.Join(", ", errors));
+        }
+        
         options.RegisterIdentityProvider<AzureAdIdentityProvider, AzureAdConfig>(config, endpointName);
     }
     

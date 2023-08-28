@@ -13,7 +13,12 @@ public class AzureAdConfig : OpenIdConnectConfig
 
     public override bool Validate(out IEnumerable<string> errors)
     {
-        var isValid = base.Validate(out var errorMessages);
+        base.Validate(out var errorMessages);
+        
+        errorMessages = errorMessages
+            .Where(x => !x.Contains("GCN-O-e0180c31edd7"));
+
+        var isValid = !errorMessages.Any();
 
         var results = errorMessages
             .Select(x => x.Replace("-O-", "-AZ-"))

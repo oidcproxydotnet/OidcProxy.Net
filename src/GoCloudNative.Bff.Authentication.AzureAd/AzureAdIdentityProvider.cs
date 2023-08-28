@@ -44,7 +44,6 @@ public class AzureAdIdentityProvider : OpenIdConnectIdentityProvider
     protected override async Task<DiscoveryDocument?> ObtainDiscoveryDocument(string endpointAddress)
     {
         var httpResponse = await _httpClient.GetAsync(endpointAddress);
-        var document = await httpResponse.Content.ReadFromJsonAsync<DiscoveryDocument>();
-        return document;
+        return await httpResponse.Content.ReadFromJsonAsync<DiscoveryDocument>();
     }
 }
