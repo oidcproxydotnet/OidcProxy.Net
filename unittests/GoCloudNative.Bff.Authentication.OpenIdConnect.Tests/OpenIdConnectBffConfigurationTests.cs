@@ -6,11 +6,51 @@ namespace GoCloudNative.Bff.Authentication.OpenIdConnect.Tests;
 
 public class OpenIdConnectBffConfigurationTests
 {
+    private const string json = @"{
+        ""Oidc"": {
+            ""ClientId"": ""clientId"",
+            ""ClientSecret"": ""clientSecret"",
+            ""Authority"": ""https://test.com"",
+            ""Scopes"": [
+            ""openid"",
+            ""profile"",
+            ""offline_access""
+            ],
+            ""DiscoveryEndpoint"": ""https://disco.com/.well-known/openid-configuration""
+        },
+        ""ErrorPage"": ""/error.aspx"",
+        ""LandingPage"": ""/welcome.aspx"",
+        ""CustomHostName"": ""www.foobar.org"",
+        ""SessionCookieName"": ""bff.custom.cookie"",
+        ""SessionIdleTimeout"": ""00:30:00"",
+        ""PostLogoutRedirectEndpoint"": ""bye.aspx"",
+        ""EndpointName"": ""auth"",
+        ""ReverseProxy"": {
+            ""Routes"": {
+                ""apiroute"": {
+                    ""ClusterId"": ""apicluster"",
+                    ""Match"": {
+                        ""Path"": ""/api/{*any}""
+                    }
+                }
+            },
+            ""Clusters"": {
+                ""apicluster"": {
+                    ""Destinations"": {
+                        ""api/node1"": {
+                            ""Address"": ""http://localhost:8080/""
+                        }
+                    }
+                }
+            }
+        }
+    }
+    ";
+    
     private readonly OidcBffConfig? _deserializedObject;
     
     public OpenIdConnectBffConfigurationTests()
     {
-        var json = File.ReadAllText("files/Configuration.json");
         _deserializedObject = JsonConvert.DeserializeObject<OidcBffConfig>(json);
     }
     
