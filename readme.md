@@ -28,25 +28,22 @@ dotnet add package GoCloudNative.Bff.Authentication.OpenIdConnect
 Create the following `Program.cs`:
 
 ```csharp
-using GoCloudNative.Bff.Authentication.OpenIdConnect;
 using GoCloudNative.Bff.Authentication.ModuleInitializers;
+using GoCloudNative.Bff.Authentication.OpenIdConnect;
 
 var builder = WebApplication.CreateBuilder(args);
 
-builder.Services.AddSecurityBff(o =>
-{
-    o.ConfigureOpenIdConnect(builder.Configuration.GetSection("Oidc"));
-    o.LoadYarpFromConfig(builder.Configuration.GetSection("ReverseProxy"));
-});
+var config = builder.Configuration
+    .GetSection("Bff")
+    .Get<OidcBffConfig>();
+
+builder.Services.AddBff(config);
 
 var app = builder.Build();
 
-app.UseRouting();
-
-app.UseSecurityBff();
+app.UseBff();
 
 app.Run();
-
 ```
 
 And use the following `appsettings.json`:
@@ -59,45 +56,32 @@ And use the following `appsettings.json`:
       "Microsoft.AspNetCore": "Warning"
     }
   },
-  "Oidc": {
-    "ClientId": "[InsertClientIdHere]",
-    "ClientSecret": "[InsertClientSecretHere]",
-    "Authority": "https://authority",
-    "Scopes": [
-      "openid", "profile", "offline_access"
-    ]
-  },
   "AllowedHosts": "*",
-  "ReverseProxy": {
-    "Routes": {
-      "spa": {
-        "ClusterId": "spa",
-        "Match": {
-          "Path": "/{*any}"
-        }
-      },
-      "api": {
-        "ClusterId": "api",
-        "Match": {
-          "Path": "/api/{*any}"
-        }
-      },
+  "Bff": {
+    "LandingPage": "/hello",
+    "Oidc": {
+      "ClientId": "clientid",
+      "ClientSecret": "secret",
+      "Authority": "https://login.yoursite.com/"
     },
-    "Clusters": {
-      "spa": {
-        "Destinations": {
-          "spa": {
-            "Address": "http://localhost:4200/"
+    "ReverseProxy": {
+      "Routes": {
+        "api": {
+          "ClusterId": "api",
+          "Match": {
+            "Path": "/api/{*any}"
           }
         }
       },
-      "api": {
-        "Destinations": {
-          "api": {
-            "Address": "http://localhost:8080/"
+      "Clusters": {
+        "api": {
+          "Destinations": {
+            "api/node1": {
+              "Address": "http://localhost:8080/"
+            }
           }
         }
-      },
+      }
     }
   }
 }

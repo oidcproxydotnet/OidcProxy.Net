@@ -1,4 +1,3 @@
-using GoCloudNative.Bff.Authentication;
 using Microsoft.AspNetCore.Http;
 
 namespace GoCloudNative.Bff.Authentication.OpenIdConnect;

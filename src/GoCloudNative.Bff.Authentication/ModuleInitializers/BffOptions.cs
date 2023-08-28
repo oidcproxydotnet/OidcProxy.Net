@@ -1,7 +1,9 @@
+using System.Collections.Immutable;
 using GoCloudNative.Bff.Authentication.IdentityProviders;
 using GoCloudNative.Bff.Authentication.OpenIdConnect;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using Yarp.ReverseProxy.Configuration;
 
 namespace GoCloudNative.Bff.Authentication.ModuleInitializers;
 
@@ -20,10 +22,19 @@ public class BffOptions
     internal LandingPage LandingPage;
 
     /// <summary>
-    /// The name of the cookie
+    /// Gets or sets the name of the cookie.
     /// </summary>
     public string SessionCookieName { get; set; } = "bff.cookie";
+
+    /// <summary>
+    /// Get or set a value that indicates the amount of time of inactivity after which the session will be abandoned.
+    /// </summary>
+    public TimeSpan SessionIdleTimeout { get; set; } = TimeSpan.FromMinutes(20);
     
+    /// <summary>
+    /// Gets ors sets a value which indicates whether or not the redirect_uri will automatically be rewritten to http
+    /// instead of https. This feature might come in handy when hosting the software in a Docker image.
+    /// </summary>
     public bool AlwaysRedirectToHttps { get; set; } = true;
 
     /// <summary>
@@ -103,16 +114,47 @@ public class BffOptions
     /// <summary>
     /// Initialize YARP with the values provided in a configuration-section.
     /// </summary>
+    [Obsolete("Will be removed. Migrate to options.ConfigureYarp(..).")]
     public void LoadYarpFromConfig(IConfigurationSection configurationSection)
     {
         ApplyReverseProxyConfiguration = b => b.LoadFromConfig(configurationSection);
     }
-
+    
     /// <summary>
     /// YARP is initially set up to forward traffic based on the predefined configuration. However, if you require additional configuration options, you can utilize this method to extend the configuration.
     /// </summary>
     public void ConfigureYarp(Action<IReverseProxyBuilder> configuration)
     {
         ApplyReverseProxyConfiguration = configuration;
+    }
+
+    /// <summary>
+    /// Apply the options to the service collection
+    /// </summary>
+    public void Apply(IServiceCollection serviceCollection)
+    {
+        var proxyBuilder = serviceCollection
+            .AddTransient(_ => this)
+            .AddTransient<IRedirectUriFactory, RedirectUriFactory>()
+            .AddReverseProxy();
+
+        ApplyReverseProxyConfiguration(proxyBuilder);
+        
+        IdpRegistrations.Apply(proxyBuilder);
+        
+        IdpRegistrations.Apply(serviceCollection);
+
+        ApplyClaimsTransformation(serviceCollection);
+        
+        serviceCollection
+            .AddDistributedMemoryCache()
+            .AddMemoryCache()
+            .AddSession(options =>
+            {
+                options.IdleTimeout = SessionIdleTimeout;
+                options.Cookie.HttpOnly = true;
+                options.Cookie.IsEssential = true;    
+                options.Cookie.Name = SessionCookieName;
+            });
     }
 }

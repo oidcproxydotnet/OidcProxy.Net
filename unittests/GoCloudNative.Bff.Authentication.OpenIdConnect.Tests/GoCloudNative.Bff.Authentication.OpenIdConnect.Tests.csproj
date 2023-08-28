@@ -28,4 +28,10 @@
         <ProjectReference Include="..\GoCloudNative.Bff.Authentication.OpenIdConnect.Tests.TestServer\GoCloudNative.Bff.Authentication.OpenIdConnect.Tests.TestServer.csproj" />
     </ItemGroup>
 
+    <ItemGroup>
+      <None Update="Files\Configuration.json">
+        <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+      </None>
+    </ItemGroup>
+
 </Project>

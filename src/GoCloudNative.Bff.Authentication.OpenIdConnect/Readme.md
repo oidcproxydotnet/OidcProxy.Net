@@ -22,25 +22,22 @@ dotnet add package GoCloudNative.Bff.Authentication.OpenIdConnect
 Create the following `Program.cs` file:
 
 ```csharp
-using GoCloudNative.Bff.Authentication.OpenIdConnect;
 using GoCloudNative.Bff.Authentication.ModuleInitializers;
+using GoCloudNative.Bff.Authentication.OpenIdConnect;
 
 var builder = WebApplication.CreateBuilder(args);
 
-builder.Services.AddSecurityBff(o =>
-{
-    o.ConfigureOpenIdConnect(builder.Configuration.GetSection("Oidc"));
-    o.LoadYarpFromConfig(builder.Configuration.GetSection("ReverseProxy"));
-});
+var config = builder.Configuration
+    .GetSection("Bff")
+    .Get<OidcBffConfig>();
+
+builder.Services.AddBff(config);
 
 var app = builder.Build();
 
-app.UseRouting();
-
-app.UseSecurityBff();
+app.UseBff();
 
 app.Run();
-
 ```
 
 Create the following `appsettings.json` file:
@@ -53,49 +50,35 @@ Create the following `appsettings.json` file:
       "Microsoft.AspNetCore": "Warning"
     }
   },
-  "Oidc": {
-    "ClientId": "[InsertClientIdHere]",
-    "ClientSecret": "[InsertClientSecretHere]",
-    "Authority": "https://authority",
-    "Scopes": [
-      "openid", "profile", "offline_access"
-    ]
-  },
   "AllowedHosts": "*",
-  "ReverseProxy": {
-    "Routes": {
-      "spa": {
-        "ClusterId": "spa",
-        "Match": {
-          "Path": "/{*any}"
-        }
-      },
-      "api": {
-        "ClusterId": "api",
-        "Match": {
-          "Path": "/api/{*any}"
-        }
-      },
+  "Bff": {
+    "LandingPage": "/account/me",
+    "Oidc": {
+      "ClientId": "bff",
+      "ClientSecret": "secret",
+      "Authority": "https://idsvrtst.azurewebsites.net/"
     },
-    "Clusters": {
-      "spa": {
-        "Destinations": {
-          "spa": {
-            "Address": "http://localhost:4200/"
+    "ReverseProxy": {
+      "Routes": {
+        "api": {
+          "ClusterId": "api",
+          "Match": {
+            "Path": "/api/{*any}"
           }
         }
       },
-      "api": {
-        "Destinations": {
-          "api": {
-            "Address": "http://localhost:8080/"
+      "Clusters": {
+        "api": {
+          "Destinations": {
+            "api/node1": {
+              "Address": "http://localhost:8080/"
+            }
           }
         }
-      },
+      }
     }
   }
 }
-
 ```
 
 In this example we assume you are running a Single Page Application on localhost on port `4200` and you have an API running at localhost on port `8080`. If that is not the case, then update the `appsettings.json` accordingly.
