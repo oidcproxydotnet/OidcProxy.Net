@@ -35,4 +35,11 @@
       <ProjectReference Include="..\Host.TestApps.Echo\Host.TestApps.Echo.csproj" />
     </ItemGroup>
 
+    <ItemGroup>
+      <Content Include="..\Host.TestApps.Auth0\appsettings.json">
+        <Link>appsettings.json</Link>
+        <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+      </Content>
+    </ItemGroup>
+
 </Project>
