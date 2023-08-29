@@ -52,6 +52,7 @@ Create the following `appsettings.json` file:
   },
   "AllowedHosts": "*",
   "Bff": {
+    "LandingPage": "/hello",
     "Auth0": {
       "ClientId": "{yourClientId}",
       "ClientSecret": "{yourClientSecret}",
@@ -76,7 +77,7 @@ Create the following `appsettings.json` file:
         "api": {
           "Destinations": {
             "api/node1": {
-              "Address": "http://localhost:8080/"
+              "Address": "https://{your_api}/"
             }
           }
         }

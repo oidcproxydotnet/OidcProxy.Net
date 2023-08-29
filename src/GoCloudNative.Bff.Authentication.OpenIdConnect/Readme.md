@@ -52,11 +52,11 @@ Create the following `appsettings.json` file:
   },
   "AllowedHosts": "*",
   "Bff": {
-    "LandingPage": "/account/me",
+    "LandingPage": "/hello",
     "Oidc": {
-      "ClientId": "bff",
-      "ClientSecret": "secret",
-      "Authority": "https://idsvrtst.azurewebsites.net/"
+      "ClientId": "{your_client_id}",
+      "ClientSecret": "{your_secret}",
+      "Authority": "https://{your_authority}/"
     },
     "ReverseProxy": {
       "Routes": {
@@ -71,7 +71,7 @@ Create the following `appsettings.json` file:
         "api": {
           "Destinations": {
             "api/node1": {
-              "Address": "http://localhost:8080/"
+              "Address": "https://{your_api}/"
             }
           }
         }

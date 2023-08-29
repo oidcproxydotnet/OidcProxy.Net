@@ -63,36 +63,36 @@ Create the following `appsettings.json` file:
     ]
   },
   "AllowedHosts": "*",
-  "ReverseProxy": {
-    "Routes": {
-      "spa": {
-        "ClusterId": "spa",
-        "Match": {
-          "Path": "/{*any}"
-        }
-      },
-      "api": {
-        "ClusterId": "api",
-        "Match": {
-          "Path": "/api/{*any}"
-        }
-      },
+  "Bff": {
+    "LandingPage": "/hello",
+    "AzureAd": {
+      "ClientId": "{yourClientId}",
+      "ClientSecret": "{yourClientSecret}",
+      "Scopes": [
+        "openid",
+        "profile",
+        "offline_access",
+        "https://foo.onmicrosoft.com/api/test/weatherforecast.read"
+      ]
     },
-    "Clusters": {
-      "spa": {
-        "Destinations": {
-          "spa": {
-            "Address": "http://localhost:4200/"
+    "ReverseProxy": {
+      "Routes": {
+        "api": {
+          "ClusterId": "api",
+          "Match": {
+            "Path": "/api/{*any}"
           }
         }
       },
-      "api": {
-        "Destinations": {
-          "api": {
-            "Address": "http://localhost:8080/"
+      "Clusters": {
+        "api": {
+          "Destinations": {
+            "api/node1": {
+              "Address": "https://{your_api}/"
+            }
           }
         }
-      },
+      }
     }
   }
 }
