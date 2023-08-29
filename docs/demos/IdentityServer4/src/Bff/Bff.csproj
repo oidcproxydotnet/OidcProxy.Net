@@ -8,7 +8,7 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="GoCloudNative.Bff.Authentication.OpenIdConnect" Version="0.0.13" />
+    <PackageReference Include="GoCloudNative.Bff.Authentication.OpenIdConnect" Version="0.0.16" />
   </ItemGroup>
 
 </Project>

@@ -96,7 +96,6 @@ Create the following `appsettings.json` file:
     }
   }
 }
-
 ```
 
 In this example we assume you are running a Single Page Application on localhost on port `4200` and you have an API running at localhost on port `8080`. If that is not the case, then update the `appsettings.json` accordingly.

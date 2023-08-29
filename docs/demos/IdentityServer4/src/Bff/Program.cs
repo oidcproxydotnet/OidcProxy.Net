@@ -7,17 +7,17 @@ var builder = WebApplication.CreateBuilder(args);
 
 builder.Services.AddHttpClient();
 
-builder.Services.AddSecurityBff(o =>
-{
-    o.ConfigureOpenIdConnect(builder.Configuration.GetSection("Oidc"));
-    o.LoadYarpFromConfig(builder.Configuration.GetSection("ReverseProxy"));
-});
+var config = builder.Configuration
+    .GetSection("Bff")
+    .Get<OidcBffConfig>();
+
+builder.Services.AddBff(config);
 
 var app = builder.Build();
 
 app.UseRouting();
 
-app.UseSecurityBff();
+app.UseBff();
 
 // This is an example how you can execute multiple requests 
 app.Map("/api/weatherforecast", async (HttpContext context, HttpClient httpClient) =>

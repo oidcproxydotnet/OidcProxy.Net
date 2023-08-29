@@ -40,17 +40,17 @@ if (!string.IsNullOrEmpty(redisConnectionString))
 // Reads the auth0 configuration from appsettings.json and bootstraps the BFF.
 // This section is REQUIRED. Without this section, your BFF will not work. 
 // <begin>
-builder.Services.AddSecurityBff(o =>
-{
-    o.ConfigureAuth0(builder.Configuration.GetSection("Auth0"));
-    o.LoadYarpFromConfig(builder.Configuration.GetSection("ReverseProxy"));
-});
+var auth0Config = builder.Configuration
+    .GetSection("Bff")
+    .Get<Auth0BffConfig>();
+
+builder.Services.AddBff(auth0Config);
 
 var app = builder.Build();
 
 app.UseRouting();
 
-app.UseSecurityBff(); 
+app.UseBff();
 // <end>
 
 // ========= Create an endpoint that delegates requests to multiple downstream services =========
