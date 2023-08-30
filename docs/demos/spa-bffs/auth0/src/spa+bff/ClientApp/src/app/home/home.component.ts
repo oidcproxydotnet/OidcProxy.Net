@@ -6,11 +6,20 @@ import {HttpClient} from "@angular/common/http";
   templateUrl: './home.component.html',
 })
 export class HomeComponent {
-  user: any = { message: 'not signed in' };
+  user: any = 'not signed in..';
+  forecast: any = null;
 
   constructor(private http: HttpClient) {
     http.get("/account/me").subscribe((r) => {
       this.user = r;
+    })
+  }
+
+  get(url: string) {
+    this.http.get(url).subscribe((r) => {
+      this.forecast = r;
+    }, (e) => {
+      this.forecast = e;
     })
   }
 }

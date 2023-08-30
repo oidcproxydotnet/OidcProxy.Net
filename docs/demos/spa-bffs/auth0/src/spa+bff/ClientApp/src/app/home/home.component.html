@@ -5,15 +5,16 @@
 <p>Available endpoints:</p>
 <ul>
   <li><a href="/account/login">/account/login</a></li>
-  <li><a href="/account/me">/account/me</a></li>
+  <li><a href="/account/me">/account/me</a> ({{ user | json }}) </li>
   <li><a href="/account/end-session">/account/end-session</a></li>
 </ul>
 
 <p>Available actions</p>
 <ul>
-  <li>Invoke /api/weatherforecast</li>
-  <li>Invoke /api/weatherforecast/usa</li>
+  <li>
+      <ul>
+        <li><a (click)="get('/api/weatherforecast/usa')" style="cursor: pointer;">Invoke /api/weatherforecast/usa</a></li>
+        <li>{{ forecast | json }}</li>
+      </ul>
+  </li>
 </ul>
-
-<p>Current user JSON:</p>
-<p>{{ user | json }}</p>
