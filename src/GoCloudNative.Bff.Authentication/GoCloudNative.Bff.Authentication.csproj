@@ -6,11 +6,11 @@
         <Nullable>enable</Nullable>
 
         <PackageId>GoCloudNative.Bff.Authentication</PackageId>
-        <Version>0.0.16</Version>
-        <PackageVersion>0.0.16</PackageVersion>
+        <Version>0.0.17</Version>
+        <PackageVersion>0.0.17</PackageVersion>
         <Authors>Albert Starreveld</Authors>
         <Company>GoCloudNative.org</Company>
-        <PackageLicenseExpression>GPL-3.0-or-later</PackageLicenseExpression>
+        <PackageLicenseExpression>LGPL-3.0-only</PackageLicenseExpression>
         <Description>A yarp-based authentication gateway for your service mesh.</Description>
         <RepositoryUrl>https://github.com/thecloudnativewebapp/GoCloudNative.Bff</RepositoryUrl>
         <PackageTags>BFF, Yarp, OIDC, Cloud Native</PackageTags>
