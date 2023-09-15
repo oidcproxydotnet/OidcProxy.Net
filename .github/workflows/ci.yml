@@ -10,6 +10,8 @@ jobs:
 
     steps:
     - uses: actions/checkout@v3
+    - name: Warmup
+      run: curl https://idsvrtst.azurewebsites.net/.well-known/openid-configuration
     - name: Setup .NET
       uses: actions/setup-dotnet@v3
       with:
