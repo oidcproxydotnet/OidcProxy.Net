@@ -1,4 +1,5 @@
 using System.Collections.Immutable;
+using GoCloudNative.Bff.Authentication.Endpoints;
 using GoCloudNative.Bff.Authentication.IdentityProviders;
 using GoCloudNative.Bff.Authentication.OpenIdConnect;
 using Microsoft.Extensions.Configuration;
@@ -10,11 +11,13 @@ namespace GoCloudNative.Bff.Authentication.ModuleInitializers;
 public class BffOptions
 {
     internal readonly IdpRegistrations IdpRegistrations = new();
-    
-    internal Action<IReverseProxyBuilder> ApplyReverseProxyConfiguration = _ => { };
 
-    internal Action<IServiceCollection> ApplyClaimsTransformation = (s) => s.AddTransient<IClaimsTransformation, DefaultClaimsTransformation>();
+    private Action<IReverseProxyBuilder> _applyReverseProxyConfiguration = _ => { };
+
+    private Action<IServiceCollection> _applyClaimsTransformationRegistration = (s) => s.AddTransient<IClaimsTransformation, DefaultClaimsTransformation>();
     
+    private Action<IServiceCollection> _applyAuthenticationCallbackHandlerRegistration = (s) => s.AddTransient<IAuthenticationCallbackHandler, DefaultAuthenticationCallbackHandler>();
+
     internal Uri? CustomHostName = null;
 
     internal ErrorPage ErrorPage;
@@ -108,7 +111,16 @@ public class BffOptions
     /// <typeparam name="TClaimsTransformation">The class that augments the output of the /{0}/me endpoint</typeparam>
     public void AddClaimsTransformation<TClaimsTransformation>() where TClaimsTransformation : class, IClaimsTransformation
     {
-        ApplyClaimsTransformation = s => s.AddTransient<IClaimsTransformation, TClaimsTransformation>();
+        _applyClaimsTransformationRegistration = s => s.AddTransient<IClaimsTransformation, TClaimsTransformation>();
+    }
+    
+    /// <summary>
+    ///  
+    /// </summary>
+    /// <typeparam name="TAuthenticationCallbackHandler"></typeparam>
+    public void AddAuthenticationCallbackHandler<TAuthenticationCallbackHandler>() where TAuthenticationCallbackHandler : class, IAuthenticationCallbackHandler
+    {
+        _applyAuthenticationCallbackHandlerRegistration = s => s.AddTransient<IAuthenticationCallbackHandler, TAuthenticationCallbackHandler>();
     }
 
     /// <summary>
@@ -117,7 +129,7 @@ public class BffOptions
     [Obsolete("Will be removed. Migrate to options.ConfigureYarp(..).")]
     public void LoadYarpFromConfig(IConfigurationSection configurationSection)
     {
-        ApplyReverseProxyConfiguration = b => b.LoadFromConfig(configurationSection);
+        _applyReverseProxyConfiguration = b => b.LoadFromConfig(configurationSection);
     }
     
     /// <summary>
@@ -125,7 +137,7 @@ public class BffOptions
     /// </summary>
     public void ConfigureYarp(Action<IReverseProxyBuilder> configuration)
     {
-        ApplyReverseProxyConfiguration = configuration;
+        _applyReverseProxyConfiguration = configuration;
     }
 
     /// <summary>
@@ -138,14 +150,15 @@ public class BffOptions
             .AddTransient<IRedirectUriFactory, RedirectUriFactory>()
             .AddReverseProxy();
 
-        ApplyReverseProxyConfiguration(proxyBuilder);
+        _applyReverseProxyConfiguration(proxyBuilder);
         
         IdpRegistrations.Apply(proxyBuilder);
         
         IdpRegistrations.Apply(serviceCollection);
 
-        ApplyClaimsTransformation(serviceCollection);
-        
+        _applyClaimsTransformationRegistration(serviceCollection);
+        _applyAuthenticationCallbackHandlerRegistration(serviceCollection);
+
         serviceCollection
             .AddDistributedMemoryCache()
             .AddMemoryCache()

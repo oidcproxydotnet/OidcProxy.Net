@@ -14,7 +14,8 @@ internal static class CallbackEndpoint<TIdp> where TIdp : IIdentityProvider
         [FromServices] ILogger<TIdp> logger,
         [FromServices] IRedirectUriFactory redirectUriFactory,
         [FromServices] BffOptions bffOptions,
-        [FromServices] TIdp identityProvider)
+        [FromServices] TIdp identityProvider,
+        [FromServices] IAuthenticationCallbackHandler callbackHandler)
     {
         try
         {
@@ -22,10 +23,8 @@ internal static class CallbackEndpoint<TIdp> where TIdp : IIdentityProvider
             if (string.IsNullOrEmpty(code))
             {
                 logger.LogLine(context, "Unable to obtain access token. Querystring parameter 'code' has no value.");
-
-                var redirectUri = $"{bffOptions.ErrorPage}{context.Request.QueryString}";
-                logger.LogLine(context, $"Redirect({redirectUri})");
-                return Results.Redirect(redirectUri);
+                
+                return await callbackHandler.OnAuthenticationFailed(context);
             }
             
             var endpointName = context.Request.Path.RemoveQueryString().TrimEnd("/login/callback");
@@ -42,11 +41,12 @@ internal static class CallbackEndpoint<TIdp> where TIdp : IIdentityProvider
 
             logger.LogLine(context, $"Redirect({bffOptions.LandingPage})");
 
-            return Results.Redirect(bffOptions.LandingPage.ToString());
+            return await callbackHandler.OnAuthenticated(context);
         }
         catch (Exception e)
         {
             logger.LogException(context, e);
+            await callbackHandler.OnError(context, e);
             throw;
         }
     }
