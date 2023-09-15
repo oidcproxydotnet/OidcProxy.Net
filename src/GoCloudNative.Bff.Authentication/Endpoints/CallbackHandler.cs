@@ -4,7 +4,7 @@ using Microsoft.Extensions.Logging;
 
 namespace GoCloudNative.Bff.Authentication.Endpoints;
 
-internal class DefaultAuthenticationCallbackHandler : IAuthenticationCallbackHandler
+public class DefaultAuthenticationCallbackHandler : IAuthenticationCallbackHandler
 {
     private readonly ILogger<DefaultAuthenticationCallbackHandler> _logger;
 
