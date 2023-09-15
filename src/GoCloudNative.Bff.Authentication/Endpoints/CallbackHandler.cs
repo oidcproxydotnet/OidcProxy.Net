@@ -1,5 +1,4 @@
 using GoCloudNative.Bff.Authentication.Logging;
-using GoCloudNative.Bff.Authentication.ModuleInitializers;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Logging;
 
@@ -8,31 +7,29 @@ namespace GoCloudNative.Bff.Authentication.Endpoints;
 internal class DefaultAuthenticationCallbackHandler : IAuthenticationCallbackHandler
 {
     private readonly ILogger<DefaultAuthenticationCallbackHandler> _logger;
-    private readonly BffOptions _bffOptions;
 
-    public DefaultAuthenticationCallbackHandler(ILogger<DefaultAuthenticationCallbackHandler> logger, BffOptions bffOptions)
+    public DefaultAuthenticationCallbackHandler(ILogger<DefaultAuthenticationCallbackHandler> logger)
     {
         _logger = logger;
-        _bffOptions = bffOptions;
     }
 
-    public Task<IResult> OnAuthenticationFailed(HttpContext context)
+    public virtual Task<IResult> OnAuthenticationFailed(HttpContext context, string defaultRedirectUrl)
     {
-        var redirectUri = $"{_bffOptions.ErrorPage}{context.Request.QueryString}";
-        _logger.LogLine(context, $"Redirect({redirectUri})");
-        var redirect = Results.Redirect(redirectUri);
+        _logger.LogLine(context, $"Redirect({defaultRedirectUrl})");
+        var redirect = Results.Redirect(defaultRedirectUrl);
         
         return Task.FromResult(redirect);
     }
 
-    public Task<IResult> OnAuthenticated(HttpContext context)
+    public virtual Task<IResult> OnAuthenticated(HttpContext context, string defaultRedirectUrl)
     {
-        var redirectResult = Results.Redirect(_bffOptions.LandingPage.ToString());
+        _logger.LogLine(context, $"Redirect({defaultRedirectUrl})");
+        var redirectResult = Results.Redirect(defaultRedirectUrl);
 
         return Task.FromResult(redirectResult);
     }
 
-    public Task OnError(HttpContext context, Exception e)
+    public virtual Task OnError(HttpContext context, Exception e)
     {
         return Task.CompletedTask;
     }
