@@ -14,8 +14,11 @@ public class Auth0LoginPage
     public IElementHandle TxtUsername => GetElement("#username");
     
     public IElementHandle TxtPassword => GetElement("#password");
-
-    public IElementHandle BtnContinue => GetElement("section div div form div button[type='submit'].c227b20f2");
-
+    
     private IElementHandle GetElement(string selector) => _page.QuerySelectorAsync(selector).GetAwaiter().GetResult();
+
+    public async Task HitEnter()
+    {
+        await _page.Keyboard.PressAsync("Enter");
+    }
 }
