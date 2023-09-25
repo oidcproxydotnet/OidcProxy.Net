@@ -26,7 +26,7 @@ public class Auth0IntegrationTests : IClassFixture<HostApplication>
 
             await app.Auth0LoginPage.TxtUsername.TypeAsync(username);
             await app.Auth0LoginPage.TxtPassword.TypeAsync(password);
-            await app.Auth0LoginPage.BtnContinue.ClickAsync();
+            await app.Auth0LoginPage.HitEnter();
             
             await app.WaitForNavigationAsync();
 
