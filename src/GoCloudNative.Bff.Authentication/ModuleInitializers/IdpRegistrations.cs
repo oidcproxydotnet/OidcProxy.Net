@@ -1,5 +1,6 @@
 using GoCloudNative.Bff.Authentication.Endpoints;
 using GoCloudNative.Bff.Authentication.IdentityProviders;
+using GoCloudNative.Bff.Authentication.Middleware;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.Extensions.DependencyInjection;
 
@@ -14,6 +15,8 @@ internal class IdpRegistrations
     private readonly List<Type> _optionTypes = new();
     
     private readonly List<Action<IServiceCollection>> _idpRegistrations = new();
+    
+    private readonly List<Type> _yarpMiddlewareRegistrations = new();
     
     private readonly List<Action<WebApplication>> _idpEndpointRegistrations = new();
 
@@ -30,6 +33,7 @@ internal class IdpRegistrations
         AssertOptionsTypeRegisteredOnce<TOptions>();
 
         _idpRegistrations.Add(s => s
+            .AddTransient<TokenRenewalMiddleware<TIdentityProvider>>()
             .AddTransient<TIdentityProvider>()
             .AddTransient(_ => options)
             .AddHttpClient<TIdentityProvider>()
@@ -38,6 +42,8 @@ internal class IdpRegistrations
         _proxyConfigurations.Add(c => { c.AddTransforms<HttpHeaderTransformation<TIdentityProvider>>(); });
 
         _idpEndpointRegistrations.Add(app => app.MapAuthenticationEndpoints<TIdentityProvider>(endpointName));
+        
+        _yarpMiddlewareRegistrations.Add(typeof(TokenRenewalMiddleware<TIdentityProvider>));
     }
     
     public void Apply(IServiceCollection serviceCollection)
@@ -54,6 +60,8 @@ internal class IdpRegistrations
         {
             endpointRegistration.Invoke(app);
         }
+
+        app.RegisterYarpMiddleware(_yarpMiddlewareRegistrations);
     }
 
     public void Apply(IReverseProxyBuilder configuration)

@@ -1,10 +1,8 @@
-using System.Collections.Immutable;
 using GoCloudNative.Bff.Authentication.Endpoints;
 using GoCloudNative.Bff.Authentication.IdentityProviders;
 using GoCloudNative.Bff.Authentication.OpenIdConnect;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
-using Yarp.ReverseProxy.Configuration;
 
 namespace GoCloudNative.Bff.Authentication.ModuleInitializers;
 
