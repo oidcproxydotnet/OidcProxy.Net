@@ -105,8 +105,8 @@ public class OpenIdConnectIdentityProvider : IIdentityProvider
         
         if (response.IsError)
         {
-            throw new ApplicationException($"Unable to retrieve token. " +
-                                           $"OIDC server responded {response.HttpStatusCode}: {response.Raw}");
+            throw new TokenRenewalFailedException($"Unable to retrieve token. " +
+                                                  $"OIDC server responded {response.HttpStatusCode}: {response.Raw}");
         }
 
         var expiresIn = DateTime.UtcNow.AddSeconds(response.ExpiresIn);
