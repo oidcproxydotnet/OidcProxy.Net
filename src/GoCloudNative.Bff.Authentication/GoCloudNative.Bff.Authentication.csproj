@@ -1,7 +1,7 @@
 <Project Sdk="Microsoft.NET.Sdk">
 
     <PropertyGroup>
-        <TargetFramework>net6.0</TargetFramework>
+        <TargetFramework>net8.0</TargetFramework>
         <ImplicitUsings>enable</ImplicitUsings>
         <Nullable>enable</Nullable>
 
@@ -19,6 +19,7 @@
         <PackageProjectUrl>https://bff.gocloudnative.org</PackageProjectUrl>
         <PackageIcon>logo.png</PackageIcon>
         <SignAssembly>true</SignAssembly>
+        <LangVersion>11</LangVersion>
     </PropertyGroup>
 
     <ItemGroup>
