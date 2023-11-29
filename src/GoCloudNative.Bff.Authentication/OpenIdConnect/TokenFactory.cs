@@ -13,8 +13,8 @@ internal class TokenFactory
         _identityProvider = identityProvider;
         _session = session;
     }
-    
-    public async Task<bool> RenewAccessTokenIfExpiredAsync<T>(int timeoutInSeconds = 90)
+
+    public bool GetIsTokenExpired<T>()
     {
         var expiryDateInSession = _session.GetExpiryDate<T>();
         if (!expiryDateInSession.HasValue)
@@ -25,18 +25,13 @@ internal class TokenFactory
         var expiry = expiryDateInSession.Value.AddSeconds(-15);
         var now = DateTimeOffset.UtcNow;
         
-        if (expiry > now)
-        {
-            return false;
-        }
-
-        var refreshToken = _session.GetRefreshToken<T>(); // todo: What is refresh_token is null?
-        await RenewAsync<T>(refreshToken, timeoutInSeconds);
-        return true;
+        return expiry <= now;
     }
-    
-    private async Task RenewAsync<T>(string refreshToken, int timeoutInSeconds = 90)
+
+    public async Task RenewAccessTokenIfExpiredAsync<T>(int timeoutInSeconds = 90)
     {
+        var refreshToken = _session.GetRefreshToken<T>(); // todo: What is refresh_token is null?
+
         var cacheKey = $"refreshing_token_{_session.Id}";
         var valueInSession = _session.GetString(cacheKey);
         var isWorking = !string.IsNullOrEmpty(valueInSession);

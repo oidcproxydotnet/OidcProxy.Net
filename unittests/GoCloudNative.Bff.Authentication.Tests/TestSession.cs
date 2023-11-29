@@ -25,15 +25,24 @@ public class TestSession : ISession
 
     public void Set(string key, byte[] value)
     {
-        _values[key] = value;
+        lock (_values)
+        {
+            _values[key] = value;
+        }
     }
 
-    public void Remove(string key) =>_values.Remove(key);
+    public void Remove(string key)
+    {
+        lock (_values)
+        {
+            _values.Remove(key);
+        }
+    }
 
     public void Clear() => _values.Clear();
     
     
     public bool IsAvailable { get; }
-    public string Id { get; }
-    public IEnumerable<string> Keys { get; }
+    public string Id => "testSession";
+    public IEnumerable<string> Keys => _values.Keys;
 }
