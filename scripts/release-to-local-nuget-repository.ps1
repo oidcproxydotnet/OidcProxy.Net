@@ -5,7 +5,7 @@ $repoSourceDir = $repoDir + '/source'
 # <methods>
     function Add-Package-To-Local-Repository($package)
     {
-        cp "../src/GoCloudNative.Bff.Authentication/bin/Release/$package" $repoSourceDir
+        cp "../src/$package/bin/Release/$package" $repoSourceDir
         nuget add "$repoSourceDir/$package" -Source $repoSourceDir
     }
 
