@@ -1,13 +1,13 @@
 <Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <TargetFramework>net6.0</TargetFramework>
+    <TargetFramework>net8.0</TargetFramework>
     <ImplicitUsings>enable</ImplicitUsings>
     <Nullable>enable</Nullable>
 
     <PackageId>GoCloudNative.Bff.Authentication.AzureAd</PackageId>
-    <Version>0.0.18</Version>
-    <PackageVersion>0.0.18</PackageVersion>
+    <Version>0.0.19</Version>
+    <PackageVersion>0.0.19</PackageVersion>
     <Authors>Albert Starreveld</Authors>
     <Company>GoCloudNative.org</Company>
     <PackageLicenseExpression>LGPL-3.0-only</PackageLicenseExpression>
@@ -19,7 +19,8 @@
     <PackageProjectUrl>https://bff.gocloudnative.org</PackageProjectUrl>
     <PackageReadmeFile>Readme.md</PackageReadmeFile>        
     <PackageIcon>logo.png</PackageIcon>        
-    <SignAssembly>true</SignAssembly>
+    <SignAssembly>true</SignAssembly>        
+    <LangVersion>11</LangVersion>
   </PropertyGroup>
   
   <ItemGroup>
