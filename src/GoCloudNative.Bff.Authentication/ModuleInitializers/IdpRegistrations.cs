@@ -1,5 +1,6 @@
 using GoCloudNative.Bff.Authentication.Endpoints;
 using GoCloudNative.Bff.Authentication.IdentityProviders;
+using GoCloudNative.Bff.Authentication.Locking;
 using GoCloudNative.Bff.Authentication.Middleware;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.Extensions.DependencyInjection;
@@ -34,6 +35,7 @@ internal class IdpRegistrations
 
         _idpRegistrations.Add(s => s
             .AddTransient<TokenRenewalMiddleware<TIdentityProvider>>()
+            .AddTransient<IConcurrentContext, SingleInstance>()
             .AddTransient<TIdentityProvider>()
             .AddTransient(_ => options)
             .AddHttpClient<TIdentityProvider>()

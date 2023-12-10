@@ -1,5 +1,6 @@
 using FluentAssertions;
 using GoCloudNative.Bff.Authentication.IdentityProviders;
+using GoCloudNative.Bff.Authentication.Locking;
 using GoCloudNative.Bff.Authentication.OpenIdConnect;
 using Microsoft.AspNetCore.Http;
 using NSubstitute;
@@ -8,9 +9,11 @@ namespace GoCloudNative.Bff.Authentication.Tests;
 
 public class TokenRenewalTests : IAsyncLifetime
 {
-    private IIdentityProvider _identityProvider = Substitute.For<IIdentityProvider>();
+    private readonly IIdentityProvider _identityProvider = Substitute.For<IIdentityProvider>();
 
-    private ISession _session = new TestSession();
+    private readonly ISession _session = new TestSession();
+
+    private readonly SingleInstance _context = new (); 
 
     public TokenRenewalTests()
     {
@@ -54,7 +57,7 @@ public class TokenRenewalTests : IAsyncLifetime
 
         async Task GetToken()
         {   
-            var sut = new TokenFactory(_identityProvider, _session);
+            var sut = new TokenFactory(_identityProvider, _session, _context);
             await sut.RenewAccessTokenIfExpiredAsync<IIdentityProvider>();
         }
     }
@@ -63,7 +66,7 @@ public class TokenRenewalTests : IAsyncLifetime
     public async Task ShouldUpdateRefreshToken()
     {   
         // Arrange
-        var sut = new TokenFactory(_identityProvider, _session);
+        var sut = new TokenFactory(_identityProvider, _session, _context);
         
         // Act
         await sut.RenewAccessTokenIfExpiredAsync<IIdentityProvider>();
@@ -71,49 +74,5 @@ public class TokenRenewalTests : IAsyncLifetime
         // Assert
         _session.GetString("token_key").Should().NotBeEmpty();
         _session.GetString("refresh_token_key").Should().NotBeEmpty();
-    }
-    
-    [Fact]
-    public async Task ShouldThrowTimeOut()
-    {
-        // Arrange
-        var bogusToken = Guid.NewGuid().ToString();
-        var sut = new TokenFactory(_identityProvider, _session);
-        
-        var cacheKey = $"refreshing_token_{_session.Id}";
-        _session.SetString(cacheKey, "true");
-        
-        // Act
-        Func<Task> actual = async () => await sut.RenewAccessTokenIfExpiredAsync<IIdentityProvider>(15);
-        
-        // Assert
-        await _identityProvider.DidNotReceive().RefreshTokenAsync(Arg.Any<string>());
-
-        await actual.Should().ThrowAsync<TimeoutException>();
-    }
-
-    [Fact]
-    public async Task ShouldNotThrowTimeOut()
-    {
-        // Arrange
-        var sut = new TokenFactory(_identityProvider, _session);
-
-        var cacheKey = $"refreshing_token_{_session.Id}";
-        _session.SetString(cacheKey, "true");
-
-        // Act
-        await Task.Run(async () =>
-        {
-            await Task.Delay(1000);
-
-            _session.Remove(cacheKey);
-        });
-
-        Func<Task> actual = async () => await sut.RenewAccessTokenIfExpiredAsync<IIdentityProvider>();
-
-        // Assert
-        await _identityProvider.DidNotReceive().RefreshTokenAsync(Arg.Any<string>());
-        
-        await actual.Should().NotThrowAsync<TimeoutException>();
     }
 }
