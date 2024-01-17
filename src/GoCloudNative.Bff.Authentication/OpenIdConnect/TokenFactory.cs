@@ -1,19 +1,24 @@
 using GoCloudNative.Bff.Authentication.IdentityProviders;
 using GoCloudNative.Bff.Authentication.Locking;
+using GoCloudNative.Bff.Authentication.Logging;
 using Microsoft.AspNetCore.Http;
+using Microsoft.Extensions.Logging;
 
 namespace GoCloudNative.Bff.Authentication.OpenIdConnect;
 
 internal class TokenFactory
 {
+    private readonly ILogger _logger;
     private readonly IIdentityProvider _identityProvider;
     private readonly ISession _session;
     private readonly IConcurrentContext _concurrentContext;
 
-    public TokenFactory(IIdentityProvider identityProvider, 
+    public TokenFactory(ILogger logger,
+        IIdentityProvider identityProvider, 
         ISession session,
         IConcurrentContext concurrentContext)
     {
+        _logger = logger;
         _identityProvider = identityProvider;
         _session = session;
         _concurrentContext = concurrentContext;
@@ -33,7 +38,7 @@ internal class TokenFactory
         return expiry <= now;
     }
 
-    public async Task RenewAccessTokenIfExpiredAsync<T>()
+    public async Task RenewAccessTokenIfExpiredAsync<T>(Action? callback = null)
     {
         await _concurrentContext.ExecuteOncePerSession(_session, 
             nameof(RenewAccessTokenIfExpiredAsync),
@@ -50,6 +55,8 @@ internal class TokenFactory
                 {
                     await _identityProvider.RevokeAsync(refreshToken);
                 }
+                
+                callback?.Invoke();
             });
     }
 }
