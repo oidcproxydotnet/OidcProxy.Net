@@ -1,6 +1,6 @@
 using Microsoft.AspNetCore.Http;
 
-namespace GoCloudNative.Bff.Authentication.Tests;
+namespace GoCloudNative.Bff.Authentication.Tests.UnitTests;
 
 public class TestSession : ISession
 {

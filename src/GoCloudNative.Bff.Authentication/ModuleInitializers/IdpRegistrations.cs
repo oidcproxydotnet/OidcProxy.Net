@@ -1,6 +1,7 @@
 using GoCloudNative.Bff.Authentication.Endpoints;
 using GoCloudNative.Bff.Authentication.IdentityProviders;
 using GoCloudNative.Bff.Authentication.Locking;
+using GoCloudNative.Bff.Authentication.Locking.InMemory;
 using GoCloudNative.Bff.Authentication.Middleware;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.Extensions.DependencyInjection;

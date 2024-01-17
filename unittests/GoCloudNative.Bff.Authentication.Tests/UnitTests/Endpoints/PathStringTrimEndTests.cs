@@ -2,7 +2,7 @@ using FluentAssertions;
 using GoCloudNative.Bff.Authentication.Endpoints;
 using Microsoft.AspNetCore.Http;
 
-namespace GoCloudNative.Bff.Authentication.Tests.Endpoints;
+namespace GoCloudNative.Bff.Authentication.Tests.UnitTests.Endpoints;
 
 public class PathStringTrimEndTests
 {

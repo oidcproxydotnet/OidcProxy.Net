@@ -1,6 +1,6 @@
 using Microsoft.AspNetCore.Http;
 
-namespace GoCloudNative.Bff.Authentication.Locking;
+namespace GoCloudNative.Bff.Authentication.Locking.InMemory;
 
 internal class InMemoryConcurrentContext : IConcurrentContext
 {
@@ -16,12 +16,8 @@ internal class InMemoryConcurrentContext : IConcurrentContext
             { 
                 return;
             }
-
-            var s = new SemaphoreSlim(1);
-            await s.WaitAsync();
-
-            s.Release();
-            await semaphore.WaitAsync();
+            
+            await semaphore.WaitAsync(TimeSpan.FromSeconds(15));
             if (actionRequired())
             {
                 await @delegate();

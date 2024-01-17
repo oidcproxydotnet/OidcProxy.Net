@@ -1,8 +1,8 @@
-using GoCloudNative.Bff.Authentication.Locking;
+using GoCloudNative.Bff.Authentication.Locking.InMemory;
 
-namespace GoCloudNative.Bff.Authentication.Tests.Locking;
+namespace GoCloudNative.Bff.Authentication.Tests.UnitTests.Locking;
 
-public class LockingTest
+public class InMemoryConcurrentContextTests
 {
     [Fact]
     public async Task ItShouldExecuteCriticalSectionOnce()

@@ -1,6 +1,6 @@
 using System.Collections.Concurrent;
 
-namespace GoCloudNative.Bff.Authentication.Locking;
+namespace GoCloudNative.Bff.Authentication.Locking.InMemory;
 
 internal static class Semaphores
 {
