@@ -1,7 +1,6 @@
 using GoCloudNative.Bff.Authentication.AzureAd;
 using GoCloudNative.Bff.Authentication.ModuleInitializers;
 using Host;
-using Microsoft.AspNetCore.DataProtection;
 using StackExchange.Redis;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -9,24 +8,15 @@ var builder = WebApplication.CreateBuilder(args);
 var redisConnectionString = builder.Configuration.GetSection("ConnectionStrings:Redis").Get<string>();
 var aadConfig = builder.Configuration.GetSection("bff").Get<AzureAdBffConfig>();
 
-if (!string.IsNullOrEmpty(redisConnectionString))
-{
-    var redis = ConnectionMultiplexer.Connect(redisConnectionString);
-
-    builder.Services
-        .AddDataProtection()
-        .PersistKeysToStackExchangeRedis(redis, "bff");
-
-    builder.Services.AddStackExchangeRedisCache(options =>
-    {
-        options.Configuration = redis.Configuration;
-        options.InstanceName = "bff";
-    });
-}
-
 builder.Services.AddBff(aadConfig, o =>
 {
     o.AddClaimsTransformation<MyClaimsTransformation>();
+    
+    if (!string.IsNullOrEmpty(redisConnectionString))
+    {
+        var connectionMultiplexer = ConnectionMultiplexer.Connect(redisConnectionString);
+        o.ConfigureRedisBackBone(connectionMultiplexer, "http_session_key", "bff");
+    }
 });
 
 var app = builder.Build();
