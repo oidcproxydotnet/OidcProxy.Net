@@ -36,7 +36,6 @@ internal class IdpRegistrations
 
         _idpRegistrations.Add(s => s
             .AddTransient<TokenRenewalMiddleware<TIdentityProvider>>()
-            .AddTransient<IConcurrentContext, InMemoryConcurrentContext>()
             .AddTransient<TIdentityProvider>()
             .AddTransient(_ => options)
             .AddHttpClient<TIdentityProvider>()

@@ -55,7 +55,8 @@ internal class TokenFactory
                 {
                     await _identityProvider.RevokeAsync(refreshToken);
                 }
-                
+
+                await Task.Delay(100);
                 callback?.Invoke();
             });
     }

@@ -29,7 +29,8 @@ public class RedisConcurrentContext : IConcurrentContext
         
         if (!resourceLock.IsAcquired && actionRequired())
         {
-            throw new ApplicationException("Unable to renew the expired access_token. Unable to acquire a lock. Try again.");
+            throw new ApplicationException($"Unable to renew the expired access_token. Unable to acquire a lock. " +
+                                           $"Try again. Error: {resourceLock.InstanceSummary.ToString()}");
         }
         
         if (!actionRequired())
