@@ -2,11 +2,11 @@ using Microsoft.AspNetCore.Http;
 
 namespace GoCloudNative.Bff.Authentication.Locking;
 
-internal class SingleInstance : IConcurrentContext
+internal class InMemoryConcurrentContext : IConcurrentContext
 {
     public async Task ExecuteOncePerSession(ISession session, string identifier, Func<bool> actionRequired, Func<Task> @delegate)
     {
-        var cacheKey = $"{typeof(SingleInstance).FullName}+{session.Id}+{identifier}";
+        var cacheKey = $"{typeof(InMemoryConcurrentContext).FullName}+{session.Id}+{identifier}";
 
         var semaphore = Semaphores.GetInstance(cacheKey);
 

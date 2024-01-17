@@ -16,7 +16,7 @@ public class LockingTest
         {
             tasks.Add(async () =>
             {
-                var concurrentContext = new SingleInstance();
+                var concurrentContext = new InMemoryConcurrentContext();
                 await concurrentContext.ExecuteOncePerSession(session, "foo",
                     () => !somethingChanged,
                     async () =>

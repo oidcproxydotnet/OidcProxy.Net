@@ -4,14 +4,16 @@ namespace GoCloudNative.Bff.Authentication.Tests;
 
 public class TestSession : ISession
 {
-    private Dictionary<string, byte[]> _values = new();
-
-    public Task LoadAsync(CancellationToken cancellationToken = new CancellationToken())
+    private readonly string _sessionId = Guid.NewGuid().ToString();
+    
+    private readonly Dictionary<string, byte[]> _values = new();
+    
+    public Task LoadAsync(CancellationToken cancellationToken = new ())
     {
         return Task.CompletedTask;
     }
 
-    public Task CommitAsync(CancellationToken cancellationToken = new CancellationToken())
+    public Task CommitAsync(CancellationToken cancellationToken = new ())
     {
         return Task.CompletedTask;
     }
@@ -43,6 +45,6 @@ public class TestSession : ISession
     
     
     public bool IsAvailable { get; }
-    public string Id => "testSession";
+    public string Id => _sessionId;
     public IEnumerable<string> Keys => _values.Keys;
 }
