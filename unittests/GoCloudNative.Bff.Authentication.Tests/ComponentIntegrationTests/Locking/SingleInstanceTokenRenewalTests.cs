@@ -35,12 +35,12 @@ public class SingleInstanceTokenRenewalTests : IAsyncLifetime
     public async Task InitializeAsync()
     {        
         // Store an access token dummy in the session
-        await _session.SaveAsync<IIdentityProvider>(new TokenResponse(Guid.NewGuid().ToString(),
+        await _session.SaveAsync(new TokenResponse(Guid.NewGuid().ToString(),
             Guid.NewGuid().ToString(),
             Guid.NewGuid().ToString(),
             DateTime.UtcNow.AddSeconds(-1)));
         
-        await _session2.SaveAsync<IIdentityProvider>(new TokenResponse(Guid.NewGuid().ToString(),
+        await _session2.SaveAsync(new TokenResponse(Guid.NewGuid().ToString(),
             Guid.NewGuid().ToString(),
             Guid.NewGuid().ToString(),
             DateTime.UtcNow.AddSeconds(-1)));
@@ -69,7 +69,7 @@ public class SingleInstanceTokenRenewalTests : IAsyncLifetime
         async Task GetToken()
         {   
             var sut = new TokenFactory(_identityProvider, _session, new InMemoryConcurrentContext());
-            await sut.RenewAccessTokenIfExpiredAsync<IIdentityProvider>(TraceIdentifier);
+            await sut.RenewAccessTokenIfExpiredAsync(TraceIdentifier);
         }
     }
     
@@ -90,13 +90,13 @@ public class SingleInstanceTokenRenewalTests : IAsyncLifetime
         async Task GetToken()
         {   
             var sut = new TokenFactory(_identityProvider, _session, new InMemoryConcurrentContext());
-            await sut.RenewAccessTokenIfExpiredAsync<IIdentityProvider>(TraceIdentifier);
+            await sut.RenewAccessTokenIfExpiredAsync(TraceIdentifier);
         }
         
         async Task GetToken2()
         {   
             var sut = new TokenFactory(_identityProvider, _session2, new InMemoryConcurrentContext());
-            await sut.RenewAccessTokenIfExpiredAsync<IIdentityProvider>(TraceIdentifier);
+            await sut.RenewAccessTokenIfExpiredAsync(TraceIdentifier);
         }
     }
     
@@ -109,13 +109,13 @@ public class SingleInstanceTokenRenewalTests : IAsyncLifetime
             tasks.Add(Task.Run(async () =>
             {
                 var session = new TestSession();
-                await session.SaveAsync<IIdentityProvider>(new TokenResponse(Guid.NewGuid().ToString(),
+                await session.SaveAsync(new TokenResponse(Guid.NewGuid().ToString(),
                     Guid.NewGuid().ToString(),
                     Guid.NewGuid().ToString(),
                     DateTime.UtcNow.AddSeconds(-1)));
                 
                 var sut = new TokenFactory(_identityProvider, session, new InMemoryConcurrentContext());
-                await sut.RenewAccessTokenIfExpiredAsync<IIdentityProvider>(TraceIdentifier);
+                await sut.RenewAccessTokenIfExpiredAsync(TraceIdentifier);
             }));
         }
 
@@ -131,7 +131,7 @@ public class SingleInstanceTokenRenewalTests : IAsyncLifetime
         var sut = new TokenFactory(_identityProvider, _session, new InMemoryConcurrentContext());
         
         // Act
-        await sut.RenewAccessTokenIfExpiredAsync<IIdentityProvider>(TraceIdentifier);
+        await sut.RenewAccessTokenIfExpiredAsync(TraceIdentifier);
         
         // Assert
         _session.GetString("token_key").Should().NotBeEmpty();

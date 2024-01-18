@@ -3,11 +3,13 @@ using GoCloudNative.Bff.Authentication.IdentityProviders;
 using GoCloudNative.Bff.Authentication.Locking;
 using GoCloudNative.Bff.Authentication.Locking.Distributed.Redis;
 using GoCloudNative.Bff.Authentication.Locking.InMemory;
+using GoCloudNative.Bff.Authentication.Middleware;
 using GoCloudNative.Bff.Authentication.OpenIdConnect;
 using Microsoft.AspNetCore.DataProtection;
+using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.Options;
+using Microsoft.Extensions.DependencyInjection.Extensions;
 using StackExchange.Redis;
 using RedLockNet;
 using RedLockNet.SERedis;
@@ -17,7 +19,7 @@ namespace GoCloudNative.Bff.Authentication.ModuleInitializers;
 
 public class BffOptions
 {
-    internal readonly IdpRegistrations IdpRegistrations = new();
+    internal IIdpRegistration? IdpRegistration = null;
 
     private Action<IReverseProxyBuilder> _applyReverseProxyConfiguration = _ => { };
 
@@ -111,7 +113,13 @@ public class BffOptions
         where TIdentityProvider : class, IIdentityProvider 
         where TOptions : class
     {
-        IdpRegistrations.Register<TIdentityProvider, TOptions>(options, endpointName);
+        if (IdpRegistration != null)
+        {
+            throw new NotSupportedException("Unable to bootstrap GoCloudNative.Bff. " +
+                                            "Configuring multiple IdentityProviders is not supported.");
+        }
+
+        IdpRegistration = new IdpRegistration<TIdentityProvider, TOptions>(options, endpointName);
     }
 
     /// <summary>
@@ -179,6 +187,12 @@ public class BffOptions
     /// </summary>
     public void Apply(IServiceCollection serviceCollection)
     {
+        if (IdpRegistration == null)
+        {
+            throw new NotSupportedException("Unable to bootstrap GoCloudNative.Bff. " +
+                                            "You must register an IdentityProvider.");
+        }
+
         var proxyBuilder = serviceCollection
             .AddTransient(_ => this)
             .AddTransient<IRedirectUriFactory, RedirectUriFactory>()
@@ -188,9 +202,9 @@ public class BffOptions
 
         _applyBackBone(serviceCollection);
         
-        IdpRegistrations.Apply(proxyBuilder);
+        IdpRegistration.Apply(proxyBuilder);
         
-        IdpRegistrations.Apply(serviceCollection);
+        IdpRegistration.Apply(serviceCollection);
 
         _applyClaimsTransformationRegistration(serviceCollection);
         _applyAuthenticationCallbackHandlerRegistration(serviceCollection);
@@ -205,5 +219,12 @@ public class BffOptions
                 options.Cookie.IsEssential = true;    
                 options.Cookie.Name = SessionCookieName;
             });
+        
+        serviceCollection
+            .TryAddSingleton<IHttpContextAccessor, HttpContextAccessor>();
+                
+        serviceCollection
+            .AddAuthentication(OidcAuthenticationHandler.SchemaName)
+            .AddScheme<OidcAuthenticationSchemeOptions, OidcAuthenticationHandler>(OidcAuthenticationHandler.SchemaName, null);
     }
 }

@@ -7,15 +7,14 @@ using Microsoft.Extensions.Logging;
 
 namespace GoCloudNative.Bff.Authentication.Middleware;
 
-internal class TokenRenewalMiddleware<TIdentityProvider> : ITokenRenewalMiddleware
-    where TIdentityProvider : IIdentityProvider
+internal class TokenRenewalMiddleware : ITokenRenewalMiddleware
 {
-    private readonly TIdentityProvider _identityProvider;
-    private readonly ILogger<TokenRenewalMiddleware<TIdentityProvider>> _logger;
+    private readonly IIdentityProvider _identityProvider;
+    private readonly ILogger<TokenRenewalMiddleware> _logger;
     private readonly IConcurrentContext _concurrentContext;
 
-    public TokenRenewalMiddleware(TIdentityProvider identityProvider, 
-        ILogger<TokenRenewalMiddleware<TIdentityProvider>> logger,
+    public TokenRenewalMiddleware(IIdentityProvider identityProvider, 
+        ILogger<TokenRenewalMiddleware> logger,
         IConcurrentContext concurrentContext)
     {
         _identityProvider = identityProvider;
@@ -30,7 +29,7 @@ internal class TokenRenewalMiddleware<TIdentityProvider> : ITokenRenewalMiddlewa
         // Check expiry again because another thread may have updated the token
         try
         {
-            await factory.RenewAccessTokenIfExpiredAsync<TIdentityProvider>(context.TraceIdentifier);
+            await factory.RenewAccessTokenIfExpiredAsync(context.TraceIdentifier);
         }
         catch (TokenRenewalFailedException e)
         {

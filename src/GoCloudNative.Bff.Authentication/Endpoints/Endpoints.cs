@@ -6,16 +6,16 @@ namespace GoCloudNative.Bff.Authentication.Endpoints;
 
 internal static class Endpoints
 {
-    public static void MapAuthenticationEndpoints<TIdp>(this WebApplication app, string endpointName) where TIdp : IIdentityProvider
+    public static void MapAuthenticationEndpoints(this WebApplication app, string endpointName)
     {
-        app.MapGet($"/{endpointName}/me", MeEndpoint<TIdp>.Get);
+        app.MapGet($"/{endpointName}/me", MeEndpoint.Get);
         
-        app.MapGet($"/{endpointName}/login", LoginEndpoint<TIdp>.Get);
+        app.MapGet($"/{endpointName}/login", LoginEndpoint.Get);
 
-        app.MapGet($"/{endpointName}/login/callback", CallbackEndpoint<TIdp>.Get);
+        app.MapGet($"/{endpointName}/login/callback", CallbackEndpoint.Get);
 
         app.MapGet($"/{endpointName}/login/callback/error", () => Results.Text("Login failed."));
 
-        app.MapGet($"/{endpointName}/end-session", EndSessionEndpoint<TIdp>.Get);
+        app.MapGet($"/{endpointName}/end-session", EndSessionEndpoint.Get);
     }
 }

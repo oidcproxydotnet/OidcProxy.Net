@@ -42,12 +42,12 @@ public class DistributedModeTokenRenewalTests : IAsyncLifetime
     
     public async Task InitializeAsync()
     {
-        await _session.SaveAsync<IIdentityProvider>(new TokenResponse(Guid.NewGuid().ToString(),
+        await _session.SaveAsync(new TokenResponse(Guid.NewGuid().ToString(),
             Guid.NewGuid().ToString(),
             Guid.NewGuid().ToString(),
             DateTime.UtcNow.AddSeconds(-1)));
         
-        await _session2.SaveAsync<IIdentityProvider>(new TokenResponse(Guid.NewGuid().ToString(),
+        await _session2.SaveAsync(new TokenResponse(Guid.NewGuid().ToString(),
             Guid.NewGuid().ToString(),
             Guid.NewGuid().ToString(),
             DateTime.UtcNow.AddSeconds(-1)));
@@ -80,7 +80,7 @@ public class DistributedModeTokenRenewalTests : IAsyncLifetime
         async Task GetToken()
         {   
             var sut = new TokenFactory(_identityProvider, _session, new RedisConcurrentContext(_redLockFactory!));
-            await sut.RenewAccessTokenIfExpiredAsync<IIdentityProvider>(TraceIdentifier);
+            await sut.RenewAccessTokenIfExpiredAsync(TraceIdentifier);
         }
     }
     [Fact]
@@ -100,13 +100,13 @@ public class DistributedModeTokenRenewalTests : IAsyncLifetime
         async Task GetToken()
         {   
             var sut = new TokenFactory(_identityProvider, _session, new RedisConcurrentContext(_redLockFactory!));
-            await sut.RenewAccessTokenIfExpiredAsync<IIdentityProvider>(TraceIdentifier);
+            await sut.RenewAccessTokenIfExpiredAsync(TraceIdentifier);
         }
         
         async Task GetToken2()
         {   
             var sut = new TokenFactory(_identityProvider, _session2, new RedisConcurrentContext(_redLockFactory!));
-            await sut.RenewAccessTokenIfExpiredAsync<IIdentityProvider>(TraceIdentifier);
+            await sut.RenewAccessTokenIfExpiredAsync(TraceIdentifier);
         }
     }
     
@@ -119,13 +119,13 @@ public class DistributedModeTokenRenewalTests : IAsyncLifetime
             tasks.Add(Task.Run(async () =>
             {
                 var session = new TestSession();
-                await session.SaveAsync<IIdentityProvider>(new TokenResponse(Guid.NewGuid().ToString(),
+                await session.SaveAsync(new TokenResponse(Guid.NewGuid().ToString(),
                     Guid.NewGuid().ToString(),
                     Guid.NewGuid().ToString(),
                     DateTime.UtcNow.AddSeconds(-1)));
                 
                 var sut = new TokenFactory(_identityProvider, session, new RedisConcurrentContext(_redLockFactory!));
-                await sut.RenewAccessTokenIfExpiredAsync<IIdentityProvider>(TraceIdentifier);
+                await sut.RenewAccessTokenIfExpiredAsync(TraceIdentifier);
             }));
         }
 
