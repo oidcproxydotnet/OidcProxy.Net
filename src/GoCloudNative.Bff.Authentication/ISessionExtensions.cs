@@ -50,6 +50,12 @@ public static class ISessionExtensions
     internal static async Task ProlongExpiryDate(this ISession session, int seconds)
     {
         var current = session.GetDateTime(GetExpiryKey());
+        if (current == null)
+        {
+            throw new NotSupportedException("Cannot prolong access token validity. Can only prolong based on expiry date. " +
+                                            "But the Expiry was not set in the session.");
+        }
+
         await session.SetDateTimeAsync(GetExpiryKey(), current.Value.AddSeconds(seconds));
     }
 

@@ -28,13 +28,6 @@ internal class IdpRegistration<TIdentityProvider, TOptions> : IIdpRegistration w
                 .AddTransient<IIdentityProvider, TIdentityProvider>()
                 .AddTransient(_ => options)
                 .AddHttpClient<TIdentityProvider>();
-
-            serviceCollection
-                .TryAddSingleton<IHttpContextAccessor, HttpContextAccessor>();
-                
-            serviceCollection
-                .AddAuthentication(OidcAuthenticationHandler.SchemaName)
-                .AddScheme<OidcAuthenticationSchemeOptions, OidcAuthenticationHandler>(OidcAuthenticationHandler.SchemaName, null);
         };
 
         _proxyConfiguration = c =>

@@ -24,6 +24,11 @@ public static class ModuleInitializer
     /// </summary>
     public static WebApplication UseBff(this WebApplication app)
     {
+        if (Options.IdpRegistration == null)
+        {
+            throw new NotSupportedException("Cannot bootstrap GoCloudNative.Bff. Register an identity provider.");
+        }
+
         Options.IdpRegistration.Apply(app);
 
         app.UseSession();

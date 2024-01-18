@@ -3,10 +3,13 @@ using GoCloudNative.Bff.Authentication.IdentityProviders;
 using GoCloudNative.Bff.Authentication.Locking;
 using GoCloudNative.Bff.Authentication.Locking.Distributed.Redis;
 using GoCloudNative.Bff.Authentication.Locking.InMemory;
+using GoCloudNative.Bff.Authentication.Middleware;
 using GoCloudNative.Bff.Authentication.OpenIdConnect;
 using Microsoft.AspNetCore.DataProtection;
+using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.DependencyInjection.Extensions;
 using StackExchange.Redis;
 using RedLockNet;
 using RedLockNet.SERedis;
@@ -216,5 +219,12 @@ public class BffOptions
                 options.Cookie.IsEssential = true;    
                 options.Cookie.Name = SessionCookieName;
             });
+        
+        serviceCollection
+            .TryAddSingleton<IHttpContextAccessor, HttpContextAccessor>();
+                
+        serviceCollection
+            .AddAuthentication(OidcAuthenticationHandler.SchemaName)
+            .AddScheme<OidcAuthenticationSchemeOptions, OidcAuthenticationHandler>(OidcAuthenticationHandler.SchemaName, null);
     }
 }

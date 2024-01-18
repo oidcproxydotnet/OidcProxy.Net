@@ -17,7 +17,7 @@ internal static class MeEndpoint
         context.Response.Headers.CacheControl = $"no-cache, no-store, must-revalidate";
 
         var idToken = context.Session.GetIdToken();
-        var payload = idToken.ParseJwtPayload();
+        var payload = idToken!.ParseJwtPayload();
         var claims = await claimsTransformation.Transform(payload);
         return Results.Ok(claims);
     }

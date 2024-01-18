@@ -8,5 +8,5 @@ public class BffConfig
     public Uri? CustomHostName { get; set; }
     public string? SessionCookieName { get; set; }
     public TimeSpan? SessionIdleTimeout { get; set; }
-    public YarpConfig ReverseProxy { get; set; }
+    public YarpConfig? ReverseProxy { get; set; }
 }
