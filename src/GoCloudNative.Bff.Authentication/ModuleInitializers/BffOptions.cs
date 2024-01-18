@@ -7,6 +7,7 @@ using GoCloudNative.Bff.Authentication.OpenIdConnect;
 using Microsoft.AspNetCore.DataProtection;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Options;
 using StackExchange.Redis;
 using RedLockNet;
 using RedLockNet.SERedis;
@@ -154,11 +155,13 @@ public class BffOptions
     /// <param name="connectionMultiplexer"></param>
     /// <param name="httpSessionKey"></param>
     /// <param name="redisInstanceName"></param>
-    public void ConfigureRedisBackBone(ConnectionMultiplexer connectionMultiplexer, RedisKey httpSessionKey, string redisInstanceName)
+    public void ConfigureRedisBackBone(ConnectionMultiplexer connectionMultiplexer, string redisInstanceName)
     {
         _applyBackBone = (serviceCollection) =>
         {
-            serviceCollection.AddDataProtection().PersistKeysToStackExchangeRedis(connectionMultiplexer, httpSessionKey);
+            serviceCollection
+                .AddDataProtection()
+                .PersistKeysToStackExchangeRedis(connectionMultiplexer, this.SessionCookieName);
 
             serviceCollection.AddStackExchangeRedisCache(options =>
             {

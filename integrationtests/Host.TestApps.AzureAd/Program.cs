@@ -13,7 +13,7 @@ var aadConfig = builder.Configuration.GetSection("bff").Get<AzureAdBffConfig>();
 builder.Services.AddBff(aadConfig, o =>
 {
     o.AddClaimsTransformation<MyClaimsTransformation>();
-    o.ConfigureRedisBackBone(connectionMultiplexer, "http_session_key", "bff");
+    o.ConfigureRedisBackBone(connectionMultiplexer, "http_session_key");
 });
 
 var app = builder.Build();
