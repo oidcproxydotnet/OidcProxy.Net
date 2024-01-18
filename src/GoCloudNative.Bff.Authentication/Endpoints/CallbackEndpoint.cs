@@ -8,13 +8,13 @@ using Microsoft.Extensions.Logging;
 
 namespace GoCloudNative.Bff.Authentication.Endpoints;
 
-internal static class CallbackEndpoint<TIdp> where TIdp : IIdentityProvider
+internal static class CallbackEndpoint
 {
     public static async Task<IResult> Get(HttpContext context,
-        [FromServices] ILogger<TIdp> logger,
+        [FromServices] ILogger<IIdentityProvider> logger,
         [FromServices] IRedirectUriFactory redirectUriFactory,
         [FromServices] BffOptions bffOptions,
-        [FromServices] TIdp identityProvider,
+        [FromServices] IIdentityProvider identityProvider,
         [FromServices] IAuthenticationCallbackHandler callbackHandler)
     {
         try
@@ -31,14 +31,14 @@ internal static class CallbackEndpoint<TIdp> where TIdp : IIdentityProvider
             var endpointName = context.Request.Path.RemoveQueryString().TrimEnd("/login/callback");
             var redirectUrl = redirectUriFactory.DetermineRedirectUri(context, endpointName);
 
-            var codeVerifier = context.Session.GetCodeVerifier<TIdp>();
+            var codeVerifier = context.Session.GetCodeVerifier();
 
             logger.LogLine(context, "Exchanging code for access_token.");
             var tokenResponse = await identityProvider.GetTokenAsync(redirectUrl, code, codeVerifier, context.TraceIdentifier);
 
-            await context.Session.RemoveCodeVerifierAsync<TIdp>();
+            await context.Session.RemoveCodeVerifierAsync();
 
-            await context.Session.SaveAsync<TIdp>(tokenResponse);
+            await context.Session.SaveAsync(tokenResponse);
 
             logger.LogLine(context, $"Redirect({bffOptions.LandingPage})");
 

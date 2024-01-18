@@ -5,8 +5,7 @@ using Yarp.ReverseProxy.Transforms.Builder;
 
 namespace GoCloudNative.Bff.Authentication;
 
-internal class HttpHeaderTransformation<TIdp> : ITransformProvider
-    where TIdp : IIdentityProvider
+internal class HttpHeaderTransformation : ITransformProvider
 {   
     public void ValidateRoute(TransformRouteValidationContext context)
     {
@@ -22,12 +21,12 @@ internal class HttpHeaderTransformation<TIdp> : ITransformProvider
     {
         context.AddRequestTransform(x =>
         {   
-            if (!x.HttpContext.Session.HasAccessToken<TIdp>())
+            if (!x.HttpContext.Session.HasAccessToken())
             {
                 return ValueTask.CompletedTask;
             }
 
-            var token = x.HttpContext.Session.GetAccessToken<TIdp>();
+            var token = x.HttpContext.Session.GetAccessToken();
             x.ProxyRequest.Headers.Authorization = new AuthenticationHeaderValue("Bearer", token);
             return ValueTask.CompletedTask;
         });

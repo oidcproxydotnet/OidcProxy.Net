@@ -8,7 +8,7 @@ using Microsoft.Extensions.Options;
 
 namespace GoCloudNative.Bff.Authentication.Middleware;
 
-public sealed class OidcAuthenticationHandler<T> : AuthenticationHandler<OidcAuthenticationSchemeOptions>
+public sealed class OidcAuthenticationHandler : AuthenticationHandler<OidcAuthenticationSchemeOptions>
 {
     private readonly IHttpContextAccessor _httpContextAccessor;
     public const string SchemaName = "GoCloudNative.Bff.Authentication";
@@ -30,7 +30,7 @@ public sealed class OidcAuthenticationHandler<T> : AuthenticationHandler<OidcAut
                 return Task.FromResult(AuthenticateResult.NoResult());
             }
 
-            var token = _httpContextAccessor.HttpContext.Session.GetAccessToken<T>();
+            var token = _httpContextAccessor.HttpContext.Session.GetAccessToken();
             if (token == null)
             {
                 return Task.FromResult(AuthenticateResult.NoResult());

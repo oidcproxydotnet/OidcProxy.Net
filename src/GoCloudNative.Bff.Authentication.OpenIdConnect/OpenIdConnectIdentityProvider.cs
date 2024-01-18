@@ -1,3 +1,4 @@
+using System.IdentityModel.Tokens.Jwt;
 using System.Net;
 using System.Web;
 using GoCloudNative.Bff.Authentication.IdentityProviders;
@@ -122,9 +123,7 @@ public class OpenIdConnectIdentityProvider : IIdentityProvider
                                $"\"Queried /token endpoint (refresh grant) and obtained id_, access_, and refresh_tokens\"");
 
         var expiresIn = DateTime.UtcNow.AddSeconds(response.ExpiresIn);
-        
-        Console.WriteLine($"NOW: {DateTime.UtcNow} <> {expiresIn}");
-        
+
         return new TokenResponse(response.AccessToken, response.IdentityToken, response.RefreshToken, expiresIn);
     }
 

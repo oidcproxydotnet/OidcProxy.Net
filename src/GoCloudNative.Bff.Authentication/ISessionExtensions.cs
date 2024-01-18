@@ -7,56 +7,56 @@ public static class ISessionExtensions
 {
     private static string DateFormat => "yyyy-MM-dd HH:mm:ss.fff";
     
-    private static string GetVerifierKey<T>() => $"{typeof(T)}-verifier_key";
+    private static string GetVerifierKey() => $"{typeof(IIdentityProvider)}-verifier_key";
 
-    private static string GetTokenKey<T>() => $"{typeof(T)}-token_key";
+    private static string GetTokenKey() => $"{typeof(IIdentityProvider)}-token_key";
 
-    private static string GetIdTokenKey<T>() => $"{typeof(T)}-id_token_key";
+    private static string GetIdTokenKey() => $"{typeof(IIdentityProvider)}-id_token_key";
     
-    private static string GetRefreshTokenKey<T>() => $"{typeof(T)}-refresh_token_key";
+    private static string GetRefreshTokenKey() => $"{typeof(IIdentityProvider)}-refresh_token_key";
     
-    private static string GetExpiryKey<T>() => $"{typeof(T)}-expires";
+    private static string GetExpiryKey() => $"{typeof(IIdentityProvider)}-expires";
     
-    internal static async Task SaveAsync<T>(this ISession session, TokenResponse tokenResponse)
+    internal static async Task SaveAsync(this ISession session, TokenResponse tokenResponse)
     {
-        await session.SaveAsync(GetTokenKey<T>(), tokenResponse.access_token);
-        await session.SaveAsync(GetIdTokenKey<T>(), tokenResponse.id_token);
-        await session.SaveAsync(GetRefreshTokenKey<T>(), tokenResponse.refresh_token);
-        await session.SetDateTimeAsync(GetExpiryKey<T>(), tokenResponse.ExpiryDate);
+        await session.SaveAsync(GetTokenKey(), tokenResponse.access_token);
+        await session.SaveAsync(GetIdTokenKey(), tokenResponse.id_token);
+        await session.SaveAsync(GetRefreshTokenKey(), tokenResponse.refresh_token);
+        await session.SetDateTimeAsync(GetExpiryKey(), tokenResponse.ExpiryDate);
     }
     
-    internal static async Task UpdateAccessAndRefreshTokenAsync<T>(this ISession session, TokenResponse tokenResponse)
+    internal static async Task UpdateAccessAndRefreshTokenAsync(this ISession session, TokenResponse tokenResponse)
     {
-        await session.SaveAsync(GetTokenKey<T>(), tokenResponse.access_token);
-        await session.SetDateTimeAsync(GetExpiryKey<T>(), tokenResponse.ExpiryDate);
+        await session.SaveAsync(GetTokenKey(), tokenResponse.access_token);
+        await session.SetDateTimeAsync(GetExpiryKey(), tokenResponse.ExpiryDate);
         
         if (!string.IsNullOrEmpty(tokenResponse.refresh_token))
         {
-            await session.SaveAsync(GetRefreshTokenKey<T>(), tokenResponse.refresh_token);
+            await session.SaveAsync(GetRefreshTokenKey(), tokenResponse.refresh_token);
         }
     }
 
-    internal static bool HasIdToken<T>(this ISession session) => session.Keys.Contains(GetIdTokenKey<T>());
-    internal static string? GetIdToken<T>(this ISession session) => session?.GetString(GetIdTokenKey<T>());
+    internal static bool HasIdToken(this ISession session) => session.Keys.Contains(GetIdTokenKey());
+    internal static string? GetIdToken(this ISession session) => session?.GetString(GetIdTokenKey());
     
-    internal static bool HasAccessToken<T>(this ISession session) => session.Keys.Contains(GetTokenKey<T>());
-    public static string? GetAccessToken<T>(this ISession session) => session?.GetString(GetTokenKey<T>());
+    internal static bool HasAccessToken(this ISession session) => session.Keys.Contains(GetTokenKey());
+    public static string? GetAccessToken(this ISession session) => session?.GetString(GetTokenKey());
 
-    internal static bool HasRefreshToken<T>(this ISession session) => session.Keys.Contains(GetRefreshTokenKey<T>());
-    internal static string? GetRefreshToken<T>(this ISession session) => session?.GetString(GetRefreshTokenKey<T>());
+    internal static bool HasRefreshToken(this ISession session) => session.Keys.Contains(GetRefreshTokenKey());
+    internal static string? GetRefreshToken(this ISession session) => session?.GetString(GetRefreshTokenKey());
 
-    internal static DateTime? GetExpiryDate<T>(this ISession session) => session.GetDateTime(GetExpiryKey<T>());
+    internal static DateTime? GetExpiryDate(this ISession session) => session.GetDateTime(GetExpiryKey());
     
-    internal static async Task ProlongExpiryDate<T>(this ISession session, int seconds)
+    internal static async Task ProlongExpiryDate(this ISession session, int seconds)
     {
-        var current = session.GetDateTime(GetExpiryKey<T>());
-        await session.SetDateTimeAsync(GetExpiryKey<T>(), current.Value.AddSeconds(seconds));
+        var current = session.GetDateTime(GetExpiryKey());
+        await session.SetDateTimeAsync(GetExpiryKey(), current.Value.AddSeconds(seconds));
     }
 
-    internal static string? GetCodeVerifier<T>(this ISession session) => session?.GetString(GetVerifierKey<T>());
-    internal static async Task SetCodeVerifierAsync<T>(this ISession session, string codeVerifier) 
-        => await session.SaveAsync(GetVerifierKey<T>(), codeVerifier);
-    internal static async Task RemoveCodeVerifierAsync<T>(this ISession session) => await session.RemoveAsync(GetVerifierKey<T>());
+    internal static string? GetCodeVerifier(this ISession session) => session?.GetString(GetVerifierKey());
+    internal static async Task SetCodeVerifierAsync(this ISession session, string codeVerifier) 
+        => await session.SaveAsync(GetVerifierKey(), codeVerifier);
+    internal static async Task RemoveCodeVerifierAsync(this ISession session) => await session.RemoveAsync(GetVerifierKey());
     
     private static DateTime? GetDateTime(this ISession session, string key)
     {

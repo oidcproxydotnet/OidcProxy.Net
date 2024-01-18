@@ -8,12 +8,12 @@ using Microsoft.Extensions.Logging;
 
 namespace GoCloudNative.Bff.Authentication.Endpoints;
 
-internal static class LoginEndpoint<TIdp> where TIdp : IIdentityProvider
+internal static class LoginEndpoint
 {
     public static async Task Get(HttpContext context,
-            [FromServices] ILogger<TIdp> logger,
+            [FromServices] ILogger<IIdentityProvider> logger,
             [FromServices] IRedirectUriFactory redirectUriFactory,
-            [FromServices] TIdp identityProvider)
+            [FromServices] IIdentityProvider identityProvider)
     {
         try
         {
@@ -25,7 +25,7 @@ internal static class LoginEndpoint<TIdp> where TIdp : IIdentityProvider
 
             if (!string.IsNullOrEmpty(authorizeRequest.CodeVerifier))
             {
-                await context.Session.SetCodeVerifierAsync<TIdp>(authorizeRequest.CodeVerifier);
+                await context.Session.SetCodeVerifierAsync(authorizeRequest.CodeVerifier);
             }
 
             logger.LogLine(context, $"Redirect({authorizeRequest.AuthorizeUri})");

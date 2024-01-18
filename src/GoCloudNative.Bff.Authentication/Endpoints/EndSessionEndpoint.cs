@@ -7,36 +7,35 @@ using Microsoft.Extensions.Logging;
 
 namespace GoCloudNative.Bff.Authentication.Endpoints;
 
-internal static class EndSessionEndpoint<TIdp>
-    where TIdp : IIdentityProvider
+internal static class EndSessionEndpoint
 {
     public static async Task<IResult> Get(HttpContext context,
-        [FromServices] ILogger<TIdp> logger,
+        [FromServices] ILogger<IIdentityProvider> logger,
         [FromServices] IRedirectUriFactory redirectUriFactory,
-        [FromServices] TIdp identityProvider)
+        [FromServices] IIdentityProvider identityProvider)
     {
         try
         {
-            if (context.Session.HasAccessToken<TIdp>())
+            if (context.Session.HasAccessToken())
             {
-                var accessToken = context.Session.GetAccessToken<TIdp>();
+                var accessToken = context.Session.GetAccessToken();
 
                 logger.LogLine(context, $"Revoking access_token.");
                 await identityProvider.RevokeAsync(accessToken, context.TraceIdentifier);
             }
 
-            if (context.Session.HasRefreshToken<TIdp>())
+            if (context.Session.HasRefreshToken())
             {
-                var refreshToken = context.Session.GetRefreshToken<TIdp>();
+                var refreshToken = context.Session.GetRefreshToken();
 
                 logger.LogLine(context, $"Revoking refresh_token.");
                 await identityProvider.RevokeAsync(refreshToken, context.TraceIdentifier);
             }
 
             string? idToken = null;
-            if (context.Session.HasIdToken<TIdp>())
+            if (context.Session.HasIdToken())
             {
-                idToken = context.Session.GetIdToken<TIdp>();
+                idToken = context.Session.GetIdToken();
             }
 
             context.Session.Clear();
