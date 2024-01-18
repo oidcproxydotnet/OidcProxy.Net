@@ -1,7 +1,6 @@
 using GoCloudNative.Bff.Authentication.Auth0;
 using GoCloudNative.Bff.Authentication.ModuleInitializers;
 using Host.TestApps.Auth0;
-using StackExchange.Redis;
 
 var builder = WebApplication.CreateBuilder(args);
 

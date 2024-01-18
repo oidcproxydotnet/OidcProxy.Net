@@ -14,12 +14,18 @@ internal static class Semaphores
         }
         
         value = new SemaphoreSlim(1);
-        if (!Collection.TryAdd(key, value))
+        if (Collection.TryAdd(key, value))
         {
-            throw new ApplicationException("Unable to obtain a lock.");
+            return value;
         }
+        
+        if (Collection.TryGetValue(key, out value))
+        {
+            return value;
+        }
+            
+        throw new ApplicationException("Unable to create a lock.");
 
-        return value;
     }
 
     public static void RemoveInstance(string key)

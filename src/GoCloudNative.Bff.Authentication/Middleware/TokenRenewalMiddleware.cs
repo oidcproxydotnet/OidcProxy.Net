@@ -26,7 +26,7 @@ internal class TokenRenewalMiddleware<TIdentityProvider> : ITokenRenewalMiddlewa
     
     public async Task Apply(HttpContext context, Func<HttpContext, Task> next)
     {
-        var factory = new TokenFactory(_logger, _identityProvider, context.Session, _concurrentContext);
+        var factory = new TokenFactory(_identityProvider, context.Session, _concurrentContext);
         
         // Do nothing if the token still is valid
         if (!factory.GetIsTokenExpired<TIdentityProvider>())
@@ -38,10 +38,7 @@ internal class TokenRenewalMiddleware<TIdentityProvider> : ITokenRenewalMiddlewa
         // Check expiry again because another thread may have updated the token
         try
         {
-            await factory.RenewAccessTokenIfExpiredAsync<TIdentityProvider>(() =>
-            {   
-                _logger.LogLine(context, "Renewed access_token and refresh_token");
-            });
+            await factory.RenewAccessTokenIfExpiredAsync<TIdentityProvider>(context.TraceIdentifier);
         }
         catch (TokenRenewalFailedException e)
         {

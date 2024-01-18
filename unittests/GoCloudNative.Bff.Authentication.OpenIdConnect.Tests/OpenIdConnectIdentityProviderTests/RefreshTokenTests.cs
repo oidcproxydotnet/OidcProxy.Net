@@ -1,14 +1,19 @@
 using FluentAssertions;
 using Microsoft.AspNetCore.Mvc.Testing;
 using GoCloudNative.Bff.Authentication.OpenIdConnect;
+using Microsoft.Extensions.Logging;
+using NSubstitute;
 
 namespace GoCloudNative.Bff.Authentication.OpenIdConnect.Tests.OpenIdConnectIdentityProviderTests;
 
 public class RefreshTokenTests
 {
+    private readonly string TraceIdentifier = "test";
     private readonly HttpClient _httpClient;
     private readonly OpenIdConnectConfig _config;
-    private readonly TestCache _cache;
+    private readonly TestCache _cache;    
+    private readonly ILogger<OpenIdConnectIdentityProvider> _logger = Substitute.For<ILogger<OpenIdConnectIdentityProvider>>();
+
 
     public RefreshTokenTests()
     {
@@ -36,9 +41,9 @@ public class RefreshTokenTests
             }";
         
         var expected = DateTime.UtcNow.AddSeconds(3600);
-        var sut = new OpenIdConnectIdentityProvider(_cache, _httpClient, _config);
+        var sut = new OpenIdConnectIdentityProvider(_logger, _cache, _httpClient, _config);
 
-        var tokenResponse = await sut.RefreshTokenAsync("test");
+        var tokenResponse = await sut.RefreshTokenAsync("test", TraceIdentifier);
 
         var actual = tokenResponse.ExpiryDate - expected;
 

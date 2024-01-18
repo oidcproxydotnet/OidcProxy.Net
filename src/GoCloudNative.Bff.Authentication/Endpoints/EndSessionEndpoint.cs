@@ -22,7 +22,7 @@ internal static class EndSessionEndpoint<TIdp>
                 var accessToken = context.Session.GetAccessToken<TIdp>();
 
                 logger.LogLine(context, $"Revoking access_token.");
-                await identityProvider.RevokeAsync(accessToken);
+                await identityProvider.RevokeAsync(accessToken, context.TraceIdentifier);
             }
 
             if (context.Session.HasRefreshToken<TIdp>())
@@ -30,7 +30,7 @@ internal static class EndSessionEndpoint<TIdp>
                 var refreshToken = context.Session.GetRefreshToken<TIdp>();
 
                 logger.LogLine(context, $"Revoking refresh_token.");
-                await identityProvider.RevokeAsync(refreshToken);
+                await identityProvider.RevokeAsync(refreshToken, context.TraceIdentifier);
             }
 
             string? idToken = null;
