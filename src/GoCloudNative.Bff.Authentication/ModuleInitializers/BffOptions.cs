@@ -1,10 +1,17 @@
-using System.Collections.Immutable;
 using GoCloudNative.Bff.Authentication.Endpoints;
 using GoCloudNative.Bff.Authentication.IdentityProviders;
+using GoCloudNative.Bff.Authentication.Locking;
+using GoCloudNative.Bff.Authentication.Locking.Distributed.Redis;
+using GoCloudNative.Bff.Authentication.Locking.InMemory;
 using GoCloudNative.Bff.Authentication.OpenIdConnect;
+using Microsoft.AspNetCore.DataProtection;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
-using Yarp.ReverseProxy.Configuration;
+using Microsoft.Extensions.Options;
+using StackExchange.Redis;
+using RedLockNet;
+using RedLockNet.SERedis;
+using RedLockNet.SERedis.Configuration;
 
 namespace GoCloudNative.Bff.Authentication.ModuleInitializers;
 
@@ -16,6 +23,8 @@ public class BffOptions
 
     private Action<IServiceCollection> _applyClaimsTransformationRegistration = (s) => s.AddTransient<IClaimsTransformation, DefaultClaimsTransformation>();
     
+    private Action<IServiceCollection> _applyBackBone = (s) => s.AddTransient<IConcurrentContext, InMemoryConcurrentContext>();
+
     private Action<IServiceCollection> _applyAuthenticationCallbackHandlerRegistration = (s) => s.AddTransient<IAuthenticationCallbackHandler, DefaultAuthenticationCallbackHandler>();
 
     internal Uri? CustomHostName = null;
@@ -141,6 +150,31 @@ public class BffOptions
     }
 
     /// <summary>
+    /// Configure a Redis backbone. This is required to run this module in distributed mode.
+    /// </summary>
+    /// <param name="connectionMultiplexer"></param>
+    /// <param name="httpSessionKey"></param>
+    /// <param name="redisInstanceName"></param>
+    public void ConfigureRedisBackBone(ConnectionMultiplexer connectionMultiplexer, string redisInstanceName)
+    {
+        _applyBackBone = (serviceCollection) =>
+        {
+            serviceCollection
+                .AddDataProtection()
+                .PersistKeysToStackExchangeRedis(connectionMultiplexer, this.SessionCookieName);
+
+            serviceCollection.AddStackExchangeRedisCache(options =>
+            {
+                options.Configuration = connectionMultiplexer.Configuration;
+                options.InstanceName = redisInstanceName;
+            });
+
+            serviceCollection.AddTransient<IConcurrentContext, RedisConcurrentContext>();
+            serviceCollection.AddTransient<IDistributedLockFactory>(_ => RedLockFactory.Create(new List<RedLockMultiplexer>() { connectionMultiplexer }));
+        };
+    }
+
+    /// <summary>
     /// Apply the options to the service collection
     /// </summary>
     public void Apply(IServiceCollection serviceCollection)
@@ -151,6 +185,8 @@ public class BffOptions
             .AddReverseProxy();
 
         _applyReverseProxyConfiguration(proxyBuilder);
+
+        _applyBackBone(serviceCollection);
         
         IdpRegistrations.Apply(proxyBuilder);
         

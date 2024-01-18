@@ -34,7 +34,7 @@ internal static class CallbackEndpoint<TIdp> where TIdp : IIdentityProvider
             var codeVerifier = context.Session.GetCodeVerifier<TIdp>();
 
             logger.LogLine(context, "Exchanging code for access_token.");
-            var tokenResponse = await identityProvider.GetTokenAsync(redirectUrl, code, codeVerifier);
+            var tokenResponse = await identityProvider.GetTokenAsync(redirectUrl, code, codeVerifier, context.TraceIdentifier);
 
             await context.Session.RemoveCodeVerifierAsync<TIdp>();
 

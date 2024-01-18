@@ -1,4 +1,5 @@
 using Microsoft.AspNetCore.Builder;
+using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.DependencyInjection;
 
 namespace GoCloudNative.Bff.Authentication.ModuleInitializers;
@@ -29,9 +30,7 @@ public static class ModuleInitializer
     public static WebApplication UseBff(this WebApplication app)
     {
         Options.IdpRegistrations.Apply(app);
-        
-        app.MapReverseProxy();
-        
+
         app.UseSession();
         
         app.Use(async (context, next) =>

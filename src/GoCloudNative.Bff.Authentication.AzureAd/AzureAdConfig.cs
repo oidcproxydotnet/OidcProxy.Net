@@ -8,7 +8,7 @@ public class AzureAdConfig : OpenIdConnectConfig
     
     public AzureAdConfig()
     {
-        this.DiscoveryEndpoint = "https://login.microsoftonline.com/common/v2.0/.well-known/openid-configuration";
+        this.DiscoveryEndpoint = $"{Authority}/v2.0/.well-known/openid-configuration";
     }
 
     public override bool Validate(out IEnumerable<string> errors)

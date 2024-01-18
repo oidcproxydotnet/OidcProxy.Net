@@ -3,7 +3,7 @@ using GoCloudNative.Bff.Authentication.ModuleInitializers;
 using GoCloudNative.Bff.Authentication.OpenIdConnect;
 using Microsoft.AspNetCore.Http;
 
-namespace GoCloudNative.Bff.Authentication.Tests;
+namespace GoCloudNative.Bff.Authentication.Tests.UnitTests;
 
 public class RedirectUriFactoryDetermineHostNameTests
 {   

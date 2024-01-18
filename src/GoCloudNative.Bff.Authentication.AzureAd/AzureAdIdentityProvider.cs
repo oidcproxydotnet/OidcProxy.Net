@@ -2,6 +2,7 @@ using System.Net.Http.Json;
 using GoCloudNative.Bff.Authentication.IdentityProviders;
 using GoCloudNative.Bff.Authentication.OpenIdConnect;
 using Microsoft.Extensions.Caching.Memory;
+using Microsoft.Extensions.Logging;
 using Microsoft.Identity.Client;
 
 namespace GoCloudNative.Bff.Authentication.AzureAd;
@@ -14,8 +15,11 @@ public class AzureAdIdentityProvider : OpenIdConnectIdentityProvider
     protected override string DiscoveryEndpointAddress => _configuration.DiscoveryEndpoint;
     
 
-    public AzureAdIdentityProvider(IMemoryCache cache, HttpClient httpClient, AzureAdConfig configuration) 
-        : base(cache, httpClient, configuration)
+    public AzureAdIdentityProvider(ILogger<OpenIdConnectIdentityProvider> logger,
+        IMemoryCache cache, 
+        HttpClient httpClient, 
+        AzureAdConfig configuration) 
+        : base(logger, cache, httpClient, configuration)
     {
         _httpClient = httpClient;
         _configuration = configuration;
@@ -36,7 +40,7 @@ public class AzureAdIdentityProvider : OpenIdConnectIdentityProvider
         return new AuthorizeRequest(startUrl, verifier);
     }
 
-    public override Task RevokeAsync(string token)
+    public override Task RevokeAsync(string token, string traceIdentifier)
     {
         return Task.CompletedTask; // not supported by Azure
     }

@@ -3,6 +3,7 @@ using System.Web;
 using GoCloudNative.Bff.Authentication.IdentityProviders;
 using GoCloudNative.Bff.Authentication.OpenIdConnect;
 using Microsoft.Extensions.Caching.Memory;
+using Microsoft.Extensions.Logging;
 
 namespace GoCloudNative.Bff.Authentication.Auth0;
 
@@ -10,9 +11,11 @@ public class Auth0IdentityProvider : OpenIdConnectIdentityProvider
 {
     private readonly Auth0Config _config;
 
-    public Auth0IdentityProvider(IMemoryCache cache,
+    public Auth0IdentityProvider(ILogger<OpenIdConnectIdentityProvider> logger,
+        IMemoryCache cache,
         HttpClient client, 
-        Auth0Config config) : base(cache, 
+        Auth0Config config) : base(logger,
+        cache, 
         client, 
         MapConfiguration(config))
     {
@@ -29,7 +32,7 @@ public class Auth0IdentityProvider : OpenIdConnectIdentityProvider
         return new AuthorizeRequest(new Uri(authorizeRequestWithAudience), result.CodeVerifier);
     }
 
-    public override Task RevokeAsync(string token)
+    public override Task RevokeAsync(string token, string traceIdentifier)
     {
         // I.l.e.: Auth0 does not support token revocation
         

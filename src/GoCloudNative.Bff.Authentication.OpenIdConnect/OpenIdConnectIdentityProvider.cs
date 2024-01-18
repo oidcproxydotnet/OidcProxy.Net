@@ -1,17 +1,18 @@
 using System.Net;
 using System.Web;
 using GoCloudNative.Bff.Authentication.IdentityProviders;
-using GoCloudNative.Bff.Authentication.OpenIdConnect;
 using IdentityModel;
 using IdentityModel.Client;
 using IdentityModel.OidcClient;
 using Microsoft.Extensions.Caching.Memory;
+using Microsoft.Extensions.Logging;
 using TokenResponse = GoCloudNative.Bff.Authentication.IdentityProviders.TokenResponse;
 
 namespace GoCloudNative.Bff.Authentication.OpenIdConnect;
 
 public class OpenIdConnectIdentityProvider : IIdentityProvider
 {
+    private readonly ILogger<OpenIdConnectIdentityProvider> _logger;
     private readonly IMemoryCache _cache;
     private readonly HttpClient _httpClient;
 
@@ -20,10 +21,12 @@ public class OpenIdConnectIdentityProvider : IIdentityProvider
     protected virtual string DiscoveryEndpointAddress 
         => $"{_configuration.Authority.TrimEnd('/')}/" + $"{_configuration.DiscoveryEndpoint.TrimStart('/')}";
     
-    public OpenIdConnectIdentityProvider(IMemoryCache cache,
+    public OpenIdConnectIdentityProvider(ILogger<OpenIdConnectIdentityProvider> logger,
+        IMemoryCache cache,
         HttpClient httpClient, 
         OpenIdConnectConfig configuration)
     {
+        _logger = logger;
         _cache = cache;
         _httpClient = httpClient;
         _configuration = configuration;
@@ -53,7 +56,10 @@ public class OpenIdConnectIdentityProvider : IIdentityProvider
         return new AuthorizeRequest(new Uri(startUrl), request.CodeVerifier);
     }
 
-    public virtual async Task<TokenResponse> GetTokenAsync(string redirectUri, string code, string? codeVerifier)
+    public virtual async Task<TokenResponse> GetTokenAsync(string redirectUri, 
+        string code, 
+        string? codeVerifier, 
+        string traceIdentifier)
     {
         var wellKnown = await GetDiscoveryDocument();
 
@@ -86,11 +92,14 @@ public class OpenIdConnectIdentityProvider : IIdentityProvider
                                            $"OIDC server responded {response.HttpStatusCode}: {response.Raw}");
         }
 
+        _logger.LogInformation($"null [{DateTime.Now:s}] TraceId: {traceIdentifier} null "+
+                               $"\"Queried /token endpoint and obtained id_, access_, and refresh_tokens\"");
+        
         var expiryDate = DateTime.UtcNow.AddSeconds(response.ExpiresIn);
         return new TokenResponse(response.AccessToken, response.IdentityToken, response.RefreshToken, expiryDate);
     }
 
-    public async Task<TokenResponse> RefreshTokenAsync(string refreshToken)
+    public async Task<TokenResponse> RefreshTokenAsync(string refreshToken, string traceIdentifier)
     {
         var openIdConfiguration = await GetDiscoveryDocument();
 
@@ -105,15 +114,21 @@ public class OpenIdConnectIdentityProvider : IIdentityProvider
         
         if (response.IsError)
         {
-            throw new ApplicationException($"Unable to retrieve token. " +
-                                           $"OIDC server responded {response.HttpStatusCode}: {response.Raw}");
+            throw new TokenRenewalFailedException($"Unable to retrieve token. " +
+                                                  $"OIDC server responded {response.HttpStatusCode}: {response.Raw}");
         }
+        
+        _logger.LogInformation($"null [{DateTime.Now:s}] TraceId: {traceIdentifier} null "+
+                               $"\"Queried /token endpoint (refresh grant) and obtained id_, access_, and refresh_tokens\"");
 
         var expiresIn = DateTime.UtcNow.AddSeconds(response.ExpiresIn);
+        
+        Console.WriteLine($"NOW: {DateTime.UtcNow} <> {expiresIn}");
+        
         return new TokenResponse(response.AccessToken, response.IdentityToken, response.RefreshToken, expiresIn);
     }
 
-    public virtual async Task RevokeAsync(string token)
+    public virtual async Task RevokeAsync(string token, string traceIdentifier)
     {
         var openIdConfiguration = await GetDiscoveryDocument();
 
@@ -124,11 +139,15 @@ public class OpenIdConnectIdentityProvider : IIdentityProvider
             ClientId = _configuration.ClientId,
             ClientSecret = _configuration.ClientSecret
         });
+        
         if (response.HttpStatusCode != HttpStatusCode.OK)
         {
             throw new ApplicationException($"Unable to revoke tokens. OIDC server responded {response.HttpStatusCode}:" +
                                            $" \r\n{response.Raw}");
         }
+        
+        _logger.LogInformation($"null [{DateTime.Now:s}] TraceId: {traceIdentifier} null "+
+                               $"\"Token revoked.");
     }
 
     public async Task<Uri> GetEndSessionEndpointAsync(string? idToken, string baseAddress)
@@ -150,7 +169,7 @@ public class OpenIdConnectIdentityProvider : IIdentityProvider
         var endSessionUrEndpoint = openIdConfiguration.end_session_endpoint;
         if (endSessionUrEndpoint == null)
         {
-            throw new NotSupportedException($"Invalid OpenId configuration. OpenId Configuration MUST contain a value for end_session_sendpoint. (https://openid.net/specs/openid-connect-session-1_0-17.html#OPMetadata)");
+            throw new NotSupportedException($"Invalid OpenId configuration. OpenId Configuration MUST contain a value for end_session_ endpoint. (https://openid.net/specs/openid-connect-session-1_0-17.html#OPMetadata)");
         }
 
         var urlEncodedRedirectUri = HttpUtility.UrlEncode(redirectUri);

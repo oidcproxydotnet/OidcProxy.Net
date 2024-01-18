@@ -1,7 +1,7 @@
 using FluentAssertions;
 using GoCloudNative.Bff.Authentication.OpenIdConnect;
 
-namespace GoCloudNative.Bff.Authentication.Tests;
+namespace GoCloudNative.Bff.Authentication.Tests.UnitTests;
 
 public class TokenFactoryTests
 {

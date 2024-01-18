@@ -67,17 +67,17 @@ public class RegisterIdentityProviderTests
             throw new NotImplementedException();
         }
 
-        public Task<TokenResponse> GetTokenAsync(string redirectUri, string code, string? codeVerifier)
+        public Task<TokenResponse> GetTokenAsync(string redirectUri, string code, string? codeVerifier, string traceIdentifier)
         {
             throw new NotImplementedException();
         }
 
-        public Task<TokenResponse> RefreshTokenAsync(string refreshToken)
+        public Task<TokenResponse> RefreshTokenAsync(string refreshToken, string traceIdentifier)
         {
             throw new NotImplementedException();
         }
 
-        public Task RevokeAsync(string token)
+        public Task RevokeAsync(string token, string traceIdentifier)
         {
             throw new NotImplementedException();
         }
