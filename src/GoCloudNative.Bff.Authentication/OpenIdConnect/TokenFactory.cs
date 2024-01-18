@@ -26,9 +26,9 @@ internal class TokenFactory
             GetIsTokenExpired<T>, 
             async () =>
             {
-                // avoid thread collisions without complicated distributed read/write locking mechanisms
+                // avoid thread collisions without complicated distributed read/write locking mechanisms..
                 // without this, the the token will be refreshed multiple times
-                // i know.. a bit hacky.. but it gets the job done...
+                // i know.. a bit hacky.. but it gets the job done without adding too much complexity...
                 await _session.ProlongExpiryDate<T>(15);
 
                 try
@@ -44,7 +44,7 @@ internal class TokenFactory
                         await _identityProvider.RevokeAsync(refreshToken, traceIdentifier);
                     }
                 }
-                catch (Exception e)
+                catch (Exception)
                 {
                     await _session.ProlongExpiryDate<T>(-15);
                     throw;

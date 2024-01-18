@@ -45,12 +45,12 @@ public class DistributedModeTokenRenewalTests : IAsyncLifetime
         await _session.SaveAsync<IIdentityProvider>(new TokenResponse(Guid.NewGuid().ToString(),
             Guid.NewGuid().ToString(),
             Guid.NewGuid().ToString(),
-            DateTime.Now.AddSeconds(-1)));
+            DateTime.UtcNow.AddSeconds(-1)));
         
         await _session2.SaveAsync<IIdentityProvider>(new TokenResponse(Guid.NewGuid().ToString(),
             Guid.NewGuid().ToString(),
             Guid.NewGuid().ToString(),
-            DateTime.Now.AddSeconds(-1)));
+            DateTime.UtcNow.AddSeconds(-1)));
         
         _redisContainer = new RedisBuilder()
             .WithImage("redis:7.0")
@@ -122,7 +122,7 @@ public class DistributedModeTokenRenewalTests : IAsyncLifetime
                 await session.SaveAsync<IIdentityProvider>(new TokenResponse(Guid.NewGuid().ToString(),
                     Guid.NewGuid().ToString(),
                     Guid.NewGuid().ToString(),
-                    DateTime.Now.AddSeconds(-1)));
+                    DateTime.UtcNow.AddSeconds(-1)));
                 
                 var sut = new TokenFactory(_identityProvider, session, new RedisConcurrentContext(_redLockFactory!));
                 await sut.RenewAccessTokenIfExpiredAsync<IIdentityProvider>(TraceIdentifier);

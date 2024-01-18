@@ -38,17 +38,13 @@ public static class ISessionExtensions
 
     internal static bool HasIdToken<T>(this ISession session) => session.Keys.Contains(GetIdTokenKey<T>());
     internal static string? GetIdToken<T>(this ISession session) => session?.GetString(GetIdTokenKey<T>());
-    internal static async Task RemoveIdTokenAsync<T>(this ISession session) => await session.RemoveAsync(GetIdTokenKey<T>());
     
     internal static bool HasAccessToken<T>(this ISession session) => session.Keys.Contains(GetTokenKey<T>());
     public static string? GetAccessToken<T>(this ISession session) => session?.GetString(GetTokenKey<T>());
-    internal static async Task RemoveAccessTokenAsync<T>(this ISession session) => await session.RemoveAsync(GetTokenKey<T>());
 
     internal static bool HasRefreshToken<T>(this ISession session) => session.Keys.Contains(GetRefreshTokenKey<T>());
     internal static string? GetRefreshToken<T>(this ISession session) => session?.GetString(GetRefreshTokenKey<T>());
-    internal static async Task RemoveRefreshTokenAsync<T>(this ISession session) => await session.RemoveAsync(GetRefreshTokenKey<T>());
 
-    internal static bool HasExpiryDate<T>(this ISession session) => session.Keys.Contains(GetExpiryKey<T>());
     internal static DateTime? GetExpiryDate<T>(this ISession session) => session.GetDateTime(GetExpiryKey<T>());
     
     internal static async Task ProlongExpiryDate<T>(this ISession session, int seconds)
@@ -57,7 +53,6 @@ public static class ISessionExtensions
         await session.SetDateTimeAsync(GetExpiryKey<T>(), current.Value.AddSeconds(seconds));
     }
 
-    internal static bool HasCodeVerifier<T>(this ISession session) => session.Keys.Contains(GetVerifierKey<T>());
     internal static string? GetCodeVerifier<T>(this ISession session) => session?.GetString(GetVerifierKey<T>());
     internal static async Task SetCodeVerifierAsync<T>(this ISession session, string codeVerifier) 
         => await session.SaveAsync(GetVerifierKey<T>(), codeVerifier);
