@@ -122,6 +122,9 @@ public class OpenIdConnectIdentityProvider : IIdentityProvider
                                $"\"Queried /token endpoint (refresh grant) and obtained id_, access_, and refresh_tokens\"");
 
         var expiresIn = DateTime.UtcNow.AddSeconds(response.ExpiresIn);
+        
+        Console.WriteLine($"NOW: {DateTime.UtcNow} <> {expiresIn}");
+        
         return new TokenResponse(response.AccessToken, response.IdentityToken, response.RefreshToken, expiresIn);
     }
 
@@ -166,7 +169,7 @@ public class OpenIdConnectIdentityProvider : IIdentityProvider
         var endSessionUrEndpoint = openIdConfiguration.end_session_endpoint;
         if (endSessionUrEndpoint == null)
         {
-            throw new NotSupportedException($"Invalid OpenId configuration. OpenId Configuration MUST contain a value for end_session_sendpoint. (https://openid.net/specs/openid-connect-session-1_0-17.html#OPMetadata)");
+            throw new NotSupportedException($"Invalid OpenId configuration. OpenId Configuration MUST contain a value for end_session_ endpoint. (https://openid.net/specs/openid-connect-session-1_0-17.html#OPMetadata)");
         }
 
         var urlEncodedRedirectUri = HttpUtility.UrlEncode(redirectUri);

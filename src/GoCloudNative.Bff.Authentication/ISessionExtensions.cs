@@ -5,6 +5,8 @@ namespace GoCloudNative.Bff.Authentication;
 
 public static class ISessionExtensions
 {
+    private static string DateFormat => "yyyy-MM-dd HH:mm:ss.fff";
+    
     private static string GetVerifierKey<T>() => $"{typeof(T)}-verifier_key";
 
     private static string GetTokenKey<T>() => $"{typeof(T)}-token_key";
@@ -49,6 +51,12 @@ public static class ISessionExtensions
     internal static bool HasExpiryDate<T>(this ISession session) => session.Keys.Contains(GetExpiryKey<T>());
     internal static DateTime? GetExpiryDate<T>(this ISession session) => session.GetDateTime(GetExpiryKey<T>());
     
+    internal static async Task ProlongExpiryDate<T>(this ISession session, int seconds)
+    {
+        var current = session.GetDateTime(GetExpiryKey<T>());
+        await session.SetDateTimeAsync(GetExpiryKey<T>(), current.Value.AddSeconds(seconds));
+    }
+
     internal static bool HasCodeVerifier<T>(this ISession session) => session.Keys.Contains(GetVerifierKey<T>());
     internal static string? GetCodeVerifier<T>(this ISession session) => session?.GetString(GetVerifierKey<T>());
     internal static async Task SetCodeVerifierAsync<T>(this ISession session, string codeVerifier) 
@@ -63,14 +71,16 @@ public static class ISessionExtensions
             return null;
         }
 
-        return DateTime.Parse(date);
+        return DateTime.ParseExact(date, DateFormat, null);
     }
     
     private static async Task SetDateTimeAsync(this ISession session, string key, DateTime? value)
     {
-        var stringValue = value?.ToString("yyyy-MM-dd HH:mm:sszzz");
+        var stringValue = value?.ToString(DateFormat);
+
         await session.SaveAsync(key, stringValue);
     }
+
 
     internal static async Task RemoveAsync(this ISession session, string key)
     {

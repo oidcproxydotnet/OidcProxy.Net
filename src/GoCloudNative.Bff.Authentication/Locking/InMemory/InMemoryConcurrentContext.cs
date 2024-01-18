@@ -3,7 +3,7 @@ using Microsoft.AspNetCore.Http;
 namespace GoCloudNative.Bff.Authentication.Locking.InMemory;
 
 internal class InMemoryConcurrentContext : IConcurrentContext
-{
+{   
     public async Task ExecuteOncePerSession(ISession session, string identifier, Func<bool> actionRequired, Func<Task> @delegate)
     {
         var cacheKey = $"{typeof(InMemoryConcurrentContext).FullName}+{session.Id}+{identifier}";
@@ -17,8 +17,8 @@ internal class InMemoryConcurrentContext : IConcurrentContext
                 return;
             }
             
-            await semaphore.WaitAsync(TimeSpan.FromSeconds(15));
-            if (actionRequired())
+            var acquired = await semaphore.WaitAsync(TimeSpan.FromSeconds(15));
+            if (acquired && actionRequired())
             {
                 await @delegate();
             }

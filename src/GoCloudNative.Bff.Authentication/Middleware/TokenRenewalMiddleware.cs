@@ -4,7 +4,6 @@ using GoCloudNative.Bff.Authentication.Logging;
 using GoCloudNative.Bff.Authentication.OpenIdConnect;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Logging;
-using Microsoft.Extensions.Options;
 
 namespace GoCloudNative.Bff.Authentication.Middleware;
 
@@ -27,14 +26,7 @@ internal class TokenRenewalMiddleware<TIdentityProvider> : ITokenRenewalMiddlewa
     public async Task Apply(HttpContext context, Func<HttpContext, Task> next)
     {
         var factory = new TokenFactory(_identityProvider, context.Session, _concurrentContext);
-        
-        // Do nothing if the token still is valid
-        if (!factory.GetIsTokenExpired<TIdentityProvider>())
-        {
-            await next(context);
-            return;
-        }
-        
+
         // Check expiry again because another thread may have updated the token
         try
         {

@@ -27,13 +27,14 @@ public class RedisConcurrentContext : IConcurrentContext
 
         await using var resourceLock = await _redisLockFactory.CreateLockAsync(cacheKey, expiryTime, waitTime, retryTime);
         
-        if (!resourceLock.IsAcquired && actionRequired())
+        var isActionRequired = actionRequired();
+        if (!resourceLock.IsAcquired && isActionRequired)
         {
             throw new ApplicationException($"Unable to renew the expired access_token. Unable to acquire a lock. " +
                                            $"Try again. Error: {resourceLock.InstanceSummary.ToString()}");
         }
         
-        if (!actionRequired())
+        if (!isActionRequired)
         { 
             return;
         }
