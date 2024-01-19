@@ -6,10 +6,10 @@ EXPOSE 443
 FROM mcr.microsoft.com/dotnet/sdk:7.0 AS build
 WORKDIR /src
 COPY ["Host/Host.csproj", "Host/"]
-COPY ["OpenIdConnect/GoCloudNative.Bff.Authentication.OpenIdConnect/GoCloudNative.Bff.Authentication.OpenIdConnect.csproj", "GoCloudNative.Bff.Authentication.OpenIdConnect/"]
-COPY ["GoCloudNative.Bff.Authentication/GoCloudNative.Bff.Authentication.csproj", "GoCloudNative.Bff.Authentication/"]
-COPY ["Auth0/GoCloudNative.Bff.Authentication.Auth0/GoCloudNative.Bff.Authentication.Auth0.csproj", "GoCloudNative.Bff.Authentication.Auth0/"]
-COPY ["AzureAd/GoCloudNative.Bff.Authentication.AzureAd/GoCloudNative.Bff.Authentication.AzureAd.csproj", "GoCloudNative.Bff.Authentication.AzureAd/"]
+COPY ["OpenIdConnect/OidcProxy.Net.OpenIdConnect/OidcProxy.Net.OpenIdConnect.csproj", "OidcProxy.Net.OpenIdConnect/"]
+COPY ["OidcProxy.Net/OidcProxy.Net.csproj", "OidcProxy.Net/"]
+COPY ["Auth0/OidcProxy.Net.Auth0/OidcProxy.Net.Auth0.csproj", "OidcProxy.Net.Auth0/"]
+COPY ["AzureAd/OidcProxy.Net.AzureAd/OidcProxy.Net.csproj", "OidcProxy.Net.AzureAd/"]
 RUN dotnet restore "Host/Host.csproj"
 COPY . .
 WORKDIR "/src/Host"

@@ -1,7 +1,7 @@
-using System.Security.Claims;
+using Host.TestApps.Auth0;
 using OidcProxy.Net.Auth0;
 using OidcProxy.Net.ModuleInitializers;
-using Host.TestApps.Auth0;
+using System.Security.Claims;
 using StackExchange.Redis;
 
 var builder = WebApplication.CreateBuilder(args);
