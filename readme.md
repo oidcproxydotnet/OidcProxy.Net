@@ -1,4 +1,4 @@
-# GoCloudNative.BFF
+# ~~GoCloudNative.BFF~~ - OidcProxy.Net
 
 ![](https://github.com/thecloudnativewebapp/GoCloudNative.Bff/actions/workflows/ci.yml/badge.svg)
 ![Nuget](https://img.shields.io/nuget/dt/GoCloudNative.Bff.Authentication)
