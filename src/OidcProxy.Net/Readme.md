@@ -1,4 +1,4 @@
-# GoCloudNative.Bff.Authentication
+# OidcProxy.Net
 
 This package contains the software you need to implement the BFF Security Pattern. This software does three things:
 
@@ -6,9 +6,9 @@ This package contains the software you need to implement the BFF Security Patter
 2. It allows the user to log into the site
 3. It forwards request to downstream services and adds the Authorization header with the user's access token to the requests
 
-The GoCloudNative BFF is a stateful reverse proxy. To forwared requests to downstream services GoCloudNative BFF uses YARP.
+OidcProxy.Net is a stateful reverse proxy. To forwared requests to downstream services OidcProxy.Net uses YARP.
 
-Currently, GoCloudNative BFF supports logging in with OpenId Connect and with Auth0. Currently, only the Authorization Code flow with Proof-Key Client Exchange is supported.
+Currently, OidcProxy.Net supports logging in with OpenId Connect and with Auth0. Currently, only the Authorization Code flow with Proof-Key Client Exchange is supported.
 
 ## Quickstart: Implementing the BFF Security Pattern
 
@@ -16,15 +16,15 @@ To build a BFF, execute the following commands:
 
 ```bash
 dotnet new web
-dotnet add package GoCloudNative.Bff.Authentication
-dotnet add package GoCloudNative.Bff.Authentication.OpenIdConnect
+dotnet add package OidcProxy.Net
+dotnet add package OidcProxy.Net.OpenIdConnect
 ```
 
 Create the following `Program.cs` file:
 
 ```csharp
-using GoCloudNative.Bff.Authentication.ModuleInitializers;
-using GoCloudNative.Bff.Authentication.OpenIdConnect;
+using OidcProxy.Net.ModuleInitializers;
+using OidcProxy.Net.OpenIdConnect;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -104,4 +104,4 @@ To revoke the tokens that have been obtained when the user logged in, execute a 
 
 ## Issues
 
-Are you encountering issues? Please let us know at: https://github.com/thecloudnativewebapp/GoCloudNative.Bff/issues
+Are you encountering issues? Please let us know at: https://github.com/thecloudnativewebapp/OidcProxy.Net/issues
