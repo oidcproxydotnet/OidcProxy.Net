@@ -1,5 +1,4 @@
-﻿
-using System.Web;
+﻿using System.Web;
 using GoCloudNative.Bff.Authentication.IdentityProviders;
 using GoCloudNative.Bff.Authentication.OpenIdConnect;
 using Microsoft.Extensions.Caching.Memory;

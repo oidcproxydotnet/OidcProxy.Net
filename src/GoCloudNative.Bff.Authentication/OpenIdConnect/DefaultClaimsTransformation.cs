@@ -4,5 +4,5 @@ namespace GoCloudNative.Bff.Authentication.OpenIdConnect;
 
 internal class DefaultClaimsTransformation : IClaimsTransformation
 { 
-    public Task<Object> Transform(JwtPayload payload) => Task.FromResult<object>(payload);
+    public Task<object> Transform(JwtPayload payload) => Task.FromResult<object>(payload);
 }

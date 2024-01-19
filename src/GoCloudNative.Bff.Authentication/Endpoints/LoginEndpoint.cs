@@ -1,4 +1,3 @@
-using System.Text.RegularExpressions;
 using GoCloudNative.Bff.Authentication.IdentityProviders;
 using GoCloudNative.Bff.Authentication.Logging;
 using GoCloudNative.Bff.Authentication.OpenIdConnect;

@@ -41,6 +41,7 @@ public sealed class OidcAuthenticationHandler : AuthenticationHandler<OidcAuthen
                 .Select(x => new Claim(x.Key, x.Value?.ToString() ?? string.Empty))
                 .ToArray();
 
+            // todo: make configurable
             var claimsIdentity = new ClaimsIdentity(claims, SchemaName, "sub", "role");
 
             var claimsPrincipal = new ClaimsPrincipal(claimsIdentity);
