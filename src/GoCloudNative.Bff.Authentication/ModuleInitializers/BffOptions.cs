@@ -194,8 +194,6 @@ public class BffOptions
         }
 
         var proxyBuilder = serviceCollection
-            .AddTransient(_ => this)
-            .AddTransient<IRedirectUriFactory, RedirectUriFactory>()
             .AddReverseProxy();
 
         _applyReverseProxyConfiguration(proxyBuilder);
@@ -221,6 +219,8 @@ public class BffOptions
             });
         
         serviceCollection
+            .AddTransient(_ => this)
+            .AddTransient<IRedirectUriFactory, RedirectUriFactory>()
             .TryAddSingleton<IHttpContextAccessor, HttpContextAccessor>();
                 
         serviceCollection
