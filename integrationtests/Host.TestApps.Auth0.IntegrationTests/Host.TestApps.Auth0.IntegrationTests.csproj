@@ -30,7 +30,7 @@
     </ItemGroup>
 
     <ItemGroup>
-      <ProjectReference Include="..\..\src\GoCloudNative.Bff.Authentication.Auth0\GoCloudNative.Bff.Authentication.Auth0.csproj" />
+      <ProjectReference Include="..\..\src\OidcProxy.Net.Auth0\OidcProxy.Net.Auth0.csproj" />
       <ProjectReference Include="..\Host.TestApps.Auth0\Host.TestApps.Auth0.csproj" />
       <ProjectReference Include="..\Host.TestApps.Echo\Host.TestApps.Echo.csproj" />
     </ItemGroup>

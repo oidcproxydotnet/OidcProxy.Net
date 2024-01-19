@@ -1,0 +1,49 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+    <PropertyGroup>
+        <TargetFramework>net8.0</TargetFramework>
+        <ImplicitUsings>enable</ImplicitUsings>
+        <Nullable>enable</Nullable>
+
+        <PackageId>OidcProxy.Net.OpenIdConnect</PackageId>
+        <Version>1.0.0-rc.1</Version>
+        <Version>1.0.0-rc.1</Version>
+        <Authors>Albert Starreveld</Authors>
+        <Company>GoCloudNative.org</Company>
+        <PackageLicenseExpression>LGPL-3.0-only</PackageLicenseExpression>
+        <Description>A yarp-based authentication gateway for your service mesh.</Description>
+        <RepositoryUrl>https://github.com/thecloudnativewebapp/OidcProxy.Net</RepositoryUrl>
+        <PackageTags>BFF, Yarp, OpenId Connect, Identity Server, KeyCloak, Cloud Native</PackageTags>
+        <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
+        <Title>OidcProxy.Net.AzureAd</Title>
+        <PackageProjectUrl>https://bff.gocloudnative.org</PackageProjectUrl>
+        <PackageReadmeFile>Readme.md</PackageReadmeFile>
+        <PackageIcon>logo.png</PackageIcon>
+        <SignAssembly>true</SignAssembly>
+        <LangVersion>11</LangVersion>
+    </PropertyGroup>
+
+    <ItemGroup>
+        <PackageReference Include="IdentityModel.OidcClient" Version="5.2.1" />
+        <PackageReference Include="Microsoft.AspNetCore.Http" Version="2.2.2" />
+        <PackageReference Include="Microsoft.AspNetCore.Mvc.Core" Version="2.2.5" />
+    </ItemGroup>
+
+    <ItemGroup>
+        <FrameworkReference Include="Microsoft.AspNetCore.App" />
+    </ItemGroup>
+
+    <ItemGroup>
+        <None Include="Readme.md" pack="true" PackagePath="." />
+    </ItemGroup>
+
+    <ItemGroup>
+        <Content Include="..\..\logo.png" pack="true" PackagePath=".">
+            <Link>logo.png</Link>
+        </Content>
+    </ItemGroup>
+
+    <ItemGroup>
+      <ProjectReference Include="..\OidcProxy.Net\OidcProxy.Net.csproj" />
+    </ItemGroup>
+</Project>

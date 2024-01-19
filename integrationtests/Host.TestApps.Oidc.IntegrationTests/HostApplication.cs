@@ -1,5 +1,5 @@
-using GoCloudNative.Bff.Authentication.ModuleInitializers;
-using GoCloudNative.Bff.Authentication.OpenIdConnect;
+using OidcProxy.Net.ModuleInitializers;
+using OidcProxy.Net.OpenIdConnect;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.Extensions.Configuration;
 

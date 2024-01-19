@@ -23,8 +23,8 @@ $repoSourceDir = $repoDir + '/source'
 
     Create-Directory $repoSourceDir
 
-    Add-Package-To-Local-Repository "GoCloudNative.Bff.Authentication.$version.nupkg" 
-    Add-Package-To-Local-Repository "GoCloudNative.Bff.Authentication.Auth0.$version.nupkg"
-    Add-Package-To-Local-Repository "GoCloudNative.Bff.Authentication.AzureAd.$version.nupkg"
-    Add-Package-To-Local-Repository "GoCloudNative.Bff.Authentication.OpenIdConnect.$version.nupkg"
+    Add-Package-To-Local-Repository "OidcProxy.Net.$version.nupkg" 
+    Add-Package-To-Local-Repository "OidcProxy.Net.$version.nupkg"
+    Add-Package-To-Local-Repository "OidcProxy.Net.$version.nupkg"
+    Add-Package-To-Local-Repository "OidcProxy.Net.$version.nupkg"
 # </procedure>

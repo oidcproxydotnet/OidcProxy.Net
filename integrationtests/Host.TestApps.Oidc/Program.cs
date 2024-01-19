@@ -1,6 +1,6 @@
 using System.Security.Claims;
-using GoCloudNative.Bff.Authentication.ModuleInitializers;
-using GoCloudNative.Bff.Authentication.OpenIdConnect;
+using OidcProxy.Net.ModuleInitializers;
+using OidcProxy.Net.OpenIdConnect;
 
 var builder = WebApplication.CreateBuilder(args);
 

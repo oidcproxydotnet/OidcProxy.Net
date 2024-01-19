@@ -1,6 +1,6 @@
 using System.Security.Claims;
-using GoCloudNative.Bff.Authentication.AzureAd;
-using GoCloudNative.Bff.Authentication.ModuleInitializers;
+using OidcProxy.Net.AzureAd;
+using OidcProxy.Net.ModuleInitializers;
 using Host;
 using StackExchange.Redis;
 

@@ -1,5 +1,5 @@
 using System.IdentityModel.Tokens.Jwt;
-using GoCloudNative.Bff.Authentication.OpenIdConnect;
+using OidcProxy.Net.OpenIdConnect;
 
 namespace Host;
 

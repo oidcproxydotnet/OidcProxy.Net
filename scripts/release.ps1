@@ -37,10 +37,10 @@ if ($newVersion -eq $null) {
     $newVersion = read-host
 }
 
-SetVersionNumber "src/GoCloudNative.Bff.Authentication/GoCloudNative.Bff.Authentication.csproj" $newVersion
-SetVersionNumber "src/GoCloudNative.Bff.Authentication.Auth0/GoCloudNative.Bff.Authentication.Auth0.csproj" $newVersion
-SetVersionNumber "src/GoCloudNative.Bff.Authentication.AzureAd/GoCloudNative.Bff.Authentication.AzureAd.csproj" $newVersion
-SetVersionNumber "src/GoCloudNative.Bff.Authentication.OpenIdConnect/GoCloudNative.Bff.Authentication.OpenIdConnect.csproj" $newVersion
+SetVersionNumber "src/OidcProxy.Net/OidcProxy.Net.csproj" $newVersion
+SetVersionNumber "src/OidcProxy.Net.Auth0/OidcProxy.Net.Auth0.csproj" $newVersion
+SetVersionNumber "src/OidcProxy.Net.AzureAd/OidcProxy.Net.AzureAd.csproj" $newVersion
+SetVersionNumber "src/OidcProxy.Net.OpenIdConnect/OidcProxy.Net.OpenIdConnect.csproj" $newVersion
 
 # dotnet build --configuration release
 
@@ -54,10 +54,10 @@ git push
 $apiKey = $env:bff_api_key 
 
 $newVersion = "1.0.0-rc.1"
-$authPackage = "src/GoCloudNative.Bff.Authentication/bin/release/GoCloudNative.Bff.Authentication.$newVersion.nupkg"
-$authPackageAuth0 = "src/GoCloudNative.Bff.Authentication.Auth0/bin/release/GoCloudNative.Bff.Authentication.Auth0.$newVersion.nupkg"
-$authPackageAzureAd = "src/GoCloudNative.Bff.Authentication.AzureAd/bin/release/GoCloudNative.Bff.Authentication.AzureAd.$newVersion.nupkg"
-$authPackageOpenIdConnect = "src/GoCloudNative.Bff.Authentication.OpenIdConnect/bin/release/GoCloudNative.Bff.Authentication.OpenIdConnect.$newVersion.nupkg"
+$authPackage = "src/OidcProxy.Net/bin/release/OidcProxy.Net.$newVersion.nupkg"
+$authPackageAuth0 = "src/OidcProxy.Net/bin/release/OidcProxy.Net.$newVersion.nupkg"
+$authPackageAzureAd = "src/OidcProxy.Net.AzureAd/bin/release/OidcProxy.Net.AzureAd.$newVersion.nupkg"
+$authPackageOpenIdConnect = "src/OidcProxy.Net.OpenIdConnect/bin/release/OidcProxy.Net.OpenIdConnect.$newVersion.nupkg"
 
 nuget push $authPackage $apiKey -Source https://api.nuget.org/v3/index.json
 nuget push $authPackageAuth0 $apiKey -Source https://api.nuget.org/v3/index.json

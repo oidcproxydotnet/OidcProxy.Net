@@ -1,4 +1,4 @@
-using GoCloudNative.Bff.Authentication.Endpoints;
+using OidcProxy.Net.Endpoints;
 
 namespace Host.TestApps.Auth0;
 

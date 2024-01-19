@@ -17,7 +17,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\..\src\GoCloudNative.Bff.Authentication.AzureAd\GoCloudNative.Bff.Authentication.AzureAd.csproj" />
+    <ProjectReference Include="..\..\src\OidcProxy.Net.AzureAd\OidcProxy.Net.AzureAd.csproj" />
   </ItemGroup>
 
   <ItemGroup>

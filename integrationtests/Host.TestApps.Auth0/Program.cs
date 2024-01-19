@@ -1,6 +1,6 @@
 using System.Security.Claims;
-using GoCloudNative.Bff.Authentication.Auth0;
-using GoCloudNative.Bff.Authentication.ModuleInitializers;
+using OidcProxy.Net.Auth0;
+using OidcProxy.Net.ModuleInitializers;
 using Host.TestApps.Auth0;
 using StackExchange.Redis;
 
