@@ -42,7 +42,7 @@ SetVersionNumber "src/GoCloudNative.Bff.Authentication.Auth0/GoCloudNative.Bff.A
 SetVersionNumber "src/GoCloudNative.Bff.Authentication.AzureAd/GoCloudNative.Bff.Authentication.AzureAd.csproj" $newVersion
 SetVersionNumber "src/GoCloudNative.Bff.Authentication.OpenIdConnect/GoCloudNative.Bff.Authentication.OpenIdConnect.csproj" $newVersion
 
-dotnet build --configuration release
+# dotnet build --configuration release
 
 git add .
 git checkout main
@@ -53,7 +53,13 @@ git push
 
 $apiKey = $env:bff_api_key 
 
-nuget push "src/GoCloudNative.Bff.Authentication/bin/release/GoCloudNative.Bff.Authentication.$newVersion.nupkg" $apiKey
-nuget push "src/GoCloudNative.Bff.Authentication.Auth0/bin/release/GoCloudNative.Bff.Authentication.Auth0.$newVersion.nupkg" $apiKey
-nuget push "src/GoCloudNative.Bff.Authentication.AzureAd/bin/release/GoCloudNative.Bff.Authentication.AzureAd.$newVersion.nupkg" $apiKey
-nuget push "src/GoCloudNative.Bff.Authentication.OpenIdConnect/bin/release/GoCloudNative.Bff.Authentication.OpenIdConnect.$newVersion.nupkg" $apiKey
+$newVersion = "1.0.0-rc.1"
+$authPackage = "src/GoCloudNative.Bff.Authentication/bin/release/GoCloudNative.Bff.Authentication.$newVersion.nupkg"
+$authPackageAuth0 = "src/GoCloudNative.Bff.Authentication.Auth0/bin/release/GoCloudNative.Bff.Authentication.Auth0.$newVersion.nupkg"
+$authPackageAzureAd = "src/GoCloudNative.Bff.Authentication.AzureAd/bin/release/GoCloudNative.Bff.Authentication.AzureAd.$newVersion.nupkg"
+$authPackageOpenIdConnect = "src/GoCloudNative.Bff.Authentication.OpenIdConnect/bin/release/GoCloudNative.Bff.Authentication.OpenIdConnect.$newVersion.nupkg"
+
+nuget push $authPackage $apiKey -Source https://api.nuget.org/v3/index.json
+nuget push $authPackageAuth0 $apiKey -Source https://api.nuget.org/v3/index.json
+nuget push $authPackageAzureAd $apiKey -Source https://api.nuget.org/v3/index.json
+nuget push $authPackageOpenIdConnect $apiKey -Source https://api.nuget.org/v3/index.json
