@@ -53,7 +53,7 @@ git push
 
 $apiKey = $env:bff_api_key 
 
-nuget push "src/GoCloudNative.Bff.Authentication/bin/release/GoCloudNative.Bff.Authentication.$newVersion.nupkg" -ApiKey $apiKey
-nuget push "src/GoCloudNative.Bff.Authentication.Auth0/bin/release/GoCloudNative.Bff.Authentication.Auth0.$newVersion.nupkg" -ApiKey $apiKey
-nuget push "src/GoCloudNative.Bff.Authentication.AzureAd/bin/release/GoCloudNative.Bff.Authentication.AzureAd.$newVersion.nupkg" -ApiKey $apiKey
-nuget push "src/GoCloudNative.Bff.Authentication.OpenIdConnect/bin/release/GoCloudNative.Bff.Authentication.OpenIdConnect.$newVersion.nupkg" -ApiKey $apiKey
+nuget push -source "src/GoCloudNative.Bff.Authentication/bin/release/GoCloudNative.Bff.Authentication.$newVersion.nupkg" -ApiKey $apiKey
+nuget push -source "src/GoCloudNative.Bff.Authentication.Auth0/bin/release/GoCloudNative.Bff.Authentication.Auth0.$newVersion.nupkg" -ApiKey $apiKey
+nuget push -source "src/GoCloudNative.Bff.Authentication.AzureAd/bin/release/GoCloudNative.Bff.Authentication.AzureAd.$newVersion.nupkg" -ApiKey $apiKey
+nuget push -source "src/GoCloudNative.Bff.Authentication.OpenIdConnect/bin/release/GoCloudNative.Bff.Authentication.OpenIdConnect.$newVersion.nupkg" -ApiKey $apiKey

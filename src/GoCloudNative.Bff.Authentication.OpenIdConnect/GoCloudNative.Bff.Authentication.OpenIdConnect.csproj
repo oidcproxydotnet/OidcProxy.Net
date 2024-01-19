@@ -6,8 +6,8 @@
         <Nullable>enable</Nullable>
 
         <PackageId>GoCloudNative.Bff.Authentication.OpenIdConnect</PackageId>
-        <Version>1.0.0rc1</Version>
-        <Version>1.0.0rc1</Version>
+        <Version>1.0.0-rc.1</Version>
+        <Version>1.0.0-rc.1</Version>
         <Authors>Albert Starreveld</Authors>
         <Company>GoCloudNative.org</Company>
         <PackageLicenseExpression>LGPL-3.0-only</PackageLicenseExpression>
