@@ -20,9 +20,9 @@ jobs:
     - name: Run tests
       run: dotnet test 
       env: 
-        BFF__AUTH0__AUDIENCE: ${{ secrets.BFF__AUTH0__AUDIENCE }}
-        BFF__AUTH0__CLIENTID: ${{ secrets.BFF__AUTH0__CLIENTID }}
-        BFF__AUTH0__CLIENTSECRET: ${{ secrets.BFF__AUTH0__CLIENTSECRET }}
-        BFF__AUTH0__DOMAIN: ${{ secrets.BFF__AUTH0__DOMAIN }}
+        OIDCPROXY__AUTH0__AUDIENCE: ${{ secrets.OIDCPROXY__AUTH0__AUDIENCE }}
+        OIDCPROXY__AUTH0__CLIENTID: ${{ secrets.OIDCPROXY__AUTH0__CLIENTID }}
+        OIDCPROXY__AUTH0__CLIENTSECRET: ${{ secrets.OIDCPROXY__AUTH0__CLIENTSECRET }}
+        OIDCPROXY__AUTH0__DOMAIN: ${{ secrets.OIDCPROXY__AUTH0__DOMAIN }}
         AUTH0__PASSWORD: ${{ secrets.AUTH0__PASSWORD }}
         AUTH0__USERNAME: ${{ secrets.AUTH0__USERNAME }}
