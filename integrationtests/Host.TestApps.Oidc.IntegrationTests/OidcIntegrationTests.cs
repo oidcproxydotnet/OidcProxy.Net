@@ -14,7 +14,7 @@ public class OidcIntegrationTests : IClassFixture<HostApplication>
 
         try
         {
-            await app.NavigateToBff();
+            await app.NavigateToProxy();
 
             await app.IdSvrLoginPage.BtnYodaLogin.ClickAsync();
             await Task.Delay(2000);
@@ -22,7 +22,7 @@ public class OidcIntegrationTests : IClassFixture<HostApplication>
             app.MeEndpoint.Text.Should().Contain(subYoda);
         
             // Assert the user was logged in
-            await app.GoTo("/account/me");
+            await app.GoTo("/.auth/me");
             await Task.Delay(1000);
 
             app.MeEndpoint.Text.Should().Contain(subYoda);
@@ -34,14 +34,14 @@ public class OidcIntegrationTests : IClassFixture<HostApplication>
             app.EchoEndpoint.Text.Should().Contain("Bearer ey");
 
             // Log out
-            await app.GoTo("/account/end-session");
+            await app.GoTo("/.auth/end-session");
             await Task.Delay(1000);
         
             await app.IdSvrSignOutPage.BtnYes.ClickAsync();
             await app.WaitForNavigationAsync();
         
             // Assert user details flushed
-            await app.GoTo("/account/me");
+            await app.GoTo("/.auth/me");
             await Task.Delay(1000);
 
             app.MeEndpoint.Text.Should().NotContain(subYoda);

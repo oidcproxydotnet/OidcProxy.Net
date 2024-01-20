@@ -4,7 +4,7 @@ namespace Host.TestApps.Oidc.IntegrationTests.Pom;
 
 public class MeEndpoint : Endpoint
 {
-    public static string Uri => "/account/me";
+    public static string Uri => "/.auth/me";
 
     public MeEndpoint(IPage page) : base(page)
     {

@@ -11,10 +11,10 @@ public class RedirectUriFactoryDetermineHostNameTests
     [InlineData("http://localhost/", "https://localhost")]
     [InlineData("http://localhost:80", "https://localhost")]
     [InlineData("https://localhost:443", "https://localhost")]
-    [InlineData("http://localhost/account/login/redirect", "https://localhost")]
-    [InlineData("http://localhost:8443/account/login/redirect", "https://localhost:8443")]
-    [InlineData("HTTP://localhost:8443/account/login/redirect", "https://localhost:8443")]
-    [InlineData("https://localhost:8443/account/login/redirect", "https://localhost:8443")]
+    [InlineData("http://localhost/.auth/login/redirect", "https://localhost")]
+    [InlineData("http://localhost:8443/.auth/login/redirect", "https://localhost:8443")]
+    [InlineData("HTTP://localhost:8443/.auth/login/redirect", "https://localhost:8443")]
+    [InlineData("https://localhost:8443/.auth/login/redirect", "https://localhost:8443")]
     public void WhenHttp_ShouldRewriteToHttps(string url, string expected)
     {   
         var options = new ProxyOptions();
@@ -33,10 +33,10 @@ public class RedirectUriFactoryDetermineHostNameTests
     [InlineData("http://localhost/", "http://localhost")]
     [InlineData("http://localhost:80", "http://localhost")]
     [InlineData("https://localhost:443", "https://localhost")]
-    [InlineData("http://localhost/account/login/redirect", "http://localhost")]
-    [InlineData("http://localhost:8443/account/login/redirect", "http://localhost:8443")]
-    [InlineData("HTTP://localhost:8443/account/login/redirect", "http://localhost:8443")]
-    [InlineData("https://localhost:8443/account/login/redirect", "https://localhost:8443")]
+    [InlineData("http://localhost/.auth/login/redirect", "http://localhost")]
+    [InlineData("http://localhost:8443/.auth/login/redirect", "http://localhost:8443")]
+    [InlineData("HTTP://localhost:8443/.auth/login/redirect", "http://localhost:8443")]
+    [InlineData("https://localhost:8443/.auth/login/redirect", "https://localhost:8443")]
     public void WhenRewriteModeSetToFalseHttp_ShouldRewriteToHttps(string url, string expected)
     {   
         var options = new ProxyOptions();
@@ -54,10 +54,10 @@ public class RedirectUriFactoryDetermineHostNameTests
     [Theory]
     [InlineData("http://localhost/", "https://localhost")]
     [InlineData("http://localhost:80", "https://localhost")]
-    [InlineData("http://localhost/account/login/redirect", "https://localhost")]
-    [InlineData("http://localhost:8443/account/login/redirect", "https://localhost:8443")]
-    [InlineData("HTTP://localhost:8443/account/login/redirect", "https://localhost:8443")]
-    [InlineData("https://localhost:8443/account/login/redirect", "https://localhost:8443")]
+    [InlineData("http://localhost/.auth/login/redirect", "https://localhost")]
+    [InlineData("http://localhost:8443/.auth/login/redirect", "https://localhost:8443")]
+    [InlineData("HTTP://localhost:8443/.auth/login/redirect", "https://localhost:8443")]
+    [InlineData("https://localhost:8443/.auth/login/redirect", "https://localhost:8443")]
     public void WhenCustomHostNameHttp_ShouldRewriteToHttps(string url, string expected)
     {   
         var options = new ProxyOptions();
@@ -75,9 +75,9 @@ public class RedirectUriFactoryDetermineHostNameTests
     
     [Theory]
     [InlineData("https://localhost:443", "https://localhost")]
-    [InlineData("http://localhost:8443/account/login/redirect", "http://localhost:8443")]
-    [InlineData("HTTP://localhost:8443/account/login/redirect", "http://localhost:8443")]
-    [InlineData("https://localhost:8443/account/login/redirect", "https://localhost:8443")]
+    [InlineData("http://localhost:8443/.auth/login/redirect", "http://localhost:8443")]
+    [InlineData("HTTP://localhost:8443/.auth/login/redirect", "http://localhost:8443")]
+    [InlineData("https://localhost:8443/.auth/login/redirect", "https://localhost:8443")]
     public void WhenCustomHostNameAndRewriteModeSetToFalse_ShouldNotRewriteToHttps(string url, string expected)
     {   
         var options = new ProxyOptions();

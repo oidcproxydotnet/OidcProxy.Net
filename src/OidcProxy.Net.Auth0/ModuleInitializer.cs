@@ -6,10 +6,10 @@ namespace OidcProxy.Net.Auth0;
 
 public static class ModuleInitializer
 {
-    public static void ConfigureAuth0(this ProxyOptions options, IConfigurationSection configurationSection, string endpointName = "account")
+    public static void ConfigureAuth0(this ProxyOptions options, IConfigurationSection configurationSection, string endpointName = ".auth")
         => ConfigureAuth0(options, configurationSection.Get<Auth0Config>(), endpointName);
     
-    public static void ConfigureAuth0(this ProxyOptions options, Auth0Config config, string endpointName = "account")
+    public static void ConfigureAuth0(this ProxyOptions options, Auth0Config config, string endpointName = ".auth")
     {
         if (!config.Validate(out var errors))
         {
@@ -30,7 +30,7 @@ public static class ModuleInitializer
     {
         if (config == null)
         {
-            throw new ArgumentNullException(nameof(config), "Failed to initialise GoCloudNative.Authentication.Bff. Config cannot be null. " +
+            throw new ArgumentNullException(nameof(config), "Failed to initialise OidcProxy.Net. Config cannot be null. " +
                 $"Invoke `builder.Services.AddOidcProxy(..)` with an instance of `{nameof(Auth0ProxyConfig)}`.");
         }
 
@@ -41,21 +41,21 @@ public static class ModuleInitializer
         
         if (auth0Config == null)
         {
-            throw new ArgumentException("Failed to initialise GoCloudNative.Authentication.Bff. " +
+            throw new ArgumentException("Failed to initialise OidcProxy.Net. " +
                 $"Invoke `builder.Services.AddOidcProxy(..)` with an instance of `{nameof(Auth0ProxyConfig)}` " +
                 $"and provide a value for {nameof(Auth0ProxyConfig)}.{nameof(config.Auth0)}.");
         }
         
         if (routes == null || !routes.Any())
         {
-            throw new ArgumentException("Failed to initialise GoCloudNative.Authentication.Bff. " +
+            throw new ArgumentException("Failed to initialise OidcProxy.Net. " +
                 $"Invoke `builder.Services.AddOidcProxy(..)` with an instance of `{nameof(Auth0ProxyConfig)}` " +
                 $"and provide a value for {nameof(Auth0ProxyConfig)}.{nameof(config.ReverseProxy)}.{nameof(config.ReverseProxy.Routes)}.");
         }
         
         if (clusters == null || !clusters.Any())
         {
-            throw new ArgumentException("Failed to initialise GoCloudNative.Authentication.Bff. " +
+            throw new ArgumentException("Failed to initialise OidcProxy.Net. " +
                 $"Invoke `builder.Services.AddOidcProxy(..)` with an instance of `{nameof(Auth0ProxyConfig)}` " +
                 $"and provide a value for {nameof(Auth0ProxyConfig)}.{nameof(config.ReverseProxy)}.{nameof(config.ReverseProxy.Clusters)}.");
         }

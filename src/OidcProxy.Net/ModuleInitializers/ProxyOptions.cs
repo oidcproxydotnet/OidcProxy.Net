@@ -109,7 +109,7 @@ public class ProxyOptions
         CustomHostName = hostname;
     }
 
-    public void RegisterIdentityProvider<TIdentityProvider, TOptions>(TOptions options, string endpointName = "account") 
+    public void RegisterIdentityProvider<TIdentityProvider, TOptions>(TOptions options, string endpointName = ".auth") 
         where TIdentityProvider : class, IIdentityProvider 
         where TOptions : class
     {

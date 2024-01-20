@@ -37,7 +37,12 @@ public static class Configuration
         AlwaysIncludeUserClaimsInIdToken = true,
         AllowOfflineAccess = true,
 
-        RedirectUris = { "https://localhost:8443/account/login/callback", "https://localhost:8443/oidc/login/callback" },
+        RedirectUris = { 
+            "https://localhost:8443/.auth/login/callback", 
+            "https://localhost:8444/.auth/login/callback", 
+            "https://localhost:8445/.auth/login/callback", 
+            "https://localhost:8443/oidc/login/callback" 
+        },
         FrontChannelLogoutUri = "https://localhost:8443/",
         PostLogoutRedirectUris = { "https://localhost:8443/" },
 

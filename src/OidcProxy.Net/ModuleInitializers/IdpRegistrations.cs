@@ -19,7 +19,7 @@ internal class IdpRegistration<TIdentityProvider, TOptions> : IIdpRegistration w
     
     private readonly List<Type> _yarpMiddlewareRegistrations = new();
 
-    public IdpRegistration(TOptions options, string endpointName = "account")
+    public IdpRegistration(TOptions options, string endpointName = ".auth")
     {
         _idpRegistration = serviceCollection =>
         {
