@@ -1,11 +1,11 @@
 using FluentAssertions;
-using OidcProxy.Net.AzureAd;
+using OidcProxy.Net.EntraId;
 
 namespace OidcProxy.Net.AzureAd.Tests;
 
 public class AzureAdConfigTests
 {
-    private readonly AzureAdConfig _config = new()
+    private readonly EntraIdConfig _config = new()
     { 
         ClientId = "test",
         ClientSecret = "test",

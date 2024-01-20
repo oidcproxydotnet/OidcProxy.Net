@@ -1,6 +1,6 @@
 namespace OidcProxy.Net.ModuleInitializers;
 
-public class BffConfig
+public class ProxyConfig
 {
     public string? EndpointName { get; set; }
     public string? ErrorPage { get; set; }

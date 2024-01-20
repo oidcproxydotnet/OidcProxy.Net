@@ -15,9 +15,9 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "OidcProxy.Net.OpenIdConnect
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "OidcProxy.Net.OpenIdConnect.Tests.TestServer", "unittests\OidcProxy.Net.OpenIdConnect.Tests.TestServer\OidcProxy.Net.OpenIdConnect.Tests.TestServer.csproj", "{875271E5-DA4D-4FED-AAE6-E2E3D60D40CA}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Host.TestApps.AzureAd", "integrationtests\Host.TestApps.AzureAd\Host.TestApps.AzureAd.csproj", "{789D484D-ECF3-46B4-8DDE-6DF13074CF24}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Host.TestApps.EntraId", "integrationtests\Host.TestApps.EntraId\Host.TestApps.EntraId.csproj", "{789D484D-ECF3-46B4-8DDE-6DF13074CF24}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "OidcProxy.Net.AzureAd", "src\OidcProxy.Net.AzureAd\OidcProxy.Net.AzureAd.csproj", "{B0427177-EE01-4EBB-A2E7-FF6A4B00F8F9}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "OidcProxy.Net.EntraId", "src\OidcProxy.Net.EntraId\OidcProxy.Net.EntraId.csproj", "{B0427177-EE01-4EBB-A2E7-FF6A4B00F8F9}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "OidcProxy.Net.Auth0.Tests", "unittests\OidcProxy.Net.Auth0.Tests\OidcProxy.Net.Auth0.Tests.csproj", "{AEA82840-02BE-4E9D-A506-FD2634D01EF1}"
 EndProject

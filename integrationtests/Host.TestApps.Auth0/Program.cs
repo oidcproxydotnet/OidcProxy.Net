@@ -2,22 +2,14 @@ using Host.TestApps.Auth0;
 using OidcProxy.Net.Auth0;
 using OidcProxy.Net.ModuleInitializers;
 using System.Security.Claims;
-using StackExchange.Redis;
 
 var builder = WebApplication.CreateBuilder(args);
 
 var config = builder.Configuration
-    .GetSection("Bff")
-    .Get<Auth0BffConfig>();
+    .GetSection("OidcProxy")
+    .Get<Auth0ProxyConfig>();
 
-builder.Services.AddBff(config, 
-    o =>
-    {
-        o.AddAuthenticationCallbackHandler<TestAuthenticationCallbackHandler>();
-        
-        var conn = ConnectionMultiplexer.Connect("localhost");
-        o.ConfigureRedisBackBone(conn, "foo bazr");
-    });
+builder.Services.AddAuth0Proxy(config, o => o.AddAuthenticationCallbackHandler<TestAuthenticationCallbackHandler>());
 
 var app = builder.Build();
 
@@ -36,6 +28,6 @@ app.MapGet("/custom/me", async context =>
     })
     .RequireAuthorization();
 
-app.UseBff();
+app.UseOidcProxy();
 
 app.Run();

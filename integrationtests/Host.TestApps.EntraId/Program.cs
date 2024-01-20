@@ -1,5 +1,5 @@
 using System.Security.Claims;
-using OidcProxy.Net.AzureAd;
+using OidcProxy.Net.EntraId;
 using OidcProxy.Net.ModuleInitializers;
 using Host;
 using StackExchange.Redis;
@@ -9,9 +9,11 @@ var builder = WebApplication.CreateBuilder(args);
 var redisConnectionString = builder.Configuration.GetSection("ConnectionStrings:Redis").Get<string>();
 var connectionMultiplexer = ConnectionMultiplexer.Connect(redisConnectionString);
 
-var aadConfig = builder.Configuration.GetSection("bff").Get<AzureAdBffConfig>();
+var entraIdConfig = builder.Configuration
+    .GetSection("OidcProxy")
+    .Get<EntraIdProxyConfig>();
 
-builder.Services.AddBff(aadConfig, o =>
+builder.Services.AddOidcProxy(entraIdConfig, o =>
 {
     o.AddClaimsTransformation<MyClaimsTransformation>();
     o.ConfigureRedisBackBone(connectionMultiplexer, "http_session_key");
@@ -34,7 +36,7 @@ app.MapGet("/custom/me", async context =>
     })
     .RequireAuthorization();
 
-app.UseBff();
+app.UseOidcProxy();
 
 app.Run();
  

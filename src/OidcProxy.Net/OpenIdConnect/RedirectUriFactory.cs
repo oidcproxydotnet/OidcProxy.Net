@@ -5,9 +5,9 @@ namespace OidcProxy.Net.OpenIdConnect;
 
 internal class RedirectUriFactory : IRedirectUriFactory
 {
-    private readonly BffOptions _options;
+    private readonly ProxyOptions _options;
 
-    public RedirectUriFactory(BffOptions options)
+    public RedirectUriFactory(ProxyOptions options)
     {
         _options = options;
     }

@@ -5,17 +5,17 @@
     <ImplicitUsings>enable</ImplicitUsings>
     <Nullable>enable</Nullable>
 
-    <PackageId>OidcProxy.Net.AzureAd</PackageId>
-    <Version>1.0.0-rc.1</Version>
-    <Version>1.0.0-rc.1</Version>
+    <PackageId>OidcProxy.Net.EntraId</PackageId>
+    <Version>1.0.0-rc.2</Version>
+    <Version>1.0.0-rc.2</Version>
     <Authors>Albert Starreveld</Authors>
     <Company>GoCloudNative.org</Company>
     <PackageLicenseExpression>LGPL-3.0-only</PackageLicenseExpression>
     <Description>A yarp-based authentication gateway for your service mesh.</Description>
     <RepositoryUrl>https://github.com/thecloudnativewebapp/OidcProxy.Net</RepositoryUrl>
-    <PackageTags>BFF, Yarp, Azure Ad, Cloud Native</PackageTags>
+    <PackageTags>BFF, Yarp, Azure Entra Ad, Cloud Native</PackageTags>
     <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
-    <Title>OidcProxy.Net.AzureAd</Title>
+    <Title>OidcProxy.Net.EntraId</Title>
     <PackageProjectUrl>https://bff.gocloudnative.org</PackageProjectUrl>
     <PackageReadmeFile>Readme.md</PackageReadmeFile>        
     <PackageIcon>logo.png</PackageIcon>        

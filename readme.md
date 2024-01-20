@@ -1,47 +1,101 @@
-# ~~GoCloudNative.BFF~~ - OidcProxy.Net
+# OidcProxy.Net
+
+_(Previously known as GoCloudNative.Bff)_
 
 ![](https://github.com/thecloudnativewebapp/GoCloudNative.Bff/actions/workflows/ci.yml/badge.svg)
 ![Nuget](https://img.shields.io/nuget/dt/GoCloudNative.Bff.Authentication)
 ![Version](https://img.shields.io/nuget/v/GoCloudNative.Bff.Authentication)
 
-## Our mission
+## Mission Statement
 The development of our product was driven by our clients’ need for a straightforward authentication gateway. Existing market options introduced complexities in terms of pricing and licensing, or proved to be overly intricate for beginners to comprehend and utilize effectively.
 
 Consequently, organizations are forced to make a trade-off between maintainability and security. In today’s automated society, this compromise is unacceptable.
 
-Hence, our mission is to offer an affordable, developer-friendly, and secure BFF Framework that can be implemented by anyone.
+Hence, our mission is to offer an affordable, developer-friendly, secure, identity-aware BFF Framework that can be implemented by anyone.
 
-## About this repository
+## What is OidcProxy.Net?
+The OidcProxy is designed to enhance security by keeping the `access_token` and the `refresh_token` hidden from the browser while still allowing the proxy itself to handle and use these tokens. It includes them in downstream requests. This approach helps mitigate potential security risks associated with token exposure.
 
-Inside this repository, you will find a C# implementation of a Back-end For Front-end (BFF). Its functionality includes user authentication, forwarding requests to downstream APIs, and appending the `access_token` to the forwarded requests by including the `Authentication` header with the value Bearer xyz. Additionally, you can leverage this BFF as intended, employing it to manually invoke downstream endpoints and consolidate the outcomes.
+#### OidcProxy.Net in a nutshell
+- The OidcProxy serves as an identity-aware proxy.
+- Authentication initiates a session on the OidcProxy.
+- End-users authenticate through an Open ID Connect Identity Provider.
+- The requests forwarded by the OidcProxy include `access_tokens` in the requests to backend services.
+- The OidcProxy is a Nuget package that can be included in .net 8 projects.
 
-## Getting started
+#### Token Visibility and Security Measures:
+- The `access_token`, `id_token`, and `refresh_token` are not visible to the browser. This enhances security by preventing these sensitive tokens from being exposed to potential attackers via the browser.
 
-You can swiftly implement the BFF Security Pattern within minutes using the GoCloudNative.Bff, an authentication gateway built on YARP. Just follow these steps to get started:
+#### Token Handling by OidcProxy:
+- While the tokens are not visible to the browser, the OidcProxy itself does have access to these tokens.
+- The OidcProxy adds an `Authorization=Bearer [ACCESS_TOKEN]` header to each downstream request.
+
+#### Authorization Code with PKCE Confidential Client Grant:
+- The OidcProxy enables the implementation of the OAuth2 Authorization Code Grant with Confidential Client Grant.
+- This reduces the risk of impersonation.
+- This reduces the attack surface because, in this scenario, an attacker who does not have access to the webserver cannot be issued any tokens. 
+
+### How does it work?
+
+The OidcProxy does not just forward traffic to down-stream services, it adds the `Authentication` header to the forwarded requests too. This is illustrated in the following diagram:
+
+<p align="center">
+    <img src="docs/gocloudnative.org/content/Diagrams/BFF-flow.png" width="300">
+</p>
+
+The user also uses the proxy to initiate the authentication procedure. That's done by navigating to a special endpoint: the `/.auth/login` endpoint.
+
+This process is visualised in the following diagram:
+
+<img src="docs/gocloudnative.org/content/Diagrams/BFF-login-workflow.png">
+
+
+## Features
+
+OidcClient.Net has the following features:
+
+- By requiring minimal configuration, OidcProxy.Net enables authentication through the following Identity Providers:
+  - KeyCloak
+  - Identity Server
+  - Auth0
+  - Azure Entra Id
+- Leveraging YARP, OidcProxy.Net allows for sophisticated routing configurations, enabling users to define rules for directing incoming requests to the appropriate backend services.
+- The proxy can run in single instance mode or in disributed mode. In distributed mode, the proxy uses Redis as a backbone.
+- Authentication is integrated into the ASP.NET Core pipeline. This allows for the usage of the `Authorization` attribute, Policies, and many other ASP.NET Identity feature
+- The proxy has been built following SOLID principles. This allows developers to extend the basic functionality to tailor it to their needs.
+- OidcProxy.Net can easily included in
+  - .NET Web Projects
+  - .NET Web API Projects
+  - .NET Angular projects
+  - .NET React projects
+- The proxy is designed for Docker, but native execution is also supported.
+
+## Quickstart
+
+You can swiftly implement the BFF Security Pattern within minutes using the OidcProxy.Net. Follow these steps to get started:
 
 ```bash
 dotnet new web
-dotnet add package GoCloudNative.Bff.Authentication
-dotnet add package GoCloudNative.Bff.Authentication.OpenIdConnect
+dotnet add package OidcProxy.Net.OpenIdConnect
 ```
 
-Create the following `Program.cs`:
+Create the `Program.cs`:
 
 ```csharp
-using GoCloudNative.Bff.Authentication.ModuleInitializers;
-using GoCloudNative.Bff.Authentication.OpenIdConnect;
+using OidcProxy.Net.ModuleInitializers;
+using OidcProxy.Net.OpenIdConnect;
 
 var builder = WebApplication.CreateBuilder(args);
 
 var config = builder.Configuration
-    .GetSection("Bff")
+    .GetSection("OidcProxy")
     .Get<OidcBffConfig>();
 
-builder.Services.AddBff(config);
+builder.Services.AddOidcProxy(config);
 
 var app = builder.Build();
 
-app.UseBff();
+app.UseOidcProxy();
 
 app.Run();
 ```
@@ -57,7 +111,7 @@ And use the following `appsettings.json`:
     }
   },
   "AllowedHosts": "*",
-  "Bff": {
+  "OidcProxy": {
     "LandingPage": "/hello",
     "Oidc": {
       "ClientId": "clientid",
@@ -86,135 +140,14 @@ And use the following `appsettings.json`:
   }
 }
 ```
-
-
-This solution supports authentication with
+This solution supports authentication with:
 
 - [Auth0](https://medium.com/web-security/implementing-the-bff-security-pattern-with-gocloudnative-bff-and-auth0-773a888979c)
 - [Azure Active Directory](https://medium.com/web-security/implementing-the-bff-security-pattern-with-azuread-b2c-4f340cafecfb)
 - [IdentityServer4](https://medium.com/web-security/implementing-the-bff-security-pattern-with-identityserver4-and-gocloudnative-bff-a8b594308363)
 
-# What problem does this software solve?
+## We need your help
 
-Many organizations who have a Single Page Application, have access_tokens in the front-end, and have a microservices architecture, are now struggling to move authentication to the server side. This is made possible with this software.
-
-This section explains:
-* What is 'wrong' with having access_tokens at the client-side
-* What the alternative is
-* How this software works
-
-## The problem:
-
-Many organisations have implemented the following architecture:
-
-<p align="center">
-    <img src="docs/gocloudnative.org/content/Diagrams/spa-without-bff.png" alt="PKCE without client_secret" width="500">
-</p>
-
-* The Single Page Application
-    * It runs in the browser
-    * It takes initiative to authenticate the user by forwarding unauthenticated users to the Identity Provider
-    * When the user has authenticated, the Single Page Application typically takes initiative to let this authentication manifest in an access token (by invoking the /token endpoint)
-    * The Single Page Application invokes http endpoints with a `Authentication` header which contains the token.
-* The Identity Provider
-    * This is an OpenId Connect server
-    * It produces access tokens
-    * It validates the users identity. In other words: Users log in here.
-* APIs/microservices
-    * Protected with access_tokes. Typically, the resources in this API can only be accessed with a valid access_token.
-    * The APIs apply a rule to determine whether a user is authorized to use/see a resource or not. In other words: It applies a policy.
-
-## What is 'wrong' with this architecture?
-
-There are two reasons one could argue not to use this architecture:
-
-### 1.) Token exchange in the front-end exposes an unnecessary attack vector
-
-In such an architecture, when the user authenticates, a code is being sent to the front-end. The front-end must then exchange this code for an access_token.
-
-Theoretically, in this scenario, there is no way of telling who will exchange the code for a token. To ensure access tokens are being sent to the intended recipient, the client_secret is being used. In this scenario, the client secret is _not_ being used.
-
-### 2.) The access token can be 'stolen'
-Theoretically, because the token is being stored at the client side, it is easier to steal a token.
-
-### __Don't worry. This might not be a problem for you!__
-The fact that this architecture has these weak spots does not mean it is not a 'secure' architecture. Determine whether or not your application is secure enough for you by determining how likely it is your application will be compromised. Next, determine how much damage can be caused if somebody manages to steal the access token. 
-
-Use the probability/impact matrix to see if you need to act.
-
-## The recommended solution:
-
-Often, to mitigate the risks associated with the architecture stated in the previous chapter, the proposed solution is to move the authentication to the server side.
-
-As a result, the solution architecture will be a lot more complex. (This is why you must carefully consider whether or not you really need this.)
-
-To make it possible to authenticate the user on the server side, you'll need a component which keeps track of the user's session and authentictes the user:
-
-<p align="center">
-    <img src="docs/gocloudnative.org/content/Diagrams/architecture.png" alt="PKCE with client_secret on the server side" width="500">
-</p>
-
-In this diagram there is a:
-
-* Single Page App at the server side
-    * Runs in the browser
-    * It runs on the same domain as the API's
-    * It does not take initiative to authenticate users
-* The BFF
-    * Serves the resources for the Single Page Application (index.html and the /dist folder)
-    * Exposes the API's
-    * Has a HTTP-Session
-    * Takes initiative to authenticate the user (by redirecting the user to the Identity Provider)
-* The Identity Provider
-    * This is an OpenId Connect server
-    * It produces access tokens
-    * It validates the users identity. In other words: Users log in here.
-* APIs/microservices
-    * Protected with access_tokes. Typically, the resources in this API can only be accessed with a valid access_token.
-    * The APIs apply a rule to determine whether a user is authorized to use/see a resource or not. In other words: It applies a policy.
-
-### How is this more secure?
-
-This approach is more secure because of two reasons.
-
-__1.) The token exchange is done at the server side__ 
-
-For an attacker there is no way to see how the BFF obtains an access token. Therefor, it is extremely hard to interfere.
-
-Also, when authentication is done at the server side, it is secure to include the client_secret in the token request. This means the Identity Provider is now able to validate who is asking for a token.
-
-__2.) More secure session management__
-
-When a token is stored in the browser, typically this is done by storing the token in a secure cookie, in local storage, or in session storage.
-
-When the attacker manages to copy these, the attacker basically hijacked the session. To prevent this, the front-end would need to implement all sorts of measures to prevent session hijacking, cross-site request forgery, and so forth. 
-
-The best way to implement session management is by not implementing it yourself. Microsoft (and many other major corporations) has done the work for you. By running a session on the server side you can leverage the asp.net framework to get a proper http session.
-
-### How does it work?
-
-Simply put, a BFF is nothing but a reverse proxy. But it does not just forward traffic to down-stream services, it adds the `Authentication` to the forwarded requests too. 
-
-This BFF is built to process two types of requests. Most of the requests are API requests done by a Single Page Application. A BFF processes these requests as displayed in the following diagram:
-
-<p align="center">
-    <img src="docs/gocloudnative.org/content/Diagrams/BFF-flow.png" width="300">
-</p>
-
-The BFF is also built to serve a website. This means the user must be able to navigate to it with a browser.
-
-When the user navigates to the BFF, they can navigate to a special endpoint too: the /login endpoint. When the user navigates to this endpoint, the user is authenticated.
-
-The process flow to authenticate a user is visualised in the following diagram:
-
-<img src="docs/gocloudnative.org/content/Diagrams/BFF-login-workflow.png">
-
-## Want to help making the internet more secure?
-
-Get involved!
-
+* We need maintainers
 * Star this repository
-* Follow this repository
-* Create issues when for missing features
-* Contribute to this repository
-* Write articles about this repository
+* Create issues when for missing features\

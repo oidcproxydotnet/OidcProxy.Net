@@ -23,7 +23,7 @@
     </ItemGroup>
 
     <ItemGroup>
-      <ProjectReference Include="..\..\src\OidcProxy.Net.AzureAd\OidcProxy.Net.AzureAd.csproj" />
+      <ProjectReference Include="..\..\src\OidcProxy.Net.EntraId\OidcProxy.Net.EntraId.csproj" />
     </ItemGroup>
 
 </Project>

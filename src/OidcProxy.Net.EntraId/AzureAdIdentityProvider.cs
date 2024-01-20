@@ -5,12 +5,12 @@ using Microsoft.Extensions.Caching.Memory;
 using Microsoft.Extensions.Logging;
 using Microsoft.Identity.Client;
 
-namespace OidcProxy.Net.AzureAd;
+namespace OidcProxy.Net.EntraId;
 
 public class AzureAdIdentityProvider : OpenIdConnectIdentityProvider
 {
     private readonly HttpClient _httpClient;
-    private readonly AzureAdConfig _configuration;
+    private readonly EntraIdConfig _configuration;
 
     protected override string DiscoveryEndpointAddress => _configuration.DiscoveryEndpoint;
     
@@ -18,7 +18,7 @@ public class AzureAdIdentityProvider : OpenIdConnectIdentityProvider
     public AzureAdIdentityProvider(ILogger<OpenIdConnectIdentityProvider> logger,
         IMemoryCache cache, 
         HttpClient httpClient, 
-        AzureAdConfig configuration) 
+        EntraIdConfig configuration) 
         : base(logger, cache, httpClient, configuration)
     {
         _httpClient = httpClient;

@@ -21,7 +21,7 @@ public class Auth0IntegrationTests : IClassFixture<HostApplication>
 
         try
         {
-            await app.NavigateToBff();
+            await app.NavigateToProxy();
             await Task.Delay(1000);
 
             await app.Auth0LoginPage.TxtUsername.TypeAsync(username);
@@ -39,14 +39,14 @@ public class Auth0IntegrationTests : IClassFixture<HostApplication>
             app.EchoEndpoint.Text.Should().Contain("Bearer ey");
 
             // Log out
-            await app.GoTo("/account/end-session");
+            await app.GoTo("/.auth/end-session");
             await Task.Delay(1000);
             
             await app.Auth0SignOutPage.BtnAccept.ClickAsync();
             await app.WaitForNavigationAsync();
             
             // Assert user details flushed
-            await app.GoTo("/account/me");
+            await app.GoTo("/.auth/me");
             await Task.Delay(1000);
             
             app.MeEndpoint.Text.Should().NotContain(username);

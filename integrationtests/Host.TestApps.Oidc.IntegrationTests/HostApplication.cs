@@ -21,14 +21,14 @@ public class HostApplication : IAsyncLifetime, IDisposable
         var builder = WebApplication.CreateBuilder(Array.Empty<string>());
 
         var config = builder.Configuration
-            .GetSection("Bff")
-            .Get<OidcBffConfig>();
+            .GetSection("OidcProxy")
+            .Get<OidcProxyConfig>();
         
-        builder.Services.AddBff(config);
+        builder.Services.AddOidcProxy(config);
 
         _testApi = builder.Build();
 
-        _testApi.UseBff();
+        _testApi.UseOidcProxy();
 
         _testApi.Urls.Add("https://localhost:8443");
 

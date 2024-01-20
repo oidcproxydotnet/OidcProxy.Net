@@ -2,21 +2,21 @@
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 
-namespace OidcProxy.Net.AzureAd;
+namespace OidcProxy.Net.EntraId;
 
 public static class ModuleInitializer
 {
-    public static void ConfigureAzureAd(this BffOptions options, IConfigurationSection configurationSection, string endpointName = "account")
-        => ConfigureAzureAd(options, configurationSection.Get<AzureAdConfig>(), endpointName);
+    public static void ConfigureAzureAd(this ProxyOptions options, IConfigurationSection configurationSection, string endpointName = "account")
+        => ConfigureAzureAd(options, configurationSection.Get<EntraIdConfig>(), endpointName);
 
-    public static void ConfigureAzureAd(this BffOptions options, AzureAdConfig config, string endpointName = "account")
+    public static void ConfigureAzureAd(this ProxyOptions options, EntraIdConfig config, string endpointName = "account")
     {
         if (!config.Validate(out var errors))
         {
             throw new NotSupportedException(string.Join(", ", errors));
         }
         
-        options.RegisterIdentityProvider<AzureAdIdentityProvider, AzureAdConfig>(config, endpointName);
+        options.RegisterIdentityProvider<AzureAdIdentityProvider, EntraIdConfig>(config, endpointName);
     }
     
     /// <summary>
@@ -25,16 +25,16 @@ public static class ModuleInitializer
     /// <param name="serviceCollection"></param>
     /// <param name="config"></param>
     /// <returns></returns>
-    public static IServiceCollection AddBff(this IServiceCollection serviceCollection, AzureAdBffConfig config,
-        Action<BffOptions>? configureOptions = null)
+    public static IServiceCollection AddOidcProxy(this IServiceCollection serviceCollection, EntraIdProxyConfig config,
+        Action<ProxyOptions>? configureOptions = null)
     {
         if (config == null)
         {
             throw new ArgumentNullException(nameof(config), "Failed to initialise GoCloudNative.Authentication.Bff. Config cannot be null. " +
-                $"Invoke `builder.Services.AddBff(..)` with an instance of `{nameof(AzureAdBffConfig)}`.");
+                $"Invoke `builder.Services.AddOidcProxy(..)` with an instance of `{nameof(EntraIdProxyConfig)}`.");
         }
 
-        var aadConfig = config.AzureAd;
+        var aadConfig = config.EntraId;
         var endpointName = config.EndpointName ?? "account";
         var routes = config.ReverseProxy?.Routes.ToRouteConfig();
         var clusters = config.ReverseProxy?.Clusters.ToClusterConfig();
@@ -42,25 +42,25 @@ public static class ModuleInitializer
         if (aadConfig == null)
         {
             throw new ArgumentException("Failed to initialise GoCloudNative.Authentication.Bff. " +
-                $"Invoke `builder.Services.AddBff(..)` with an instance of `{nameof(AzureAdBffConfig)}` " +
-                $"and provide a value for {nameof(AzureAdBffConfig)}.{nameof(config.AzureAd)}.");
+                $"Invoke `builder.Services.AddOidcProxy(..)` with an instance of `{nameof(EntraIdProxyConfig)}` " +
+                $"and provide a value for {nameof(EntraIdProxyConfig)}.{nameof(config.EntraId)}.");
         }
         
         if (routes == null || !routes.Any())
         {
             throw new ArgumentException("Failed to initialise GoCloudNative.Authentication.Bff. " +
-                $"Invoke `builder.Services.AddBff(..)` with an instance of `{nameof(AzureAdBffConfig)}` " +
-                $"and provide a value for {nameof(AzureAdBffConfig)}.{nameof(config.ReverseProxy)}.{nameof(config.ReverseProxy.Routes)}.");
+                $"Invoke `builder.Services.AddOidcProxy(..)` with an instance of `{nameof(EntraIdProxyConfig)}` " +
+                $"and provide a value for {nameof(EntraIdProxyConfig)}.{nameof(config.ReverseProxy)}.{nameof(config.ReverseProxy.Routes)}.");
         }
         
         if (clusters == null || !clusters.Any())
         {
             throw new ArgumentException("Failed to initialise GoCloudNative.Authentication.Bff. " +
-                $"Invoke `builder.Services.AddBff(..)` with an instance of `{nameof(AzureAdBffConfig)}` " +
-                $"and provide a value for {nameof(AzureAdBffConfig)}.{nameof(config.ReverseProxy)}.{nameof(config.ReverseProxy.Clusters)}.");
+                $"Invoke `builder.Services.AddOidcProxy(..)` with an instance of `{nameof(EntraIdProxyConfig)}` " +
+                $"and provide a value for {nameof(EntraIdProxyConfig)}.{nameof(config.ReverseProxy)}.{nameof(config.ReverseProxy.Clusters)}.");
         }
 
-        return serviceCollection.AddBff(options =>
+        return serviceCollection.AddOidcProxy(options =>
         {
             AssignIfNotNull(config.ErrorPage, options.SetAuthenticationErrorPage);
             AssignIfNotNull(config.LandingPage, options.SetLandingPage);

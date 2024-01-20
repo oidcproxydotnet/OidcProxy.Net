@@ -10,7 +10,7 @@ public class RegisterIdentityProviderTests
     public void WhenRegisteringEndpointNameTwice_ShouldThrowNotSupportedException()
     {
         // Arrange
-        var sut = new BffOptions();
+        var sut = new ProxyOptions();
         sut.RegisterIdentityProvider<TestIdp1, TestConfig>(new TestConfig(), "test");
         
         // Act
@@ -24,7 +24,7 @@ public class RegisterIdentityProviderTests
     public void WhenRegisteringTypeTwice_ShouldThrowNotSupportedException()
     {
         // Arrange
-        var sut = new BffOptions();
+        var sut = new ProxyOptions();
         sut.RegisterIdentityProvider<TestIdp1, TestConfig>(new TestConfig(), "test1");
         
         // Act
@@ -38,7 +38,7 @@ public class RegisterIdentityProviderTests
     public void WhenRegisteringOptionsTypeTwice_ShouldThrowNotSupportedException()
     {
         // Arrange
-        var sut = new BffOptions();
+        var sut = new ProxyOptions();
         sut.RegisterIdentityProvider<TestIdp1, TestConfig>(new TestConfig(), "test1");
         
         // Act

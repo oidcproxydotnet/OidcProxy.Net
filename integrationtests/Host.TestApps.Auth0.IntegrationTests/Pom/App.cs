@@ -9,7 +9,7 @@ public class App
 
     private const string BaseAddress = "https://localhost:8443";
 
-    public async Task NavigateToBff()
+    public async Task NavigateToProxy()
     {
         using var browserFetcher = new BrowserFetcher(SupportedBrowser.Chrome);
         await browserFetcher.DownloadAsync();
@@ -22,7 +22,7 @@ public class App
         });
         
         _page = await _browser.NewPageAsync();
-        await _page.GoToAsync($"{BaseAddress}/account/login");
+        await _page.GoToAsync($"{BaseAddress}/.auth/login");
     }
 
     public async Task GoTo(string uri)

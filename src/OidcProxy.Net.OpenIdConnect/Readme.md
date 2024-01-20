@@ -28,10 +28,10 @@ using OidcProxy.Net.OpenIdConnect;
 var builder = WebApplication.CreateBuilder(args);
 
 var config = builder.Configuration
-    .GetSection("Bff")
-    .Get<OidcBffConfig>();
+    .GetSection("OidcProxy")
+    .Get<OidcProxyConfig>();
 
-builder.Services.AddBff(config);
+builder.Services.AddOidcProxy(config);
 
 var app = builder.Build();
 
@@ -51,7 +51,7 @@ Create the following `appsettings.json` file:
     }
   },
   "AllowedHosts": "*",
-  "Bff": {
+  "OidcProxy": {
     "LandingPage": "/hello",
     "Oidc": {
       "ClientId": "{your_client_id}",
@@ -103,4 +103,4 @@ To revoke the tokens that have been obtained when the user logged in, execute a 
 
 ## Issues
 
-Are you encountering issues? Please let us know at: https://github.com/thecloudnativewebapp/GoCloudNative.Bff/issues
+Are you encountering issues? Please let us know at: https://github.com/thecloudnativewebapp/OidcProxy.Net/issues

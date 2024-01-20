@@ -48,11 +48,11 @@ public class OpenIdConnectBffConfigurationTests
     }
     ";
     
-    private readonly OidcBffConfig? _deserializedObject;
+    private readonly OidcProxyConfig? _deserializedObject;
     
     public OpenIdConnectBffConfigurationTests()
     {
-        _deserializedObject = JsonConvert.DeserializeObject<OidcBffConfig>(json);
+        _deserializedObject = JsonConvert.DeserializeObject<OidcProxyConfig>(json);
     }
     
     [Fact]

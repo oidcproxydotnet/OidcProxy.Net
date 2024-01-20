@@ -5,13 +5,13 @@ namespace OidcProxy.Net.ModuleInitializers;
 
 public static class ModuleInitializer
 {
-    private static readonly BffOptions Options = new();
+    private static readonly ProxyOptions Options = new();
 
     /// <summary>
-    /// Initialises the BFF
+    /// Initialises the proxy
     /// </summary>
-    public static IServiceCollection AddBff(this IServiceCollection serviceCollection,
-        Action<BffOptions>? configureOptions = null)
+    public static IServiceCollection AddOidcProxy(this IServiceCollection serviceCollection,
+        Action<ProxyOptions>? configureOptions = null)
     {
         configureOptions?.Invoke(Options);
         
@@ -20,13 +20,13 @@ public static class ModuleInitializer
     }
 
     /// <summary>
-    /// Bootstraps the BFF.
+    /// Bootstraps the proxy.
     /// </summary>
-    public static WebApplication UseBff(this WebApplication app)
+    public static WebApplication UseOidcProxy(this WebApplication app)
     {
         if (Options.IdpRegistration == null)
         {
-            throw new NotSupportedException("Cannot bootstrap GoCloudNative.Bff. Register an identity provider.");
+            throw new NotSupportedException("Cannot bootstrap OidcProxy.Net. Register an identity provider.");
         }
 
         Options.IdpRegistration.Apply(app);

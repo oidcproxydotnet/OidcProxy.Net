@@ -18,7 +18,7 @@ public class SetLandingPageTests
     [InlineData("/error#q=x")]
     public void ValidRelativePath_ShouldSetLandingPage(string relativePath)
     {
-        var sut = new BffOptions();
+        var sut = new ProxyOptions();
         
         sut.SetLandingPage(relativePath);
 
@@ -31,7 +31,7 @@ public class SetLandingPageTests
     [InlineData("https://external.domain.com")]
     public void InvalidRelativePath_ShouldThrowNotSupportedException(string path)
     {
-        var sut = new BffOptions();
+        var sut = new ProxyOptions();
         
         var actual = () => sut.SetLandingPage(path);
 

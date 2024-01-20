@@ -12,7 +12,7 @@ Currently, OidcProxy.Net supports logging in with Azure, Auth0, IdentityServer4,
 
 ## Quickstart: Implementing the BFF Security Pattern
 
-To build a BFF, execute the following commands:
+To build it, execute the following commands:
 
 ```bash
 dotnet new web
@@ -28,14 +28,14 @@ using OidcProxy.Net.ModuleInitializers;
 var builder = WebApplication.CreateBuilder(args);
 
 var config = builder.Configuration
-    .GetSection("Bff")
-    .Get<Auth0BffConfig>();
+    .GetSection("OidcProxy")
+    .Get<Auth0ProxyConfig>();
 
-builder.Services.AddBff(config);
+builder.Services.AddOidcProxy(config);
 
 var app = builder.Build();
 
-app.UseBff();
+app.UseOidcProxy();
 
 app.Run();
 ```
@@ -51,7 +51,7 @@ Create the following `appsettings.json` file:
     }
   },
   "AllowedHosts": "*",
-  "Bff": {
+  "OidcProxy": {
     "LandingPage": "/hello",
     "Auth0": {
       "ClientId": "{yourClientId}",
@@ -89,11 +89,11 @@ Create the following `appsettings.json` file:
 
 In this example we assume you are running a Single Page Application on localhost on port `4200` and you have an API running at localhost on port `8080`. If that is not the case, then update the `appsettings.json` accordingly.
 
-To run the BFF, type `dotnet run` or just hit the 'play'-button in Visual Studio.
+To run it, type `dotnet run` or just hit the 'play'-button in Visual Studio.
 
 ## Endpoints
 
-The BFF relays all requests as configured in the `ReverseProxy` section in the `appsettings.json` file, except for four endpoints:
+The proxy relays all requests as configured in the `ReverseProxy` section in the `appsettings.json` file, except for four endpoints:
 
 ### [GET] /account/login
 To log a user in and to start a http session, navigate to `/account/login`. The software will redirect to the login page of the Identity Provider to log the user in. The resulting tokens will be stored in the user session and are not available in the browser.

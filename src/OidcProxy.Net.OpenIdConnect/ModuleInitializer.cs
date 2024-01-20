@@ -6,10 +6,10 @@ namespace OidcProxy.Net.OpenIdConnect;
 
 public static class ModuleInitializer
 {
-    public static void ConfigureOpenIdConnect(this BffOptions options, IConfigurationSection configurationSection, string endpointName = "account")
+    public static void ConfigureOpenIdConnect(this ProxyOptions options, IConfigurationSection configurationSection, string endpointName = "account")
         => ConfigureOpenIdConnect(options, configurationSection.Get<OpenIdConnectConfig>(), endpointName);
 
-    public static void ConfigureOpenIdConnect(this BffOptions options, OpenIdConnectConfig config, string endpointName = "account")
+    public static void ConfigureOpenIdConnect(this ProxyOptions options, OpenIdConnectConfig config, string endpointName = "account")
     {
         if (!config.Validate(out var errors))
         {
@@ -25,13 +25,13 @@ public static class ModuleInitializer
     /// <param name="serviceCollection"></param>
     /// <param name="config"></param>
     /// <returns></returns>
-    public static IServiceCollection AddBff(this IServiceCollection serviceCollection, OidcBffConfig config,
-        Action<BffOptions>? configureOptions = null)
+    public static IServiceCollection AddOidcProxy(this IServiceCollection serviceCollection, OidcProxyConfig config,
+        Action<ProxyOptions>? configureOptions = null)
     {
         if (config == null)
         {
             throw new ArgumentNullException(nameof(config), "Failed to initialise GoCloudNative.Authentication.Bff. Config cannot be null. " +
-                $"Invoke `builder.Services.AddBff(..)` with an instance of `{nameof(OidcBffConfig)}`.");
+                $"Invoke `builder.Services.AddOidcProxy(..)` with an instance of `{nameof(OidcProxyConfig)}`.");
         }
 
         var oidcConfig = config.Oidc;
@@ -42,25 +42,25 @@ public static class ModuleInitializer
         if (oidcConfig == null)
         {
             throw new ArgumentException("Failed to initialise GoCloudNative.Authentication.Bff. " +
-                $"Invoke `builder.Services.AddBff(..)` with an instance of `{nameof(OidcBffConfig)}` " +
-                $"and provide a value for {nameof(OidcBffConfig)}.{nameof(config.Oidc)}.");
+                $"Invoke `builder.Services.AddOidcProxy(..)` with an instance of `{nameof(OidcProxyConfig)}` " +
+                $"and provide a value for {nameof(OidcProxyConfig)}.{nameof(config.Oidc)}.");
         }
         
         if (routes == null || !routes.Any())
         {
             throw new ArgumentException("Failed to initialise GoCloudNative.Authentication.Bff. " +
-                $"Invoke `builder.Services.AddBff(..)` with an instance of `{nameof(OidcBffConfig)}` " +
-                $"and provide a value for {nameof(OidcBffConfig)}.{nameof(config.ReverseProxy)}.{nameof(config.ReverseProxy.Routes)}.");
+                $"Invoke `builder.Services.AddOidcProxy(..)` with an instance of `{nameof(OidcProxyConfig)}` " +
+                $"and provide a value for {nameof(OidcProxyConfig)}.{nameof(config.ReverseProxy)}.{nameof(config.ReverseProxy.Routes)}.");
         }
         
         if (clusters == null || !clusters.Any())
         {
             throw new ArgumentException("Failed to initialise GoCloudNative.Authentication.Bff. " +
-                $"Invoke `builder.Services.AddBff(..)` with an instance of `{nameof(OidcBffConfig)}` " +
-                $"and provide a value for {nameof(OidcBffConfig)}.{nameof(config.ReverseProxy)}.{nameof(config.ReverseProxy.Clusters)}.");
+                $"Invoke `builder.Services.AddOidcProxy(..)` with an instance of `{nameof(OidcProxyConfig)}` " +
+                $"and provide a value for {nameof(OidcProxyConfig)}.{nameof(config.ReverseProxy)}.{nameof(config.ReverseProxy.Clusters)}.");
         }
 
-        return serviceCollection.AddBff(options =>
+        return serviceCollection.AddOidcProxy(options =>
         {
             AssignIfNotNull(config.ErrorPage, options.SetAuthenticationErrorPage);
             AssignIfNotNull(config.LandingPage, options.SetLandingPage);

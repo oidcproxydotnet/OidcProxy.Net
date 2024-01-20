@@ -17,7 +17,7 @@ using RedLockNet.SERedis.Configuration;
 
 namespace OidcProxy.Net.ModuleInitializers;
 
-public class BffOptions
+public class ProxyOptions
 {
     internal IIdpRegistration? IdpRegistration = null;
 
@@ -61,7 +61,7 @@ public class BffOptions
         if (!ErrorPage.TryParse(errorPage, out var value))
         {
             const string errorMessage = "GNC-B-faa80ff1e452: " +
-                                        "Cannot initialize GoCloudNative.BFF. " +
+                                        "Cannot initialize OidcProxy.Net. " +
                                         "Invalid error page. " +
                                         "The path to the error page must be relative and may not have a querystring.";
             
@@ -80,7 +80,7 @@ public class BffOptions
         if (!LandingPage.TryParse(landingPage, out var value))
         {
             const string errorMessage = "GNC-B-f30ab76dde63: " +
-                                        "Cannot initialize GoCloudNative.BFF. " +
+                                        "Cannot initialize OidcProxy.Net. " +
                                         "Invalid landing page. " +
                                         "The path to the landing page must be relative and may not have a querystring.";
             
@@ -100,7 +100,7 @@ public class BffOptions
         if (!string.IsNullOrEmpty(hostname.Query))
         {
             throw new NotSupportedException("GCN-B-322cf6ab8a70: " +
-                                            "Cannot initialize GoCloudNative.BFF. " +
+                                            "Cannot initialize OidcProxy.Net. " +
                                             "Error configuring custom hostname. " +
                                             $"{hostname} is not a valid hostname. " +
                                             "A custom hostname may not have a querystring.");
@@ -115,7 +115,7 @@ public class BffOptions
     {
         if (IdpRegistration != null)
         {
-            throw new NotSupportedException("Unable to bootstrap GoCloudNative.Bff. " +
+            throw new NotSupportedException("Unable to bootstrap OidcProxy.Net. " +
                                             "Configuring multiple IdentityProviders is not supported.");
         }
 
@@ -189,7 +189,7 @@ public class BffOptions
     {
         if (IdpRegistration == null)
         {
-            throw new NotSupportedException("Unable to bootstrap GoCloudNative.Bff. " +
+            throw new NotSupportedException("Unable to bootstrap OidcProxy.Net. " +
                                             "You must register an IdentityProvider.");
         }
 

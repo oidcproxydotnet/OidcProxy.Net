@@ -5,10 +5,10 @@ using OidcProxy.Net.OpenIdConnect;
 var builder = WebApplication.CreateBuilder(args);
 
 var config = builder.Configuration
-    .GetSection("Bff")
-    .Get<OidcBffConfig>();
+    .GetSection("OidcProxy")
+    .Get<OidcProxyConfig>();
 
-builder.Services.AddBff(config);
+builder.Services.AddOidcProxy(config);
 
 var app = builder.Build();
 
@@ -27,6 +27,6 @@ app.MapGet("/custom/me", async context =>
     })
     .RequireAuthorization();
 
-app.UseBff();
+app.UseOidcProxy();
 
 app.Run();

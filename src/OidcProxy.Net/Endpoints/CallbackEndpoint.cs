@@ -13,7 +13,7 @@ internal static class CallbackEndpoint
     public static async Task<IResult> Get(HttpContext context,
         [FromServices] ILogger<IIdentityProvider> logger,
         [FromServices] IRedirectUriFactory redirectUriFactory,
-        [FromServices] BffOptions bffOptions,
+        [FromServices] ProxyOptions proxyOptions,
         [FromServices] IIdentityProvider identityProvider,
         [FromServices] IAuthenticationCallbackHandler callbackHandler)
     {
@@ -24,7 +24,7 @@ internal static class CallbackEndpoint
             {
                 logger.LogLine(context, "Unable to obtain access token. Querystring parameter 'code' has no value.");
                 
-                var redirectUri = $"{bffOptions.ErrorPage}{context.Request.QueryString}";
+                var redirectUri = $"{proxyOptions.ErrorPage}{context.Request.QueryString}";
                 return await callbackHandler.OnAuthenticationFailed(context, redirectUri);
             }
             
@@ -40,9 +40,9 @@ internal static class CallbackEndpoint
 
             await context.Session.SaveAsync(tokenResponse);
 
-            logger.LogLine(context, $"Redirect({bffOptions.LandingPage})");
+            logger.LogLine(context, $"Redirect({proxyOptions.LandingPage})");
 
-            return await callbackHandler.OnAuthenticated(context, bffOptions.LandingPage.ToString());
+            return await callbackHandler.OnAuthenticated(context, proxyOptions.LandingPage.ToString());
         }
         catch (Exception e)
         {

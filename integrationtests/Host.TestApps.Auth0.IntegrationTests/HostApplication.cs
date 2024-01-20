@@ -29,17 +29,17 @@ public class HostApplication : IAsyncLifetime, IDisposable
 
         builder.Configuration.AddConfiguration(configuration);
         
-        // Add bff
+        // Add proxy
         var config = builder.Configuration
-            .GetSection("Bff")
-            .Get<Auth0BffConfig>();
+            .GetSection("OidcProxy")
+            .Get<Auth0ProxyConfig>();
 
-        builder.Services.AddBff(config);
+        builder.Services.AddAuth0Proxy(config);
 
         // Build and run..
         _testApi = builder.Build();
 
-        _testApi.UseBff();
+        _testApi.UseOidcProxy();
 
         _testApi.Urls.Add("https://localhost:8443");
 

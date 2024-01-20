@@ -1,12 +1,12 @@
 using OidcProxy.Net.OpenIdConnect;
 
-namespace OidcProxy.Net.AzureAd;
+namespace OidcProxy.Net.EntraId;
 
-public class AzureAdConfig : OpenIdConnectConfig
+public class EntraIdConfig : OpenIdConnectConfig
 {
     public string TenantId { get; set; } = string.Empty;
     
-    public AzureAdConfig()
+    public EntraIdConfig()
     {
         this.DiscoveryEndpoint = $"{Authority}/v2.0/.well-known/openid-configuration";
     }
@@ -28,7 +28,7 @@ public class AzureAdConfig : OpenIdConnectConfig
         if (string.IsNullOrEmpty(TenantId))
         {
             isValid = false;
-            results.Add("GCN-AZ-42d458c58299: Unable to start GoCloudNative.Bff. Invalid TenantId. " +
+            results.Add("GCN-AZ-42d458c58299: Unable to start OidcProxy.Net. Invalid TenantId. " +
                         "Configure the TenantId in the appsettings.json or program.cs file and try again. " +
                         "More info: https://bff.gocloudnative.org/errors/gcn-az-42d458c58299");   
         }

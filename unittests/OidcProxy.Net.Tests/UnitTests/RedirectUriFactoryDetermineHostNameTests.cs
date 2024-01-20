@@ -17,7 +17,7 @@ public class RedirectUriFactoryDetermineHostNameTests
     [InlineData("https://localhost:8443/account/login/redirect", "https://localhost:8443")]
     public void WhenHttp_ShouldRewriteToHttps(string url, string expected)
     {   
-        var options = new BffOptions();
+        var options = new ProxyOptions();
         options.AlwaysRedirectToHttps = true;
 
         var _httpContext = CreateHttpContext(url);
@@ -39,7 +39,7 @@ public class RedirectUriFactoryDetermineHostNameTests
     [InlineData("https://localhost:8443/account/login/redirect", "https://localhost:8443")]
     public void WhenRewriteModeSetToFalseHttp_ShouldRewriteToHttps(string url, string expected)
     {   
-        var options = new BffOptions();
+        var options = new ProxyOptions();
         options.AlwaysRedirectToHttps = false;
 
         var _httpContext = CreateHttpContext(url);
@@ -60,7 +60,7 @@ public class RedirectUriFactoryDetermineHostNameTests
     [InlineData("https://localhost:8443/account/login/redirect", "https://localhost:8443")]
     public void WhenCustomHostNameHttp_ShouldRewriteToHttps(string url, string expected)
     {   
-        var options = new BffOptions();
+        var options = new ProxyOptions();
         options.AlwaysRedirectToHttps = true;
         options.SetCustomHostName(new Uri(url));
 
@@ -80,7 +80,7 @@ public class RedirectUriFactoryDetermineHostNameTests
     [InlineData("https://localhost:8443/account/login/redirect", "https://localhost:8443")]
     public void WhenCustomHostNameAndRewriteModeSetToFalse_ShouldNotRewriteToHttps(string url, string expected)
     {   
-        var options = new BffOptions();
+        var options = new ProxyOptions();
         options.AlwaysRedirectToHttps = false;
         options.SetCustomHostName(new Uri(url));
 

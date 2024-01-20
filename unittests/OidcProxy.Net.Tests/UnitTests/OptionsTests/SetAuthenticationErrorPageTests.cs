@@ -14,7 +14,7 @@ public class SetAuthenticationErrorPageTests
     [InlineData("/oh/my/something%20really-bad has_happened")]
     public void ValidRelativePath_ShouldSetErrorPage(string relativePath)
     {
-        var sut = new BffOptions();
+        var sut = new ProxyOptions();
         
         sut.SetAuthenticationErrorPage(relativePath);
 
@@ -31,7 +31,7 @@ public class SetAuthenticationErrorPageTests
     [InlineData("/error#q=x")]
     public void InvalidRelativePath_ShouldThrowNotSupportedException(string path)
     {
-        var sut = new BffOptions();
+        var sut = new ProxyOptions();
         
         var actual = () => sut.SetAuthenticationErrorPage(path);
 
