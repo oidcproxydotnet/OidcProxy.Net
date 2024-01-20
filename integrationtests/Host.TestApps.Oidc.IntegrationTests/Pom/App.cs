@@ -7,7 +7,7 @@ public class App
     private IPage? _page;
     private IBrowser _browser;
 
-    private const string BaseAddress = "https://localhost:8443";
+    private const string BaseAddress = "https://localhost:8444";
 
     public async Task NavigateToProxy()
     {

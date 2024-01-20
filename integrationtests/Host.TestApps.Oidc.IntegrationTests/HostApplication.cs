@@ -30,7 +30,7 @@ public class HostApplication : IAsyncLifetime, IDisposable
 
         _testApi.UseOidcProxy();
 
-        _testApi.Urls.Add("https://localhost:8443");
+        _testApi.Urls.Add("https://localhost:8444");
 
         return _testApi.StartAsync();
     }
