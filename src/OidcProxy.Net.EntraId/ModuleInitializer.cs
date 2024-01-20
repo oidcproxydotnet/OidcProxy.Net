@@ -6,17 +6,17 @@ namespace OidcProxy.Net.EntraId;
 
 public static class ModuleInitializer
 {
-    public static void ConfigureAzureAd(this ProxyOptions options, IConfigurationSection configurationSection, string endpointName = ".auth")
-        => ConfigureAzureAd(options, configurationSection.Get<EntraIdConfig>(), endpointName);
+    public static void ConfigureEntraId(this ProxyOptions options, IConfigurationSection configurationSection, string endpointName = ".auth")
+        => ConfigureEntraId(options, (IConfigurationSection)configurationSection.Get<EntraIdConfig>(), endpointName);
 
-    public static void ConfigureAzureAd(this ProxyOptions options, EntraIdConfig config, string endpointName = ".auth")
+    public static void ConfigureEntraId(this ProxyOptions options, EntraIdConfig config, string endpointName = ".auth")
     {
         if (!config.Validate(out var errors))
         {
             throw new NotSupportedException(string.Join(", ", errors));
         }
         
-        options.RegisterIdentityProvider<AzureAdIdentityProvider, EntraIdConfig>(config, endpointName);
+        options.RegisterIdentityProvider<EntraIdIdentityProvider, EntraIdConfig>(config, endpointName);
     }
     
     /// <summary>
@@ -72,7 +72,7 @@ public static class ModuleInitializer
                 options.SessionIdleTimeout = config.SessionIdleTimeout.Value;
             }
             
-            options.ConfigureAzureAd(aadConfig, endpointName);
+            ConfigureEntraId(options, (IConfigurationSection)aadConfig, endpointName);
         
             options.ConfigureYarp(yarp => yarp.LoadFromMemory(routes, clusters));
             

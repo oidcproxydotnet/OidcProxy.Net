@@ -1,4 +1,4 @@
-# OidcProxy.Net.AzureAd
+# OidcProxy.Net.EntraId
 
 This package contains the software you need to implement the BFF Security Pattern. This software does three things:
 
@@ -16,20 +16,20 @@ To build it, execute the following commands:
 
 ```bash
 dotnet new web
-dotnet add package OidcProxy.Net.AzureAd
+dotnet add package OidcProxy.Net.EntraId
 ```
 
 Create the following `Program.cs` file:
 
 ```csharp
-using OidcProxy.Net.AzureAd;
+using OidcProxy.Net.EntraId;
 using OidcProxy.Net.ModuleInitializers;
 
 var builder = WebApplication.CreateBuilder(args);
 
 builder.Services.AddOidcProxy(o =>
 {
-    o.ConfigureAzureAd(builder.Configuration.GetSection("EntraId"));
+    o.ConfigureEntraId(builder.Configuration.GetSection("EntraId"));
     o.LoadYarpFromConfig(builder.Configuration.GetSection("ReverseProxy"));
 });
 
@@ -65,7 +65,7 @@ Create the following `appsettings.json` file:
   "AllowedHosts": "*",
   "OidcProxy": {
     "LandingPage": "/hello",
-    "AzureAd": {
+    "EntraId": {
       "ClientId": "{yourClientId}",
       "ClientSecret": "{yourClientSecret}",
       "Scopes": [

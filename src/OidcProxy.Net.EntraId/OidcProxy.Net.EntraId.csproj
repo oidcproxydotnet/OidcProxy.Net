@@ -13,7 +13,7 @@
     <PackageLicenseExpression>LGPL-3.0-only</PackageLicenseExpression>
     <Description>A yarp-based authentication gateway for your service mesh.</Description>
     <RepositoryUrl>https://github.com/thecloudnativewebapp/OidcProxy.Net</RepositoryUrl>
-    <PackageTags>BFF, Yarp, Azure Entra Ad, Cloud Native</PackageTags>
+    <PackageTags>BFF, Yarp, Microsoft Entra Ad, Cloud Native</PackageTags>
     <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
     <Title>OidcProxy.Net.EntraId</Title>
     <PackageProjectUrl>https://bff.gocloudnative.org</PackageProjectUrl>

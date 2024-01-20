@@ -9,7 +9,7 @@ COPY ["Host/Host.csproj", "Host/"]
 COPY ["OpenIdConnect/OidcProxy.Net.OpenIdConnect/OidcProxy.Net.OpenIdConnect.csproj", "OidcProxy.Net.OpenIdConnect/"]
 COPY ["OidcProxy.Net/OidcProxy.Net.csproj", "OidcProxy.Net/"]
 COPY ["Auth0/OidcProxy.Net.Auth0/OidcProxy.Net.Auth0.csproj", "OidcProxy.Net.Auth0/"]
-COPY ["AzureAd/OidcProxy.Net.AzureAd/OidcProxy.Net.csproj", "OidcProxy.Net.AzureAd/"]
+COPY ["EntraId/OidcProxy.Net.EntraId/OidcProxy.Net.EntraId.csproj", "OidcProxy.Net.EntraId/"]
 RUN dotnet restore "Host/Host.csproj"
 COPY . .
 WORKDIR "/src/Host"

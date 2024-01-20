@@ -7,7 +7,7 @@ using Microsoft.Identity.Client;
 
 namespace OidcProxy.Net.EntraId;
 
-public class AzureAdIdentityProvider : OpenIdConnectIdentityProvider
+public class EntraIdIdentityProvider : OpenIdConnectIdentityProvider
 {
     private readonly HttpClient _httpClient;
     private readonly EntraIdConfig _configuration;
@@ -15,7 +15,7 @@ public class AzureAdIdentityProvider : OpenIdConnectIdentityProvider
     protected override string DiscoveryEndpointAddress => _configuration.DiscoveryEndpoint;
     
 
-    public AzureAdIdentityProvider(ILogger<OpenIdConnectIdentityProvider> logger,
+    public EntraIdIdentityProvider(ILogger<OpenIdConnectIdentityProvider> logger,
         IMemoryCache cache, 
         HttpClient httpClient, 
         EntraIdConfig configuration) 

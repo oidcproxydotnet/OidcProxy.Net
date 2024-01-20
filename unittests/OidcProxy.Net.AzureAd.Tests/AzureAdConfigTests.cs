@@ -1,7 +1,7 @@
 using FluentAssertions;
 using OidcProxy.Net.EntraId;
 
-namespace OidcProxy.Net.AzureAd.Tests;
+namespace EntraId.Tests;
 
 public class AzureAdConfigTests
 {
