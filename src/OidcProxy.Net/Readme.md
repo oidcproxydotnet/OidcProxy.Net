@@ -16,7 +16,6 @@ To build a BFF, execute the following commands:
 
 ```bash
 dotnet new web
-dotnet add package OidcProxy.Net
 dotnet add package OidcProxy.Net.OpenIdConnect
 ```
 
