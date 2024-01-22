@@ -35,6 +35,8 @@ public class ProxyOptions
         
     internal LandingPage LandingPage;
 
+    internal LandingPage[] AllowedUserPreferredLandingPages = Array.Empty<LandingPage>();
+
     /// <summary>
     /// Gets or sets the name of the cookie.
     /// </summary>
@@ -50,6 +52,12 @@ public class ProxyOptions
     /// instead of https. This feature might come in handy when hosting the software in a Docker image.
     /// </summary>
     public bool AlwaysRedirectToHttps { get; set; } = true;
+    
+    /// <summary>
+    /// Gets or sets a value that indicates whether or not the user is allowed to specify the page he/she wants to be
+    /// redirected to after authenticating successfully.
+    /// </summary>
+    public bool EnableUserPreferredLandingPages { get; set; } = false;
 
     /// <summary>
     /// Sets a custom page to redirect to when the authentication on the OIDC Server failed.
@@ -72,9 +80,9 @@ public class ProxyOptions
     }
 
     /// <summary>
-    /// 
+    /// Set the page the user will be redirected to after authenticating successfully
     /// </summary>
-    /// <param name="landingPage"></param>
+    /// <param name="landingPage">The relative path the user will be redirected to.</param>
     public void SetLandingPage(string landingPage)
     {
         if (!LandingPage.TryParse(landingPage, out var value))
@@ -82,12 +90,43 @@ public class ProxyOptions
             const string errorMessage = "GNC-B-f30ab76dde63: " +
                                         "Cannot initialize OidcProxy.Net. " +
                                         "Invalid landing page. " +
-                                        "The path to the landing page must be relative and may not have a querystring.";
+                                        "The path to the landing page must be relative.";
             
             throw new NotSupportedException(errorMessage);
         }
         
         LandingPage = value;
+    }
+    
+    /// <summary>
+    /// 
+    /// </summary>
+    /// <param name="landingPage"></param>
+    public void SetAllowedLandingPages(IEnumerable<string>? landingPages)
+    {
+        if (landingPages == null || !landingPages.Any())
+        {
+            return;
+        }
+
+        var allowedLandingPages = new List<LandingPage>();
+        
+        foreach (var landingPage in landingPages)
+        {
+            if (!LandingPage.TryParse(landingPage, out var value))
+            {
+                const string errorMessage = "GNC-B-f30ab76dde63: " +
+                                            "Cannot initialize OidcProxy.Net. " +
+                                            "Invalid landing page. " +
+                                            "The path to the landing page must be relative.";
+            
+                throw new NotSupportedException(errorMessage);
+            }
+            
+            allowedLandingPages.Add(value);
+        }
+        
+        AllowedUserPreferredLandingPages = allowedLandingPages.ToArray();
     }
 
     /// <summary>

@@ -49,7 +49,9 @@ internal readonly partial struct LandingPage
     }
 
     public override string ToString() => string.IsNullOrEmpty(_value) ? "/" : _value;
-    
+
+    public bool Equals(string url) => this.ToString().Equals(url, StringComparison.InvariantCultureIgnoreCase);
+
     [GeneratedRegex("^\\/[a-zA-Z0-9.]")]
     private static partial Regex LandingPageRegex();
 }

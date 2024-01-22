@@ -34,12 +34,12 @@ public static class ModuleInitializer
                 $"Invoke `builder.Services.AddOidcProxy(..)` with an instance of `{nameof(EntraIdProxyConfig)}`.");
         }
 
-        var aadConfig = config.EntraId;
+        var entraIdConfig = config.EntraId;
         var endpointName = config.EndpointName ?? ".auth";
         var routes = config.ReverseProxy?.Routes.ToRouteConfig();
         var clusters = config.ReverseProxy?.Clusters.ToClusterConfig();
         
-        if (aadConfig == null)
+        if (entraIdConfig == null)
         {
             throw new ArgumentException("Failed to initialise OidcProxy.Net. " +
                 $"Invoke `builder.Services.AddOidcProxy(..)` with an instance of `{nameof(EntraIdProxyConfig)}` " +
@@ -67,12 +67,15 @@ public static class ModuleInitializer
             AssignIfNotNull(config.CustomHostName, options.SetCustomHostName);
             AssignIfNotNull(config.SessionCookieName, cookieName => options.SessionCookieName = cookieName);
             
+            options.EnableUserPreferredLandingPages = config.EnableUserPreferredLandingPages;
+            options.SetAllowedLandingPages(config.AllowedLandingPages);
+            
             if (config.SessionIdleTimeout.HasValue)
             {
                 options.SessionIdleTimeout = config.SessionIdleTimeout.Value;
             }
             
-            ConfigureEntraId(options, (IConfigurationSection)aadConfig, endpointName);
+            ConfigureEntraId(options, entraIdConfig, endpointName);
         
             options.ConfigureYarp(yarp => yarp.LoadFromMemory(routes, clusters));
             

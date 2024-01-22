@@ -15,6 +15,16 @@ internal static class LogExtensions
             line);
     }
     
+    public static void LogWarning<T>(this ILogger<T> logger, HttpContext context, string line)
+    {
+        logger.Log(LogLevel.Warning, "{0} [{1}] TraceId: {2} \"{3}\" Warning: \"{4}\"",
+            context.GetClientIpAddress(),
+            DateTime.Now, 
+            context.TraceIdentifier,
+            context.Request.GetEndpointAddress(),
+            line);
+    }
+    
     public static void LogException<T>(this ILogger<T> logger, HttpContext context,  Exception e)
     {
         logger.Log(LogLevel.Error, "{0} [{1}] TraceId: {2} \"{3}\" responded InternalServerError: \"{4}\"",

@@ -20,7 +20,6 @@ public static class ModuleInitializer
     }
 
     /// <summary>
-    /// Initialises the BFF. Also use app.UseBff();
     /// </summary>
     /// <param name="serviceCollection"></param>
     /// <param name="config"></param>
@@ -66,6 +65,9 @@ public static class ModuleInitializer
             AssignIfNotNull(config.LandingPage, options.SetLandingPage);
             AssignIfNotNull(config.CustomHostName, options.SetCustomHostName);
             AssignIfNotNull(config.SessionCookieName, cookieName => options.SessionCookieName = cookieName);
+            
+            options.EnableUserPreferredLandingPages = config.EnableUserPreferredLandingPages;
+            options.SetAllowedLandingPages(config.AllowedLandingPages);
             
             if (config.SessionIdleTimeout.HasValue)
             {
