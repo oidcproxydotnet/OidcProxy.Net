@@ -1,4 +1,8 @@
+using System.Linq;
 using System.Security.Claims;
+using Microsoft.AspNetCore.Builder;
+using Microsoft.AspNetCore.Http;
+using Microsoft.Extensions.Configuration;
 using OidcProxy.Net.ModuleInitializers;
 using OidcProxy.Net.OpenIdConnect;
 
