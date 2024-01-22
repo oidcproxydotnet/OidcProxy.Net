@@ -8,6 +8,10 @@
   </PropertyGroup>
 
   <Target Name="CopyScriptsToProject" BeforeTargets="Build">
+    <Message Text="Building ClientApp. This may take a while." />
+    <Exec Command="npm install" Condition="'$(RestorePackagesWithLockFile)' != 'true'" WorkingDirectory="$(MSBuildProjectDirectory)\ClientApp" />
+    <Exec Command="npm run build" Condition="'$(RestorePackagesWithLockFile)' != 'true'" WorkingDirectory="$(MSBuildProjectDirectory)\ClientApp" />
+
     <Message Text="Copying ClientApp/dist folder to wwwroot" />
     <RemoveDir Directories="$(MSBuildProjectDirectory)\WwwRoot" />
     <ItemGroup>
@@ -24,9 +28,5 @@
     <Folder Include="ClientApp\dist\" />
     <Folder Include="wwwroot\" />
   </ItemGroup>
-
-  <Target Name="PreBuild" BeforeTargets="PreBuildEvent">
-    <Exec Command="npm i --prefix ClientApp&#xA;npm run build --prefix ClientApp" />
-  </Target>
 
 </Project>
