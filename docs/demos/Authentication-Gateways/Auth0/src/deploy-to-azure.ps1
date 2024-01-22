@@ -40,16 +40,16 @@ $acrLoginServer = $createAcrResult.loginServer;
 
 az acr login --name $createAcrResult.loginServer
 
-docker build -f Bff/Dockerfile -t gocloudnative-demo-bff:1.0 .
-docker tag gocloudnative-demo-bff:1.0 "$acrLoginServer/bffdemo-bff:1.0"
+docker build -f Bff/Dockerfile -t oidcproxy-demo-bff:1.0 .
+docker tag oidcproxy-demo-bff:1.0 "$acrLoginServer/bffdemo-bff:1.0"
 docker push "$acrLoginServer/bffdemo-bff:1.0"
 
-docker build -f Spa/Dockerfile  -t gocloudnative-demo-spa:1.0 .
-docker tag gocloudnative-demo-spa:1.0 "$acrLoginServer/bffdemo-spa:1.0"
+docker build -f Spa/Dockerfile  -t oidcproxy-demo-spa:1.0 .
+docker tag oidcproxy-demo-spa:1.0 "$acrLoginServer/bffdemo-spa:1.0"
 docker push "$acrLoginServer/bffdemo-spa:1.0"
 
-docker build -f Api/Dockerfile -t gocloudnative-demo-api:1.0 .
-docker tag gocloudnative-demo-api:1.0 "$acrLoginServer/bffdemo-api:1.0"
+docker build -f Api/Dockerfile -t oidcproxy-demo-api:1.0 .
+docker tag oidcproxy-demo-api:1.0 "$acrLoginServer/bffdemo-api:1.0"
 docker push "$acrLoginServer/bffdemo-api:1.0"
 
 Write-Host "======= Creating Redis Cache ======"

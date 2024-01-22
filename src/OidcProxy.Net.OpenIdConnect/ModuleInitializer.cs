@@ -64,7 +64,7 @@ public static class ModuleInitializer
             AssignIfNotNull(config.ErrorPage, options.SetAuthenticationErrorPage);
             AssignIfNotNull(config.LandingPage, options.SetLandingPage);
             AssignIfNotNull(config.CustomHostName, options.SetCustomHostName);
-            AssignIfNotNull(config.SessionCookieName, cookieName => options.SessionCookieName = cookieName);
+            AssignIfNotNull(config.CookieName, cookieName => options.CookieName = cookieName);
             
             options.EnableUserPreferredLandingPages = config.EnableUserPreferredLandingPages;
             options.SetAllowedLandingPages(config.AllowedLandingPages);

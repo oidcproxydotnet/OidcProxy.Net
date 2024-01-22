@@ -22,7 +22,7 @@ public class OpenIdConnectBffConfigurationTests
         ""ErrorPage"": ""/error.aspx"",
         ""LandingPage"": ""/welcome.aspx"",
         ""CustomHostName"": ""www.foobar.org"",
-        ""SessionCookieName"": ""bff.custom.cookie"",
+        ""CookieName"": ""bff.custom.cookie"",
         ""SessionIdleTimeout"": ""00:30:00"",
         ""PostLogoutRedirectEndpoint"": ""bye.aspx"",
         ""EndpointName"": ""auth"",
@@ -73,7 +73,7 @@ public class OpenIdConnectBffConfigurationTests
         _deserializedObject?.ErrorPage.Should().NotBeNullOrEmpty();
         _deserializedObject?.LandingPage.Should().NotBeNullOrEmpty();
         _deserializedObject?.CustomHostName.Should().NotBeNull();
-        _deserializedObject?.SessionCookieName.Should().NotBeNullOrEmpty();
+        _deserializedObject?.CookieName.Should().NotBeNullOrEmpty();
         _deserializedObject?.SessionIdleTimeout.Should().NotBe(TimeSpan.Zero);
     }
     

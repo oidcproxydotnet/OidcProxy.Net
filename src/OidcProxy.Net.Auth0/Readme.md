@@ -31,11 +31,11 @@ var config = builder.Configuration
     .GetSection("OidcProxy")
     .Get<Auth0ProxyConfig>();
 
-builder.Services.AddOidcProxy(config);
+builder.Services.AddAuth0Proxy(config);
 
 var app = builder.Build();
 
-app.UseOidcProxy();
+app.UseAuth0Proxy();
 
 app.Run();
 ```

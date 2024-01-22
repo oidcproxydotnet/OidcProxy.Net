@@ -1,3 +1,4 @@
+using Microsoft.AspNetCore.Builder;
 using OidcProxy.Net.ModuleInitializers;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -20,7 +21,7 @@ public static class ModuleInitializer
     }
     
     /// <summary>
-    /// Initialises the BFF. Also use app.UseBff();
+    /// Initialises the BFF. Also use app.UseAuth0Proxy();
     /// </summary>
     /// <param name="serviceCollection"></param>
     /// <param name="config"></param>
@@ -65,7 +66,7 @@ public static class ModuleInitializer
             AssignIfNotNull(config.ErrorPage, options.SetAuthenticationErrorPage);
             AssignIfNotNull(config.LandingPage, options.SetLandingPage);
             AssignIfNotNull(config.CustomHostName, options.SetCustomHostName);
-            AssignIfNotNull(config.SessionCookieName, cookieName => options.SessionCookieName = cookieName);
+            AssignIfNotNull(config.CookieName, cookieName => options.CookieName = cookieName);
             
             options.EnableUserPreferredLandingPages = config.EnableUserPreferredLandingPages;
             options.SetAllowedLandingPages(config.AllowedLandingPages);
@@ -82,6 +83,8 @@ public static class ModuleInitializer
             configureOptions?.Invoke(options);
         });
     }
+
+    public static void UseAuth0Proxy(this WebApplication app) => app.UseOidcProxy();
         
     private static void AssignIfNotNull<T>(T? value, Action<T> @do)
     {

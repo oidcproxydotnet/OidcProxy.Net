@@ -1,56 +1,39 @@
 using System.Net.Http.Headers;
 using Bff;
-using GoCloudNative.Bff.Authentication.Auth0;
-using GoCloudNative.Bff.Authentication.ModuleInitializers;
-using Microsoft.AspNetCore.DataProtection;
+using OidcProxy.Net;
+using OidcProxy.Net.Auth0;
 using StackExchange.Redis;
 
 var builder = WebApplication.CreateBuilder(args);
 
 builder.Services.AddHttpClient();
 
-// ======== Distributed session configuration ========
-// Use this if you're deploying to a container platform like Azure Container Apps or Kubernetes.
-// If the Redis connection string has been set, the following code configures two things
-// 1. Instead of storing session variables in the memory, session variables will be stored in Redis now. This allows
-//    the BFF to scale horizontally.
-// 2. It adds data-protection, this means all the session variables that are stored in Redis will be encrypted
-//
-// This section is OPTIONAL. Although it is highly recommended to configure this, you can safely remove this section
-// if it does not apply in your context.
-// <begin>
 var redisConnectionString = builder.Configuration.GetSection("ConnectionStrings:Redis").Get<string>();
-if (!string.IsNullOrEmpty(redisConnectionString))
-{
-    var redis = ConnectionMultiplexer.Connect(redisConnectionString);
-
-    builder.Services
-        .AddDataProtection()
-        .PersistKeysToStackExchangeRedis(redis, "bff");
-
-    builder.Services.AddStackExchangeRedisCache(options =>
-    {
-        options.Configuration = redis.Configuration;
-        options.InstanceName = "bff";
-    });
-}
-// <end>
 
 // ========= Configure the BFF =========
 // Reads the auth0 configuration from appsettings.json and bootstraps the BFF.
 // This section is REQUIRED. Without this section, your BFF will not work. 
 // <begin>
 var auth0Config = builder.Configuration
-    .GetSection("Bff")
-    .Get<Auth0BffConfig>();
+    .GetSection("OidcProxy")
+    .Get<Auth0ProxyConfig>();
 
-builder.Services.AddBff(auth0Config);
+builder.Services.AddAuth0Proxy(auth0Config, o =>
+{
+    if (string.IsNullOrEmpty(redisConnectionString))
+    {
+        return;
+    }
+    
+    var connection = ConnectionMultiplexer.Connect(redisConnectionString);
+    o.ConfigureRedisBackBone(connection);
+});
 
 var app = builder.Build();
 
 app.UseRouting();
 
-app.UseBff();
+app.UseAuth0Proxy();
 // <end>
 
 // ========= Create an endpoint that delegates requests to multiple downstream services =========

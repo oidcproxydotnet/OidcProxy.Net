@@ -1,7 +1,8 @@
 using System.Net.Http.Headers;
 using Bff;
-using GoCloudNative.Bff.Authentication.OpenIdConnect;
-using GoCloudNative.Bff.Authentication.ModuleInitializers;
+using OidcProxy.Net;
+using OidcProxy.Net.OpenIdConnect;
+using OidcProxy.Net.ModuleInitializers;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -9,15 +10,15 @@ builder.Services.AddHttpClient();
 
 var config = builder.Configuration
     .GetSection("Bff")
-    .Get<OidcBffConfig>();
+    .Get<OidcProxyConfig>();
 
-builder.Services.AddBff(config);
+builder.Services.AddOidcProxy(config);
 
 var app = builder.Build();
 
 app.UseRouting();
 
-app.UseBff();
+app.UseOidcProxy();
 
 // This is an example how you can execute multiple requests 
 app.Map("/api/weatherforecast", async (HttpContext context, HttpClient httpClient) =>

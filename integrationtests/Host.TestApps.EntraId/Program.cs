@@ -13,10 +13,10 @@ var entraIdConfig = builder.Configuration
     .GetSection("OidcProxy")
     .Get<EntraIdProxyConfig>();
 
-builder.Services.AddOidcProxy(entraIdConfig, o =>
+builder.Services.AddEntraIdProxy(entraIdConfig, o =>
 {
     o.AddClaimsTransformation<MyClaimsTransformation>();
-    o.ConfigureRedisBackBone(connectionMultiplexer, "http_session_key");
+    o.ConfigureRedisBackBone(connectionMultiplexer);
 });
 
 var app = builder.Build();
@@ -36,7 +36,7 @@ app.MapGet("/custom/me", async context =>
     })
     .RequireAuthorization();
 
-app.UseOidcProxy();
+app.UseEntraIdProxy();
 
 app.Run();
  

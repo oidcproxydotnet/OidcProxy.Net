@@ -1,4 +1,5 @@
-﻿using OidcProxy.Net.ModuleInitializers;
+﻿using Microsoft.AspNetCore.Builder;
+using OidcProxy.Net.ModuleInitializers;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 
@@ -20,12 +21,12 @@ public static class ModuleInitializer
     }
     
     /// <summary>
-    /// Initialises the BFF. Also use app.UseBff();
+    /// Initialises the BFF. Also use app.UseOidcProxy();
     /// </summary>
     /// <param name="serviceCollection"></param>
     /// <param name="config"></param>
     /// <returns></returns>
-    public static IServiceCollection AddOidcProxy(this IServiceCollection serviceCollection, EntraIdProxyConfig config,
+    public static IServiceCollection AddEntraIdProxy(this IServiceCollection serviceCollection, EntraIdProxyConfig config,
         Action<ProxyOptions>? configureOptions = null)
     {
         if (config == null)
@@ -65,7 +66,7 @@ public static class ModuleInitializer
             AssignIfNotNull(config.ErrorPage, options.SetAuthenticationErrorPage);
             AssignIfNotNull(config.LandingPage, options.SetLandingPage);
             AssignIfNotNull(config.CustomHostName, options.SetCustomHostName);
-            AssignIfNotNull(config.SessionCookieName, cookieName => options.SessionCookieName = cookieName);
+            AssignIfNotNull(config.CookieName, cookieName => options.CookieName = cookieName);
             
             options.EnableUserPreferredLandingPages = config.EnableUserPreferredLandingPages;
             options.SetAllowedLandingPages(config.AllowedLandingPages);
@@ -82,6 +83,8 @@ public static class ModuleInitializer
             configureOptions?.Invoke(options);
         });
     }
+
+    public static void UseEntraIdProxy(this WebApplication app) => app.UseOidcProxy();
         
     private static void AssignIfNotNull<T>(T? value, Action<T> @do)
     {

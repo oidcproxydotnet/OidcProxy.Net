@@ -10,7 +10,7 @@ import { User } from './userInfo';
 })
 export class AppUserName {
   
-    username$: Observable<string | null> = this.http.get<User>('/account/me', { observe: 'response' })
+    username$: Observable<string | null> = this.http.get<User>('/.auth/me', { observe: 'response' })
         .pipe(
             map((response) => {
                 return 'Welcome ' + response.body?.name;

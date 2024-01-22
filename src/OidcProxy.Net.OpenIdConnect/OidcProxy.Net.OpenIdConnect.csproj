@@ -6,8 +6,8 @@
         <Nullable>enable</Nullable>
 
         <PackageId>OidcProxy.Net.OpenIdConnect</PackageId>
-        <Version>1.0.0-rc.2</Version>
-        <Version>1.0.0-rc.2</Version>
+        <Version>1.0.0</Version>
+        <Version>1.0.0</Version>
         <Authors>Albert Starreveld</Authors>
         <Company>GoCloudNative.org</Company>
         <PackageLicenseExpression>LGPL-3.0-only</PackageLicenseExpression>

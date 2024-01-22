@@ -27,17 +27,15 @@ using OidcProxy.Net.ModuleInitializers;
 
 var builder = WebApplication.CreateBuilder(args);
 
-builder.Services.AddOidcProxy(o =>
-{
-    o.ConfigureEntraId(builder.Configuration.GetSection("EntraId"));
-    o.LoadYarpFromConfig(builder.Configuration.GetSection("ReverseProxy"));
-});
+var entraIdConfig = builder.Configuration
+    .GetSection("OidcProxy")
+    .Get<EntraIdProxyConfig>();
+
+builder.Services.AddEntraIdProxy(entraIdConfig);
 
 var app = builder.Build();
 
-app.UseRouting();
-
-app.UseOidcProxy();
+app.UseEntraIdProxy();
 
 app.Run();
 

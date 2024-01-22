@@ -1,6 +1,5 @@
 using Host.TestApps.Auth0;
 using OidcProxy.Net.Auth0;
-using OidcProxy.Net.ModuleInitializers;
 using System.Security.Claims;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -28,6 +27,6 @@ app.MapGet("/custom/me", async context =>
     })
     .RequireAuthorization();
 
-app.UseOidcProxy();
+app.UseAuth0Proxy();
 
 app.Run();

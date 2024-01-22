@@ -40,7 +40,7 @@ public class ProxyOptions
     /// <summary>
     /// Gets or sets the name of the cookie.
     /// </summary>
-    public string SessionCookieName { get; set; } = "oidcproxy.cookie";
+    public string CookieName { get; set; } = "oidcproxy.cookie";
 
     /// <summary>
     /// Get or set a value that indicates the amount of time of inactivity after which the session will be abandoned.
@@ -202,18 +202,18 @@ public class ProxyOptions
     /// <param name="connectionMultiplexer"></param>
     /// <param name="httpSessionKey"></param>
     /// <param name="redisInstanceName"></param>
-    public void ConfigureRedisBackBone(ConnectionMultiplexer connectionMultiplexer, string redisInstanceName)
+    public void ConfigureRedisBackBone(ConnectionMultiplexer connectionMultiplexer)
     {
         _applyBackBone = (serviceCollection) =>
         {
             serviceCollection
                 .AddDataProtection()
-                .PersistKeysToStackExchangeRedis(connectionMultiplexer, this.SessionCookieName);
+                .PersistKeysToStackExchangeRedis(connectionMultiplexer, this.CookieName);
 
             serviceCollection.AddStackExchangeRedisCache(options =>
             {
                 options.Configuration = connectionMultiplexer.Configuration;
-                options.InstanceName = redisInstanceName;
+                options.InstanceName = CookieName;
             });
 
             serviceCollection.AddTransient<IConcurrentContext, RedisConcurrentContext>();
@@ -254,7 +254,7 @@ public class ProxyOptions
                 options.IdleTimeout = SessionIdleTimeout;
                 options.Cookie.HttpOnly = true;
                 options.Cookie.IsEssential = true;    
-                options.Cookie.Name = SessionCookieName;
+                options.Cookie.Name = CookieName;
             });
         
         serviceCollection

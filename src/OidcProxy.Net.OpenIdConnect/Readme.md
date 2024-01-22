@@ -35,7 +35,7 @@ builder.Services.AddOidcProxy(config);
 
 var app = builder.Build();
 
-app.UseBff();
+app.UseOidcProxy();
 
 app.Run();
 ```

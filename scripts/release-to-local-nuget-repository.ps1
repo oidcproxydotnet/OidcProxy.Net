@@ -1,11 +1,11 @@
-$version = '0.0.19'
+$version = '1.0.0-rc.2'
 $repoDir = $home + '/local-nuget-repository'
 $repoSourceDir = $repoDir + '/source'
 
 # <methods>
-    function Add-Package-To-Local-Repository($package)
+    function Add-Package-To-Local-Repository($project, $package)
     {
-        cp "../src/$package/bin/Release/$package" $repoSourceDir
+        cp "src/$project/bin/Release/$package" $repoSourceDir
         nuget add "$repoSourceDir/$package" -Source $repoSourceDir
     }
 
@@ -23,8 +23,8 @@ $repoSourceDir = $repoDir + '/source'
 
     Create-Directory $repoSourceDir
 
-    Add-Package-To-Local-Repository "OidcProxy.Net.$version.nupkg" 
-    Add-Package-To-Local-Repository "OidcProxy.Net.$version.nupkg"
-    Add-Package-To-Local-Repository "OidcProxy.Net.$version.nupkg"
-    Add-Package-To-Local-Repository "OidcProxy.Net.$version.nupkg"
+    Add-Package-To-Local-Repository "OidcProxy.Net" "OidcProxy.Net.$version.nupkg" 
+    Add-Package-To-Local-Repository "OidcProxy.Net.Auth0" "OidcProxy.Net.Auth0.$version.nupkg"
+    Add-Package-To-Local-Repository "OidcProxy.Net.EntraId" "OidcProxy.Net.EntraId.$version.nupkg"
+    Add-Package-To-Local-Repository "OidcProxy.Net.OpenIdConnect" "OidcProxy.Net.OpenIdConnect.$version.nupkg"
 # </procedure>
