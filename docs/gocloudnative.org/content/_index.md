@@ -54,10 +54,6 @@ app.Run();
   },
   "AllowedHosts": "*",
   "OidcProxy": {
-    "LandingPage": "/.auth/me",
-    "AllowedLandingPages": [
-      "/custom/me"
-    ],
     "Oidc": {
       "ClientId": "{YourClientId}",
       "ClientSecret": "{YourClientSecret}",
