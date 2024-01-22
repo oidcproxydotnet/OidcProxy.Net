@@ -1,0 +1,21 @@
+<Project Sdk="Microsoft.NET.Sdk.Web">
+
+  <PropertyGroup>
+    <TargetFramework>net8.0</TargetFramework>
+    <Nullable>enable</Nullable>
+    <ImplicitUsings>enable</ImplicitUsings>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <Folder Include="WwwRoot\" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="OidcProxy.Net.OpenIdConnect" Version="1.0.0" />
+  </ItemGroup>
+
+  <Target Name="PreBuild" BeforeTargets="PreBuildEvent">
+    <Exec Command="rm -rf WwwRoot/dist&#xA;npm i --prefix ClientApp&#xA;npm run build --prefix ClientApp&#xA;cp -r &quot;ClientApp/dist/client-app/&quot; WwwRoot" />
+  </Target>
+
+</Project>
