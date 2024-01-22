@@ -11,17 +11,20 @@ internal readonly struct LandingPage
         {
             return false;
         }
-        
-        try
-        {
-            _ = new Uri(url, UriKind.Relative);
-            landingPage = new LandingPage(url);
-            return true;
-        }
-        catch (Exception)
+
+        if (!url.StartsWith("/") || url.StartsWith("//"))
         {
             return false;
         }
+        
+        var isValidUri = Uri.TryCreate(url, UriKind.Relative, out _);
+        if (!isValidUri)
+        {
+            return false;
+        }
+        
+        landingPage = new LandingPage(url);
+        return true;
     }
     
     public LandingPage()

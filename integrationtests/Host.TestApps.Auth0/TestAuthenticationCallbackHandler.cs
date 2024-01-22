@@ -14,6 +14,10 @@ public class TestAuthenticationCallbackHandler : DefaultAuthenticationCallbackHa
         string defaultLandingPage, 
         string? userPreferredLandingPage)
     {
-        return base.OnAuthenticated(context, payload, $"{defaultLandingPage}?custom_callback_handler_works=true", null);
+        var customLandingPageWorks = string.IsNullOrEmpty(userPreferredLandingPage)
+            ? Results.Redirect($"{defaultLandingPage}?custom_landing_page_works")
+            : Results.Redirect(userPreferredLandingPage);
+
+        return Task.FromResult(customLandingPageWorks);
     }
 }

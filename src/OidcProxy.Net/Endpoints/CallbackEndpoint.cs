@@ -20,7 +20,7 @@ internal static class CallbackEndpoint
     {
         try
         {
-            var userPreferredLandingPage = context.Session.GetUserPreferredLandingPage();
+            var userPreferredLandingPage = GetUserPreferredLandingPage(context);
             
             var code = context.Request.Query["code"].SingleOrDefault();
             if (string.IsNullOrEmpty(code))
@@ -58,6 +58,11 @@ internal static class CallbackEndpoint
             await authenticationCallbackHandler.OnError(context, e);
             throw;
         }
+    }
+
+    private static string? GetUserPreferredLandingPage(HttpContext context)
+    {
+        return context.Session.GetUserPreferredLandingPage();
     }
 
     private static JwtPayload? ExtractJwtPayload(string? jwt)

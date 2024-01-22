@@ -70,11 +70,16 @@ public static class ISessionExtensions
     internal static string? GetUserPreferredLandingPage(this ISession session) 
         => session?.GetString(UserPreferredLandingPageKey);
     internal static async Task SetUserPreferredLandingPageAsync(this ISession session, string? userPreferredLandingPage)
-    {
+    {   
         if (string.IsNullOrEmpty(userPreferredLandingPage))
         {
             await session.RemoveAsync(UserPreferredLandingPageKey);
             return;
+        }
+
+        if (!LandingPage.TryParse(userPreferredLandingPage, out _))
+        {
+            throw new NotSupportedException($"Will not redirect user to {userPreferredLandingPage}");
         }
 
         await session.SaveAsync(UserPreferredLandingPageKey, userPreferredLandingPage);
