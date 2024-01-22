@@ -1,6 +1,5 @@
 using System.Security.Claims;
 using OidcProxy.Net.EntraId;
-using OidcProxy.Net.ModuleInitializers;
 using Host;
 using StackExchange.Redis;
 

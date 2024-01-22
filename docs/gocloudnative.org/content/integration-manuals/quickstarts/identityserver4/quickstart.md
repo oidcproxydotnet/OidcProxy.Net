@@ -54,7 +54,7 @@ The GoCloudNatibe.Bff only supports the Authorization Code Flow with Proof Key f
     };
 ```
 
-Find a sample identity-server implementation here: https://github.com/thecloudnativewebapp/GoCloudNative.Bff/tree/main/docs/Integration-Manuals/Integrating-With-Identity-Providers/IdentityServer4/src/IdentityServer4
+Find a sample identity-server implementation here: https://github.com/thecloudnativewebapp/OidcProxy.Net/tree/main/docs/Integration-Manuals/Integrating-With-Identity-Providers/IdentityServer4/src/IdentityServer4
 
 
 ## Step 2.) Build the aspnetcore API
@@ -141,30 +141,29 @@ To build a BFF with `aspnetcore`, execute the following commands on the command 
 
 ```bash
 dotnet new web
-dotnet add package GoCloudNative.Bff.Authentication.OpenIdConnect
+dotnet add package OidcProxy.Net.OpenIdConnect
 ```
 
 Create the following `Program.cs` file:
 
 ```csharp
-using GoCloudNative.Bff.Authentication.OpenIdConnect;
-using GoCloudNative.Bff.Authentication.ModuleInitializers;
+using OidcProxy.Net.OpenIdConnect;
+using OidcProxy.Net.ModuleInitializers;
 
 var builder = WebApplication.CreateBuilder(args);
 
-builder.Services.AddSecurityBff(o =>
-{
-    o.ConfigureOpenIdConnect(builder.Configuration.GetSection("Oidc"));
-    o.LoadYarpFromConfig(builder.Configuration.GetSection("ReverseProxy"));
-});
+var config = builder.Configuration
+    .GetSection("OidcProxy")
+    .Get<OidcProxyConfig>();
+
+builder.Services.AddOidcProxy(config);
 
 var app = builder.Build();
 
-app.UseRouting();
-
-app.UseSecurityBff();
+app.UseOidcProxy();
 
 app.Run();
+
 
 ```
 
@@ -178,45 +177,47 @@ Create the following `appsettings.json` file:
       "Microsoft.AspNetCore": "Warning"
     }
   },
-  "Oidc": {
-    "ClientId": "{yourClientId}",
-    "ClientSecret": "{yourClientSecret}",
-    "Authority": "https://{yourAuthority}",
-    "Scopes": [
-      "openid", "profile", "offline_access"
-    ]
-  },
   "AllowedHosts": "*",
-  "ReverseProxy": {
-    "Routes": {
-      "spa": {
-        "ClusterId": "spa",
-        "Match": {
-          "Path": "/{*any}"
-        }
-      },
-      "api": {
-        "ClusterId": "api",
-        "Match": {
-          "Path": "/api/{*any}"
-        }
-      },
+  "OidcProxy": {
+    "Oidc": {
+      "ClientId": "{yourClientId}",
+      "ClientSecret": "{yourClientSecret}",
+      "Authority": "https://{yourAuthority}",
+      "Scopes": [
+        "openid", "profile", "offline_access"
+      ]
     },
-    "Clusters": {
-      "spa": {
-        "Destinations": {
-          "spa": {
-            "Address": "http://localhost:4200/"
+    "ReverseProxy": {
+      "Routes": {
+        "spa": {
+          "ClusterId": "spa",
+          "Match": {
+            "Path": "/{*any}"
+          }
+        },
+        "api": {
+          "ClusterId": "api",
+          "Match": {
+            "Path": "/api/{*any}"
+          }
+        },
+      },
+      "Clusters": {
+        "spa": {
+          "Destinations": {
+            "spa": {
+              "Address": "http://localhost:4200/"
+            }
+          }
+        },
+        "api": {
+          "Destinations": {
+            "api": {
+              "Address": "http://localhost:8080/"
+            }
           }
         }
-      },
-      "api": {
-        "Destinations": {
-          "api": {
-            "Address": "http://localhost:8080/"
-          }
-        }
-      },
+      }
     }
   }
 }
@@ -249,25 +250,25 @@ To run the BFF, type `dotnet run` or just hit the 'play'-button in Visual Studio
 
 The BFF relays all requests as configured in the `ReverseProxy` section in the `appsettings.json` file, except for four endpoints:
 
-### [GET] /account/login
-To log a user in and to start an HTTP session, navigate to `/account/login`. The software will redirect to the login page of the Identity Provider to log the user in. The resulting tokens will be stored in the user session and are not available in the browser.
+### [GET] /.auth/login
+To log a user in and to start an HTTP session, navigate to `/.auth/login`. The software will redirect to the login page of the Identity Provider to log the user in. The resulting tokens will be stored in the user session and are not available in the browser.
 
-### [GET] /account/login/callback
+### [GET] /.auth/login/callback
 This endpoint is used by the IdentityProvider.
 
-### [GET] /account/me
-To see the logged-in user, navigate to the `/account/me` endpoint. This endpoint shows the claims that are in the `id_token`.
+### [GET] /.auth/me
+To see the logged-in user, navigate to the `/.auth/me` endpoint. This endpoint shows the claims that are in the `id_token`.
 
-### [GET] /account/end-session
-To revoke the tokens that have been obtained when the user logs in, navigate to `/account/end-session` endpoint. This will revoke the tokens that have been stored in the user session. This will also end the user-session on at the Identity Provider
+### [GET] /.auth/end-session
+To revoke the tokens that have been obtained when the user logs in, navigate to `/.auth/end-session` endpoint. This will revoke the tokens that have been stored in the user session. This will also end the user-session on at the Identity Provider
 
 ## Demo
 
-Check out a fully working demo [here](https://github.com/thecloudnativewebapp/GoCloudNative.Bff/tree/main/docs/demos/IdentityServer4/src).
+Check out a fully working demo [here](https://github.com/thecloudnativewebapp/OidcProxy.Net/tree/main/docs/demos/IdentityServer4/src).
 
 ## Feedback
 
 Help us build better software. Your feedback is valuable to us. We would like to inquire about your success in setting up this demo.
 
 - Were you able to successfully set up a BFF with IdentityServer? Please share your thoughts on the overall experience by answering the questions in our [feedback form](/feedback/).
-- Did you face any difficulties or encounter missing features? Kindly inform us at: https://github.com/thecloudnativewebapp/GoCloudNative.Bff/issues
+- Did you face any difficulties or encounter missing features? Kindly inform us at: https://github.com/thecloudnativewebapp/OidcProxy.Net/issues

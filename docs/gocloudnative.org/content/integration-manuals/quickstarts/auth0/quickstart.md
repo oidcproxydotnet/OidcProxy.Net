@@ -12,7 +12,7 @@ Complete the following three steps to implement the BFF Security Pattern with Au
 
 ## Step 1.) Configure Auth0
 
-The GoCloudNatibe.Bff only supports the Authorization Code Flow with Proof Key for Client Exchange. That's why it is important to configure Auth0 in a specific way. 
+The OidcProxy only supports the Authorization Code Flow with Proof Key for Client Exchange. That's why it is important to configure Auth0 in a specific way. 
 
 Follow these steps to configure Auth0 correctly:
 
@@ -20,7 +20,7 @@ Follow these steps to configure Auth0 correctly:
 * Go to the `Applications` section in the menu on the left-hand side and click `Applications`
 * Click `+ Create application` in the right upper corner
 * Provide a name for your app and select `Regular web applications
-* Now, click settings, now you'll see the following section: ![client-id/secret](https://raw.githubusercontent.com/thecloudnativewebapp/GoCloudNative.Bff/main/docs/gocloudnative.org/content/integration-manuals/quickstarts/auth0/clientid-secret.png)
+* Now, click settings, now you'll see the following section: ![client-id/secret](https://raw.githubusercontent.com/thecloudnativewebapp/OidcProxy.Net/main/docs/gocloudnative.org/content/integration-manuals/quickstarts/auth0/clientid-secret.png)
 
 * Copy the client_id, the secret, and the authority into the `appsettings.json`, like so:
 
@@ -40,9 +40,9 @@ Follow these steps to configure Auth0 correctly:
 }
 ```
 
-* Now, configure the `redirect_url`. When the user has logged into Auth0, Auth0 will redirect the user to this URL. Redirecting will not work unless the redirect URL has been whitelisted: ![Whitelisting the redirect_uri](https://raw.githubusercontent.com/thecloudnativewebapp/GoCloudNative.Bff/main/docs/gocloudnative.org/content/integration-manuals/quickstarts/auth0/redirect-uri.png)
+* Now, configure the `redirect_url`. When the user has logged into Auth0, Auth0 will redirect the user to this URL. Redirecting will not work unless the redirect URL has been whitelisted: ![Whitelisting the redirect_uri](https://raw.githubusercontent.com/thecloudnativewebapp/OidcProxy.Net/main/docs/gocloudnative.org/content/integration-manuals/quickstarts/auth0/redirect-uri.png)
 
-* Next, scroll to the `Advanced settings` and configure the `grant_types`. Enable `Authorization Code` and `Refresh tokens` ![grant-types](https://raw.githubusercontent.com/thecloudnativewebapp/GoCloudNative.Bff/main/docs/gocloudnative.org/content/integration-manuals/quickstarts/auth0/grant-types.png)
+* Next, scroll to the `Advanced settings` and configure the `grant_types`. Enable `Authorization Code` and `Refresh tokens` ![grant-types](https://raw.githubusercontent.com/thecloudnativewebapp/OidcProxy.Net/main/docs/gocloudnative.org/content/integration-manuals/quickstarts/auth0/grant-types.png)
 
 ## Step 2.) Build the aspnetcore API
 
@@ -129,31 +129,27 @@ To build a BFF with `aspnetcore`, execute the following commands on the command 
 
 ```bash
 dotnet new web
-dotnet add package GoCloudNative.Bff.Authentication.Auth0
+dotnet add package OidcProxy.Net.Auth0
 ```
 
 Create the following `Program.cs` file:
 
 ```csharp
-using GoCloudNative.Bff.Authentication.Auth0;
-using GoCloudNative.Bff.Authentication.ModuleInitializers;
+using OidcProxy.Net.Auth0;
 
 var builder = WebApplication.CreateBuilder(args);
 
-builder.Services.AddSecurityBff(o =>
-{
-    o.ConfigureAuth0(builder.Configuration.GetSection("Auth0"));
-    o.LoadYarpFromConfig(builder.Configuration.GetSection("ReverseProxy"));
-});
+var config = builder.Configuration
+    .GetSection("OidcProxy")
+    .Get<Auth0ProxyConfig>();
+
+builder.Services.AddAuth0Proxy(config);
 
 var app = builder.Build();
 
-app.UseRouting();
-
-app.UseSecurityBff();
+app.UseAuth0Proxy();
 
 app.Run();
-
 ```
 
 Create the following `appsettings.json` file:
@@ -166,47 +162,49 @@ Create the following `appsettings.json` file:
       "Microsoft.AspNetCore": "Warning"
     }
   },
-  "Auth0": {
-    "ClientId": "{yourClientId}",
-    "ClientSecret": "{yourClientSecret}",
-    "Domain": "{yourDomain}",
-    "Audience": "{yourAudience}",
-    "FederatedLogout": false,
-    "Scopes": [
-      "openid", "profile", "offline_access"
-    ]
-  },
   "AllowedHosts": "*",
-  "ReverseProxy": {
-    "Routes": {
-      "spa": {
-        "ClusterId": "spa",
-        "Match": {
-          "Path": "/{*any}"
-        }
-      },
-      "api": {
-        "ClusterId": "api",
-        "Match": {
-          "Path": "/api/{*any}"
-        }
-      },
+  "OidcProxy": {
+    "Auth0": {
+      "ClientId": "{yourClientId}",
+      "ClientSecret": "{yourClientSecret}",
+      "Domain": "{yourDomain}",
+      "Audience": "{yourAudience}",
+      "FederatedLogout": false,
+      "Scopes": [
+        "openid", "profile", "offline_access"
+      ]
     },
-    "Clusters": {
-      "spa": {
-        "Destinations": {
-          "spa": {
-            "Address": "http://localhost:4200/"
+    "ReverseProxy": {
+      "Routes": {
+        "spa": {
+          "ClusterId": "spa",
+          "Match": {
+            "Path": "/{*any}"
           }
-        }
-      },
-      "api": {
-        "Destinations": {
-          "api": {
-            "Address": "http://localhost:8080/"
+        },
+        "api": {
+          "ClusterId": "api",
+          "Match": {
+            "Path": "/api/{*any}"
           }
-        }
+        },
       },
+      "Clusters": {
+        "spa": {
+          "Destinations": {
+            "spa": {
+              "Address": "http://localhost:4200/"
+            }
+          }
+        },
+        "api": {
+          "Destinations": {
+            "api": {
+              "Address": "http://localhost:8080/"
+            }
+          }
+        },
+      }
     }
   }
 }
@@ -239,21 +237,21 @@ To run the BFF, type `dotnet run` or just hit the 'play'-button in Visual Studio
 
 The BFF relays all requests as configured in the `ReverseProxy` section in the `appsettings.json` file, except for four endpoints:
 
-### [GET] /account/login
-To log a user in and to start an HTTP session, navigate to `/account/login`. The software will redirect to the login page of the Identity Provider to log the user in. The resulting tokens will be stored in the user session and are not available in the browser.
+### [GET] /.auth/login
+To log a user in and to start an HTTP session, navigate to `/.auth/login`. The software will redirect to the login page of the Identity Provider to log the user in. The resulting tokens will be stored in the user session and are not available in the browser.
 
-### [GET] /account/login/callback
+### [GET] /.auth/login/callback
 This endpoint is used by the IdentityProvider.
 
-### [GET] /account/me
-To see the logged-in user, navigate to the `/account/me` endpoint. This endpoint shows the claims that are in the `id_token`.
+### [GET] /.auth/me
+To see the logged-in user, navigate to the `/.auth/me` endpoint. This endpoint shows the claims that are in the `id_token`.
 
-### [GET] /account/end-session
-To revoke the tokens that have been obtained when the user logs in, navigate to `/account/end-session` endpoint. This will revoke the tokens that have been stored in the user session. This will also end the user-session on at the Identity Provider
+### [GET] /.auth/end-session
+To revoke the tokens that have been obtained when the user logs in, navigate to `/.auth/end-session` endpoint. This will revoke the tokens that have been stored in the user session. This will also end the user-session on at the Identity Provider
 
 ## Demo
 
-Check out a fully working demo [here](https://github.com/thecloudnativewebapp/GoCloudNative.Bff/tree/main/docs/demos/Auth0/src).
+Check out a fully working demo [here](https://github.com/thecloudnativewebapp/OidcProxy.Net/tree/main/docs/demos/Auth0/src).
 
 ## Deploying to Azure Container Apps
 
@@ -264,4 +262,4 @@ Read how to deploy this demo to an Azure Container Apps Environment [here](/inte
 Help us build better software. Your feedback is valuable to us. We would like to inquire about your success in setting up this demo.
 
 - Were you able to successfully set up a BFF with Auth0? Please share your thoughts on the overall experience by answering the questions in our [feedback form](/feedback/).
-- Did you face any difficulties or encounter missing features? Kindly inform us at: https://github.com/thecloudnativewebapp/GoCloudNative.Bff/issues
+- Did you face any difficulties or encounter missing features? Kindly inform us at: https://github.com/thecloudnativewebapp/OidcProxy.Net/issues
