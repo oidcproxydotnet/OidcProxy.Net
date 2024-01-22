@@ -4,18 +4,29 @@
     <TargetFramework>net8.0</TargetFramework>
     <Nullable>enable</Nullable>
     <ImplicitUsings>enable</ImplicitUsings>
+    <DockerDefaultTargetOS>Linux</DockerDefaultTargetOS>
   </PropertyGroup>
 
-  <ItemGroup>
-    <Folder Include="WwwRoot\" />
-  </ItemGroup>
-
+  <Target Name="CopyScriptsToProject" BeforeTargets="Build">
+    <Message Text="Copying ClientApp/dist folder to wwwroot" />
+    <RemoveDir Directories="$(MSBuildProjectDirectory)\WwwRoot" />
+    <ItemGroup>
+      <SourceScripts Include="$(MSBuildThisFileDirectory)\ClientApp\dist\client-app\**\*.*" />
+    </ItemGroup>
+    <Copy SourceFiles="@(SourceScripts)" DestinationFiles="@(SourceScripts -> '$(MSBuildProjectDirectory)\WwwRoot\%(RecursiveDir)%(FileName)%(Extension)')" Condition="!Exists('$(MSBuildProjectDirectory)\WwwRoot\%(RecursiveDir)%(FileName)%(Extension)')" />
+  </Target>
+  
   <ItemGroup>
     <PackageReference Include="OidcProxy.Net.OpenIdConnect" Version="1.0.0" />
   </ItemGroup>
+  
+  <ItemGroup>
+    <Folder Include="ClientApp\dist\" />
+    <Folder Include="wwwroot\" />
+  </ItemGroup>
 
   <Target Name="PreBuild" BeforeTargets="PreBuildEvent">
-    <Exec Command="rm -rf WwwRoot/dist&#xA;npm i --prefix ClientApp&#xA;npm run build --prefix ClientApp&#xA;cp -r &quot;ClientApp/dist/client-app/&quot; WwwRoot" />
+    <Exec Command="npm i --prefix ClientApp&#xA;npm run build --prefix ClientApp" />
   </Target>
 
 </Project>
