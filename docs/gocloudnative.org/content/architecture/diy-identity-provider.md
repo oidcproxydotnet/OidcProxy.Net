@@ -1,12 +1,12 @@
 ---
 author: Albert Starreveld
-title: Connecting GoCloudNative.BFF with a custom OIDC/OAuth2 server
+title: Connecting OidcProxy.Net with a custom OIDC/OAuth2 server
 ---
-# Connecting GoCloudNative.BFF with a custom OIDC/OAuth2 server
+# Connecting OidcProxy.Net with a custom OIDC/OAuth2 server
 
-The GoCloudNative.Bff does not support all identity providers out of the box. Also, it does not encourage to use the `authorization code flow` without PKCE. 
+The OidcProxy.Net proxy does not support all identity providers out of the box. Also, it does not encourage to use the `authorization code flow` without PKCE. 
 
-The GoCloudNative.Bff only supports OpenId Connect compliant authentication servers, and Auth0, and Azure Active Directory.
+The OidcProxy.Net proxy only supports OpenId Connect compliant authentication servers, and Auth0, and Azure Active Directory.
 
 Assume you want to use GitHub for an Identity Provider. Or Google. Or you have a legacy identity provider which only supports the `authorization code flow` without PKCE. Then what?
 
@@ -14,9 +14,9 @@ This documents describes how to implement an Identity Provider from scratch.
 
 ## Implementing the `IIdentityProvider` interface
 
-At the core of the GoCloudNative.Bff, there is the `IIdentityProvider` interface. It implements the OAuth2 "flow":
+At the core of OidcProxy.Net, there is the `IIdentityProvider` interface. It implements the OAuth2 "flow":
 
-![GoCloudNative.Bff authentication flow](https://raw.githubusercontent.com/thecloudnativewebapp/GoCloudNative.Bff/main/docs/gocloudnative.org/content/Diagrams/auth_code-sequence-diagram.png)
+![OidcProxy.Net authentication flow](https://raw.githubusercontent.com/thecloudnativewebapp/GoCloudNative.Bff/main/docs/gocloudnative.org/content/Diagrams/auth_code-sequence-diagram.png)
 
 This is reflected in the `IIdentityProvider` interface which has the following signature:
 
@@ -42,7 +42,7 @@ Assume you want to implement the `authorization code` flow to connect to a legac
 
 ```csharp
 using System.Text;
-using GoCloudNative.Bff.Authentication.IdentityProviders;
+using OidcProxy.Net.IdentityProviders;
 using Newtonsoft.Json.Linq;
 
 namespace YourApp;
@@ -122,12 +122,12 @@ After you have completed your implementation of the `IIdentityProvider` interfac
 
 ```csharp
 
-using GoCloudNative.Bff.Authentication.OpenIdConnect;
-using GoCloudNative.Bff.Authentication.ModuleInitializers;
+using OidcProxy.Net.OpenIdConnect;
+using OidcProxy.Net.Authentication.ModuleInitializers;
 
 var builder = WebApplication.CreateBuilder(args);
 
-builder.Services.AddSecurityBff(o =>
+builder.Services.AddOidcProxy(o =>
 {
     var options = builder.Configuration.GetSection("LegacyServer").Get<LegacyServerConfig>();
     o.RegisterIdentityProvider<LegacyIdentityProvider, LegacyServerConfig>(options);
@@ -138,7 +138,7 @@ var app = builder.Build();
 
 app.UseRouting();
 
-app.UseSecurityBff();
+app.UseOidcProxy();
 
 app.Run();
 

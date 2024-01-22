@@ -18,9 +18,9 @@ Introducing the BFF Pattern in a microservices architecture creates the followin
 * Microservices are not exposed to the front-ends directly, all traffic is proxied through the BFF
 * Requests to microservices and their responses can be augmented by the BFF
 
-## Using the GoCloudNative.BFF as an authenticated request aggregator
+## Using the OidcProxy.Net as an authenticated request aggregator
 
-The GoCloudNative.BFF can be used as a request aggregator. This is demonstrated in the [demos](https://github.com/thecloudnativewebapp/GoCloudNative.Bff/tree/main/docs/demos). The demo APIs have two endpoints:
+The OidcProxy.Net can be used as a request aggregator. This is demonstrated in the [demos](https://github.com/thecloudnativewebapp/OidcProxy.Net/tree/main/docs/demos). The demo APIs have two endpoints:
 
 * /api/weatherforecast/usa
 * /api/weatherforecast/sahara
@@ -42,7 +42,7 @@ In abstract, a BFF:
 
 To forward requests to downstream services, directly, use YARP. To implement an endpoint which aggregates results, implement an `aspnetcore` API. 
 
-To invoke downstream services, chances are, you need an `access_token`. This token is stored in the HTTP-session and can be obtained by using the `HttpContext.Current.Session.GetAccessToken()` method. This method is made available to you via the `GoCloudNative.Bff.Authentication.OpenIdConnect` namespace in case of OpenId Connect, via the `GoCloudNative.Bff.Authentication.Auth0` namespace in case of Auth0, and the `GoCloudNative.Bff.Authentication.AzureAd` namespace in case of Azure Ad. You must include the token in the downstream requests manually. 
+To invoke downstream services, chances are, you need an `access_token`. This token is stored in the HTTP-session and can be obtained by using the `HttpContext.Current.Session.GetAccessToken()` method. This method is made available to you via the `OidcProxy.Net.OpenIdConnect` namespace in case of OpenId Connect, via the `OidcProxy.Net.Auth0` namespace in case of Auth0, and the `OidcProxy.Net.Authentication.EntraId` namespace in case of Microsoft EntraId. You must include the token in the downstream requests manually. 
 
 ## A BFF-example that aggregates downstream HTTP-requests
 
@@ -53,24 +53,24 @@ You can implement an aggregation service as follows:
 ```csharp
 using System.Net.Http.Headers;
 using Bff;
-using GoCloudNative.Bff.Authentication.OpenIdConnect;
-using GoCloudNative.Bff.Authentication.ModuleInitializers;
+using OidcProxy.Net.OpenIdConnect;
+using OidcProxy.Net.ModuleInitializers;
 
 var builder = WebApplication.CreateBuilder(args);
 
 builder.Services.AddHttpClient();
 
-builder.Services.AddSecurityBff(o =>
-{
-    o.ConfigureOpenIdConnect(builder.Configuration.GetSection("Oidc"));
-    o.LoadYarpFromConfig(builder.Configuration.GetSection("ReverseProxy"));
-});
+var config = builder.Configuration
+    .GetSection("OidcProxy")
+    .Get<OidcProxyConfig>();
+
+builder.Services.AddOidcProxy(config);
 
 var app = builder.Build();
 
 app.UseRouting();
 
-app.UseSecurityBff();
+app.UseOidcProxy();
 
 // This is an example how you can execute multiple requests 
 app.Map("/api/weatherforecast", async (HttpContext context, HttpClient httpClient) =>
@@ -107,32 +107,34 @@ Use the following `appsettings.json`:
       "Microsoft.AspNetCore": "Warning"
     }
   },
-  "Oidc": {
-    "ClientId": "{yourClientId}",
-    "ClientSecret": "{yourClientSecret}",
-    "Authority": "https://{yourAuthority}",
-    "Scopes": [
-      "openid", "profile", "offline_access"
-    ]
-  },
   "AllowedHosts": "*",
-  "ReverseProxy": {
-    "Routes": {
-      "api": {
-        "ClusterId": "api",
-        "Match": {
-          "Path": "/api/{*any}"
-        }
-      },
+  "OidcProxy": {
+    "Oidc": {
+      "ClientId": "{yourClientId}",
+      "ClientSecret": "{yourClientSecret}",
+      "Authority": "https://{yourAuthority}",
+      "Scopes": [
+        "openid", "profile", "offline_access"
+      ]
     },
-    "Clusters": {
-      "api": {
-        "Destinations": {
-          "api": {
-            "Address": "http://localhost:8080/"
+    "ReverseProxy": {
+      "Routes": {
+        "api": {
+          "ClusterId": "api",
+          "Match": {
+            "Path": "/api/{*any}"
+          }
+        },
+      },
+      "Clusters": {
+        "api": {
+          "Destinations": {
+            "api": {
+              "Address": "http://localhost:8080/"
+            }
           }
         }
-      },
+      }
     }
   }
 }
@@ -149,9 +151,9 @@ httpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("
 
 Check out fully working examples here:
 
-- [IdentityServer4](https://github.com/thecloudnativewebapp/GoCloudNative.Bff/tree/main/docs/demos/IdentityServer4/src)
-- [Auth0](https://github.com/thecloudnativewebapp/GoCloudNative.Bff/tree/main/docs/demos/Auth0/src)
-- [AzureAd](https://github.com/thecloudnativewebapp/GoCloudNative.Bff/tree/main/docs/demos/AzureAd/src)
+- [IdentityServer4](https://github.com/thecloudnativewebapp/OidcProxy.Net/tree/main/docs/demos/Authentication-Gateways/IdentityServer4/src/src)
+- [Auth0](https://github.com/thecloudnativewebapp/OidcProxy.Net/tree/main/docs/demos/Authentication-Gateways/Auth0/src)
+- [AzureAd](https://github.com/thecloudnativewebapp/OidcProxy.Net/tree/main/docs/demos/Authentication-Gateways/AzureAd/src)
 
 ## Cost of a BFF as an Aggregation Service
 

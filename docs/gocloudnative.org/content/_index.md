@@ -1,7 +1,7 @@
 ---
 author: Albert Starreveld
-title: GoCloudNative.BFF - A scalable, free OIDC Authentication Gateway
-description: Elevate the security of your web application to the most up-to-date standards by incorporating the BFF Security Pattern using GoCloudNative.BFF.
+title: OidcProxy.Net - A scalable, free OIDC Authentication Gateway
+description: Elevate the security of your web application to the most up-to-date standards by incorporating the BFF Security Pattern using OidcProxy.Net.
 ---
 
 ## Why?
@@ -14,32 +14,30 @@ Hence, our mission is to offer an affordable, developer-friendly, and secure BFF
 
 ## Getting started
 
-You can swiftly implement the [BFF Security Pattern](https://bff.gocloudnative.org/concepts/bff-security-pattern/) within minutes using the GoCloudNative.Bff, an authentication gateway built on YARP. Just follow these steps to get started:
+You can swiftly implement the [BFF Security Pattern](https://bff.gocloudnative.org/concepts/bff-security-pattern/) within minutes using the OidcProxy.Net, an authentication gateway built on YARP. Just follow these steps to get started:
 
 ```bash
 dotnet new web
-dotnet add package GoCloudNative.Bff.Authentication.OpenIdConnect
+dotnet add package OidcProxy.Net.OpenIdConnect
 ```
 
 `program.cs`
 
 ```csharp
-using GoCloudNative.Bff.Authentication.OpenIdConnect;
-using GoCloudNative.Bff.Authentication.ModuleInitializers;
+using OidcProxy.Net.ModuleInitializers;
+using OidcProxy.Net.OpenIdConnect;
 
 var builder = WebApplication.CreateBuilder(args);
 
-builder.Services.AddSecurityBff(o =>
-{
-    o.ConfigureOpenIdConnect(builder.Configuration.GetSection("Oidc"));
-    o.LoadYarpFromConfig(builder.Configuration.GetSection("ReverseProxy"));
-});
+var config = builder.Configuration
+    .GetSection("OidcProxy")
+    .Get<OidcProxyConfig>();
+
+builder.Services.AddOidcProxy(config);
 
 var app = builder.Build();
 
-app.UseRouting();
-
-app.UseSecurityBff();
+app.UseOidcProxy();
 
 app.Run();
 ```
@@ -54,48 +52,39 @@ app.Run();
       "Microsoft.AspNetCore": "Warning"
     }
   },
-  "Oidc": {
-    "ClientId": "{YourClientId}",
-    "ClientSecret": "{YourClientSecret}",
-    "Authority": "{YourAuthority}",
-    "Scopes": [
-      "openid", "profile", "offline_access"
-    ]
-  },
   "AllowedHosts": "*",
-  "ReverseProxy": {
-    "Routes": {
-      "spa": {
-        "ClusterId": "spa",
-        "Match": {
-          "Path": "/{*any}"
-        }
-      },
-      "api": {
-        "ClusterId": "api",
-        "Match": {
-          "Path": "/api/{*any}"
-        }
-      },
+  "OidcProxy": {
+    "LandingPage": "/.auth/me",
+    "AllowedLandingPages": [
+      "/custom/me"
+    ],
+    "Oidc": {
+      "ClientId": "{YourClientId}",
+      "ClientSecret": "{YourClientSecret}",
+      "Authority": "{YourAuthority}",
     },
-    "Clusters": {
-      "spa": {
-        "Destinations": {
-          "spa": {
-            "Address": "http://localhost:4200/"
+    "ReverseProxy": {
+      "Routes": {
+        "api": {
+          "ClusterId": "api",
+          "Match": {
+            "Path": "/api/{*any}"
           }
         }
       },
-      "api": {
-        "Destinations": {
-          "api": {
-            "Address": "http://localhost:8080/"
+      "Clusters": {
+        "api": {
+          "Destinations": {
+            "api/node1": {
+              "Address": "http://localhost:8080/"
+            }
           }
         }
-      },
+      }
     }
   }
 }
+
 ```
 
-To gain a comprehensive understanding of API security, reverse proxies, horizontal scaling or the implementation process of the GoCloudNative BFF, we recommend referring to [our documentation](/table-of-contents/). It provides detailed information and guidance on these topics.
+To gain a comprehensive understanding of API security, reverse proxies, horizontal scaling or the implementation process of the OidcProxy.Net, we recommend referring to [our documentation](/table-of-contents/). It provides detailed information and guidance on these topics.
