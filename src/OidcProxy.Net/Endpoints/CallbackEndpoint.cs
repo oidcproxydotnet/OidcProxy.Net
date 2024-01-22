@@ -15,17 +15,19 @@ internal static class CallbackEndpoint
         [FromServices] IRedirectUriFactory redirectUriFactory,
         [FromServices] ProxyOptions proxyOptions,
         [FromServices] IIdentityProvider identityProvider,
-        [FromServices] IAuthenticationCallbackHandler callbackHandler)
+        [FromServices] IAuthenticationCallbackHandler authenticationCallbackHandler)
     {
         try
         {
+            var userPreferredLandingPage = context.Session.GetUserPreferredLandingPage();
+            
             var code = context.Request.Query["code"].SingleOrDefault();
             if (string.IsNullOrEmpty(code))
             {
                 logger.LogLine(context, "Unable to obtain access token. Querystring parameter 'code' has no value.");
                 
                 var redirectUri = $"{proxyOptions.ErrorPage}{context.Request.QueryString}";
-                return await callbackHandler.OnAuthenticationFailed(context, redirectUri);
+                return await authenticationCallbackHandler.OnAuthenticationFailed(context, redirectUri, userPreferredLandingPage);
             }
             
             var endpointName = context.Request.Path.RemoveQueryString().TrimEnd("/login/callback");
@@ -42,12 +44,12 @@ internal static class CallbackEndpoint
 
             logger.LogLine(context, $"Redirect({proxyOptions.LandingPage})");
 
-            return await callbackHandler.OnAuthenticated(context, proxyOptions.LandingPage.ToString());
+            return await authenticationCallbackHandler.OnAuthenticated(context, proxyOptions.LandingPage.ToString(), userPreferredLandingPage);
         }
         catch (Exception e)
         {
             logger.LogException(context, e);
-            await callbackHandler.OnError(context, e);
+            await authenticationCallbackHandler.OnError(context, e);
             throw;
         }
     }

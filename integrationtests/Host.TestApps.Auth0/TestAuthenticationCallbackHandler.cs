@@ -1,3 +1,4 @@
+using OidcProxy.Net;
 using OidcProxy.Net.Endpoints;
 
 namespace Host.TestApps.Auth0;
@@ -8,8 +9,10 @@ public class TestAuthenticationCallbackHandler : DefaultAuthenticationCallbackHa
     {
     }
 
-    public override Task<IResult> OnAuthenticated(HttpContext context, string defaultRedirectUrl)
+    public override Task<IResult> OnAuthenticated(HttpContext context, 
+        string defaultLandingPage, 
+        string? userPreferredLandingPage)
     {
-        return base.OnAuthenticated(context, $"{defaultRedirectUrl}?custom_callback_handler_works=true");
+        return base.OnAuthenticated(context, $"{defaultLandingPage}?custom_callback_handler_works=true", null);
     }
 }

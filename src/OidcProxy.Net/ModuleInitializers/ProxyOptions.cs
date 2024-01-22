@@ -38,7 +38,7 @@ public class ProxyOptions
     /// <summary>
     /// Gets or sets the name of the cookie.
     /// </summary>
-    public string SessionCookieName { get; set; } = "bff.cookie";
+    public string SessionCookieName { get; set; } = "oidcproxy.cookie";
 
     /// <summary>
     /// Get or set a value that indicates the amount of time of inactivity after which the session will be abandoned.

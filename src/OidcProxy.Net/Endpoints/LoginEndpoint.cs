@@ -16,6 +16,8 @@ internal static class LoginEndpoint
     {
         try
         {
+            await context.Session.SetUserPreferredLandingPageAsync(context.Request.Query["landingpage"]);
+            
             var endpointName = context.Request.Path.RemoveQueryString().TrimEnd("/login");
             
             var redirectUri = redirectUriFactory.DetermineRedirectUri(context, endpointName);
