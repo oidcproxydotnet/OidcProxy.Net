@@ -1,3 +1,4 @@
+using System.IdentityModel.Tokens.Jwt;
 using Microsoft.AspNetCore.Http;
 
 namespace OidcProxy.Net;
@@ -8,6 +9,7 @@ public interface IAuthenticationCallbackHandler
         string defaultLandingPage, 
         string? userPreferredLandingPage);
     Task<IResult> OnAuthenticated(HttpContext context, 
+        JwtPayload? jwtPayload,
         string defaultLandingPage, 
         string? userPreferredLandingPage);
     

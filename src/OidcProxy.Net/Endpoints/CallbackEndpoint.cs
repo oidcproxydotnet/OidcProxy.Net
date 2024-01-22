@@ -1,3 +1,4 @@
+using System.IdentityModel.Tokens.Jwt;
 using OidcProxy.Net.Logging;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -44,7 +45,12 @@ internal static class CallbackEndpoint
 
             logger.LogLine(context, $"Redirect({proxyOptions.LandingPage})");
 
-            return await authenticationCallbackHandler.OnAuthenticated(context, proxyOptions.LandingPage.ToString(), userPreferredLandingPage);
+            var jwtPayload = ExtractJwtPayload(tokenResponse.access_token);
+            
+            return await authenticationCallbackHandler.OnAuthenticated(context, 
+                jwtPayload, 
+                proxyOptions.LandingPage.ToString(), 
+                userPreferredLandingPage);
         }
         catch (Exception e)
         {
@@ -52,5 +58,10 @@ internal static class CallbackEndpoint
             await authenticationCallbackHandler.OnError(context, e);
             throw;
         }
+    }
+
+    private static JwtPayload? ExtractJwtPayload(string? jwt)
+    {
+        return string.IsNullOrEmpty(jwt) ? null : jwt.ParseJwtPayload();
     }
 }

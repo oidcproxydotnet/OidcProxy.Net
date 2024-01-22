@@ -35,9 +35,15 @@ public sealed class OidcAuthenticationHandler : AuthenticationHandler<OidcAuthen
             {
                 return Task.FromResult(AuthenticateResult.NoResult());
             }
-        
-            var claims = token.ParseJwtPayload()
-                .ToArray()
+
+            var payload = token.ParseJwtPayload()?.ToArray() ?? Array.Empty<KeyValuePair<string, object>>();
+            if (!payload.Any())
+            {
+                throw new AuthenticationFailureException("Failed to authenticate. " +
+                                                         "The access_token jwt does not contain any claims.");
+            }
+
+            var claims = payload
                 .Select(x => new Claim(x.Key, x.Value?.ToString() ?? string.Empty))
                 .ToArray();
 

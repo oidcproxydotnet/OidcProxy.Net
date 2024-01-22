@@ -1,3 +1,4 @@
+using System.IdentityModel.Tokens.Jwt;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Logging;
 using OidcProxy.Net.Logging;
@@ -18,10 +19,16 @@ public class DefaultAuthenticationCallbackHandler : IAuthenticationCallbackHandl
         string? userPreferredLandingPage)
     {
         // Todo: Introduce proper error page here
-        return OnAuthenticated(context, defaultLandingPage, userPreferredLandingPage);
+        var landingPage = userPreferredLandingPage ?? defaultLandingPage;
+        
+        _logger.LogLine(context, $"Redirect({landingPage})");
+        var redirectResult = Results.Redirect(landingPage);
+
+        return Task.FromResult(redirectResult);
     }
 
     public virtual Task<IResult> OnAuthenticated(HttpContext context, 
+        JwtPayload? jwtPayload,
         string defaultLandingPage, 
         string? userPreferredLandingPage)
     {

@@ -24,4 +24,13 @@ public class TokenFactoryTests
         actual.Sub.Should().NotBeNullOrEmpty();
     }
 
+    [Fact]
+    public void WhenNoPayload_ShouldReturnNull()
+    {
+        const string token = "x..y";
+
+        var actual = token.ParseJwtPayload();
+
+        actual.Should().BeNull();
+    }
 }

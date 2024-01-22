@@ -5,7 +5,7 @@ namespace OidcProxy.Net.OpenIdConnect;
 
 internal static class JwtParser
 {   
-    public static JwtPayload ParseJwtPayload(this string token)
+    public static JwtPayload? ParseJwtPayload(this string token)
     {
         var urlEncodedMiddleSection = GetSection(token, 1);
         
@@ -19,7 +19,9 @@ internal static class JwtParser
         var bytes = Convert.FromBase64String(base64);
         var json = Encoding.UTF8.GetString(bytes);
         
-        return JwtPayload.Deserialize(json);
+        return string.IsNullOrEmpty(json)
+            ? null
+            : JwtPayload.Deserialize(json);
     }
 
     private static string GetSection(string token, int section)

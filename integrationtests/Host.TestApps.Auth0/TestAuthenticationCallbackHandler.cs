@@ -1,5 +1,5 @@
+using System.IdentityModel.Tokens.Jwt;
 using OidcProxy.Net;
-using OidcProxy.Net.Endpoints;
 
 namespace Host.TestApps.Auth0;
 
@@ -10,9 +10,10 @@ public class TestAuthenticationCallbackHandler : DefaultAuthenticationCallbackHa
     }
 
     public override Task<IResult> OnAuthenticated(HttpContext context, 
+        JwtPayload? payload,
         string defaultLandingPage, 
         string? userPreferredLandingPage)
     {
-        return base.OnAuthenticated(context, $"{defaultLandingPage}?custom_callback_handler_works=true", null);
+        return base.OnAuthenticated(context, payload, $"{defaultLandingPage}?custom_callback_handler_works=true", null);
     }
 }
