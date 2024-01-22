@@ -1,6 +1,8 @@
+using System.Text.RegularExpressions;
+
 namespace OidcProxy.Net;
 
-internal readonly struct LandingPage
+internal readonly partial struct LandingPage
 {
     private readonly string _value;
     
@@ -12,7 +14,16 @@ internal readonly struct LandingPage
             return false;
         }
 
-        if (!url.StartsWith("/") || url.StartsWith("//"))
+        if (url == "/")
+        {
+            return true;
+        }
+
+        var regex = LandingPageRegex();
+        if (!regex.IsMatch(url) 
+            || url.Contains("://")
+            || url.Contains("javascript:", StringComparison.InvariantCultureIgnoreCase)
+            || url.Contains("javascript%3a", StringComparison.InvariantCultureIgnoreCase))
         {
             return false;
         }
@@ -38,4 +49,7 @@ internal readonly struct LandingPage
     }
 
     public override string ToString() => string.IsNullOrEmpty(_value) ? "/" : _value;
+    
+    [GeneratedRegex("^\\/[a-zA-Z0-9.]")]
+    private static partial Regex LandingPageRegex();
 }

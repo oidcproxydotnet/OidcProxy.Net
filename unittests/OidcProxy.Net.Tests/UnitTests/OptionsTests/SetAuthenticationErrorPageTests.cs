@@ -1,7 +1,7 @@
 using FluentAssertions;
 using OidcProxy.Net.ModuleInitializers;
 
-namespace OidcProxy.Net.Tests.OptionsTests;
+namespace OidcProxy.Net.Tests.UnitTests.OptionsTests;
 
 public class SetAuthenticationErrorPageTests
 {

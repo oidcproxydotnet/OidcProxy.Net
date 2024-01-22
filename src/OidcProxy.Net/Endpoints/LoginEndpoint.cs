@@ -16,7 +16,7 @@ internal static class LoginEndpoint
     {
         try
         {
-            await context.Session.SetUserPreferredLandingPageAsync(context.Request.Query["landingpage"]);
+            await SetUserPreferredLandingPage(context);
             
             var endpointName = context.Request.Path.RemoveQueryString().TrimEnd("/login");
             
@@ -38,5 +38,19 @@ internal static class LoginEndpoint
             logger.LogException(context, e);
             throw;
         }
+    }
+
+    private static async Task SetUserPreferredLandingPage(HttpContext context)
+    {
+        var landingPage = context.Request.Query["landingpage"];
+
+        if (context.Request.Path
+            .RemoveQueryString()
+            .Equals(landingPage.ToString(), StringComparison.InvariantCultureIgnoreCase))
+        {
+            throw new NotSupportedException($"Will not redirect user to {landingPage}");
+        }
+
+        await context.Session.SetUserPreferredLandingPageAsync(landingPage);
     }
 }
