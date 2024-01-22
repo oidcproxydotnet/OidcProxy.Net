@@ -18,7 +18,7 @@ jobs:
         dotnet-version: 6.0.x
     - uses: browser-actions/setup-chrome@v1
     - name: Run tests
-      run: dotnet test --filter 'FullyQualifiedName!~ShouldIntegrateWithAuth0'
+      run: dotnet test --filter 'FullyQualifiedName~.UnitTests'
       env: 
         OIDCPROXY__AUTH0__AUDIENCE: ${{ secrets.OIDCPROXY__AUTH0__AUDIENCE }}
         OIDCPROXY__AUTH0__CLIENTID: ${{ secrets.OIDCPROXY__AUTH0__CLIENTID }}
