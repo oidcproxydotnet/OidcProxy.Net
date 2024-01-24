@@ -5,5 +5,31 @@
     "identity": "OidcProxy.Net",
     "name": "A boilerplate OidcProxy.Net proxy project",
     "shortName": "OidcProxy.Net",
-    "sourceName": "MyApp"
+    "sourceName": "MyApp",
+    "symbols": {
+        "clientId": {
+            "type": "parameter",
+            "datatype": "string",
+            "replaces": "{client_id}",
+            "isRequired": "true"
+        },
+        "clientSecret": {
+            "type": "parameter",
+            "datatype": "string",
+            "replaces": "{client_secret}",
+            "isRequired": "true"
+        },
+        "idp": {
+            "type": "parameter",
+            "datatype": "string",
+            "replaces": "https://{address_to_idp}/",
+            "isRequired": "true"
+        },
+        "backend": {
+            "type": "parameter",
+            "datatype": "string",
+            "replaces": "http://localhost:8080/",
+            "isRequired": "true"
+        }
+    }
 }

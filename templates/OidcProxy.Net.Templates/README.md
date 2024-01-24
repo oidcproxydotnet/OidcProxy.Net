@@ -22,15 +22,8 @@ dotnet new install OidcProxy.Net.Templates
 Scaffold a new project by executing the following commands:
 
 ```bash
-mkdir MyProxy
-cd MyProxy
+dotnet new OidcProxy.Net --backend "https://api.myapp.com" --idp "https://idp.myapp.com" --clientId xyz --clientSecret abc
 
-dotnet new OidcProxy.Net.Web
-```
-
-Open the appsettings.json to configure the `client_id`, `client_secret`, and the `authority` and run your new BFF:
-
-```bash
 dotnet run
 ```
 
@@ -39,15 +32,8 @@ dotnet run
 Scaffold a new project by executing the following commands:
 
 ```bash
-mkdir MyBff
-cd MyBff
+dotnet new OidcProxy.Net.Angular --backend "https://api.myapp.com" --idp "https://idp.myapp.com" --clientId xyz --clientSecret abc
 
-dotnet new OidcProxy.Net.Angular
-```
-
-Open the appsettings.json to configure the `client_id`, `client_secret`, and the `authority` and run your new BFF:
-
-```bash
 dotnet run
 ```
 
