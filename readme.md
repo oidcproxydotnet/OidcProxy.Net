@@ -1,6 +1,15 @@
 # OidcProxy.Net
 
-_(Previously known as GoCloudNative.Bff)_
+```bash
+dotnet new install OidcProxy.Net.Templates
+
+dotnet new OidcProxy.Net --backend "https://api.myapp.com"
+    --idp "https://idp.myapp.com"
+    --clientId xyz
+    --clientSecret abc
+
+dotnet run
+```
 
 ![](https://github.com/thecloudnativewebapp/GoCloudNative.Bff/actions/workflows/ci.yml/badge.svg)
 ![Nuget](https://img.shields.io/nuget/dt/OidcProxy.Net)
