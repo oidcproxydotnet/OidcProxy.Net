@@ -1,13 +1,16 @@
 # OidcProxy.Net
 
 ```bash
+# Download and install the template pack first
 dotnet new install OidcProxy.Net.Templates
 
+# Scaffold the proxy
 dotnet new OidcProxy.Net --backend "https://api.myapp.com"
     --idp "https://idp.myapp.com"
     --clientId xyz
     --clientSecret abc
 
+# Run it
 dotnet run
 ```
 
