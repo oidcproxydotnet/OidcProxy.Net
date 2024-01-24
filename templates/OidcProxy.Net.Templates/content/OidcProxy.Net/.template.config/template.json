@@ -1,0 +1,9 @@
+{
+    "$schema": "http://json.schemastore.org/template",
+    "author": "Albert Starreveld",
+    "classifications": [ "ASP.NET Core", "C#", "OidcProxy.Net" ],    
+    "identity": "OidcProxy.Net",
+    "name": "A boilerplate OidcProxy.Net proxy project",
+    "shortName": "OidcProxy.Net",
+    "sourceName": "MyApp"
+}
