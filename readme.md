@@ -162,4 +162,4 @@ This solution supports authentication with:
 
 * We need maintainers
 * Star this repository
-* Create issues when for missing features\
+* Create issues when for missing features
