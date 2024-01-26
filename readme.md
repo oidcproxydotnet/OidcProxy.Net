@@ -59,8 +59,9 @@ The user also uses the proxy to initiate the authentication procedure. That's do
 
 This process is visualised in the following diagram:
 
-<img src="docs/gocloudnative.org/content/Diagrams/BFF-login-workflow.png">
-
+<p align="center">
+  <img src="docs/gocloudnative.org/content/Diagrams/BFF-login-workflow.png">
+</p>
 
 ## Features
 
