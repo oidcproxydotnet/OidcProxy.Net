@@ -6,8 +6,8 @@
     <Nullable>enable</Nullable>
 
     <PackageId>OidcProxy.Net.EntraId</PackageId>
-    <Version>1.1.0</Version>
-    <Version>1.1.0</Version>
+    <Version>1.1.1</Version>
+    <Version>1.1.1</Version>
     <Authors>Albert Starreveld</Authors>
     <Company>GoCloudNative.org</Company>
     <PackageLicenseExpression>LGPL-3.0-only</PackageLicenseExpression>
@@ -20,7 +20,9 @@
     <PackageReadmeFile>Readme.md</PackageReadmeFile>        
     <PackageIcon>logo.png</PackageIcon>        
     <SignAssembly>true</SignAssembly>        
-    <LangVersion>11</LangVersion>
+    <LangVersion>11</LangVersion>        
+    <PackageReleaseNotes>Dependency updates:
+- bump System.IdentityModel.Tokens.Jwt from 7.2.0 to 7.3.0</PackageReleaseNotes>
   </PropertyGroup>
   
   <ItemGroup>
