@@ -84,3 +84,7 @@ app.Run();
 ```
 
 To gain a comprehensive understanding of API security, reverse proxies, horizontal scaling or the implementation process of the OidcProxy.Net, we recommend referring to [our documentation](/table-of-contents/). It provides detailed information and guidance on these topics.
+
+## Feedback
+
+We need your feedback. Like any other software product, it is impossible to be successful without user-feedback. Please take a moment of your time to fill out this form: [https://forms.gle/a6uuwFSLSAod52MH9](https://forms.gle/a6uuwFSLSAod52MH9)

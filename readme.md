@@ -159,8 +159,6 @@ This solution supports authentication with:
 - [Azure Active Directory](https://medium.com/web-security/implementing-the-bff-security-pattern-with-azuread-b2c-4f340cafecfb)
 - [IdentityServer4](https://medium.com/web-security/implementing-the-bff-security-pattern-with-identityserver4-and-gocloudnative-bff-a8b594308363)
 
-## We need your help
+## Feedback
 
-* We need maintainers
-* Star this repository
-* Create issues when for missing features
+We need your feedback. Like any other software product, it is impossible to be successful without user-feedback. Please take a moment of your time to fill out this form: [https://forms.gle/a6uuwFSLSAod52MH9](https://forms.gle/a6uuwFSLSAod52MH9)
