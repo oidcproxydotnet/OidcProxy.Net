@@ -1,0 +1,6 @@
+baseURL = 'https://oidcproxy.net/'
+languageCode = 'en-us'
+title = 'OidcProxy.Net'
+theme = 'oidcproxynet'
+enableRobotsTXT = true
+

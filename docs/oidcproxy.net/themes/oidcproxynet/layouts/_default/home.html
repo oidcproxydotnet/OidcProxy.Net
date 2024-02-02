@@ -1,0 +1,13 @@
+{{ define "main" }}
+
+  {{ if  (eq .Content "") }}
+    {{ partial "default.html" . }}
+  {{ else }}
+    {{ .Content }}
+    {{ range site.RegularPages }}
+      <h2><a href="{{ .RelPermalink }}">{{ .LinkTitle }}</a></h2>
+      {{ .Summary }}
+    {{ end }}
+  {{ end }}
+
+{{ end }}
