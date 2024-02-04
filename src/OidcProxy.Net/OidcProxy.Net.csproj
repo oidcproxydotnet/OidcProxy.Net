@@ -6,11 +6,11 @@
         <Nullable>enable</Nullable>
 
         <PackageId>OidcProxy.Net</PackageId>
-        <Version>1.1.1</Version>
-        <Version>1.1.1</Version>
+        <Version>1.1.2</Version>
+        <Version>1.1.2</Version>
         <releaseNotes>
             Dependency updates:
-                - bump System.IdentityModel.Tokens.Jwt from 7.2.0 to 7.3.0
+                - build(deps): bump System.IdentityModel.Tokens.Jwt from 7.3.0 to 7.3.1
         </releaseNotes>
         <Authors>Albert Starreveld</Authors>
         <Company>GoCloudNative.org</Company>

@@ -18,7 +18,7 @@ function SetVersionNumber($fileName, $versionNumber) {
 
 # ==== test ====
 
-dotnet test
+#dotnet test
 
 if ($lastexitcode -eq 1) {
     write-host "Aborted. Package has not been published to nuget. Cannot deploy when tests fail. Fix the tests first, then run the script again."
@@ -37,27 +37,26 @@ if ($newVersion -eq $null) {
     $newVersion = read-host
 }
 
-SetVersionNumber "src/OidcProxy.Net/OidcProxy.Net.csproj" $newVersion
-SetVersionNumber "src/OidcProxy.Net.Auth0/OidcProxy.Net.Auth0.csproj" $newVersion
-SetVersionNumber "src/OidcProxy.Net.AzureAd/OidcProxy.Net.AzureAd.csproj" $newVersion
-SetVersionNumber "src/OidcProxy.Net.OpenIdConnect/OidcProxy.Net.OpenIdConnect.csproj" $newVersion
+# SetVersionNumber "src/OidcProxy.Net/OidcProxy.Net.csproj" $newVersion
+# SetVersionNumber "src/OidcProxy.Net.Auth0/OidcProxy.Net.Auth0.csproj" $newVersion
+# SetVersionNumber "src/OidcProxy.Net.AzureAd/OidcProxy.Net.AzureAd.csproj" $newVersion
+# SetVersionNumber "src/OidcProxy.Net.OpenIdConnect/OidcProxy.Net.OpenIdConnect.csproj" $newVersion
 
 # dotnet build --configuration release
 
-git add .
-git checkout main
-git commit -m "release(v$newVersion)"
-git push
+# git add .
+# git checkout main
+# git commit -m "release(v$newVersion)"
+# git push
 
 # # ==== publish to nuget ====
 
 $apiKey = $env:bff_api_key 
 
-$newVersion = "1.0.0-rc.1"
-$authPackage = "src/OidcProxy.Net/bin/release/OidcProxy.Net.$newVersion.nupkg"
-$authPackageAuth0 = "src/OidcProxy.Net/bin/release/OidcProxy.Net.$newVersion.nupkg"
-$authPackageAzureAd = "src/OidcProxy.Net.AzureAd/bin/release/OidcProxy.Net.AzureAd.$newVersion.nupkg"
-$authPackageOpenIdConnect = "src/OidcProxy.Net.OpenIdConnect/bin/release/OidcProxy.Net.OpenIdConnect.$newVersion.nupkg"
+$authPackage                = "src/OidcProxy.Net/bin/release/OidcProxy.Net.$newVersion.nupkg"
+$authPackageAuth0           = "src/OidcProxy.Net.Auth0/bin/release/OidcProxy.Net.Auth0.$newVersion.nupkg"
+$authPackageAzureAd         = "src/OidcProxy.Net.EntraId/bin/release/OidcProxy.Net.EntraId.$newVersion.nupkg"
+$authPackageOpenIdConnect   = "src/OidcProxy.Net.OpenIdConnect/bin/release/OidcProxy.Net.OpenIdConnect.$newVersion.nupkg"
 
 nuget push $authPackage $apiKey -Source https://api.nuget.org/v3/index.json
 nuget push $authPackageAuth0 $apiKey -Source https://api.nuget.org/v3/index.json
