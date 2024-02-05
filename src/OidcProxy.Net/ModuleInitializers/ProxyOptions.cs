@@ -185,7 +185,7 @@ public class ProxyOptions
     /// Configure a class that converts the token received from the identity-provider to an instance of JwtPayload.
     /// </summary>
     /// <typeparam name="TTokenParser">The type of the class to use to convert the jwt to a JwtPayload.</typeparam>
-    public void AddJwtParser<TTokenParser>() where TTokenParser : class, ITokenParser
+    public void AddTokenParser<TTokenParser>() where TTokenParser : class, ITokenParser
     {
         _applyJwtParser = s => s.AddTransient<ITokenParser, TTokenParser>();
     }
