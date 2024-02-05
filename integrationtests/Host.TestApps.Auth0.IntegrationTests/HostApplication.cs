@@ -1,6 +1,8 @@
+using System.Security.Claims;
 using OidcProxy.Net.Auth0;
 using OidcProxy.Net.ModuleInitializers;
 using Microsoft.AspNetCore.Builder;
+using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Configuration;
 
 namespace Host.TestApps.Auth0.IntegrationTests;
@@ -38,6 +40,10 @@ public class HostApplication : IAsyncLifetime, IDisposable
 
         // Build and run..
         _testApi = builder.Build();
+        
+        _testApi
+            .MapGet("/custom/me", async context => await context.Response.WriteAsJsonAsync(context.User.Identity?.Name))
+            .RequireAuthorization();
 
         _testApi.UseOidcProxy();
 
