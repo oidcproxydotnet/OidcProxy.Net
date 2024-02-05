@@ -3,7 +3,6 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.DependencyInjection.Extensions;
-using OidcProxy.Net.Endpoints;
 using OidcProxy.Net.IdentityProviders;
 using OidcProxy.Net.Locking;
 using OidcProxy.Net.Locking.Distributed.Redis;
@@ -28,6 +27,8 @@ public class ProxyOptions
     private Action<IServiceCollection> _applyBackBone = (s) => s.AddTransient<IConcurrentContext, InMemoryConcurrentContext>();
 
     private Action<IServiceCollection> _applyAuthenticationCallbackHandlerRegistration = (s) => s.AddTransient<IAuthenticationCallbackHandler, DefaultAuthenticationCallbackHandler>();
+    
+    private Action<IServiceCollection> _applyJwtParser = (s) => s.AddTransient<IJwtParser, JwtParser>();
 
     internal Uri? CustomHostName = null;
 
@@ -169,11 +170,20 @@ public class ProxyOptions
     {
         _applyClaimsTransformationRegistration = s => s.AddTransient<IClaimsTransformation, TClaimsTransformation>();
     }
-    
+
     /// <summary>
-    ///  
+    /// Configure a class that converts the token received from the identity-provider to an instance of JwtPayload.
     /// </summary>
-    /// <typeparam name="TAuthenticationCallbackHandler"></typeparam>
+    /// <typeparam name="TJwtParser">The type of the class to use to convert the jwt to a JwtPayload.</typeparam>
+    public void AddJwtParser<TJwtParser>() where TJwtParser : class, IJwtParser
+    {
+        _applyJwtParser = s => s.AddTransient<IJwtParser, TJwtParser>();
+    }
+
+    /// <summary>
+    /// Configure a class that redirects the user somewhere after authenticating.
+    /// </summary>
+    /// <typeparam name="TAuthenticationCallbackHandler">The type of the class.</typeparam>
     public void AddAuthenticationCallbackHandler<TAuthenticationCallbackHandler>() where TAuthenticationCallbackHandler : class, IAuthenticationCallbackHandler
     {
         _applyAuthenticationCallbackHandlerRegistration = s => s.AddTransient<IAuthenticationCallbackHandler, TAuthenticationCallbackHandler>();
@@ -238,13 +248,14 @@ public class ProxyOptions
         _applyReverseProxyConfiguration(proxyBuilder);
 
         _applyBackBone(serviceCollection);
-        
+
         IdpRegistration.Apply(proxyBuilder);
         
         IdpRegistration.Apply(serviceCollection);
 
         _applyClaimsTransformationRegistration(serviceCollection);
         _applyAuthenticationCallbackHandlerRegistration(serviceCollection);
+        _applyJwtParser(serviceCollection);
 
         serviceCollection
             .AddDistributedMemoryCache()

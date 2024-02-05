@@ -10,14 +10,17 @@ namespace OidcProxy.Net.Middleware;
 
 public sealed class OidcAuthenticationHandler : AuthenticationHandler<OidcAuthenticationSchemeOptions>
 {
+    private readonly IJwtParser _jwtParser;
     private readonly IHttpContextAccessor _httpContextAccessor;
     public const string SchemaName = "OidcProxy.Net";
 
-    public OidcAuthenticationHandler(IHttpContextAccessor httpContextAccessor,
+    public OidcAuthenticationHandler(IJwtParser jwtParser,
+        IHttpContextAccessor httpContextAccessor,
         IOptionsMonitor<OidcAuthenticationSchemeOptions> options, 
         ILoggerFactory logger, 
         UrlEncoder encoder) : base(options, logger, encoder)
     {
+        _jwtParser = jwtParser;
         _httpContextAccessor = httpContextAccessor;
     }
 
@@ -36,16 +39,16 @@ public sealed class OidcAuthenticationHandler : AuthenticationHandler<OidcAuthen
                 return Task.FromResult(AuthenticateResult.NoResult());
             }
 
-            var payload = token.ParseJwtPayload()?.ToArray() ?? Array.Empty<KeyValuePair<string, object>>();
-            if (!payload.Any())
+            var payload = _jwtParser.ParseAccessToken(token);
+            var claims = payload
+                .Select(x => new Claim(x.Key, x.Value?.ToString() ?? string.Empty))
+                .ToArray();
+            
+            if (!claims.Any())
             {
                 throw new AuthenticationFailureException("Failed to authenticate. " +
                                                          "The access_token jwt does not contain any claims.");
             }
-
-            var claims = payload
-                .Select(x => new Claim(x.Key, x.Value?.ToString() ?? string.Empty))
-                .ToArray();
 
             // todo: make configurable
             var claimsIdentity = new ClaimsIdentity(claims, SchemaName, "sub", "role");
