@@ -6,23 +6,23 @@
     <Nullable>enable</Nullable>
 
     <PackageId>OidcProxy.Net.EntraId</PackageId>
-    <Version>1.1.2</Version>
-    <Version>1.1.2</Version>
+    <Version>1.2.0</Version>
+    <Version>1.2.0</Version>
     <Authors>Albert Starreveld</Authors>
     <Company>GoCloudNative.org</Company>
     <PackageLicenseExpression>LGPL-3.0-only</PackageLicenseExpression>
     <Description>A yarp-based authentication gateway for your service mesh.</Description>
     <RepositoryUrl>https://github.com/thecloudnativewebapp/OidcProxy.Net</RepositoryUrl>
-    <PackageTags>BFF, Yarp, Microsoft Entra Ad, Cloud Native</PackageTags>
+    <PackageTags>BFF, Yarp, Microsoft Entra Id, Cloud Native</PackageTags>
     <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
     <Title>OidcProxy.Net.EntraId</Title>
     <PackageProjectUrl>https://bff.gocloudnative.org</PackageProjectUrl>
     <PackageReadmeFile>Readme.md</PackageReadmeFile>        
     <PackageIcon>logo.png</PackageIcon>        
     <SignAssembly>true</SignAssembly>        
-    <LangVersion>11</LangVersion>        
-    <PackageReleaseNotes>Dependency updates:
-- build(deps): bump System.IdentityModel.Tokens.Jwt from 7.3.0 to 7.3.1</PackageReleaseNotes>
+    <LangVersion>11</LangVersion>
+    <PackageReleaseNotes>Feature added:
+      - Introduced `ITokenParser`: Implement this interface to use OidcProxy.Net with reference tokens, for example.</PackageReleaseNotes>
   </PropertyGroup>
   
   <ItemGroup>

@@ -65,6 +65,8 @@ public static class ModuleInitializer
             AssignIfNotNull(config.LandingPage, options.SetLandingPage);
             AssignIfNotNull(config.CustomHostName, options.SetCustomHostName);
             AssignIfNotNull(config.CookieName, cookieName => options.CookieName = cookieName);
+            AssignIfNotNull(config.NameClaim, nameClaim => options.NameClaim = nameClaim);
+            AssignIfNotNull(config.RoleClaim, roleClaim => options.RoleClaim = roleClaim);
             
             options.EnableUserPreferredLandingPages = config.EnableUserPreferredLandingPages;
             options.SetAllowedLandingPages(config.AllowedLandingPages);

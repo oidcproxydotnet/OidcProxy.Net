@@ -19,19 +19,25 @@ public class OidcIntegrationTests : IClassFixture<HostApplication>
             await app.IdSvrLoginPage.BtnYodaLogin.ClickAsync();
             await Task.Delay(2000);
 
-            app.MeEndpoint.Text.Should().Contain(subYoda);
+            app.CurrentPage.Text.Should().Contain(subYoda);
         
             // Assert the user was logged in
             await app.GoTo("/.auth/me");
             await Task.Delay(1000);
 
-            app.MeEndpoint.Text.Should().Contain(subYoda);
-        
+            app.CurrentPage.Text.Should().Contain(subYoda);
+            
+            // Test ASP.NET Core authorization pipeline
+            await app.GoTo("/custom/me");
+            await Task.Delay(1000);
+
+            app.CurrentPage.Text.Should().Contain(subYoda);
+
             // Assert the user was logged in
             await app.GoTo("/api/echo");
             await Task.Delay(1000);
 
-            app.EchoEndpoint.Text.Should().Contain("Bearer ey");
+            app.CurrentPage.Text.Should().Contain("Bearer ey");
 
             // Log out
             await app.GoTo("/.auth/end-session");
@@ -44,13 +50,13 @@ public class OidcIntegrationTests : IClassFixture<HostApplication>
             await app.GoTo("/.auth/me");
             await Task.Delay(1000);
 
-            app.MeEndpoint.Text.Should().NotContain(subYoda);
+            app.CurrentPage.Text.Should().NotContain(subYoda);
             
             // Assert token removed
             await app.GoTo("/api/echo");
             await Task.Delay(1000);
         
-            app.EchoEndpoint.Text.Should().NotContain("Bearer ey");
+            app.CurrentPage.Text.Should().NotContain("Bearer ey");
         }
         finally
         {

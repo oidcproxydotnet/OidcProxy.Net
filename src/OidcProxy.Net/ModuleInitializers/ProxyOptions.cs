@@ -28,7 +28,7 @@ public class ProxyOptions
 
     private Action<IServiceCollection> _applyAuthenticationCallbackHandlerRegistration = (s) => s.AddTransient<IAuthenticationCallbackHandler, DefaultAuthenticationCallbackHandler>();
     
-    private Action<IServiceCollection> _applyJwtParser = (s) => s.AddTransient<IJwtParser, JwtParser>();
+    private Action<IServiceCollection> _applyJwtParser = (s) => s.AddTransient<ITokenParser, JwtParser>();
 
     internal Uri? CustomHostName = null;
 
@@ -59,6 +59,16 @@ public class ProxyOptions
     /// redirected to after authenticating successfully.
     /// </summary>
     public bool EnableUserPreferredLandingPages { get; set; } = false;
+
+    /// <summary>
+    /// The name of the claim that represents the username.
+    /// </summary>
+    public string NameClaim { get; set; } = "sub";
+    
+    /// <summary>
+    /// The name of the claim that represents the username.
+    /// </summary>
+    public string RoleClaim { get; set; } = "role";
 
     /// <summary>
     /// Sets a custom page to redirect to when the authentication on the OIDC Server failed.
@@ -174,10 +184,10 @@ public class ProxyOptions
     /// <summary>
     /// Configure a class that converts the token received from the identity-provider to an instance of JwtPayload.
     /// </summary>
-    /// <typeparam name="TJwtParser">The type of the class to use to convert the jwt to a JwtPayload.</typeparam>
-    public void AddJwtParser<TJwtParser>() where TJwtParser : class, IJwtParser
+    /// <typeparam name="TTokenParser">The type of the class to use to convert the jwt to a JwtPayload.</typeparam>
+    public void AddJwtParser<TTokenParser>() where TTokenParser : class, ITokenParser
     {
-        _applyJwtParser = s => s.AddTransient<IJwtParser, TJwtParser>();
+        _applyJwtParser = s => s.AddTransient<ITokenParser, TTokenParser>();
     }
 
     /// <summary>
@@ -274,7 +284,7 @@ public class ProxyOptions
             .TryAddSingleton<IHttpContextAccessor, HttpContextAccessor>();
                 
         serviceCollection
-            .AddAuthentication(OidcAuthenticationHandler.SchemaName)
-            .AddScheme<OidcAuthenticationSchemeOptions, OidcAuthenticationHandler>(OidcAuthenticationHandler.SchemaName, null);
+            .AddAuthentication(OidcProxyAuthenticationHandler.SchemaName)
+            .AddScheme<OidcProxyAuthenticationSchemeOptions, OidcProxyAuthenticationHandler>(OidcProxyAuthenticationHandler.SchemaName, null);
     }
 }

@@ -8,19 +8,19 @@ using Microsoft.Extensions.Options;
 
 namespace OidcProxy.Net.Middleware;
 
-public sealed class OidcAuthenticationHandler : AuthenticationHandler<OidcAuthenticationSchemeOptions>
+public sealed class OidcProxyAuthenticationHandler : AuthenticationHandler<OidcProxyAuthenticationSchemeOptions>
 {
-    private readonly IJwtParser _jwtParser;
+    private readonly ITokenParser _tokenParser;
     private readonly IHttpContextAccessor _httpContextAccessor;
     public const string SchemaName = "OidcProxy.Net";
 
-    public OidcAuthenticationHandler(IJwtParser jwtParser,
+    public OidcProxyAuthenticationHandler(ITokenParser tokenParser,
         IHttpContextAccessor httpContextAccessor,
-        IOptionsMonitor<OidcAuthenticationSchemeOptions> options, 
+        IOptionsMonitor<OidcProxyAuthenticationSchemeOptions> options, 
         ILoggerFactory logger, 
         UrlEncoder encoder) : base(options, logger, encoder)
     {
-        _jwtParser = jwtParser;
+        _tokenParser = tokenParser;
         _httpContextAccessor = httpContextAccessor;
     }
 
@@ -39,7 +39,7 @@ public sealed class OidcAuthenticationHandler : AuthenticationHandler<OidcAuthen
                 return Task.FromResult(AuthenticateResult.NoResult());
             }
 
-            var payload = _jwtParser.ParseAccessToken(token);
+            var payload = _tokenParser.ParseAccessToken(token);
             var claims = payload
                 .Select(x => new Claim(x.Key, x.Value?.ToString() ?? string.Empty))
                 .ToArray();
@@ -50,8 +50,10 @@ public sealed class OidcAuthenticationHandler : AuthenticationHandler<OidcAuthen
                                                          "The access_token jwt does not contain any claims.");
             }
 
-            // todo: make configurable
-            var claimsIdentity = new ClaimsIdentity(claims, SchemaName, "sub", "role");
+            var nameClaim = _tokenParser.GetNameClaim();
+            var roleClaim = _tokenParser.GetRoleClaim();
+            
+            var claimsIdentity = new ClaimsIdentity(claims, SchemaName, nameClaim, roleClaim);
 
             var claimsPrincipal = new ClaimsPrincipal(claimsIdentity);
             var ticket = new AuthenticationTicket(claimsPrincipal, SchemaName);
