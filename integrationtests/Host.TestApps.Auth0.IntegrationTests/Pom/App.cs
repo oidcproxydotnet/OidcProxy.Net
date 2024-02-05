@@ -49,6 +49,5 @@ public class App
     public Auth0SignOutPage Auth0SignOutPage => new(_page);
     
     
-    public MeEndpoint MeEndpoint => new(_page);
-    public EchoEndpoint EchoEndpoint => new(_page);
+    public Endpoint CurrentPage => new(_page);
 }

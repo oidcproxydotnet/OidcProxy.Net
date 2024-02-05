@@ -5,6 +5,8 @@ public class ProxyConfig
     public string? EndpointName { get; set; }
     public string? ErrorPage { get; set; }
     public string? LandingPage { get; set; }
+    public string? NameClaim { get; set; }
+    public string? RoleClaim { get; set; }
     public IEnumerable<string> AllowedLandingPages { get; set; }
     public bool EnableUserPreferredLandingPages { get; set; } = false;
     public Uri? CustomHostName { get; set; }

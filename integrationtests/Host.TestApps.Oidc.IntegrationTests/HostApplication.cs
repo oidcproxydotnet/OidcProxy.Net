@@ -1,6 +1,7 @@
 using OidcProxy.Net.ModuleInitializers;
 using OidcProxy.Net.OpenIdConnect;
 using Microsoft.AspNetCore.Builder;
+using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Configuration;
 
 namespace Host.TestApps.Oidc.IntegrationTests;
@@ -27,7 +28,11 @@ public class HostApplication : IAsyncLifetime, IDisposable
         builder.Services.AddOidcProxy(config);
 
         _testApi = builder.Build();
-
+        
+        _testApi
+            .MapGet("/custom/me", async context => await context.Response.WriteAsJsonAsync(context.User.Identity?.Name))
+            .RequireAuthorization();
+        
         _testApi.UseOidcProxy();
 
         _testApi.Urls.Add("https://localhost:8444");

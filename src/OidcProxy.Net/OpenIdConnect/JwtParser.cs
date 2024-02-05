@@ -1,12 +1,33 @@
 using System.IdentityModel.Tokens.Jwt;
 using System.Text;
+using OidcProxy.Net.ModuleInitializers;
 
 namespace OidcProxy.Net.OpenIdConnect;
 
-internal static class JwtParser
-{   
-    public static JwtPayload? ParseJwtPayload(this string token)
+internal class JwtParser : ITokenParser
+{
+    private readonly ProxyOptions _options;
+
+    public JwtParser(ProxyOptions options)
     {
+        _options = options;
+    }
+
+    public string GetNameClaim() => _options.NameClaim;
+    
+    public string GetRoleClaim() => _options.RoleClaim;
+
+    public JwtPayload? ParseAccessToken(string accessToken) => ParseJwtPayload(accessToken);
+
+    public JwtPayload? ParseIdToken(string idToken) => ParseJwtPayload(idToken);
+
+    private static JwtPayload? ParseJwtPayload(string token)
+    {
+        if (string.IsNullOrEmpty(token))
+        {
+            return null;
+        }
+
         var urlEncodedMiddleSection = GetSection(token, 1);
         
         var middleSection = urlEncodedMiddleSection

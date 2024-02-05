@@ -8,16 +8,19 @@ using Microsoft.Extensions.Options;
 
 namespace OidcProxy.Net.Middleware;
 
-public sealed class OidcAuthenticationHandler : AuthenticationHandler<OidcAuthenticationSchemeOptions>
+public sealed class OidcProxyAuthenticationHandler : AuthenticationHandler<OidcProxyAuthenticationSchemeOptions>
 {
+    private readonly ITokenParser _tokenParser;
     private readonly IHttpContextAccessor _httpContextAccessor;
     public const string SchemaName = "OidcProxy.Net";
 
-    public OidcAuthenticationHandler(IHttpContextAccessor httpContextAccessor,
-        IOptionsMonitor<OidcAuthenticationSchemeOptions> options, 
+    public OidcProxyAuthenticationHandler(ITokenParser tokenParser,
+        IHttpContextAccessor httpContextAccessor,
+        IOptionsMonitor<OidcProxyAuthenticationSchemeOptions> options, 
         ILoggerFactory logger, 
         UrlEncoder encoder) : base(options, logger, encoder)
     {
+        _tokenParser = tokenParser;
         _httpContextAccessor = httpContextAccessor;
     }
 
@@ -36,19 +39,21 @@ public sealed class OidcAuthenticationHandler : AuthenticationHandler<OidcAuthen
                 return Task.FromResult(AuthenticateResult.NoResult());
             }
 
-            var payload = token.ParseJwtPayload()?.ToArray() ?? Array.Empty<KeyValuePair<string, object>>();
-            if (!payload.Any())
+            var payload = _tokenParser.ParseAccessToken(token);
+            var claims = payload
+                .Select(x => new Claim(x.Key, x.Value?.ToString() ?? string.Empty))
+                .ToArray();
+            
+            if (!claims.Any())
             {
                 throw new AuthenticationFailureException("Failed to authenticate. " +
                                                          "The access_token jwt does not contain any claims.");
             }
 
-            var claims = payload
-                .Select(x => new Claim(x.Key, x.Value?.ToString() ?? string.Empty))
-                .ToArray();
-
-            // todo: make configurable
-            var claimsIdentity = new ClaimsIdentity(claims, SchemaName, "sub", "role");
+            var nameClaim = _tokenParser.GetNameClaim();
+            var roleClaim = _tokenParser.GetRoleClaim();
+            
+            var claimsIdentity = new ClaimsIdentity(claims, SchemaName, nameClaim, roleClaim);
 
             var claimsPrincipal = new ClaimsPrincipal(claimsIdentity);
             var ticket = new AuthenticationTicket(claimsPrincipal, SchemaName);

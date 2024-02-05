@@ -14,6 +14,7 @@ public class Auth0IntegrationTests : IClassFixture<HostApplication>
             .AddEnvironmentVariables()
             .Build();
 
+        var sub = configuration.GetSection("Auth0:Sub").Get<string>();
         var username = configuration.GetSection("Auth0:Username").Get<string>();
         var password = configuration.GetSection("Auth0:Password").Get<string>();
         
@@ -30,13 +31,19 @@ public class Auth0IntegrationTests : IClassFixture<HostApplication>
             
             await app.WaitForNavigationAsync();
 
-            app.MeEndpoint.Text.Should().Contain(username);
+            app.CurrentPage.Text.Should().Contain(username);
         
             // Assert the user was logged in
             await app.GoTo("/api/echo");
             await Task.Delay(1000);
 
-            app.EchoEndpoint.Text.Should().Contain("Bearer ey");
+            app.CurrentPage.Text.Should().Contain("Bearer ey");
+            
+            // Test ASP.NET Core authorization pipeline
+            await app.GoTo("/custom/me");
+            await Task.Delay(1000);
+
+            app.CurrentPage.Text.Should().Contain(sub);
 
             // Log out
             await app.GoTo("/.auth/end-session");
@@ -49,13 +56,13 @@ public class Auth0IntegrationTests : IClassFixture<HostApplication>
             await app.GoTo("/.auth/me");
             await Task.Delay(1000);
             
-            app.MeEndpoint.Text.Should().NotContain(username);
+            app.CurrentPage.Text.Should().NotContain(username);
             
             // Assert token removed
             await app.GoTo("/api/echo");
             await Task.Delay(1000);
             
-            app.EchoEndpoint.Text.Should().NotContain("Bearer ey");
+            app.CurrentPage.Text.Should().NotContain("Bearer ey");
         }
         finally
         {

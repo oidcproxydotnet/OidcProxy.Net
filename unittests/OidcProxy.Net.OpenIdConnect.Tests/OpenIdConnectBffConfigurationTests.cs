@@ -21,6 +21,8 @@ public class OpenIdConnectBffConfigurationTests
         },
         ""ErrorPage"": ""/error.aspx"",
         ""LandingPage"": ""/welcome.aspx"",
+        ""RoleClaim"": ""sub"",
+        ""NameClaim"": ""role"",
         ""CustomHostName"": ""www.foobar.org"",
         ""CookieName"": ""bff.custom.cookie"",
         ""SessionIdleTimeout"": ""00:30:00"",
@@ -72,6 +74,8 @@ public class OpenIdConnectBffConfigurationTests
     {
         _deserializedObject?.ErrorPage.Should().NotBeNullOrEmpty();
         _deserializedObject?.LandingPage.Should().NotBeNullOrEmpty();
+        _deserializedObject?.NameClaim.Should().NotBeNullOrEmpty();
+        _deserializedObject?.RoleClaim.Should().NotBeNullOrEmpty();
         _deserializedObject?.CustomHostName.Should().NotBeNull();
         _deserializedObject?.CookieName.Should().NotBeNullOrEmpty();
         _deserializedObject?.SessionIdleTimeout.Should().NotBe(TimeSpan.Zero);

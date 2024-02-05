@@ -7,6 +7,7 @@ namespace OidcProxy.Net.Endpoints;
 internal static class MeEndpoint
 {
     public static async Task<IResult> Get(HttpContext context,
+        [FromServices] ITokenParser tokenParser,
         [FromServices] IClaimsTransformation claimsTransformation)
     {
         if (!context.Session.HasIdToken())
@@ -17,7 +18,7 @@ internal static class MeEndpoint
         context.Response.Headers.CacheControl = $"no-cache, no-store, must-revalidate";
 
         var idToken = context.Session.GetIdToken();
-        var payload = idToken!.ParseJwtPayload();
+        var payload = tokenParser.ParseIdToken(idToken);
         var claims = await claimsTransformation.Transform(payload);
         return Results.Ok(claims);
     }

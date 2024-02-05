@@ -6,12 +6,8 @@
         <Nullable>enable</Nullable>
 
         <PackageId>OidcProxy.Net</PackageId>
-        <Version>1.1.2</Version>
-        <Version>1.1.2</Version>
-        <releaseNotes>
-            Dependency updates:
-                - build(deps): bump System.IdentityModel.Tokens.Jwt from 7.3.0 to 7.3.1
-        </releaseNotes>
+        <Version>1.2.0</Version>
+        <Version>1.2.0</Version>
         <Authors>Albert Starreveld</Authors>
         <Company>GoCloudNative.org</Company>
         <PackageLicenseExpression>LGPL-3.0-only</PackageLicenseExpression>
@@ -24,8 +20,8 @@
         <PackageIcon>logo.png</PackageIcon>
         <SignAssembly>true</SignAssembly>
         <LangVersion>11</LangVersion>
-        <PackageReleaseNotes>Dependency updates:
-- bump System.IdentityModel.Tokens.Jwt from 7.2.0 to 7.3.0</PackageReleaseNotes>
+        <PackageReleaseNotes>Feature added:
+            - Introduced `ITokenParser`: Implement this interface to use OidcProxy.Net with reference tokens, for example.</PackageReleaseNotes>
     </PropertyGroup>
 
     <ItemGroup>

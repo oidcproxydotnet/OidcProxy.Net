@@ -3,7 +3,6 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.DependencyInjection.Extensions;
-using OidcProxy.Net.Endpoints;
 using OidcProxy.Net.IdentityProviders;
 using OidcProxy.Net.Locking;
 using OidcProxy.Net.Locking.Distributed.Redis;
@@ -28,6 +27,8 @@ public class ProxyOptions
     private Action<IServiceCollection> _applyBackBone = (s) => s.AddTransient<IConcurrentContext, InMemoryConcurrentContext>();
 
     private Action<IServiceCollection> _applyAuthenticationCallbackHandlerRegistration = (s) => s.AddTransient<IAuthenticationCallbackHandler, DefaultAuthenticationCallbackHandler>();
+    
+    private Action<IServiceCollection> _applyJwtParser = (s) => s.AddTransient<ITokenParser, JwtParser>();
 
     internal Uri? CustomHostName = null;
 
@@ -58,6 +59,16 @@ public class ProxyOptions
     /// redirected to after authenticating successfully.
     /// </summary>
     public bool EnableUserPreferredLandingPages { get; set; } = false;
+
+    /// <summary>
+    /// The name of the claim that represents the username.
+    /// </summary>
+    public string NameClaim { get; set; } = "sub";
+    
+    /// <summary>
+    /// The name of the claim that represents the username.
+    /// </summary>
+    public string RoleClaim { get; set; } = "role";
 
     /// <summary>
     /// Sets a custom page to redirect to when the authentication on the OIDC Server failed.
@@ -169,11 +180,20 @@ public class ProxyOptions
     {
         _applyClaimsTransformationRegistration = s => s.AddTransient<IClaimsTransformation, TClaimsTransformation>();
     }
-    
+
     /// <summary>
-    ///  
+    /// Configure a class that converts the token received from the identity-provider to an instance of JwtPayload.
     /// </summary>
-    /// <typeparam name="TAuthenticationCallbackHandler"></typeparam>
+    /// <typeparam name="TTokenParser">The type of the class to use to convert the jwt to a JwtPayload.</typeparam>
+    public void AddTokenParser<TTokenParser>() where TTokenParser : class, ITokenParser
+    {
+        _applyJwtParser = s => s.AddTransient<ITokenParser, TTokenParser>();
+    }
+
+    /// <summary>
+    /// Configure a class that redirects the user somewhere after authenticating.
+    /// </summary>
+    /// <typeparam name="TAuthenticationCallbackHandler">The type of the class.</typeparam>
     public void AddAuthenticationCallbackHandler<TAuthenticationCallbackHandler>() where TAuthenticationCallbackHandler : class, IAuthenticationCallbackHandler
     {
         _applyAuthenticationCallbackHandlerRegistration = s => s.AddTransient<IAuthenticationCallbackHandler, TAuthenticationCallbackHandler>();
@@ -238,13 +258,14 @@ public class ProxyOptions
         _applyReverseProxyConfiguration(proxyBuilder);
 
         _applyBackBone(serviceCollection);
-        
+
         IdpRegistration.Apply(proxyBuilder);
         
         IdpRegistration.Apply(serviceCollection);
 
         _applyClaimsTransformationRegistration(serviceCollection);
         _applyAuthenticationCallbackHandlerRegistration(serviceCollection);
+        _applyJwtParser(serviceCollection);
 
         serviceCollection
             .AddDistributedMemoryCache()
@@ -263,7 +284,7 @@ public class ProxyOptions
             .TryAddSingleton<IHttpContextAccessor, HttpContextAccessor>();
                 
         serviceCollection
-            .AddAuthentication(OidcAuthenticationHandler.SchemaName)
-            .AddScheme<OidcAuthenticationSchemeOptions, OidcAuthenticationHandler>(OidcAuthenticationHandler.SchemaName, null);
+            .AddAuthentication(OidcProxyAuthenticationHandler.SchemaName)
+            .AddScheme<OidcProxyAuthenticationSchemeOptions, OidcProxyAuthenticationHandler>(OidcProxyAuthenticationHandler.SchemaName, null);
     }
 }

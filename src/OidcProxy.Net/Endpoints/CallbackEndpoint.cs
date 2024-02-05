@@ -16,6 +16,7 @@ internal static class CallbackEndpoint
         [FromServices] IRedirectUriFactory redirectUriFactory,
         [FromServices] ProxyOptions proxyOptions,
         [FromServices] IIdentityProvider identityProvider,
+        [FromServices] ITokenParser tokenParser,
         [FromServices] IAuthenticationCallbackHandler authenticationCallbackHandler)
     {
         try
@@ -45,7 +46,7 @@ internal static class CallbackEndpoint
 
             logger.LogLine(context, $"Redirect({proxyOptions.LandingPage})");
 
-            var jwtPayload = ExtractJwtPayload(tokenResponse.access_token);
+            var jwtPayload = tokenParser.ParseAccessToken(tokenResponse.access_token);
             
             return await authenticationCallbackHandler.OnAuthenticated(context, 
                 jwtPayload, 
@@ -63,10 +64,5 @@ internal static class CallbackEndpoint
     private static string? GetUserPreferredLandingPage(HttpContext context)
     {
         return context.Session.GetUserPreferredLandingPage();
-    }
-
-    private static JwtPayload? ExtractJwtPayload(string? jwt)
-    {
-        return string.IsNullOrEmpty(jwt) ? null : jwt.ParseJwtPayload();
     }
 }

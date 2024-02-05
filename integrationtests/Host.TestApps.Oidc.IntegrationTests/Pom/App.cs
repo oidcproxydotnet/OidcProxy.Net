@@ -48,6 +48,5 @@ public class App
     public IdSvrLoginPage IdSvrLoginPage => new (_page);
     public IdSvrSignOutPage IdSvrSignOutPage => new (_page);
     
-    public MeEndpoint MeEndpoint => new(_page);
-    public EchoEndpoint EchoEndpoint => new(_page);
+    public Endpoint CurrentPage => new(_page);
 }
