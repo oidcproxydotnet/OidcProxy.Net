@@ -1,19 +1,18 @@
-using OidcProxy.Net.ModuleInitializers;
-using OidcProxy.Net.OpenIdConnect;
+using OidcProxy.Net.Auth0;
 
 var builder = WebApplication.CreateBuilder(args);
 
 var config = builder.Configuration
     .GetSection("OidcProxy")
-    .Get<OidcProxyConfig>();
+    .Get<Auth0ProxyConfig>();
 
-builder.Services.AddOidcProxy(config);
+builder.Services.AddAuth0Proxy(config);
 
 var app = builder.Build();
 
 app.UseDefaultFiles();
 app.UseStaticFiles();
 
-app.UseOidcProxy();
+app.UseAuth0Proxy();
 
 app.Run();
