@@ -18,7 +18,7 @@ function SetVersionNumber($fileName, $versionNumber) {
 
 # ==== test ====
 
-#dotnet test
+dotnet test
 
 if ($lastexitcode -eq 1) {
     write-host "Aborted. Package has not been published to nuget. Cannot deploy when tests fail. Fix the tests first, then run the script again."
