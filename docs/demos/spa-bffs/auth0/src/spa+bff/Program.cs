@@ -1,33 +1,18 @@
-using GoCloudNative.Bff.Authentication.Auth0;
-using GoCloudNative.Bff.Authentication.ModuleInitializers;
+using OidcProxy.Net.Auth0;
 
 var builder = WebApplication.CreateBuilder(args);
 
-// Add services to the container.
-
-builder.Services.AddControllersWithViews();
-
 var config = builder.Configuration
-    .GetSection("Bff")
-    .Get<Auth0BffConfig>();
+    .GetSection("OidcProxy")
+    .Get<Auth0ProxyConfig>();
 
-builder.Services.AddBff(config);
+builder.Services.AddAuth0Proxy(config);
 
 var app = builder.Build();
 
-// Configure the HTTP request pipeline.
-if (!app.Environment.IsDevelopment())
-{
-    // The default HSTS value is 30 days. You may want to change this for production scenarios, see https://aka.ms/aspnetcore-hsts.
-    app.UseHsts();
-}
-
-app.UseHttpsRedirection();
+app.UseDefaultFiles();
 app.UseStaticFiles();
-app.UseRouting();
 
-app.UseBff();
-
-app.MapFallbackToFile("index.html");
+app.UseAuth0Proxy();
 
 app.Run();
