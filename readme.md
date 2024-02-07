@@ -17,7 +17,7 @@ dotnet run
 ![](https://github.com/thecloudnativewebapp/GoCloudNative.Bff/actions/workflows/ci.yml/badge.svg)
 ![Nuget](https://img.shields.io/nuget/dt/OidcProxy.Net)
 ![Version](https://img.shields.io/nuget/v/OidcProxy.Net)
-![Twitter](https://shields.io/twitter/follow/oidcproxydotnet)
+[![Twitter](https://shields.io/twitter/follow/oidcproxydotnet)](https://twitter.com/intent/follow?screen_name=oidcproxydotnet)
 
 ## Mission Statement
 The development of our product was driven by our clients’ need for a straightforward authentication gateway. Existing market options introduced complexities in terms of pricing and licensing, or proved to be overly intricate for beginners to comprehend and utilize effectively.
