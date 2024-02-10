@@ -1,5 +1,8 @@
 using System.Security.Claims;
-using Microsoft.IdentityModel.Tokens;
+using System.Security.Cryptography.X509Certificates;
+using OidcProxy.Net.ModuleInitializers;
+using OidcProxy.Net.OpenIdConnect;
+using OidcProxy.Net.OpenIdConnect.Jwe;
 using OidcProxy.Net.OpenIdDict;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -9,20 +12,15 @@ var config = builder.Configuration
     .Get<OpenIdDictProxyConfig>();
 
 builder.Services
-    .AddOpenIdDictProxy(config)
-    .AddValidation(options =>
+    .AddOidcProxy(config, o =>
     {
-        // <don't use this in production!>
-        // Create your own signing key instead! Or choose another encryption method...
-        options.AddEncryptionKey(new SymmetricSecurityKey(
-            Convert.FromBase64String("DRjd/GnduI3Efzen9V9BvbNUfc/VKgXltV7Kbk9sMkY="))
-        );
-        // </don't use this in production!>
+        var cert = X509Certificate2.CreateFromPemFile("cert.pem", "key.pem");
+        o.ConfigureJwe(new Certificate(cert));
     });
 
 var app = builder.Build();
 
-app.UseOpenIdDictProxy();
+app.UseOidcProxy();
 
 app.MapGet("/custom/me", async context =>
     {

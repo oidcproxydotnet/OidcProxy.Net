@@ -9,6 +9,7 @@ using OidcProxy.Net.Locking.Distributed.Redis;
 using OidcProxy.Net.Locking.InMemory;
 using OidcProxy.Net.Middleware;
 using OidcProxy.Net.OpenIdConnect;
+using OidcProxy.Net.OpenIdConnect.Jwe;
 using StackExchange.Redis;
 using RedLockNet;
 using RedLockNet.SERedis;
@@ -188,6 +189,17 @@ public class ProxyOptions
     public void AddTokenParser<TTokenParser>() where TTokenParser : class, ITokenParser
     {
         _applyJwtParser = s => s.AddTransient<ITokenParser, TTokenParser>();
+    }
+    
+    /// <summary>
+    /// Configure how to decrypt a JWE
+    /// </summary>
+    /// <param name="key">An implementation of the ITokenEncryptionKey class.</param>
+    public void ConfigureJwe(ITokenEncryptionKey key)
+    {
+        _applyJwtParser = s => s
+            .AddTransient<ITokenParser, JweParser>()
+            .AddSingleton(key);
     }
 
     /// <summary>
