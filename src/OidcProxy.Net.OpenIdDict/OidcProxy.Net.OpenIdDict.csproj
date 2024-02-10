@@ -36,4 +36,14 @@
       <ProjectReference Include="..\OidcProxy.Net.OpenIdConnect\OidcProxy.Net.OpenIdConnect.csproj" />
     </ItemGroup>
     
+    <ItemGroup>
+        <None Include="Readme.md" pack="true" PackagePath="." />
+    </ItemGroup>
+
+    <ItemGroup>
+        <Content Include="..\..\logo.png" pack="true" PackagePath=".">
+            <Link>logo.png</Link>
+        </Content>
+    </ItemGroup>
+    
 </Project>
