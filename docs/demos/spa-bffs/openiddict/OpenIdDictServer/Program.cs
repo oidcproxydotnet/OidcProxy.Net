@@ -1,5 +1,6 @@
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.IdentityModel.Tokens;
 using OpenIdDictServer;
 using OpenIdDictServer.Models;
 
@@ -25,16 +26,17 @@ builder.Services.AddOpenIddict()
         options.SetTokenEndpointUris("connect/token");
 
         options.SetAuthorizationEndpointUris("connect/authorize");
-        
-        //options.DisableAccessTokenEncryption();
 
         options
             .AllowAuthorizationCodeFlow()
             .AllowRefreshTokenFlow();
-
+        
         // <don't use this in production!>
+        options.AddEncryptionKey(new SymmetricSecurityKey(
+            Convert.FromBase64String("DRjd/GnduI3Efzen9V9BvbNUfc/VKgXltV7Kbk9sMkY="))
+        );
+        
         options
-            .AddDevelopmentEncryptionCertificate()
             .AddDevelopmentSigningCertificate();
         // </don't use this in production!>
 

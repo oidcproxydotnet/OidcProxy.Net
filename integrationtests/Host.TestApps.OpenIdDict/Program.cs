@@ -1,16 +1,28 @@
 using System.Security.Claims;
-using OidcProxy.Net.ModuleInitializers;
-using OidcProxy.Net.OpenIdConnect;
+using Microsoft.IdentityModel.Tokens;
+using OidcProxy.Net.OpenIdDict;
 
 var builder = WebApplication.CreateBuilder(args);
 
 var config = builder.Configuration
     .GetSection("OidcProxy")
-    .Get<OidcProxyConfig>();
+    .Get<OpenIdDictProxyConfig>();
 
-builder.Services.AddOidcProxy(config);
+builder.Services
+    .AddOpenIdDictProxy(config)
+    .AddValidation(options =>
+    {
+        // <don't use this in production!>
+        // Create your own signing key instead! Or choose another encryption method...
+        options.AddEncryptionKey(new SymmetricSecurityKey(
+            Convert.FromBase64String("DRjd/GnduI3Efzen9V9BvbNUfc/VKgXltV7Kbk9sMkY="))
+        );
+        // </don't use this in production!>
+    });
 
 var app = builder.Build();
+
+app.UseOpenIdDictProxy();
 
 app.MapGet("/custom/me", async context =>
     {
@@ -26,7 +38,5 @@ app.MapGet("/custom/me", async context =>
         });
     })
     .RequireAuthorization();
-
-app.UseOidcProxy();
 
 app.Run();
