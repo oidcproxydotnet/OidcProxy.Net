@@ -4,6 +4,25 @@
         <TargetFramework>net8.0</TargetFramework>
         <ImplicitUsings>enable</ImplicitUsings>
         <Nullable>enable</Nullable>
+
+        <PackageId>OidcProxy.Net.OpenIdDict</PackageId>
+        <Version>1.3.0</Version>
+        <Version>1.3.0</Version>
+        <Authors>Albert Starreveld</Authors>
+        <Company>GoCloudNative.org</Company>
+        <PackageLicenseExpression>LGPL-3.0-only</PackageLicenseExpression>
+        <Description>A yarp-based authentication gateway for your service mesh.</Description>
+        <RepositoryUrl>https://github.com/thecloudnativewebapp/OidcProxy.Net</RepositoryUrl>
+        <PackageTags>BFF, Yarp, OpenId Connect, OpenIdDict, Cloud Native</PackageTags>
+        <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
+        <Title>OidcProxy.Net.OpenIdDict</Title>
+        <PackageProjectUrl>https://oidcproxy.net</PackageProjectUrl>
+        <PackageReadmeFile>Readme.md</PackageReadmeFile>
+        <PackageIcon>logo.png</PackageIcon>
+        <SignAssembly>true</SignAssembly>
+        <LangVersion>11</LangVersion>
+        <PackageReleaseNotes>Feature added:
+            - Introduced `ITokenParser`: Implement this interface to use OidcProxy.Net with reference tokens, for example.</PackageReleaseNotes>
     </PropertyGroup>
 
     <ItemGroup>
