@@ -2,7 +2,7 @@ using System.IdentityModel.Tokens.Jwt;
 using System.Security.Authentication;
 using OidcProxy.Net.ModuleInitializers;
 
-namespace OidcProxy.Net.OpenIdConnect.Jwe;
+namespace OidcProxy.Net.OpenIdConnect;
 
 public class JweParser : JwtParser
 {

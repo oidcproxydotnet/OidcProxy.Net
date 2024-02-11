@@ -9,7 +9,6 @@ using OidcProxy.Net.Locking.Distributed.Redis;
 using OidcProxy.Net.Locking.InMemory;
 using OidcProxy.Net.Middleware;
 using OidcProxy.Net.OpenIdConnect;
-using OidcProxy.Net.OpenIdConnect.Jwe;
 using StackExchange.Redis;
 using RedLockNet;
 using RedLockNet.SERedis;

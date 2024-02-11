@@ -1,4 +1,3 @@
-using System.IdentityModel.Tokens.Jwt;
 using OidcProxy.Net.Logging;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;

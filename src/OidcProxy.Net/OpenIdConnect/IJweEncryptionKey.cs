@@ -1,4 +1,4 @@
-namespace OidcProxy.Net.OpenIdConnect.Jwe;
+namespace OidcProxy.Net.OpenIdConnect;
 
 public interface IJweEncryptionKey
 {
