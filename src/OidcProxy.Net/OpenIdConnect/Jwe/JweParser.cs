@@ -1,56 +1,30 @@
 using System.IdentityModel.Tokens.Jwt;
-using System.Text;
+using System.Security.Authentication;
 using OidcProxy.Net.ModuleInitializers;
 
 namespace OidcProxy.Net.OpenIdConnect.Jwe;
 
 public class JweParser : JwtParser
 {
-    private readonly ITokenEncryptionKey _encryptionKey;
+    private readonly IJweEncryptionKey _encryptionKey;
 
-    public JweParser(ProxyOptions options, ITokenEncryptionKey encryptionKey) : base(options)
+    public JweParser(ProxyOptions options, IJweEncryptionKey encryptionKey) : base(options)
     {
         _encryptionKey = encryptionKey;
     }
 
-    public override JwtPayload? ParseAccessToken(string accessToken)
+    public override JwtPayload? ParseAccessToken(string encryptedAccessToken)
     {
-        var plainText = _encryptionKey.Decrypt(accessToken);
-        return ParseJwtPayload(plainText);
-    }
-
-    private static JwtPayload? ParseJwtPayload(string token)
-    {
-        if (string.IsNullOrEmpty(token))
+        try
         {
-            return null;
+            var accessToken = _encryptionKey.Decrypt(encryptedAccessToken);
+            return base.ParseAccessToken(accessToken);
         }
-
-        var urlEncodedMiddleSection = GetSection(token, 1);
-        
-        var middleSection = urlEncodedMiddleSection
-            .Replace('-', '+')
-            .Replace('_', '/');
-        
-        var base64 = middleSection
-            .PadRight(middleSection.Length + (4 - middleSection.Length % 4) % 4, '=');
-        
-        var bytes = Convert.FromBase64String(base64);
-        var json = Encoding.UTF8.GetString(bytes);
-        
-        return string.IsNullOrEmpty(json)
-            ? null
-            : JwtPayload.Deserialize(json);
-    }
-
-    private static string GetSection(string token, int section)
-    {
-        var chunks = token.Split(".");
-        if (chunks.Length != 3)
+        catch (Exception e)
         {
-            throw new NotSupportedException($"Invalid token: {token}");
+            throw new AuthenticationException("Authentication failed. Unable to decrypt JWE. Use the " +
+                                              "options.ConfigureJweParser(..) method to configure JWE handling" +
+                                              $"correctly or implement the '{typeof(ITokenParser)}' class.", e);
         }
-
-        return chunks[section];
     }
 }

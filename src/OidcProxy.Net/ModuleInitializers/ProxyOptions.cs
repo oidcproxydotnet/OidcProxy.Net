@@ -195,10 +195,10 @@ public class ProxyOptions
     /// Configure how to decrypt a JWE
     /// </summary>
     /// <param name="key">An implementation of the ITokenEncryptionKey class.</param>
-    public void ConfigureJweEncryptionKey(ITokenEncryptionKey key)
+    public void UseJweKey(IJweEncryptionKey key)
     {
         _applyJwtParser = s => s
-            .AddSingleton<ITokenParser, JweParser>()
+            .AddTransient<ITokenParser, JweParser>()
             .AddSingleton(key);
     }
 

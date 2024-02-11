@@ -3,7 +3,7 @@ using Microsoft.IdentityModel.Tokens;
 
 namespace OidcProxy.Net.OpenIdConnect.Jwe;
 
-public sealed class EncryptionKey : ITokenEncryptionKey
+public sealed class EncryptionKey : IJweEncryptionKey
 {
     private readonly SymmetricSecurityKey _key;
 
@@ -12,9 +12,9 @@ public sealed class EncryptionKey : ITokenEncryptionKey
         _key = key;
     }
     
-    public string Decrypt(string payload)
+    public string Decrypt(string token)
     {
-        var jweToken = JWE.Decrypt(payload, _key.Key);
+        var jweToken = JWE.Decrypt(token, _key.Key);
         return jweToken.Plaintext;
     }
 }

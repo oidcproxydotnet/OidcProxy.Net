@@ -37,12 +37,12 @@ builder.Services.AddOpenIddict()
         //     Convert.FromBase64String("DRjd/GnduI3Efzen9V9BvbNUfc/VKgXltV7Kbk9sMkY=")));
 
         // Done!
-        options.AddEncryptionCertificate(X509Certificate2.CreateFromPemFile("cert.pem", "key.pem"));
+        // options.AddEncryptionCertificate(X509Certificate2.CreateFromPemFile("cert.pem", "key.pem"));
 
-        // options.AddEncryptionCredentials(new EncryptingCredentials(
-        //     new SymmetricSecurityKey(Convert.FromBase64String("DRjd/GnduI3Efzen9V9BvbNUfc/VKgXltV7Kbk9sMkY=")),
-        //     SecurityAlgorithms.HmacSha512
-        // ));
+        options.AddEncryptionCredentials(new EncryptingCredentials(
+            new SymmetricSecurityKey(Convert.FromBase64String("DRjd/GnduI3Efzen9V9BvbNUfc/VKgXltV7Kbk9sMkY=")),
+            SecurityAlgorithms.HmacSha512
+        ));
 
         options
             .AddDevelopmentSigningCertificate();
