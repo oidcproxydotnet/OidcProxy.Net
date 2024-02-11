@@ -1,9 +1,9 @@
-using System.Security.Cryptography.X509Certificates;
 using Jose;
+using System.Security.Cryptography.X509Certificates;
 
 namespace OidcProxy.Net.OpenIdConnect.Jwe;
 
-public class Certificate : ITokenEncryptionKey
+public sealed class Certificate : ITokenEncryptionKey
 {
     private readonly X509Certificate2 _certificate;
 
@@ -11,14 +11,10 @@ public class Certificate : ITokenEncryptionKey
     {
         _certificate = certificate;
     }
-    
+
     public string Decrypt(string payload)
     {
-        var decrypted = JWE.Decrypt(payload,
-            _certificate.GetRSAPrivateKey(), 
-            JweAlgorithm.RSA_OAEP, 
-            JweEncryption.A256CBC_HS512);
-
-        return decrypted.Plaintext;
+        var jweToken = JWE.Decrypt(payload, _certificate.GetRSAPrivateKey());
+        return jweToken.Plaintext;
     }
 }

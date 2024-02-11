@@ -17,14 +17,7 @@ public class JwtParser : ITokenParser
     
     public virtual string GetRoleClaim() => _options.RoleClaim;
 
-    [Obsolete]
     public virtual JwtPayload? ParseAccessToken(string accessToken) => ParseJwtPayload(accessToken);
-
-    public virtual Task<JwtPayload?> ParseAccessTokenAsync(string accessToken)
-    {
-        var result = ParseJwtPayload(accessToken);
-        return Task.FromResult(result);
-    }
 
     public virtual JwtPayload? ParseIdToken(string idToken) => ParseJwtPayload(idToken);
 

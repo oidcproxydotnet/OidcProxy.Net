@@ -13,15 +13,12 @@ public class JweParser : JwtParser
         _encryptionKey = encryptionKey;
     }
 
-    public override JwtPayload? ParseAccessToken(string accessToken) => null;
-
-    public override Task<JwtPayload?> ParseAccessTokenAsync(string accessToken)
+    public override JwtPayload? ParseAccessToken(string accessToken)
     {
         var plainText = _encryptionKey.Decrypt(accessToken);
-        var payload = ParseJwtPayload(plainText);
-        return Task.FromResult(payload);
+        return ParseJwtPayload(plainText);
     }
-    
+
     private static JwtPayload? ParseJwtPayload(string token)
     {
         if (string.IsNullOrEmpty(token))

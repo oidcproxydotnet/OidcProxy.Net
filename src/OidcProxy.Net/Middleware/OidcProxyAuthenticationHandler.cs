@@ -24,23 +24,22 @@ public sealed class OidcProxyAuthenticationHandler : AuthenticationHandler<OidcP
         _httpContextAccessor = httpContextAccessor;
     }
 
-    protected override async Task<AuthenticateResult> HandleAuthenticateAsync()
+    protected override Task<AuthenticateResult> HandleAuthenticateAsync()
     {
         try
         {
             if (_httpContextAccessor.HttpContext == null)
             {
-                AuthenticateResult.NoResult();
+                return Task.FromResult(AuthenticateResult.NoResult());
             }
 
             var token = _httpContextAccessor.HttpContext.Session.GetAccessToken();
-            if (token == null)
+            if (string.IsNullOrEmpty(token))
             {
-                AuthenticateResult.NoResult();
+                return Task.FromResult(AuthenticateResult.NoResult());
             }
 
-            var payload = await _tokenParser.ParseAccessTokenAsync(token)
-                ?? _tokenParser.ParseAccessToken(token);
+            var payload = _tokenParser.ParseAccessToken(token);
             
             var claims = payload
                 .Select(x => new Claim(x.Key, x.Value?.ToString() ?? string.Empty))
@@ -60,11 +59,11 @@ public sealed class OidcProxyAuthenticationHandler : AuthenticationHandler<OidcP
             var claimsPrincipal = new ClaimsPrincipal(claimsIdentity);
             var ticket = new AuthenticationTicket(claimsPrincipal, SchemaName);
 
-            return AuthenticateResult.Success(ticket);
+            return Task.FromResult(AuthenticateResult.Success(ticket));
         }
         catch (Exception e)
         {
-            return AuthenticateResult.Fail(e);
+            return Task.FromResult(AuthenticateResult.Fail(e));
         }
     }
 }

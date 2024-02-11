@@ -46,8 +46,7 @@ internal static class CallbackEndpoint
 
             logger.LogLine(context, $"Redirect({proxyOptions.LandingPage})");
 
-            var jwtPayload = await tokenParser.ParseAccessTokenAsync(tokenResponse.access_token)
-                ?? tokenParser.ParseAccessToken(tokenResponse.access_token);
+            var jwtPayload = tokenParser.ParseAccessToken(tokenResponse.access_token);
             
             return await authenticationCallbackHandler.OnAuthenticated(context, 
                 jwtPayload, 
