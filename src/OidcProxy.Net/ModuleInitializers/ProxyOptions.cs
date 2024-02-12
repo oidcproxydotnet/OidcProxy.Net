@@ -189,6 +189,17 @@ public class ProxyOptions
     {
         _applyJwtParser = s => s.AddTransient<ITokenParser, TTokenParser>();
     }
+    
+    /// <summary>
+    /// Configure how to decrypt a JWE
+    /// </summary>
+    /// <param name="key">An implementation of the ITokenEncryptionKey class.</param>
+    public void UseJweKey(IJweEncryptionKey key)
+    {
+        _applyJwtParser = s => s
+            .AddTransient<ITokenParser, JweParser>()
+            .AddSingleton(key);
+    }
 
     /// <summary>
     /// Configure a class that redirects the user somewhere after authenticating.
@@ -199,15 +210,6 @@ public class ProxyOptions
         _applyAuthenticationCallbackHandlerRegistration = s => s.AddTransient<IAuthenticationCallbackHandler, TAuthenticationCallbackHandler>();
     }
 
-    /// <summary>
-    /// Initialize YARP with the values provided in a configuration-section.
-    /// </summary>
-    [Obsolete("Will be removed. Migrate to options.ConfigureYarp(..).")]
-    public void LoadYarpFromConfig(IConfigurationSection configurationSection)
-    {
-        _applyReverseProxyConfiguration = b => b.LoadFromConfig(configurationSection);
-    }
-    
     /// <summary>
     /// YARP is initially set up to forward traffic based on the predefined configuration. However, if you require additional configuration options, you can utilize this method to extend the configuration.
     /// </summary>

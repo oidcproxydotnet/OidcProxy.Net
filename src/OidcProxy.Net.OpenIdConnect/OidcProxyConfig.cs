@@ -4,5 +4,5 @@ namespace OidcProxy.Net.OpenIdConnect;
 
 public class OidcProxyConfig : ProxyConfig
 {
-    public OpenIdConnectConfig Oidc { get; set; }
+    public OpenIdConnectConfig Oidc { get; set; } = new();
 }

@@ -34,12 +34,13 @@ public sealed class OidcProxyAuthenticationHandler : AuthenticationHandler<OidcP
             }
 
             var token = _httpContextAccessor.HttpContext.Session.GetAccessToken();
-            if (token == null)
+            if (string.IsNullOrEmpty(token))
             {
                 return Task.FromResult(AuthenticateResult.NoResult());
             }
 
             var payload = _tokenParser.ParseAccessToken(token);
+            
             var claims = payload
                 .Select(x => new Claim(x.Key, x.Value?.ToString() ?? string.Empty))
                 .ToArray();
@@ -58,8 +59,7 @@ public sealed class OidcProxyAuthenticationHandler : AuthenticationHandler<OidcP
             var claimsPrincipal = new ClaimsPrincipal(claimsIdentity);
             var ticket = new AuthenticationTicket(claimsPrincipal, SchemaName);
 
-            var result = AuthenticateResult.Success(ticket);
-            return Task.FromResult(result);
+            return Task.FromResult(AuthenticateResult.Success(ticket));
         }
         catch (Exception e)
         {

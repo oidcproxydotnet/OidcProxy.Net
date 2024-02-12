@@ -1,6 +1,8 @@
 using System.Security.Claims;
+using System.Security.Cryptography.X509Certificates;
 using OidcProxy.Net.ModuleInitializers;
 using OidcProxy.Net.OpenIdConnect;
+using OidcProxy.Net.OpenIdConnect.Jwe;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -8,9 +10,22 @@ var config = builder.Configuration
     .GetSection("OidcProxy")
     .Get<OidcProxyConfig>();
 
-builder.Services.AddOidcProxy(config);
+builder.Services
+    .AddOidcProxy(config, o =>
+    {
+        var cert = X509Certificate2.CreateFromPemFile("cert.pem", "key.pem");
+        o.UseJweKey(new EncryptionCertificate(cert));
+
+        // var key = new SymmetricSecurityKey(
+        //     Convert.FromBase64String("DRjd/GnduI3Efzen9V9BvbNUfc/VKgXltV7Kbk9sMkY=")
+        // );
+        //
+        // o.UseJweKey(new EncryptionKey(key));
+    });
 
 var app = builder.Build();
+
+app.UseOidcProxy();
 
 app.MapGet("/custom/me", async context =>
     {
@@ -26,7 +41,5 @@ app.MapGet("/custom/me", async context =>
         });
     })
     .RequireAuthorization();
-
-app.UseOidcProxy();
 
 app.Run();

@@ -6,8 +6,8 @@
         <Nullable>enable</Nullable>
         
         <PackageId>OidcProxy.Net.Auth0</PackageId>
-        <Version>1.2.0</Version>
-        <Version>1.2.0</Version>
+        <Version>1.3.0</Version>
+        <Version>1.3.0</Version>
         <Authors>Albert Starreveld</Authors>
         <Company>GoCloudNative.org</Company>
         <PackageLicenseExpression>LGPL-3.0-only</PackageLicenseExpression>
@@ -16,7 +16,7 @@
         <PackageTags>BFF, Yarp, Auth0, Cloud Native</PackageTags>
         <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
         <Title>OidcProxy.Net.Auth0</Title>
-        <PackageProjectUrl>https://bff.gocloudnative.org</PackageProjectUrl>
+        <PackageProjectUrl>https://oidcproxy.net</PackageProjectUrl>
         <PackageReadmeFile>Readme.md</PackageReadmeFile>
         <PackageIcon>logo.png</PackageIcon>
         <SignAssembly>true</SignAssembly>

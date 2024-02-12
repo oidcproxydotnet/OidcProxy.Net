@@ -4,7 +4,7 @@ using OidcProxy.Net.ModuleInitializers;
 
 namespace OidcProxy.Net.OpenIdConnect;
 
-internal class JwtParser : ITokenParser
+public class JwtParser : ITokenParser
 {
     private readonly ProxyOptions _options;
 
@@ -13,13 +13,13 @@ internal class JwtParser : ITokenParser
         _options = options;
     }
 
-    public string GetNameClaim() => _options.NameClaim;
+    public virtual string GetNameClaim() => _options.NameClaim;
     
-    public string GetRoleClaim() => _options.RoleClaim;
+    public virtual string GetRoleClaim() => _options.RoleClaim;
 
-    public JwtPayload? ParseAccessToken(string accessToken) => ParseJwtPayload(accessToken);
+    public virtual JwtPayload? ParseAccessToken(string accessToken) => ParseJwtPayload(accessToken);
 
-    public JwtPayload? ParseIdToken(string idToken) => ParseJwtPayload(idToken);
+    public virtual JwtPayload? ParseIdToken(string idToken) => ParseJwtPayload(idToken);
 
     private static JwtPayload? ParseJwtPayload(string token)
     {
