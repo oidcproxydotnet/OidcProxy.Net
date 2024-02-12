@@ -21,10 +21,4 @@
     <PackageReference Include="OpenIddict.EntityFrameworkCore" Version="5.1.0" />
   </ItemGroup>
 
-  <ItemGroup>
-    <None Update="cert.pem">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </None>
-  </ItemGroup>
-
 </Project>

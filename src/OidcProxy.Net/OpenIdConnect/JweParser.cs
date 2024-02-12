@@ -4,7 +4,7 @@ using OidcProxy.Net.ModuleInitializers;
 
 namespace OidcProxy.Net.OpenIdConnect;
 
-public class JweParser : JwtParser
+public sealed class JweParser : JwtParser
 {
     private readonly IJweEncryptionKey _encryptionKey;
 

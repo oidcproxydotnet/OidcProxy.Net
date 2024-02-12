@@ -7,15 +7,6 @@
     </PropertyGroup>
 
     <ItemGroup>
-      <None Update="cert.pem">
-        <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-      </None>
-      <None Update="key.pem">
-        <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-      </None>
-    </ItemGroup>
-
-    <ItemGroup>
       <ProjectReference Include="..\..\src\OidcProxy.Net.OpenIdConnect\OidcProxy.Net.OpenIdConnect.csproj" />
     </ItemGroup>
 

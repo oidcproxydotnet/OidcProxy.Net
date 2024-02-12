@@ -1,4 +1,3 @@
-using System.Security.Cryptography.X509Certificates;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
@@ -32,17 +31,8 @@ builder.Services.AddOpenIddict()
             .AllowAuthorizationCodeFlow()
             .AllowRefreshTokenFlow();
 
-        // Done!
-        // options.AddEncryptionKey(new SymmetricSecurityKey(
-        //     Convert.FromBase64String("DRjd/GnduI3Efzen9V9BvbNUfc/VKgXltV7Kbk9sMkY=")));
-
-        // Done!
-        // options.AddEncryptionCertificate(X509Certificate2.CreateFromPemFile("cert.pem", "key.pem"));
-
-        options.AddEncryptionCredentials(new EncryptingCredentials(
-            new SymmetricSecurityKey(Convert.FromBase64String("DRjd/GnduI3Efzen9V9BvbNUfc/VKgXltV7Kbk9sMkY=")),
-            SecurityAlgorithms.HmacSha512
-        ));
+        options.AddEncryptionKey(new SymmetricSecurityKey(
+            Convert.FromBase64String("DRjd/GnduI3Efzen9V9BvbNUfc/VKgXltV7Kbk9sMkY=")));
 
         options
             .AddDevelopmentSigningCertificate();
@@ -51,17 +41,13 @@ builder.Services.AddOpenIddict()
             .UseAspNetCore()
             .EnableTokenEndpointPassthrough()
             .EnableAuthorizationEndpointPassthrough();
-    });
+    })
 
-    // Register the OpenIddict validation components.
-    // .AddValidation(options =>
-    // {
-    //     // Import the configuration from the local OpenIddict server instance.
-    //     options.UseLocalServer();
-    //
-    //     // Register the ASP.NET Core host.
-    //     options.UseAspNetCore();
-    // });
+    .AddValidation(options =>
+    {
+        options.UseLocalServer();
+        options.UseAspNetCore();
+    });
 
 builder.Services.AddHostedService<Worker>();
 

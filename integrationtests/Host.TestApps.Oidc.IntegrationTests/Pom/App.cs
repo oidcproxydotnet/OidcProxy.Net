@@ -5,7 +5,7 @@ namespace Host.TestApps.Oidc.IntegrationTests.Pom;
 public class App
 {
     private IPage? _page;
-    private IBrowser _browser;
+    private IBrowser? _browser;
 
     private const string BaseAddress = "https://localhost:8444";
 
@@ -30,23 +30,23 @@ public class App
 
     public async Task GoTo(string uri)
     {
-        await _page.GoToAsync($"{BaseAddress}{uri}");
+        await _page!.GoToAsync($"{BaseAddress}{uri}");
     }
 
     public async Task WaitForNavigationAsync()
     {
-        await _page.WaitForNavigationAsync();
+        await _page!.WaitForNavigationAsync();
         await Task.Delay(500);
     }
 
     public async Task CloseBrowser()
     {
-        await _page.CloseAsync();
-        await _browser.CloseAsync();
+        await _page!.CloseAsync();
+        await _browser!.CloseAsync();
     }
 
-    public IdSvrLoginPage IdSvrLoginPage => new (_page);
-    public IdSvrSignOutPage IdSvrSignOutPage => new (_page);
+    public IdSvrLoginPage IdSvrLoginPage => new (_page!);
+    public IdSvrSignOutPage IdSvrSignOutPage => new (_page!);
     
-    public Endpoint CurrentPage => new(_page);
+    public Endpoint CurrentPage => new(_page!);
 }
