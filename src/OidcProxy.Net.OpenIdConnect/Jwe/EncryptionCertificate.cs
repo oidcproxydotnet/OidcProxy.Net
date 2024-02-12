@@ -14,7 +14,16 @@ public sealed class EncryptionCertificate : IJweEncryptionKey
 
     public string Decrypt(string token)
     {
-        var jweToken = JWE.Decrypt(token, _certificate.GetRSAPrivateKey());
+        var privateKey = _certificate.GetRSAPrivateKey();
+        if (privateKey == null)
+        {
+            throw new NotSupportedException("Failed to decrypt JWE. " +
+                                            "The provided certificate does not have a private key. " +
+                                            "The private key of the certificate is required to decrypt the JWE. " +
+                                            "Provide a certificate with a private key.");
+        }
+
+        var jweToken = JWE.Decrypt(token, privateKey);
         return jweToken.Plaintext;
     }
 }
