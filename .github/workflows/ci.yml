@@ -10,8 +10,6 @@ jobs:
 
     steps:
     - uses: actions/checkout@v3
-    - name: Warmup
-      run: curl https://idsvrtst.azurewebsites.net/.well-known/openid-configuration
     - name: Setup .NET
       uses: actions/setup-dotnet@v3
       with:
@@ -19,10 +17,3 @@ jobs:
     - uses: browser-actions/setup-chrome@v1
     - name: Run tests
       run: dotnet test --filter 'FullyQualifiedName~.UnitTests'
-      env: 
-        OIDCPROXY__AUTH0__AUDIENCE: ${{ secrets.OIDCPROXY__AUTH0__AUDIENCE }}
-        OIDCPROXY__AUTH0__CLIENTID: ${{ secrets.OIDCPROXY__AUTH0__CLIENTID }}
-        OIDCPROXY__AUTH0__CLIENTSECRET: ${{ secrets.OIDCPROXY__AUTH0__CLIENTSECRET }}
-        OIDCPROXY__AUTH0__DOMAIN: ${{ secrets.OIDCPROXY__AUTH0__DOMAIN }}
-        AUTH0__PASSWORD: ${{ secrets.AUTH0__PASSWORD }}
-        AUTH0__USERNAME: ${{ secrets.AUTH0__USERNAME }}

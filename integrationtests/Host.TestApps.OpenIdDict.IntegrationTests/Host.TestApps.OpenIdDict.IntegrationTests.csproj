@@ -1,0 +1,42 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+    <PropertyGroup>
+        <TargetFramework>net8.0</TargetFramework>
+        <ImplicitUsings>enable</ImplicitUsings>
+        <Nullable>enable</Nullable>
+        <RootNamespace>Host.TestApps.OpenIdDict.IntegrationTests</RootNamespace>
+    </PropertyGroup>
+
+    <ItemGroup>
+        <PackageReference Include="FluentAssertions" Version="6.12.0" />
+        <PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="8.0.1">
+            <PrivateAssets>all</PrivateAssets>
+            <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+        </PackageReference>
+        <PackageReference Include="Microsoft.AspNetCore.Identity.EntityFrameworkCore" Version="8.0.1" />
+        <PackageReference Include="Microsoft.NET.Test.Sdk" Version="17.9.0" />
+        <PackageReference Include="OpenIddict.AspNetCore" Version="5.2.0" />
+        <PackageReference Include="OpenIddict.EntityFrameworkCore" Version="5.1.0" />
+        <PackageReference Include="PuppeteerSharp" Version="14.0.0" />
+        <PackageReference Include="xunit" Version="2.6.6" />
+        <PackageReference Include="Microsoft.EntityFrameworkCore.Sqlite" Version="8.0.1" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <None Update="cert.pem">
+        <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+      </None>
+      <None Update="key.pem">
+        <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+      </None>
+      <None Update="appsettings.json">
+        <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+      </None>
+    </ItemGroup>
+
+    <ItemGroup>
+      <ProjectReference Include="..\..\src\OidcProxy.Net.OpenIdConnect\OidcProxy.Net.OpenIdConnect.csproj" />
+      <ProjectReference Include="..\Host.TestApps.Echo\Host.TestApps.Echo.csproj" />
+    </ItemGroup>
+
+</Project>

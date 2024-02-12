@@ -1,6 +1,6 @@
 using Microsoft.AspNetCore.Identity;
 
-namespace OpenIdDictServer.Models;
+namespace OpenIdDictServer;
 
 public class ApplicationUser : IdentityUser
 {

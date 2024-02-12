@@ -5,7 +5,12 @@ namespace OidcProxy.Net.ModuleInitializers;
 
 public static class ModuleInitializer
 {
-    private static readonly ProxyOptions Options = new();
+    private static ProxyOptions Options = new();
+
+    internal static void Reset()
+    {
+        Options = new ProxyOptions();
+    }
 
     /// <summary>
     /// Initialises the proxy

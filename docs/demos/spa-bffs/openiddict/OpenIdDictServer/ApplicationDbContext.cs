@@ -1,7 +1,7 @@
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 
-namespace OpenIdDictServer.Models;
+namespace OpenIdDictServer;
 
 public class ApplicationDbContext : IdentityDbContext<ApplicationUser>
 {

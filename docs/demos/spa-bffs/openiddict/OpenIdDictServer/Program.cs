@@ -1,9 +1,7 @@
-using System.Security.Cryptography.X509Certificates;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using OpenIdDictServer;
-using OpenIdDictServer.Models;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -67,5 +65,9 @@ app.UseEndpoints(options =>
     options.MapControllers();
     options.MapDefaultControllerRoute();
 });
+
+app
+    .MapAuthorizeEndpoint()
+    .MapTokenEndpoint();
 
 app.Run();
