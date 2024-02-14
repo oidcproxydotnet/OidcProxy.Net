@@ -19,7 +19,7 @@
         <PackageReference Include="OpenIddict.EntityFrameworkCore" Version="5.1.0" />
         <PackageReference Include="PuppeteerSharp" Version="14.0.0" />
         <PackageReference Include="xunit" Version="2.6.6" />
-        <PackageReference Include="Microsoft.EntityFrameworkCore.Sqlite" Version="8.0.1" />
+        <PackageReference Include="Microsoft.EntityFrameworkCore.Sqlite" Version="8.0.2" />
     </ItemGroup>
 
     <ItemGroup>
