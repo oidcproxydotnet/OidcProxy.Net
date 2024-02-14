@@ -24,7 +24,7 @@ internal class TokenRenewalMiddleware : ITokenRenewalMiddleware
     
     public async Task Apply(HttpContext context, Func<HttpContext, Task> next)
     {
-        var factory = new TokenFactory(_identityProvider, context.Session, _concurrentContext);
+        var factory = new TokenFactory(_logger, _identityProvider, context.Session, _concurrentContext);
 
         // Check expiry again because another thread may have updated the token
         try

@@ -15,13 +15,23 @@ internal static class LogExtensions
             line);
     }
     
-    public static void LogWarning<T>(this ILogger<T> logger, HttpContext context, string line)
+    public static void Warn<T>(this ILogger<T> logger, HttpContext context, string line)
     {
         logger.Log(LogLevel.Warning, "{0} [{1}] TraceId: {2} \"{3}\" Warning: \"{4}\"",
             context.GetClientIpAddress(),
             DateTime.Now, 
             context.TraceIdentifier,
             context.Request.GetEndpointAddress(),
+            line);
+    }
+    
+    public static void Warn(this ILogger logger, string traceIdentifier, string line)
+    {
+        logger.Log(LogLevel.Warning, "{0} [{1}] TraceId: {2} \"{3}\" Warning: \"{4}\"",
+            null,
+            DateTime.Now, 
+            traceIdentifier,
+            null,
             line);
     }
     

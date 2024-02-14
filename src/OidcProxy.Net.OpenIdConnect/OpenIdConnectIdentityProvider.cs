@@ -45,12 +45,8 @@ public class OpenIdConnectIdentityProvider : IIdentityProvider
 
         var request = await client.PrepareLoginAsync();
 
-        // Strange.. Oidc clients seems not to include the scope in the authorize request
-        // As a result, the response will not contain an id_token, nor a refresh_token
-        // So, we append the start-url with the scopes to get the tokens we need
-        var requiredScopes = new[] { "openid", "offline_access" };
-        var allScopes = _configuration.Scopes.Select(x => x.ToLowerInvariant()).Union(requiredScopes);
-        var scopesParameter = $"scope={string.Join("%20", allScopes)}";
+        var scopes = new Scopes(_configuration.Scopes);
+        var scopesParameter = $"scope={string.Join("%20", scopes)}";
         
         var startUrl = $"{request.StartUrl}&{scopesParameter}";
         
@@ -70,7 +66,9 @@ public class OpenIdConnectIdentityProvider : IIdentityProvider
                 "Unable to exchange code for access_token. The well-known/openid-configuration" +
                 "document does not contain a token endpoint.");
         }
-        
+
+        var scopes = new Scopes(_configuration.Scopes);
+
         var response = await _httpClient.RequestTokenAsync(new AuthorizationCodeTokenRequest
         {
              Address = wellKnown.token_endpoint,
@@ -80,13 +78,13 @@ public class OpenIdConnectIdentityProvider : IIdentityProvider
              
              Parameters =
              {
-                 { "code", code },
-                 { "scope", string.Join(' ', _configuration.Scopes) },
-                 { "redirect_uri", redirectUri },
-                 { "code_verifier", codeVerifier },
+                 { OidcConstants.TokenRequest.Code, code },
+                 { OidcConstants.TokenRequest.Scope, string.Join(' ', scopes) },
+                 { OidcConstants.TokenRequest.RedirectUri, redirectUri },
+                 { OidcConstants.TokenRequest.CodeVerifier, codeVerifier },
              }
         });
-
+        
         if (response.IsError)
         {
             throw new ApplicationException($"Unable to retrieve token. " +
@@ -97,6 +95,7 @@ public class OpenIdConnectIdentityProvider : IIdentityProvider
                                $"\"Queried /token endpoint and obtained id_, access_, and refresh_tokens\"");
         
         var expiryDate = DateTime.UtcNow.AddSeconds(response.ExpiresIn);
+        
         return new TokenResponse(response.AccessToken, response.IdentityToken, response.RefreshToken, expiryDate);
     }
 

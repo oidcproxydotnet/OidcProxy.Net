@@ -27,7 +27,7 @@ internal static class LoginEndpoint
                 catch (Exception e)  when (e is ArgumentException or NotSupportedException)
                 {
                     var userPreferredLandingPage = context.Request.Query["landingpage"];
-                    logger.LogWarning(context, $"Suspicious activity detected. User provided an invalid landing page at " +
+                    logger.Warn(context, $"Suspicious activity detected. User provided an invalid landing page at " +
                                                $"login. Value provided: \"{userPreferredLandingPage}\"");
                     
                     context.Response.StatusCode = StatusCodes.Status400BadRequest;

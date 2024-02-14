@@ -49,7 +49,7 @@ public static class ISessionExtensions
 
     internal static DateTime? GetExpiryDate(this ISession session) => session.GetDateTime(ExpiryKey);
     
-    internal static async Task ProlongExpiryDate(this ISession session, int seconds)
+    internal static async Task ProlongExpirationDate(this ISession session, int seconds)
     {
         var current = session.GetDateTime(ExpiryKey);
         if (current == null)

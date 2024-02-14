@@ -1,6 +1,7 @@
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
+using OpenIddict.Server;
 using OpenIdDictServer;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -25,11 +26,13 @@ builder.Services.AddOpenIddict()
         options.SetTokenEndpointUris("connect/token");
 
         options.SetAuthorizationEndpointUris("connect/authorize");
-
+        
         options
             .AllowAuthorizationCodeFlow()
-            .AllowRefreshTokenFlow();
-
+                .RequireProofKeyForCodeExchange()
+                .AllowRefreshTokenFlow()
+            .SetAccessTokenLifetime(TimeSpan.FromSeconds(90));;
+        
         options.AddEncryptionKey(new SymmetricSecurityKey(
             Convert.FromBase64String("DRjd/GnduI3Efzen9V9BvbNUfc/VKgXltV7Kbk9sMkY=")));
         
@@ -40,6 +43,17 @@ builder.Services.AddOpenIddict()
             .UseAspNetCore()
             .EnableTokenEndpointPassthrough()
             .EnableAuthorizationEndpointPassthrough();
+
+        // Todo: Fix this properly (help wanted!)
+        // when exchanging the authorization code for a token, the request to the token-endpoint must contain
+        // at least the scope 'openid' and 'offline_access'. Otherwise, the id_token and the refresh_token will
+        // be empty.
+        // When submitting this request to the OpenIddict server, it throws an exception: "The 'scope' parameter is not
+        // valid in this context."
+        // This is because the ticket doesn't contain any scopes. However, when skipping this check, everything works
+        // properly...
+        options
+            .RemoveEventHandler(OpenIddictServerHandlers.Exchange.ValidateScopeParameter.Descriptor);
     })
 
     .AddValidation(options =>
