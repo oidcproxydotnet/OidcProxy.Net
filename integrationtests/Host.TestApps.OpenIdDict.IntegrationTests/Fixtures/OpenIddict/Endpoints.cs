@@ -1,4 +1,5 @@
 using System.Security.Claims;
+using Microsoft.AspNetCore;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Http;
 using Microsoft.IdentityModel.Tokens;
@@ -12,13 +13,17 @@ public static class Endpoints
 {
     public static WebApplication MapAuthorizeEndpoint(this WebApplication app)
     {
-        app.MapGet("~/connect/authorize", () =>
+        app.MapGet("~/connect/authorize", async (HttpContext context, IOpenIddictScopeManager manager) =>
         {
-            var scheme = OpenIddictServerAspNetCoreDefaults.AuthenticationScheme;
+            var request = context.GetOpenIddictServerRequest();
             var identity = CreateClaimsIdentity();
-            var result = Results.SignIn(new ClaimsPrincipal(identity), null, scheme);
+            identity.SetScopes(request.GetScopes());
+            
+            var resources = await manager.ListResourcesAsync(identity.GetScopes()).ToListAsync();
+            identity.SetResources(resources);
+            identity.SetDestinations(c => new [] { OpenIddictConstants.Destinations.AccessToken });
 
-            return Task.FromResult(result);
+            return Results.SignIn(new ClaimsPrincipal(identity), properties: null, OpenIddictServerAspNetCoreDefaults.AuthenticationScheme);
         });
 
         return app;

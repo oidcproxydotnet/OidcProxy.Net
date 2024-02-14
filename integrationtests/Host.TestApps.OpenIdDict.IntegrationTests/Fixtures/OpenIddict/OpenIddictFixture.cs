@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.IdentityModel.Tokens;
+using OpenIddict.Server;
 using Xunit;
 
 namespace Host.TestApps.OpenIdDict.IntegrationTests.Fixtures.OpenIddict;
@@ -49,6 +50,9 @@ public class OpenIddictFixture : IAsyncLifetime, IDisposable
                     .UseAspNetCore()
                     .EnableTokenEndpointPassthrough()
                     .EnableAuthorizationEndpointPassthrough();
+                
+                options
+                    .RemoveEventHandler(OpenIddictServerHandlers.Exchange.ValidateScopeParameter.Descriptor);
             })
 
             .AddValidation(options =>
