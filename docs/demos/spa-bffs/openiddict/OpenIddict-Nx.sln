@@ -5,6 +5,8 @@ VisualStudioVersion = 17.0.31903.59
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "OpenIdDictServer", "OpenIdDictServer\OpenIdDictServer.csproj", "{AD374D84-CF0E-49B4-B59C-683FAF8C5E86}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "spa+bff", "spa+bff\spa+bff.csproj", "{8297B0F4-959B-4E0B-BC0C-F316F813045C}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -18,5 +20,9 @@ Global
 		{AD374D84-CF0E-49B4-B59C-683FAF8C5E86}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{AD374D84-CF0E-49B4-B59C-683FAF8C5E86}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{AD374D84-CF0E-49B4-B59C-683FAF8C5E86}.Release|Any CPU.Build.0 = Release|Any CPU
+		{8297B0F4-959B-4E0B-BC0C-F316F813045C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{8297B0F4-959B-4E0B-BC0C-F316F813045C}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{8297B0F4-959B-4E0B-BC0C-F316F813045C}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{8297B0F4-959B-4E0B-BC0C-F316F813045C}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 EndGlobal

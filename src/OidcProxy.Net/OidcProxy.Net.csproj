@@ -9,7 +9,7 @@
         <Version>1.3.0</Version>
         <Version>1.3.0</Version>
         <Authors>Albert Starreveld</Authors>
-        <Company>GoCloudNative.org</Company>
+        <Company>OidcProxy.net</Company>
         <PackageLicenseExpression>LGPL-3.0-only</PackageLicenseExpression>
         <Description>A yarp-based authentication gateway for your service mesh.</Description>
         <RepositoryUrl>https://github.com/thecloudnativewebapp/OidcProxy.Net</RepositoryUrl>
@@ -20,8 +20,13 @@
         <PackageIcon>logo.png</PackageIcon>
         <SignAssembly>true</SignAssembly>
         <LangVersion>11</LangVersion>
-        <PackageReleaseNotes>Feature added:
-            - Introduced `ITokenParser`: Implement this interface to use OidcProxy.Net with reference tokens, for example.</PackageReleaseNotes>
+        <PackageReleaseNotes>This release contains the following changes (making it comaptible with OpenIddict)
+            - New feature: Added support for JWEs that are encrypted using a certificate.
+            - New feature: Added support for JWEs that are encrypted using a secret.
+            - Bugfix: Ensure openid and offline_access scope always included in code-token-exchange request.
+            - Enhancement: Token revokaction failures while refreshing access_tokens raise warnings instead of raising an exception.
+
+            Using OpenIddict? Encountering issues after this release? Read the docs: http://tinyurl.com/oidcproxy-scope-error</PackageReleaseNotes>
     </PropertyGroup>
 
     <ItemGroup>

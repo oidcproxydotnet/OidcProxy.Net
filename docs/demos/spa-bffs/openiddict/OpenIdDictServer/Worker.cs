@@ -30,7 +30,6 @@ public class Worker : IHostedService
     {
         const string clientId = "bff";
         const string clientSecret = "secret";
-        const string redirectUrl = "https://localhost:8443/.auth/login/callback";
         
         var manager = scope.ServiceProvider.GetRequiredService<IOpenIddictApplicationManager>();
 
@@ -46,7 +45,8 @@ public class Worker : IHostedService
                 ClientType = OpenIddictConstants.ClientTypes.Confidential,
                 RedirectUris =
                 {
-                    new Uri(redirectUrl)
+                    new Uri("https://localhost:8443/.auth/login/callback"),
+                    new Uri("https://localhost:8444/.auth/login/callback"),
                 },
                 
                 Permissions =
