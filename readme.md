@@ -53,7 +53,7 @@ The OidcProxy is designed to enhance security by keeping the `access_token` and 
 The OidcProxy does not just forward traffic to down-stream services, it adds the `Authentication` header to the forwarded requests too. This is illustrated in the following diagram:
 
 <p align="center">
-    <img src="docs/gocloudnative.org/content/Diagrams/BFF-flow.png" width="300">
+    <img src="BFF-flow.png" width="300">
 </p>
 
 The user also uses the proxy to initiate the authentication procedure. That's done by navigating to a special endpoint: the `/.auth/login` endpoint.
@@ -61,7 +61,7 @@ The user also uses the proxy to initiate the authentication procedure. That's do
 This process is visualised in the following diagram:
 
 <p align="center">
-  <img src="docs/gocloudnative.org/content/Diagrams/BFF-login-workflow.png">
+  <img src="BFF-login-workflow.png">
 </p>
 
 ## Features
