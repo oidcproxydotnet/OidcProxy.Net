@@ -19,13 +19,6 @@ dotnet run
 ![Version](https://img.shields.io/nuget/v/OidcProxy.Net)
 [![Twitter](https://shields.io/twitter/follow/oidcproxydotnet)](https://twitter.com/intent/follow?screen_name=oidcproxydotnet)
 
-## Mission Statement
-The development of our product was driven by our clients’ need for a straightforward authentication gateway. Existing market options introduced complexities in terms of pricing and licensing, or proved to be overly intricate for beginners to comprehend and utilize effectively.
-
-Consequently, organizations are forced to make a trade-off between maintainability and security. In today’s automated society, this compromise is unacceptable.
-
-Hence, our mission is to offer an affordable, developer-friendly, secure, identity-aware BFF Framework that can be implemented by anyone.
-
 ## What is OidcProxy.Net?
 The OidcProxy is designed to enhance security by keeping the `access_token` and the `refresh_token` hidden from the browser while still allowing the proxy itself to handle and use these tokens. It includes them in downstream requests. This approach helps mitigate potential security risks associated with token exposure.
 
@@ -159,6 +152,14 @@ This solution supports authentication with:
 - [Auth0](https://medium.com/web-security/implementing-the-bff-security-pattern-with-gocloudnative-bff-and-auth0-773a888979c)
 - [Azure Active Directory](https://medium.com/web-security/implementing-the-bff-security-pattern-with-azuread-b2c-4f340cafecfb)
 - [IdentityServer4](https://medium.com/web-security/implementing-the-bff-security-pattern-with-identityserver4-and-gocloudnative-bff-a8b594308363)
+
+  
+## Why we built this
+The development of our product was driven by our clients’ need for a straightforward authentication gateway. Existing market options introduced complexities in terms of pricing and licensing, or proved to be overly intricate for beginners to comprehend and utilize effectively.
+
+Consequently, organizations are forced to make a trade-off between maintainability and security. In today’s automated society, this compromise is unacceptable.
+
+Hence, our mission is to offer an affordable, developer-friendly, secure, identity-aware BFF Framework that can be implemented by anyone.
 
 ## Feedback
 
