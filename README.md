@@ -66,6 +66,7 @@ OidcClient.Net has the following features:
   - Identity Server
   - Auth0
   - Azure Entra Id
+  - OpenIddict
 - Leveraging YARP, OidcProxy.Net allows for sophisticated routing configurations, enabling users to define rules for directing incoming requests to the appropriate backend services.
 - The proxy can run in single instance mode or in disributed mode. In distributed mode, the proxy uses Redis as a backbone.
 - Authentication is integrated into the ASP.NET Core pipeline. This allows for the usage of the `Authorization` attribute, Policies, and many other ASP.NET Identity feature
@@ -76,6 +77,7 @@ OidcClient.Net has the following features:
   - .NET Angular projects
   - .NET React projects
 - The proxy is designed for Docker, but native execution is also supported.
+- Authenticate users with JWT and JWE.
 
 ## Quickstart
 
