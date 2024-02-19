@@ -11,9 +11,9 @@
         <Authors>Albert Starreveld</Authors>
         <Company>OidcProxy.net</Company>
         <PackageLicenseExpression>LGPL-3.0-only</PackageLicenseExpression>
-        <Description>A yarp-based authentication gateway for your service mesh.</Description>
+        <Description>An extendible framework for .NET to implement the BFF Security Pattern (a.k.a. Token Handler Pattern) in Single Page Applications.</Description>
         <RepositoryUrl>https://github.com/thecloudnativewebapp/OidcProxy.Net</RepositoryUrl>
-        <PackageTags>BFF, Yarp, OpenId Connect, Identity Server, KeyCloak, Cloud Native</PackageTags>
+        <PackageTags>Yarp, OAuth2, Oidc, OpenId, Authentication, Identity Server, KeyCloak, OpenIddict, Security</PackageTags>
         <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
         <Title>OidcProxy.Net.OpenIdConnect</Title>
         <PackageProjectUrl>https://oidcproxy.net</PackageProjectUrl>
