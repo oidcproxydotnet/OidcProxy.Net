@@ -31,7 +31,7 @@ public static class ModuleInitializer
         {
             throw new ArgumentNullException(nameof(config), "Failed to initialise OidcProxy.Net. Config cannot be null. " +
                 $"Invoke `builder.Services.AddOidcProxy(..)` with an instance of `{nameof(OidcProxyConfig)}`.");
-        }
+        } 
 
         var oidcConfig = config.Oidc;
         var endpointName = config.EndpointName ?? ".auth";

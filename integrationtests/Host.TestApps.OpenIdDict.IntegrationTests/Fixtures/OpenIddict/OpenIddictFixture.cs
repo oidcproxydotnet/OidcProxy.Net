@@ -81,7 +81,8 @@ public class OpenIddictFixture : IAsyncLifetime, IDisposable
 
         app
             .MapAuthorizeEndpoint()
-            .MapTokenEndpoint();
+            .MapTokenEndpoint()
+            .MapLogoutEndpoint();
 
         app.Urls.Add("https://localhost:8765/");
         

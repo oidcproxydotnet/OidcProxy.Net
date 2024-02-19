@@ -1,13 +1,12 @@
-using Microsoft.AspNetCore.Identity;
 using OpenIddict.Abstractions;
 
 namespace OpenIdDictServer;
 
-public class Worker : IHostedService
+public class ClientConfiguration : IHostedService
 {
     private readonly IServiceProvider _serviceProvider;
 
-    public Worker(IServiceProvider serviceProvider)
+    public ClientConfiguration(IServiceProvider serviceProvider)
     {
         _serviceProvider = serviceProvider;
     }
@@ -18,8 +17,6 @@ public class Worker : IHostedService
 
         var context = scope.ServiceProvider.GetRequiredService<ApplicationDbContext>();
         await context.Database.EnsureCreatedAsync(cancellationToken);
-        
-        await EnsureTestUserCreated(scope);
         
         await EnsureClientCreated(scope, cancellationToken);
     }
@@ -34,8 +31,11 @@ public class Worker : IHostedService
         var manager = scope.ServiceProvider.GetRequiredService<IOpenIddictApplicationManager>();
 
         var client = await manager.FindByClientIdAsync(clientId, cancellationToken);
-        await manager.DeleteAsync(client);
-        
+        if (client != null)
+        {
+            await manager.DeleteAsync(client, cancellationToken);
+        }
+
         if (await manager.FindByClientIdAsync(clientId, cancellationToken) == null)
         {
             await manager.CreateAsync(new OpenIddictApplicationDescriptor
@@ -47,6 +47,11 @@ public class Worker : IHostedService
                 {
                     new Uri("https://localhost:8443/.auth/login/callback"),
                     new Uri("https://localhost:8444/.auth/login/callback"),
+                },
+                PostLogoutRedirectUris =
+                {
+                    new Uri("https://localhost:8443/"),
+                    new Uri("https://localhost:8444/")
                 },
                 
                 Permissions =
@@ -67,18 +72,5 @@ public class Worker : IHostedService
                 }
             }, cancellationToken);
         }
-    }
-
-    private static async Task EnsureTestUserCreated(AsyncServiceScope scope)
-    {
-        using var userService = scope.ServiceProvider.GetRequiredService<UserManager<ApplicationUser>>();
-
-        var johnDoe = new ApplicationUser
-        {
-            UserName = "johndoe@oidcproxy.net",
-            Email = "johndoe@oidcproxy.net"
-        };
-
-        await userService.CreateAsync(johnDoe, "~l9u9D1Xd)Wxd'y6zp_\"]ocj");
     }
 }

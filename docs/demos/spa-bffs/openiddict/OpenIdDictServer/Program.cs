@@ -26,6 +26,8 @@ builder.Services.AddOpenIddict()
         options.SetTokenEndpointUris("connect/token");
 
         options.SetAuthorizationEndpointUris("connect/authorize");
+
+        options.SetLogoutEndpointUris("connect/logout");
         
         options
             .AllowAuthorizationCodeFlow()
@@ -42,7 +44,8 @@ builder.Services.AddOpenIddict()
         options
             .UseAspNetCore()
             .EnableTokenEndpointPassthrough()
-            .EnableAuthorizationEndpointPassthrough();
+            .EnableAuthorizationEndpointPassthrough()
+            .EnableLogoutEndpointPassthrough();
 
         // Todo: Fix this properly (help wanted)
         
@@ -65,7 +68,7 @@ builder.Services.AddOpenIddict()
         options.UseAspNetCore();
     });
 
-builder.Services.AddHostedService<Worker>();
+builder.Services.AddHostedService<ClientConfiguration>();
 
 var app = builder.Build();
 
@@ -85,6 +88,7 @@ app.UseEndpoints(options =>
 
 app
     .MapAuthorizeEndpoint()
-    .MapTokenEndpoint();
+    .MapTokenEndpoint()
+    .MapLogoutEndpoint();
 
 app.Run();

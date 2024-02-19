@@ -14,44 +14,56 @@ internal static class EndSessionEndpoint
         [FromServices] IRedirectUriFactory redirectUriFactory,
         [FromServices] IIdentityProvider identityProvider)
     {
+        
+        if (!context.Session.HasAccessToken())
+        {
+            return Results.BadRequest();
+        }
+
+        logger.LogLine(context, $"Revoking access_token.");
+        var accessToken = context.Session.GetAccessToken();
+
         try
         {
-            if (context.Session.HasAccessToken())
-            {
-                var accessToken = context.Session.GetAccessToken();
-
-                logger.LogLine(context, $"Revoking access_token.");
-                await identityProvider.RevokeAsync(accessToken!, context.TraceIdentifier);
-            }
-
-            if (context.Session.HasRefreshToken())
-            {
-                var refreshToken = context.Session.GetRefreshToken();
-
-                logger.LogLine(context, $"Revoking refresh_token.");
-                await identityProvider.RevokeAsync(refreshToken!, context.TraceIdentifier);
-            }
-
-            string? idToken = null;
-            if (context.Session.HasIdToken())
-            {
-                idToken = context.Session.GetIdToken();
-            }
-
-            context.Session.Clear();
-
-            var baseAddress = $"{redirectUriFactory.DetermineHostName(context)}";
-
-            var endSessionEndpoint = await identityProvider.GetEndSessionEndpointAsync(idToken, baseAddress);
-
-            logger.LogLine(context, $"Redirect to {endSessionEndpoint}");
-
-            return Results.Redirect(endSessionEndpoint.ToString());
+            await identityProvider.RevokeAsync(accessToken!, context.TraceIdentifier);
         }
-        catch (Exception e)
+        catch (ApplicationException e)
         {
-            logger.LogException(context, e);
-            throw;
+            logger.Warn(context.TraceIdentifier, $"Unexpected: Failed to revoke access_token during end-session. " +
+                                                 $"Access_token will be removed from the OidcProxy.Net http-session. " +
+                                                 $"This event is only visible in the logs. " +
+                                                 $"The following error occured: {e}");
         }
+        
+        logger.LogLine(context, "Revoking refresh_token.");
+        var refreshToken = context.Session.GetRefreshToken();
+
+        try
+        {
+            await identityProvider.RevokeAsync(refreshToken!, context.TraceIdentifier);
+        }
+        catch (ApplicationException e)
+        {
+            logger.Warn(context.TraceIdentifier, $"Unexpected: Failed to revoke refresh_token during end-session. " +
+                                                 $"Refresh_token will be removed from the OidcProxy.Net http-session. " +
+                                                 $"This event is only visible in the logs. " +
+                                                 $"The following error occured: {e}");
+        }
+
+        string? idToken = null;
+        if (context.Session.HasIdToken())
+        {
+            idToken = context.Session.GetIdToken();
+        }
+
+        context.Session.Clear();
+
+        var baseAddress = $"{redirectUriFactory.DetermineHostName(context)}";
+
+        var endSessionEndpoint = await identityProvider.GetEndSessionEndpointAsync(idToken, baseAddress);
+
+        logger.LogLine(context, $"Redirect to {endSessionEndpoint}");
+
+        return Results.Redirect(endSessionEndpoint.ToString());
     }
 }

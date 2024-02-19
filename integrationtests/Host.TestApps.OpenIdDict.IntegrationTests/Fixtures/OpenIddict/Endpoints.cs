@@ -1,5 +1,6 @@
 using System.Security.Claims;
 using Microsoft.AspNetCore;
+using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Http;
 using Microsoft.IdentityModel.Tokens;
@@ -37,6 +38,27 @@ public static class Endpoints
             var identity = CreateClaimsIdentity();
             var result = Results.SignIn(new ClaimsPrincipal(identity), null, scheme);
 
+            return Task.FromResult(result);
+        });
+
+        return app;
+    }
+
+    public static WebApplication MapLogoutEndpoint(this WebApplication app)
+    {
+        app.MapGet("~/connect/logout", () =>
+        {
+            var authenticationSchemes = new List<string>
+            {
+                OpenIddictServerAspNetCoreDefaults.AuthenticationScheme
+            };
+
+            var authenticationProperties = new AuthenticationProperties
+            {
+                RedirectUri = "/"
+            };
+            
+            var result = Results.SignOut(authenticationProperties, authenticationSchemes);
             return Task.FromResult(result);
         });
 

@@ -34,6 +34,9 @@ public class JwtTest : IAsyncLifetime,
         _testApi
             .MapGet("/custom/me", async context => await context.Response.WriteAsJsonAsync(context.User.Identity?.Name))
             .RequireAuthorization();
+
+        _testApi
+            .MapGet("/", () => "{}");
         
         _testApi.UseOidcProxy();
 
@@ -72,6 +75,22 @@ public class JwtTest : IAsyncLifetime,
             await Task.Delay(1000);
 
             app.CurrentPage.Text.Should().Contain("Bearer ey");
+            
+            // Sign out
+            await app.GoTo("/.auth/end-session");
+            await Task.Delay(1000);
+            
+            // Assert user details flushed
+            await app.GoTo("/.auth/me");
+            await Task.Delay(1000);
+
+            app.CurrentPage.Text.Should().NotContain(subJohnDoe);
+            
+            // Assert token removed
+            await app.GoTo("/api/echo");
+            await Task.Delay(1000);
+        
+            app.CurrentPage.Text.Should().NotContain("Bearer ey");
         }
         finally
         {
