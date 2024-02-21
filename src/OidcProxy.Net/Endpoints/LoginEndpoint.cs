@@ -1,7 +1,6 @@
 using OidcProxy.Net.Logging;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.Extensions.Logging;
 using OidcProxy.Net.IdentityProviders;
 using OidcProxy.Net.ModuleInitializers;
 using OidcProxy.Net.OpenIdConnect;
@@ -11,8 +10,9 @@ namespace OidcProxy.Net.Endpoints;
 internal static class LoginEndpoint
 {
     public static async Task Get(HttpContext context,
+            [FromServices] AuthSession authSession,
             [FromServices] ProxyOptions options,
-            [FromServices] ILogger<IIdentityProvider> logger,
+            [FromServices] ILogger logger,
             [FromServices] IRedirectUriFactory redirectUriFactory,
             [FromServices] IIdentityProvider identityProvider)
     {
@@ -22,13 +22,13 @@ internal static class LoginEndpoint
             {
                 try
                 {
-                    await SaveUserPreferredLandingPage(context, options.AllowedUserPreferredLandingPages);
+                    await SaveUserPreferredLandingPage(context, authSession, options.AllowedUserPreferredLandingPages);
                 }
                 catch (Exception e)  when (e is ArgumentException or NotSupportedException)
                 {
                     var userPreferredLandingPage = context.Request.Query["landingpage"];
-                    logger.Warn(context, $"Suspicious activity detected. User provided an invalid landing page at " +
-                                               $"login. Value provided: \"{userPreferredLandingPage}\"");
+                    await logger.WarnAsync($"Suspicious activity detected. User provided an invalid landing page at " +
+                                      $"login. Value provided: \"{userPreferredLandingPage}\"");
                     
                     context.Response.StatusCode = StatusCodes.Status400BadRequest;
                     return;
@@ -43,21 +43,23 @@ internal static class LoginEndpoint
 
             if (!string.IsNullOrEmpty(authorizeRequest.CodeVerifier))
             {
-                await context.Session.SetCodeVerifierAsync(authorizeRequest.CodeVerifier);
+                await authSession.SetCodeVerifierAsync(authorizeRequest.CodeVerifier);
             }
 
-            logger.LogLine(context, $"Redirect({authorizeRequest.AuthorizeUri})");
+            await logger.WarnAsync($"Redirect({authorizeRequest.AuthorizeUri})");
 
             context.Response.Redirect(authorizeRequest.AuthorizeUri.ToString());
         }
         catch (Exception e)
         {
-            logger.LogException(context, e);
+            await logger.WarnAsync(e);
             throw;
         }
     }
 
-    private static async Task SaveUserPreferredLandingPage(HttpContext context, LandingPage[] allowedLandingPages)
+    private static async Task SaveUserPreferredLandingPage(HttpContext context, 
+        AuthSession authSession,
+        LandingPage[] allowedLandingPages)
     {
         var userPreferredLandingPage = context.Request.Query["landingpage"].ToString();
 
@@ -77,6 +79,6 @@ internal static class LoginEndpoint
             throw new NotSupportedException($"Will not redirect user to {userPreferredLandingPage}");
         }
 
-        await context.Session.SetUserPreferredLandingPageAsync(userPreferredLandingPage);
+        await authSession.SetUserPreferredLandingPageAsync(userPreferredLandingPage);
     }
 }

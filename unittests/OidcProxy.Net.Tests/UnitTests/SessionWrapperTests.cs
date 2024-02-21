@@ -2,7 +2,7 @@ using FluentAssertions;
 
 namespace OidcProxy.Net.Tests.UnitTests;
 
-public class SessionExtensionTests
+public class SessionWrapperTests
 {
     [InlineData("/")]
     [InlineData("/test.aspx")]
@@ -11,7 +11,7 @@ public class SessionExtensionTests
     [Theory]
     public async Task ShouldStoreLandingPageInSession(string landingPage)
     {
-        var testSession = new TestSession();
+        var testSession = AuthSession.Create(new TestSession());
 
         await testSession.SetUserPreferredLandingPageAsync(landingPage);
         var actual = testSession.GetUserPreferredLandingPage();
@@ -22,7 +22,7 @@ public class SessionExtensionTests
     [Fact]
     public async Task WhenEmptyLandingPage_ShouldRemoveLandingPageValueFromSession()
     {
-        var testSession = new TestSession();
+        var testSession = AuthSession.Create(new TestSession());
 
         await testSession.SetUserPreferredLandingPageAsync(string.Empty);
         var actual = testSession.GetUserPreferredLandingPage();
@@ -305,7 +305,7 @@ public class SessionExtensionTests
     [Theory]
     public async Task WhenMaliciousRequest_ShouldThrowException(string baaaddddd)
     {
-        var testSession = new TestSession();
+        var testSession = AuthSession.Create(new TestSession());
 
         var actual = async () => await testSession.SetUserPreferredLandingPageAsync(baaaddddd);
 

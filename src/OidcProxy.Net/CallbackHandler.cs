@@ -2,42 +2,39 @@ using System.IdentityModel.Tokens.Jwt;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Logging;
 using OidcProxy.Net.Logging;
+using ILogger = OidcProxy.Net.Logging.ILogger;
 
 namespace OidcProxy.Net;
 
 public class DefaultAuthenticationCallbackHandler : IAuthenticationCallbackHandler
 {
-    private readonly ILogger<DefaultAuthenticationCallbackHandler> _logger;
+    private readonly ILogger _logger;
 
-    public DefaultAuthenticationCallbackHandler(ILogger<DefaultAuthenticationCallbackHandler> logger)
+    public DefaultAuthenticationCallbackHandler(ILogger logger)
     {
         _logger = logger;
     }
 
-    public virtual Task<IResult> OnAuthenticationFailed(HttpContext context, 
+    public virtual async Task<IResult> OnAuthenticationFailed(HttpContext context, 
         string defaultLandingPage, 
         string? userPreferredLandingPage)
     {
         // Todo: Introduce proper error page here
         var landingPage = userPreferredLandingPage ?? defaultLandingPage;
         
-        _logger.LogLine(context, $"Redirect({landingPage})");
-        var redirectResult = Results.Redirect(landingPage);
-
-        return Task.FromResult(redirectResult);
+        await _logger.InformAsync($"Redirect({landingPage})");
+        return Results.Redirect(landingPage);
     }
 
-    public virtual Task<IResult> OnAuthenticated(HttpContext context, 
+    public virtual async Task<IResult> OnAuthenticated(HttpContext context, 
         JwtPayload? jwtPayload,
         string defaultLandingPage, 
         string? userPreferredLandingPage)
     {
         var landingPage = userPreferredLandingPage ?? defaultLandingPage;
         
-        _logger.LogLine(context, $"Redirect({landingPage})");
-        var redirectResult = Results.Redirect(landingPage);
-
-        return Task.FromResult(redirectResult);
+        await _logger.InformAsync($"Redirect({landingPage})");
+        return Results.Redirect(landingPage);
     }
 
     public virtual Task OnError(HttpContext context, Exception e)

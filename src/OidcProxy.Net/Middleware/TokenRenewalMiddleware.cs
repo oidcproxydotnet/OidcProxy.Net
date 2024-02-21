@@ -1,39 +1,30 @@
 using OidcProxy.Net.Logging;
 using Microsoft.AspNetCore.Http;
-using Microsoft.Extensions.Logging;
-using OidcProxy.Net.IdentityProviders;
-using OidcProxy.Net.Locking;
 using OidcProxy.Net.OpenIdConnect;
 
 namespace OidcProxy.Net.Middleware;
 
 internal class TokenRenewalMiddleware : ITokenRenewalMiddleware
 {
-    private readonly IIdentityProvider _identityProvider;
-    private readonly ILogger<TokenRenewalMiddleware> _logger;
-    private readonly IConcurrentContext _concurrentContext;
+    private readonly TokenFactory _tokenFactory;
+    private readonly ILogger _logger;
 
-    public TokenRenewalMiddleware(IIdentityProvider identityProvider, 
-        ILogger<TokenRenewalMiddleware> logger,
-        IConcurrentContext concurrentContext)
+    public TokenRenewalMiddleware(TokenFactory tokenFactory, ILogger logger)
     {
-        _identityProvider = identityProvider;
+        _tokenFactory = tokenFactory;
         _logger = logger;
-        _concurrentContext = concurrentContext;
     }
     
     public async Task Apply(HttpContext context, Func<HttpContext, Task> next)
     {
-        var factory = new TokenFactory(_logger, _identityProvider, context.Session, _concurrentContext);
-
         // Check expiry again because another thread may have updated the token
         try
         {
-            await factory.RenewAccessTokenIfExpiredAsync(context.TraceIdentifier);
+            await _tokenFactory.RenewAccessTokenIfExpiredAsync(context.TraceIdentifier);
         }
         catch (TokenRenewalFailedException e)
         {
-            _logger.LogException(context, e);
+            await _logger.ErrorAsync(e);
 
             context.Response.StatusCode = StatusCodes.Status401Unauthorized;
             await context.Response.WriteAsync(@"{ ""reason"": ""token_renewal_failed"" }");

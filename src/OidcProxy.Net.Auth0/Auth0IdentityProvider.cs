@@ -1,8 +1,8 @@
 ﻿using System.Web;
+using OidcProxy.Net.IdentityProviders;
+using OidcProxy.Net.Logging;
 using OidcProxy.Net.OpenIdConnect;
 using Microsoft.Extensions.Caching.Memory;
-using Microsoft.Extensions.Logging;
-using OidcProxy.Net.IdentityProviders;
 
 namespace OidcProxy.Net.Auth0;
 
@@ -10,7 +10,7 @@ public class Auth0IdentityProvider : OpenIdConnectIdentityProvider
 {
     private readonly Auth0Config _config;
 
-    public Auth0IdentityProvider(ILogger<OpenIdConnectIdentityProvider> logger,
+    public Auth0IdentityProvider(ILogger logger,
         IMemoryCache cache,
         HttpClient client, 
         Auth0Config config) : base(logger,
