@@ -1,4 +1,4 @@
-# The Auth0 Spa+BFF demo
+# Auth0 / Spa+BFF / API demo
 
 This that consists of three parts:
 
