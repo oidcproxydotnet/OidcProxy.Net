@@ -22,7 +22,7 @@ sequenceDiagram
     OidcProxy -->> Auth0: redirect to https://{auth0}/authorize endpoint
     Auth0 -->> Auth0: Authenticates the user
     Auth0 -->> OidcProxy: Redirect to OidcProxy with means to obtain access_token
-    OidcProxy --> OidcProxy: Obtains access_token
+    OidcProxy -->> OidcProxy: Obtains access_token
     browser -->> OidcProxy: Request /dist to initiate the SPA
     OidcProxy -->> browser: SPA binaries
     browser -->> OidcProxy: SPA invokes /api/wheatherforecast
