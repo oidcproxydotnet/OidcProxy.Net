@@ -1,11 +1,12 @@
 using System.IdentityModel.Tokens.Jwt;
 using OidcProxy.Net;
+using ILogger = OidcProxy.Net.Logging.ILogger;
 
 namespace Host.TestApps.Auth0;
 
 public class TestAuthenticationCallbackHandler : DefaultAuthenticationCallbackHandler
 {
-    public TestAuthenticationCallbackHandler(ILogger<DefaultAuthenticationCallbackHandler> logger) : base(logger)
+    public TestAuthenticationCallbackHandler(ILogger logger) : base(logger)
     {
     }
 

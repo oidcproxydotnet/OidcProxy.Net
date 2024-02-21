@@ -7,6 +7,7 @@ using OidcProxy.Net.IdentityProviders;
 using OidcProxy.Net.Locking;
 using OidcProxy.Net.Locking.Distributed.Redis;
 using OidcProxy.Net.Locking.InMemory;
+using OidcProxy.Net.Logging;
 using OidcProxy.Net.Middleware;
 using OidcProxy.Net.OpenIdConnect;
 using StackExchange.Redis;
@@ -238,8 +239,9 @@ public class ProxyOptions
                 options.InstanceName = CookieName;
             });
 
-            serviceCollection.AddTransient<IConcurrentContext, RedisConcurrentContext>();
-            serviceCollection.AddTransient<IDistributedLockFactory>(_ => RedLockFactory.Create(new List<RedLockMultiplexer>() { connectionMultiplexer }));
+            serviceCollection
+                .AddTransient<IConcurrentContext, RedisConcurrentContext>()
+                .AddTransient<IDistributedLockFactory>(_ => RedLockFactory.Create(new List<RedLockMultiplexer>() { connectionMultiplexer }));
         };
     }
 
@@ -282,8 +284,13 @@ public class ProxyOptions
         
         serviceCollection
             .AddTransient(_ => this)
-            .AddTransient<IRedirectUriFactory, RedirectUriFactory>()
-            .TryAddSingleton<IHttpContextAccessor, HttpContextAccessor>();
+            .AddTransient<IRedirectUriFactory, RedirectUriFactory>();
+        
+        serviceCollection
+            .AddHttpContextAccessor()
+            .AddTransient<TokenFactory>()
+            .AddTransient<AuthSession>()
+            .AddTransient<ILogger, DefaultLogger>();
                 
         serviceCollection
             .AddAuthentication(OidcProxyAuthenticationHandler.SchemaName)

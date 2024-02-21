@@ -1,18 +1,17 @@
 using FluentAssertions;
 using Microsoft.AspNetCore.Mvc.Testing;
-using OidcProxy.Net.OpenIdConnect;
-using Microsoft.Extensions.Logging;
 using NSubstitute;
+using OidcProxy.Net.Logging;
 
 namespace OidcProxy.Net.OpenIdConnect.Tests.OpenIdConnectIdentityProviderTests;
 
 public class RefreshTokenTests
 {
-    private readonly string TraceIdentifier = "test";
+    private const string TraceIdentifier = "test";
     private readonly HttpClient _httpClient;
     private readonly OpenIdConnectConfig _config;
     private readonly TestCache _cache;    
-    private readonly ILogger<OpenIdConnectIdentityProvider> _logger = Substitute.For<ILogger<OpenIdConnectIdentityProvider>>();
+    private readonly ILogger _logger = Substitute.For<ILogger>();
 
 
     public RefreshTokenTests()

@@ -1,8 +1,8 @@
 using System.Net.Http.Json;
 using OidcProxy.Net.IdentityProviders;
+using OidcProxy.Net.Logging;
 using OidcProxy.Net.OpenIdConnect;
 using Microsoft.Extensions.Caching.Memory;
-using Microsoft.Extensions.Logging;
 using Microsoft.Identity.Client;
 
 namespace OidcProxy.Net.EntraId;
@@ -15,7 +15,7 @@ public class EntraIdIdentityProvider : OpenIdConnectIdentityProvider
     protected override string DiscoveryEndpointAddress => _configuration.DiscoveryEndpoint;
     
 
-    public EntraIdIdentityProvider(ILogger<OpenIdConnectIdentityProvider> logger,
+    public EntraIdIdentityProvider(ILogger logger,
         IMemoryCache cache, 
         HttpClient httpClient, 
         EntraIdConfig configuration) 

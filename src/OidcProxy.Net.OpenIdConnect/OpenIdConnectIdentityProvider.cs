@@ -1,4 +1,3 @@
-using System.IdentityModel.Tokens.Jwt;
 using System.Net;
 using System.Web;
 using OidcProxy.Net.IdentityProviders;
@@ -6,14 +5,14 @@ using IdentityModel;
 using IdentityModel.Client;
 using IdentityModel.OidcClient;
 using Microsoft.Extensions.Caching.Memory;
-using Microsoft.Extensions.Logging;
+using OidcProxy.Net.Logging;
 using TokenResponse = OidcProxy.Net.IdentityProviders.TokenResponse;
 
 namespace OidcProxy.Net.OpenIdConnect;
 
 public class OpenIdConnectIdentityProvider : IIdentityProvider
 {
-    private readonly ILogger<OpenIdConnectIdentityProvider> _logger;
+    private readonly ILogger _logger;
     private readonly IMemoryCache _cache;
     private readonly HttpClient _httpClient;
 
@@ -22,7 +21,7 @@ public class OpenIdConnectIdentityProvider : IIdentityProvider
     protected virtual string DiscoveryEndpointAddress 
         => $"{_configuration.Authority.TrimEnd('/')}/" + $"{_configuration.DiscoveryEndpoint.TrimStart('/')}";
     
-    public OpenIdConnectIdentityProvider(ILogger<OpenIdConnectIdentityProvider> logger,
+    public OpenIdConnectIdentityProvider(ILogger logger,
         IMemoryCache cache,
         HttpClient httpClient, 
         OpenIdConnectConfig configuration)
@@ -91,8 +90,7 @@ public class OpenIdConnectIdentityProvider : IIdentityProvider
                                            $"OIDC server responded {response.HttpStatusCode}: {response.Raw}");
         }
 
-        _logger.LogInformation($"null [{DateTime.Now:s}] TraceId: {traceIdentifier} null "+
-                               $"\"Queried /token endpoint and obtained id_, access_, and refresh_tokens\"");
+        await _logger.InformAsync($"Queried /token endpoint and obtained id_, access_, and refresh_tokens.");
         
         var expiryDate = DateTime.UtcNow.AddSeconds(response.ExpiresIn);
         
@@ -118,8 +116,7 @@ public class OpenIdConnectIdentityProvider : IIdentityProvider
                                                   $"OIDC server responded {response.HttpStatusCode}: {response.Raw}");
         }
         
-        _logger.LogInformation($"null [{DateTime.Now:s}] TraceId: {traceIdentifier} null "+
-                               $"\"Queried /token endpoint (refresh grant) and obtained id_, access_, and refresh_tokens\"");
+        await _logger.InformAsync($"Queried /token endpoint (refresh grant) and obtained id_, access_, and refresh_tokens.");
 
         var expiresIn = DateTime.UtcNow.AddSeconds(response.ExpiresIn);
 
@@ -144,8 +141,7 @@ public class OpenIdConnectIdentityProvider : IIdentityProvider
                                            $" \r\n{response.Raw}");
         }
         
-        _logger.LogInformation($"null [{DateTime.Now:s}] TraceId: {traceIdentifier} null "+
-                               $"\"Token revoked.");
+        await _logger.InformAsync($"Token revoked.");
     }
 
     public async Task<Uri> GetEndSessionEndpointAsync(string? idToken, string baseAddress)

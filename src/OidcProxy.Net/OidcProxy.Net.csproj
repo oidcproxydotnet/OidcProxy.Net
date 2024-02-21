@@ -6,8 +6,8 @@
         <Nullable>enable</Nullable>
 
         <PackageId>OidcProxy.Net</PackageId>
-        <Version>1.3.1</Version>
-        <Version>1.3.1</Version>
+        <Version>2.0.0</Version>
+        <Version>2.0.0</Version>
         <Authors>Albert Starreveld</Authors>
         <Company>OidcProxy.net</Company>
         <PackageLicenseExpression>LGPL-3.0-only</PackageLicenseExpression>
@@ -20,9 +20,13 @@
         <PackageIcon>logo.png</PackageIcon>
         <SignAssembly>true</SignAssembly>
         <LangVersion>11</LangVersion>
-        <PackageReleaseNotes>Small bugfixes:
-            - Signing out when not signed in now throws an error 400 instead of an internal server error
-            - Revoking tokens with identity providers that do not support token revocation now write warnings to the logs instead of raising an exception.</PackageReleaseNotes>
+        <PackageReleaseNotes>Major update
+- Implemented structured logging
+            
+Impact:
+- `OpenIdConnectIdentityProvider`, `Auth0IdentityProvider`, `EntraIdIdentityProvider` now depend on OidcProxy.Net.Logging.ILogger instead of ILogger&lt;T&gt;.
+- `DefaultAuthenticationCallbackHandler` now depends on OidcProxy.Net.Logging.ILogger instead of ILogger&lt;T&gt;.
+        </PackageReleaseNotes>
     </PropertyGroup>
 
     <ItemGroup>
