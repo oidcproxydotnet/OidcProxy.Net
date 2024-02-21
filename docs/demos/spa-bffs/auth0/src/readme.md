@@ -3,7 +3,7 @@
 This demo consists of three parts:
 
 - Auth0, to authenticate users
-- A SPA, hosted in an ASP.NET Core BFF
+- A SPA, hosted in an ASP.NET Core BFF (the OidcProxy)
 - An ASP.NET Core API
 
 Prerequisites to run this demo:
