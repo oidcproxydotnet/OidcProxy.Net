@@ -64,6 +64,12 @@ Configure the API:
 
 * Open a browser and navigate to https://localhost:8444
 
+## Result
+
+If you've followed these steps correctly, you should see:
+
+![](https://miro.medium.com/v2/resize:fit:1346/format:webp/1*QGx3Ci4-U3MIT9D_GVVqjw.png)
+
 ## Issues
 
 Not working? Missing features? Create an [issue](https://github.com/oidcproxydotnet/oidcproxy.net/issues).
