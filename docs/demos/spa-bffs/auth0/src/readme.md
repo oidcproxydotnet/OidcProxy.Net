@@ -1,6 +1,6 @@
 # Auth0 / Spa+BFF / API demo
 
-This that consists of three parts:
+This demo consists of three parts:
 
 - Auth0, to authenticate users
 - A SPA, hosted in an ASP.NET Core BFF
