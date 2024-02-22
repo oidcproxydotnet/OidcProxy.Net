@@ -20,9 +20,9 @@ sequenceDiagram
     OidcProxy -->> browser: SPA binaries
     browser -->> OidcProxy: SPA navigates user to /.auth/login
     OidcProxy -->> Auth0: redirect to https://{auth0}/authorize endpoint
-    Auth0 -->> Auth0: Authenticates the user
+    Auth0 -->> Auth0: Authenticate the user
     Auth0 -->> OidcProxy: Redirect to OidcProxy with means to obtain access_token
-    OidcProxy -->> OidcProxy: Obtains access_token
+    OidcProxy -->> OidcProxy: Obtain access_token
     browser -->> OidcProxy: Request /dist to initiate the SPA
     OidcProxy -->> browser: SPA binaries
     browser -->> OidcProxy: SPA invokes /api/wheatherforecast
@@ -53,12 +53,12 @@ Configure the API:
 
 ## Or run the demo using the CLI
 
-* Open a terminal window or a command promt
+* Open a terminal window or a command prompt
 * Navigate to api/
 * Type `dotnet restore`
 * Type `dotnet run`
 
-* Open another terminal window or a command promt
+* Open another terminal window or a command prompt
 * Navigate to spa+bff/
 * Type `dotnet restore`
 * Type `dotnet run`
