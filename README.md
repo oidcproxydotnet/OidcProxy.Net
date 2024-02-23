@@ -38,7 +38,7 @@ var builder = WebApplication.CreateBuilder(args);
 
 var config = builder.Configuration
     .GetSection("OidcProxy")
-    .Get<OidcBffConfig>();
+    .Get<OidcProxyConfig>();
 
 builder.Services.AddOidcProxy(config);
 
