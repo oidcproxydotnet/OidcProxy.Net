@@ -27,6 +27,7 @@
             Breaking changes:
             - `OpenIdConnectIdentityProvider`, `Auth0IdentityProvider`, `EntraIdIdentityProvider` now depend on OidcProxy.Net.Logging.ILogger instead of ILogger&lt;T&gt;.
             - `DefaultAuthenticationCallbackHandler` now depends on OidcProxy.Net.Logging.ILogger instead of ILogger&lt;T&gt;.
+            - Class `ErrorPage` no longer exists, use `LandingPage` instead.
         </PackageReleaseNotes>
     </PropertyGroup>
 

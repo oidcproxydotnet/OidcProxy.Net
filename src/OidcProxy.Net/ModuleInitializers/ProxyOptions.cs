@@ -33,7 +33,7 @@ public class ProxyOptions
 
     internal Uri? CustomHostName = null;
 
-    internal ErrorPage ErrorPage;
+    internal LandingPage ErrorPage;
         
     internal LandingPage LandingPage;
 
@@ -78,13 +78,18 @@ public class ProxyOptions
     /// <param name="errorPage">A relative path to the error page</param>
     public void SetAuthenticationErrorPage(string errorPage)
     {
-        if (!ErrorPage.TryParse(errorPage, out var value))
+        const string errorMessage = "GNC-B-faa80ff1e452: " +
+                                    "Cannot initialize OidcProxy.Net. " +
+                                    "Invalid error page. " +
+                                    "The path to the error page must be relative and may not have a querystring.";
+        
+        if (!LandingPage.TryParse(errorPage, out var value))
         {
-            const string errorMessage = "GNC-B-faa80ff1e452: " +
-                                        "Cannot initialize OidcProxy.Net. " +
-                                        "Invalid error page. " +
-                                        "The path to the error page must be relative and may not have a querystring.";
-            
+            throw new NotSupportedException(errorMessage);
+        }
+        
+        if (errorPage.Contains('?') || errorPage.Contains('#'))
+        {
             throw new NotSupportedException(errorMessage);
         }
 
