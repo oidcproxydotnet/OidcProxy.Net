@@ -21,10 +21,10 @@
     <PackageIcon>logo.png</PackageIcon>        
     <SignAssembly>true</SignAssembly>        
     <LangVersion>11</LangVersion>
-    <PackageReleaseNotes>Major update
+    <PackageReleaseNotes>Improvements:
       - Implemented structured logging
 
-      Impact:
+      Breaking changes:
       - `OpenIdConnectIdentityProvider`, `Auth0IdentityProvider`, `EntraIdIdentityProvider` now depend on OidcProxy.Net.Logging.ILogger instead of ILogger&lt;T&gt;.
       - `DefaultAuthenticationCallbackHandler` now depends on OidcProxy.Net.Logging.ILogger instead of ILogger&lt;T&gt;.
     </PackageReleaseNotes>
