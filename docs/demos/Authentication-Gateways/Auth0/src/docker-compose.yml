@@ -14,6 +14,8 @@ services:
       - OidcProxy__Auth0__ClientId={yourClientId}
       - OidcProxy__Auth0__Domain={yourDomain}
       - OidcProxy__Auth0__Audience={yourAudience}
+      - OidcProxy__AlwaysRedirectToHttps=false
+      - OidcProxy__CustomHostName=http://localhost:8443
       - ASPNETCORE_ENVIRONMENT=Development
       - OidcProxy__ReverseProxy__Clusters__spa__Destinations__spa__Address=http://host.docker.internal:4200
       - OidcProxy__ReverseProxy__Clusters__api__Destinations__api__Address=http://host.docker.internal:8080

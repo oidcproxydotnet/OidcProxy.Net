@@ -22,12 +22,6 @@ var auth0Config = builder.Configuration
 
 builder.Services.AddAuth0Proxy(auth0Config, o =>
 {
-    if (runLocallyWithDocker)
-    {
-        o.AlwaysRedirectToHttps = false;
-        o.SetCustomHostName(new Uri("http://localhost:8443"));
-    }
-
     if (string.IsNullOrEmpty(redisConnectionString))
     {
         return;
