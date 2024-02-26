@@ -9,6 +9,7 @@ services:
       testnet:
         ipv4_address: 10.5.0.2
     environment:
+      - RunLocallyWithDocker=true
       - OidcProxy__Auth0__ClientSecret={yourSecret}
       - OidcProxy__Auth0__ClientId={yourClientId}
       - OidcProxy__Auth0__Domain={yourDomain}
