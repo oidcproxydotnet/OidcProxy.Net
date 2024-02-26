@@ -22,6 +22,7 @@
         <LangVersion>11</LangVersion>
         <PackageReleaseNotes>Improvements:
             - Implemented structured logging
+            - Enabled configuring `AlwaysRedirectToHttps` via `appsettings.config`
 
             Breaking changes:
             - `OpenIdConnectIdentityProvider`, `Auth0IdentityProvider`, `EntraIdIdentityProvider` now depend on OidcProxy.Net.Logging.ILogger instead of ILogger&lt;T&gt;.
