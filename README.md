@@ -7,9 +7,9 @@
 
 ## Deployment Options
 
-- [Do it yourself](###scaffold-a-proxy)
+- [Do it yourself](#scaffold-a-proxy)
 - [Docker Compose](https://github.com/oidcproxydotnet/OidcProxy.Net/blob/main/docs/demos/Authentication-Gateways/Auth0/src/readme.md)
-- [Kubernetes]()
+- [Kubernetes](https://github.com/oidcproxydotnet/OidcProxy.Net/blob/feat/add-deployment-options/docs/demos/Authentication-Gateways/Auth0/src/kubernetes/readme.md)
 
 ### Scaffold a proxy:
 
