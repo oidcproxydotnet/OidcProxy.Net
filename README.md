@@ -5,6 +5,12 @@
 ![Version](https://img.shields.io/nuget/v/OidcProxy.Net)
 [![Twitter](https://shields.io/twitter/follow/oidcproxydotnet)](https://twitter.com/intent/follow?screen_name=oidcproxydotnet)
 
+## Deployment Options
+
+- [Do it yourself](###scaffold-a-proxy)
+- [Docker Compose](https://github.com/oidcproxydotnet/OidcProxy.Net/blob/main/docs/demos/Authentication-Gateways/Auth0/src/readme.md)
+- [Kubernetes]()
+
 ### Scaffold a proxy:
 
 ```bash
