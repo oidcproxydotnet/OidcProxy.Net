@@ -26,6 +26,7 @@ The OidcProxy is designed to enhance security by keeping the `access_token` and 
 - The OidcProxy is a Nuget package that can be included in .net 8 projects.
 
 #### Token Visibility and Security Measures:
+- The OidcProxy is designed to be a confidential client. This makes it possible to require a `client_secret` to obtain tokens which means it is impossible for unknown computers to obtain tokens in any way.
 - The `access_token`, `id_token`, and `refresh_token` are not visible to the browser. This enhances security by preventing these sensitive tokens from being exposed to potential attackers via the browser.
 
 #### Token Handling by OidcProxy:
