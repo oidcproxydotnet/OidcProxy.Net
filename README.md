@@ -5,6 +5,38 @@
 ![Version](https://img.shields.io/nuget/v/OidcProxy.Net)
 [![Twitter](https://shields.io/twitter/follow/oidcproxydotnet)](https://twitter.com/intent/follow?screen_name=oidcproxydotnet)
 
+## Table of contents
+
+1. [What is OidcProxy.Net?](#what-is-oidcproxynet)
+2. [Scaffonding a proxy](#scaffold-a-proxy)
+3. [DIY: Setting up a proxy from scratch](#setting-up-a-proxy-from-scratch)
+4. [OidcProxy.Net <3 Docker](#oidcproxynet-3-docker)
+5. [OidcProxy.Net <3 Kubernetes](#oidcproxynet-3-kubernetes)
+6. [Features](#features)
+7. [Why we built it](#why-we-built-it)
+
+## What is OidcProxy.Net?
+The OidcProxy is designed to enhance security by keeping the `access_token` and the `refresh_token` hidden from the browser while still allowing the proxy itself to handle and use these tokens. It includes them in downstream requests. This approach helps mitigate potential security risks associated with token exposure.
+
+#### OidcProxy.Net in a nutshell
+- The OidcProxy serves as an identity-aware proxy.
+- Authentication initiates a session on the OidcProxy.
+- End-users authenticate through an Open ID Connect Identity Provider.
+- The requests forwarded by the OidcProxy include `access_tokens` in the requests to backend services.
+- The OidcProxy is a Nuget package that can be included in .net 8 projects.
+
+#### Token Visibility and Security Measures:
+- The `access_token`, `id_token`, and `refresh_token` are not visible to the browser. This enhances security by preventing these sensitive tokens from being exposed to potential attackers via the browser.
+
+#### Token Handling by OidcProxy:
+- While the tokens are not visible to the browser, the OidcProxy itself does have access to these tokens.
+- The OidcProxy adds an `Authorization=Bearer [ACCESS_TOKEN]` header to each downstream request.
+
+#### Authorization Code with PKCE Confidential Client Grant:
+- The OidcProxy enables the implementation of the OAuth2 Authorization Code Grant with Confidential Client Grant.
+- This reduces the risk of impersonation.
+- This reduces the attack surface because, in this scenario, an attacker who does not have access to the webserver cannot be issued any tokens. 
+
 ### Scaffold a proxy:
 
 ```bash
@@ -21,7 +53,7 @@ dotnet new OidcProxy.Net --backend "https://api.myapp.com"
 dotnet run
 ```
 
-### Do it yourself:
+###  Setting up a proxy from scratch
 
 ```bash
 dotnet new web
@@ -97,27 +129,15 @@ app.Run();
 }
 ```
 
-## What is OidcProxy.Net?
-The OidcProxy is designed to enhance security by keeping the `access_token` and the `refresh_token` hidden from the browser while still allowing the proxy itself to handle and use these tokens. It includes them in downstream requests. This approach helps mitigate potential security risks associated with token exposure.
+## OidcProxy.Net <3 Docker 
+OidcProxy.Net was developed to be used in cloud environments. This is why it has mainly been designed to work well in containerised environments.
 
-#### OidcProxy.Net in a nutshell
-- The OidcProxy serves as an identity-aware proxy.
-- Authentication initiates a session on the OidcProxy.
-- End-users authenticate through an Open ID Connect Identity Provider.
-- The requests forwarded by the OidcProxy include `access_tokens` in the requests to backend services.
-- The OidcProxy is a Nuget package that can be included in .net 8 projects.
+- [Check out the Auth0 demo and run it with Docker Compose](https://github.com/oidcproxydotnet/OidcProxy.Net/blob/main/docs/demos/Authentication-Gateways/Auth0/src/readme.md#run-this-demo-with-docker)
 
-#### Token Visibility and Security Measures:
-- The `access_token`, `id_token`, and `refresh_token` are not visible to the browser. This enhances security by preventing these sensitive tokens from being exposed to potential attackers via the browser.
+## OidcProxy.Net <3 Kubernetes
+OidcProxy.Net was designed to work well in container platforms. It's been designed to work well when scaled both horizontally as vertically. To scale the proxy vertically, use Redis as a back-bone.
 
-#### Token Handling by OidcProxy:
-- While the tokens are not visible to the browser, the OidcProxy itself does have access to these tokens.
-- The OidcProxy adds an `Authorization=Bearer [ACCESS_TOKEN]` header to each downstream request.
-
-#### Authorization Code with PKCE Confidential Client Grant:
-- The OidcProxy enables the implementation of the OAuth2 Authorization Code Grant with Confidential Client Grant.
-- This reduces the risk of impersonation.
-- This reduces the attack surface because, in this scenario, an attacker who does not have access to the webserver cannot be issued any tokens. 
+- [Check out out the Auth0 demo to find out how run OidcProxy.Net in a Kubernetes cluster](https://github.com/oidcproxydotnet/OidcProxy.Net/blob/feat/add-deployment-options/docs/demos/Authentication-Gateways/Auth0/src/kubernetes/readme.md)
 
 ## Features
 

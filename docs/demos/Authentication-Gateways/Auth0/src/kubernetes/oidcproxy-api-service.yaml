@@ -1,0 +1,11 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: oidcproxy-api-service
+  namespace: oidcproxy
+spec:
+  selector:
+    app: oidcproxy-api
+  ports:
+    - port: 8080
+      targetPort: 8080

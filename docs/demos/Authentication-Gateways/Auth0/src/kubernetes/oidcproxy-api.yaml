@@ -1,0 +1,35 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: oidcproxy-api
+  namespace: oidcproxy
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: oidcproxy-api
+  template:
+    metadata:
+      labels:
+        app: oidcproxy-api
+    spec:
+      containers:
+        - name: oidcproxy-api
+          image: {add-docker-image-location}
+          resources:
+            requests:
+              memory: "256Mi"
+              cpu: "500m"
+            limits:
+              memory: "512Mi"
+              cpu: "1000m"
+          imagePullPolicy: 'IfNotPresent'
+          ports:
+            - containerPort: 8080
+              hostPort: 8080
+              protocol: TCP
+          envFrom:
+            - secretRef:
+                name: oidcproxy-api-secrets
+      imagePullSecrets:
+        - name: regcred

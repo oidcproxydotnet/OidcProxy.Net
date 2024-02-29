@@ -1,0 +1,45 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: oidcproxy-bff
+  namespace: oidcproxy
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: oidcproxy-bff
+  template:
+    metadata:
+      labels:
+        app: oidcproxy-bff
+        io.kompose.network/src-testnet: "true"
+    spec:
+      containers:
+        - name: oidcproxy-bff
+          image: {add-docker-image-location}
+          resources:
+            requests:
+              memory: "256Mi"
+              cpu: "500m"
+            limits:
+              memory: "512Mi"
+              cpu: "1000m"
+          imagePullPolicy: 'IfNotPresent'
+          ports:
+            - containerPort: 8080
+              hostPort: 8443
+              protocol: TCP
+          envFrom:
+            - secretRef:
+                name: oidcproxy-api-secrets
+          env:
+            - name: ASPNETCORE_ENVIRONMENT
+              value: Development
+            - name: OidcProxy__ReverseProxy__Clusters__api__Destinations__api__Address
+              value: http://oidcproxy-api-service:8080
+            - name: OidcProxy__ReverseProxy__Clusters__spa__Destinations__spa__Address
+              value: http://oidcproxy-spa-service:4200
+            - name: RunLocallyWithDocker
+              value: "true"
+      imagePullSecrets:
+        - name: regcred
