@@ -137,7 +137,7 @@ OidcProxy.Net was developed to be used in cloud environments. This is why it has
 ## OidcProxy.Net <3 Kubernetes
 OidcProxy.Net was designed to work well in container platforms. It's been designed to work well when scaled both horizontally as vertically. To scale the proxy vertically, use Redis as a back-bone.
 
-- [Checkou out the Auth0 demo to find out how run OidcProxy.Net in a Kubernetes cluster](https://github.com/oidcproxydotnet/OidcProxy.Net/blob/feat/add-deployment-options/docs/demos/Authentication-Gateways/Auth0/src/kubernetes/readme.md)
+- [Check out out the Auth0 demo to find out how run OidcProxy.Net in a Kubernetes cluster](https://github.com/oidcproxydotnet/OidcProxy.Net/blob/feat/add-deployment-options/docs/demos/Authentication-Gateways/Auth0/src/kubernetes/readme.md)
 
 ## Features
 
