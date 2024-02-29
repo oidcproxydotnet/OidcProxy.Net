@@ -132,7 +132,7 @@ app.Run();
 ## OidcProxy.Net <3 Docker 
 OidcProxy.Net was developed to be used in cloud environments. This is why it has mainly been designed to work well in containerised environments.
 
-- [Check out the Auth0 demo and run it with Docker Compose](https://github.com/oidcproxydotnet/OidcProxy.Net/blob/main/docs/demos/Authentication-Gateways/Auth0/src/readme.md)
+- [Check out the Auth0 demo and run it with Docker Compose](https://github.com/oidcproxydotnet/OidcProxy.Net/blob/main/docs/demos/Authentication-Gateways/Auth0/src/readme.md#run-this-demo-with-docker)
 
 ## OidcProxy.Net <3 Kubernetes
 OidcProxy.Net was designed to work well in container platforms. It's been designed to work well when scaled both horizontally as vertically. To scale the proxy vertically, use Redis as a back-bone.

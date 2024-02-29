@@ -77,7 +77,9 @@ If you've followed these steps correctly, you should see:
 
 ## Run this demo with Docker
 
-Navigate to this folder on your local machine and open the `docker-compose.yml`. It has a section called `bff` and a section called `api`. Configure the following environment variables with the values you have configured in Auth0:
+In case you haven't done so already, please create an Auth0 instance and configure it as described [here](readme-auth0.md).
+
+Clone this repository and navigate to this folder on your local machine and open the `docker-compose.yml`. It has a section called `bff` and a section called `api`. Configure the following environment variables with the values you have configured in Auth0:
 
 ```yaml
 version: '3.4'
