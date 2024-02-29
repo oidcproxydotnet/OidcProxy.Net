@@ -10,8 +10,6 @@ builder.Services.AddHttpClient();
 
 var redisConnectionString = builder.Configuration.GetSection("ConnectionStrings:Redis").Get<string>();
 
-var runLocallyWithDocker = builder.Configuration.GetSection("runLocallyWithDocker").Get<bool>();
-
 // ========= Configure the BFF =========
 // Reads the auth0 configuration from appsettings.json and bootstraps the BFF.
 // This section is REQUIRED. Without this section, your BFF will not work. 
@@ -22,12 +20,6 @@ var auth0Config = builder.Configuration
 
 builder.Services.AddAuth0Proxy(auth0Config, o =>
 {
-    if (runLocallyWithDocker)
-    {
-        o.AlwaysRedirectToHttps = false;
-        o.SetCustomHostName(new Uri("http://localhost:8443"));
-    }
-
     if (string.IsNullOrEmpty(redisConnectionString))
     {
         return;
