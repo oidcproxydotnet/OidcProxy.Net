@@ -61,7 +61,7 @@ Check out our demos too:
 - [Demo: Setting up OidcProxy.Net as an identity-aware reverse proxy, using IdentityServer, Angular, and one .NET API](https://github.com/oidcproxydotnet/OidcProxy.Net/tree/main/docs/demos/Authentication-Gateways/IdentityServer4/src)
 - [Demo: Setting up OidcProxy.Net as an identity-aware reverse proxy, using Azure EntraId, Angular, and one .NET API](https://github.com/oidcproxydotnet/OidcProxy.Net/tree/main/docs/demos/Authentication-Gateways/IdentityServer4/src)
 - [Demo: Setting up OidcProxy.Net as a host for an Angular SPA and as a reverse proxy for one ASP.NET Api with Auth0 as Identity Provider](https://github.com/oidcproxydotnet/OidcProxy.Net/tree/main/docs/demos/spa-bffs/auth0/src)
-- [Demo: Setting up OidcProxy.Net as a host for an Angular SPA and as a reverse proxy for one ASP.NET Api with OpenIddict as Identity Provider]([https://github.com/oidcproxydotnet/OidcProxy.Net/tree/main/docs/demos/spa-bffs/auth0/src](https://github.com/oidcproxydotnet/OidcProxy.Net/tree/main/docs/demos/spa-bffs/openiddict/src))
+- [Demo: Setting up OidcProxy.Net as a host for an Angular SPA and as a reverse proxy for one ASP.NET Api with OpenIddict as Identity Provider (WIP)](https://github.com/oidcproxydotnet/OidcProxy.Net/tree/main/docs/demos/spa-bffs/openiddict/src)
 
 ###  Setting up a proxy from scratch
 
