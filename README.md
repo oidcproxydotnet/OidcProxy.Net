@@ -16,7 +16,7 @@
 7. [Why we built it](#why-we-built-it)
 
 ## What is OidcProxy.Net?
-The OidcProxy is an identity-aware reverse proxy. It is a component which is desinged to be used with SPA-based web applications. It authenticates users and it manages their session. It is designed to enhance security by keeping the `access_token` and the `refresh_token` hidden from the browser while still allowing the proxy itself to handle and use these tokens. It includes them in downstream requests. This approach helps mitigate potential security risks associated with token exposure.
+The OidcProxy is an identity-aware reverse proxy. It is a framework that's designed to be used with SPA-based web applications. It authenticates users and it manages their session. It is designed to enhance security by keeping the `access_token` and the `refresh_token` hidden from the browser while still allowing the proxy itself to handle and use these tokens. It includes them in downstream requests. This approach helps mitigate potential security risks associated with token exposure.
 
 #### OidcProxy.Net in a nutshell
 - The OidcProxy serves as an identity-aware proxy.
