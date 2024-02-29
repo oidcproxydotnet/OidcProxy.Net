@@ -8,7 +8,7 @@
 ## Table of contents
 
 1. [What is OidcProxy.Net?](#what-is-oidcproxynet)
-2. [Scaffonding a proxy](#scaffold-a-proxy)
+2. [Getting started with OidcProxy.Net](#getting-started-with-oidcproxynet)
 3. [DIY: Setting up a proxy from scratch](#setting-up-a-proxy-from-scratch)
 4. [OidcProxy.Net <3 Docker](#oidcproxynet-3-docker)
 5. [OidcProxy.Net <3 Kubernetes](#oidcproxynet-3-kubernetes)
@@ -37,7 +37,9 @@ The OidcProxy is designed to enhance security by keeping the `access_token` and 
 - This reduces the risk of impersonation.
 - This reduces the attack surface because, in this scenario, an attacker who does not have access to the webserver cannot be issued any tokens. 
 
-### Scaffold a proxy:
+## Getting started with OidcProxy.Net
+
+To get started, configure your identity provider. Create a Client that uses the `Authorization Code` grant with PKCE. It must provide refresh tokens too. This client will have a `client_id` and a `client_secret`. Use those to scaffold a boilerplate project:
 
 ```bash
 # Download and install the template pack first
@@ -52,6 +54,14 @@ dotnet new OidcProxy.Net --backend "https://api.myapp.com"
 # Run it
 dotnet run
 ```
+
+Check out our demos too:
+
+- [Demo: Setting up OidcProxy.Net as an identity-aware reverse proxy, using Docker, Kubernetes, Auth0, with Angular and one .NET API.](https://github.com/oidcproxydotnet/OidcProxy.Net/tree/main/docs/demos/Authentication-Gateways/Auth0/src)
+- [Demo: Setting up OidcProxy.Net as an identity-aware reverse proxy, using IdentityServer, Angular, and one .NET API](https://github.com/oidcproxydotnet/OidcProxy.Net/tree/main/docs/demos/Authentication-Gateways/IdentityServer4/src)
+- [Demo: Setting up OidcProxy.Net as an identity-aware reverse proxy, using Azure EntraId, Angular, and one .NET API](https://github.com/oidcproxydotnet/OidcProxy.Net/tree/main/docs/demos/Authentication-Gateways/IdentityServer4/src)
+- [Demo: Setting up OidcProxy.Net as a host for an Angular SPA and as a reverse proxy for one ASP.NET Api with Auth0 as Identity Provider](https://github.com/oidcproxydotnet/OidcProxy.Net/tree/main/docs/demos/spa-bffs/auth0/src)
+- [Demo: Setting up OidcProxy.Net as a host for an Angular SPA and as a reverse proxy for one ASP.NET Api with OpenIddict as Identity Provider]([https://github.com/oidcproxydotnet/OidcProxy.Net/tree/main/docs/demos/spa-bffs/auth0/src](https://github.com/oidcproxydotnet/OidcProxy.Net/tree/main/docs/demos/spa-bffs/openiddict/src))
 
 ###  Setting up a proxy from scratch
 
