@@ -1,4 +1,4 @@
-$version = '1.0.0-rc.2'
+$version = '2.0.0'
 $repoDir = $home + '/local-nuget-repository'
 $repoSourceDir = $repoDir + '/source'
 

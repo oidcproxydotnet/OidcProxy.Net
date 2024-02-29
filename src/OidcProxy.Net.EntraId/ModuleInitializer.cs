@@ -71,6 +71,7 @@ public static class ModuleInitializer
             AssignIfNotNull(config.RoleClaim, roleClaim => options.RoleClaim = roleClaim);
             
             options.EnableUserPreferredLandingPages = config.EnableUserPreferredLandingPages;
+            options.AlwaysRedirectToHttps = !config.AlwaysRedirectToHttps.HasValue || config.AlwaysRedirectToHttps.Value;
             options.SetAllowedLandingPages(config.AllowedLandingPages);
             
             if (config.SessionIdleTimeout.HasValue)

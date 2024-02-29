@@ -6,8 +6,8 @@
         <Nullable>enable</Nullable>
 
         <PackageId>OidcProxy.Net</PackageId>
-        <Version>2.0.0</Version>
-        <Version>2.0.0</Version>
+        <Version>2.0.1</Version>
+        <Version>2.0.1</Version>
         <Authors>Albert Starreveld</Authors>
         <Company>OidcProxy.net</Company>
         <PackageLicenseExpression>LGPL-3.0-only</PackageLicenseExpression>
@@ -20,13 +20,8 @@
         <PackageIcon>logo.png</PackageIcon>
         <SignAssembly>true</SignAssembly>
         <LangVersion>11</LangVersion>
-        <PackageReleaseNotes>Improvements:
-            - Implemented structured logging
-
-            Breaking changes:
-            - `OpenIdConnectIdentityProvider`, `Auth0IdentityProvider`, `EntraIdIdentityProvider` now depend on OidcProxy.Net.Logging.ILogger instead of ILogger&lt;T&gt;.
-            - `DefaultAuthenticationCallbackHandler` now depends on OidcProxy.Net.Logging.ILogger instead of ILogger&lt;T&gt;.
-            - Class `ErrorPage` no longer exists, use `LandingPage` instead.
+        <PackageReleaseNotes>Upgrades:
+            - build(deps): bump System.IdentityModel.Tokens.Jwt from 7.3.1 to 7.4.0
         </PackageReleaseNotes>
     </PropertyGroup>
 
@@ -35,7 +30,7 @@
       <PackageReference Include="Microsoft.Extensions.Caching.StackExchangeRedis" Version="8.0.2" />
       <PackageReference Include="Microsoft.Identity.Client" Version="4.59.0" />
       <PackageReference Include="RedLock.net" Version="2.3.2" />
-      <PackageReference Include="System.IdentityModel.Tokens.Jwt" Version="7.3.1" />
+      <PackageReference Include="System.IdentityModel.Tokens.Jwt" Version="7.4.0" />
       <PackageReference Include="Yarp.ReverseProxy" Version="2.1.0" />
     </ItemGroup>
 

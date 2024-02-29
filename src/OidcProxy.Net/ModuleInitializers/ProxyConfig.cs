@@ -9,6 +9,7 @@ public class ProxyConfig
     public string? RoleClaim { get; set; }
     public IEnumerable<string> AllowedLandingPages { get; set; }
     public bool EnableUserPreferredLandingPages { get; set; } = false;
+    public bool? AlwaysRedirectToHttps { get; set; }
     public Uri? CustomHostName { get; set; }
     public string? CookieName { get; set; }
     public TimeSpan? SessionIdleTimeout { get; set; }

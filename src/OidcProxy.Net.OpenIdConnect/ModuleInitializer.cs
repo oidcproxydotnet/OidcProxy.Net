@@ -1,3 +1,4 @@
+using Microsoft.AspNetCore.Builder;
 using OidcProxy.Net.ModuleInitializers;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -68,7 +69,8 @@ public static class ModuleInitializer
             AssignIfNotNull(config.NameClaim, nameClaim => options.NameClaim = nameClaim);
             AssignIfNotNull(config.RoleClaim, roleClaim => options.RoleClaim = roleClaim);
             
-            options.EnableUserPreferredLandingPages = config.EnableUserPreferredLandingPages;
+            options.EnableUserPreferredLandingPages = config.EnableUserPreferredLandingPages;            
+            options.AlwaysRedirectToHttps = !config.AlwaysRedirectToHttps.HasValue || config.AlwaysRedirectToHttps.Value;
             options.SetAllowedLandingPages(config.AllowedLandingPages);
             
             if (config.SessionIdleTimeout.HasValue)
@@ -83,7 +85,7 @@ public static class ModuleInitializer
             configureOptions?.Invoke(options);
         });
     }
-        
+
     private static void AssignIfNotNull<T>(T? value, Action<T> @do)
     {
         if (value != null)
