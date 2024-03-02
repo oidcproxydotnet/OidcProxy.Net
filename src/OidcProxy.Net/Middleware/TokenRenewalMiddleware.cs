@@ -4,7 +4,7 @@ using OidcProxy.Net.OpenIdConnect;
 
 namespace OidcProxy.Net.Middleware;
 
-internal class TokenRenewalMiddleware : ITokenRenewalMiddleware
+internal class TokenRenewalMiddleware : IYarpMiddleware
 {
     private readonly TokenFactory _tokenFactory;
     private readonly ILogger _logger;

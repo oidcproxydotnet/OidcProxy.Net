@@ -4,7 +4,7 @@ using Microsoft.Extensions.DependencyInjection;
 
 namespace OidcProxy.Net.Middleware;
 
-internal static class TokenRenewalMiddlewareExtensions
+internal static class WebApplicationExtensions
 {
     public static void RegisterYarpMiddleware(this WebApplication app, IEnumerable<Type> types)
     {
@@ -19,7 +19,7 @@ internal static class TokenRenewalMiddlewareExtensions
 
             foreach (var type in types)
             {
-                var instance = (ITokenRenewalMiddleware) x.ApplicationServices.GetRequiredService(type);
+                var instance = (IYarpMiddleware) x.ApplicationServices.GetRequiredService(type);
                 var previous = delegates.Last();
                 delegates.Add(ctx => instance.Apply(ctx, previous));
             }
