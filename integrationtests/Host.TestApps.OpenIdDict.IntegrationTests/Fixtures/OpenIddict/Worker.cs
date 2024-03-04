@@ -33,8 +33,11 @@ public class Worker : IHostedService
         var manager = scope.ServiceProvider.GetRequiredService<IOpenIddictApplicationManager>();
 
         var client = await manager.FindByClientIdAsync(clientId, cancellationToken);
-        await manager.DeleteAsync(client, cancellationToken);
-        
+        if (client != null)
+        {
+            await manager.DeleteAsync(client, cancellationToken);
+        }
+
         if (await manager.FindByClientIdAsync(clientId, cancellationToken) == null)
         {
             await manager.CreateAsync(new OpenIddictApplicationDescriptor
