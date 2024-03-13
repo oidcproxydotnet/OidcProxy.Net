@@ -27,7 +27,7 @@ internal static class EndSessionEndpoint
         {
             await identityProvider.RevokeAsync(accessToken!, context.TraceIdentifier);
         }
-        catch (ApplicationException e)
+        catch (Exception e) when (e is ApplicationException || e is ArgumentException)
         {
             await logger.WarnAsync($"Unexpected: Failed to revoke access_token during end-session. " +
                               $"Access_token will be removed from the OidcProxy.Net http-session. " +
@@ -42,7 +42,7 @@ internal static class EndSessionEndpoint
         {
             await identityProvider.RevokeAsync(refreshToken!, context.TraceIdentifier);
         }
-        catch (ApplicationException e)
+        catch (Exception e) when (e is ApplicationException || e is ArgumentException)
         {
             await logger.WarnAsync($"Unexpected: Failed to revoke refresh_token during end-session. " +
                               $"Refresh_token will be removed from the OidcProxy.Net http-session. " +
