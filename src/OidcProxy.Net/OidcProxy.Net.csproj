@@ -28,7 +28,7 @@
 
     <ItemGroup>
       <PackageReference Include="Microsoft.AspNetCore.DataProtection.StackExchangeRedis" Version="8.0.3" />
-      <PackageReference Include="Microsoft.Extensions.Caching.StackExchangeRedis" Version="8.0.2" />
+      <PackageReference Include="Microsoft.Extensions.Caching.StackExchangeRedis" Version="8.0.3" />
       <PackageReference Include="Microsoft.Identity.Client" Version="4.59.0" />
       <PackageReference Include="RedLock.net" Version="2.3.2" />
       <PackageReference Include="System.IdentityModel.Tokens.Jwt" Version="7.4.0" />
