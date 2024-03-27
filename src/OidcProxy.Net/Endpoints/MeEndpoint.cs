@@ -13,7 +13,7 @@ internal static class MeEndpoint
     {
         if (!authSession.HasIdToken())
         {
-            return Results.NotFound();
+            return Results.Unauthorized();
         }
 
         context.Response.Headers.CacheControl = $"no-cache, no-store, must-revalidate";
