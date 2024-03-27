@@ -10,41 +10,29 @@ using TokenResponse = OidcProxy.Net.IdentityProviders.TokenResponse;
 
 namespace OidcProxy.Net.OpenIdConnect;
 
-public class OpenIdConnectIdentityProvider : IIdentityProvider
+public class OpenIdConnectIdentityProvider(
+    ILogger logger,
+    IMemoryCache cache,
+    HttpClient httpClient,
+    OpenIdConnectConfig configuration)
+    : IIdentityProvider
 {
-    private readonly ILogger _logger;
-    private readonly IMemoryCache _cache;
-    private readonly HttpClient _httpClient;
-
-    private readonly OpenIdConnectConfig _configuration;
-    
     protected virtual string DiscoveryEndpointAddress 
-        => $"{_configuration.Authority.TrimEnd('/')}/" + $"{_configuration.DiscoveryEndpoint.TrimStart('/')}";
-    
-    public OpenIdConnectIdentityProvider(ILogger logger,
-        IMemoryCache cache,
-        HttpClient httpClient, 
-        OpenIdConnectConfig configuration)
-    {
-        _logger = logger;
-        _cache = cache;
-        _httpClient = httpClient;
-        _configuration = configuration;
-    }
-    
+        => $"{configuration.Authority.TrimEnd('/')}/" + $"{configuration.DiscoveryEndpoint.TrimStart('/')}";
+
     public virtual async Task<AuthorizeRequest> GetAuthorizeUrlAsync(string redirectUri)
     { 
         var client = new OidcClient(new OidcClientOptions
         {
-            Authority = _configuration.Authority,
-            ClientId = _configuration.ClientId,
-            ClientSecret = _configuration.ClientSecret,
+            Authority = configuration.Authority,
+            ClientId = configuration.ClientId,
+            ClientSecret = configuration.ClientSecret,
             RedirectUri = redirectUri
         });
 
         var request = await client.PrepareLoginAsync();
 
-        var scopes = new Scopes(_configuration.Scopes);
+        var scopes = new Scopes(configuration.Scopes);
         var scopesParameter = $"scope={string.Join("%20", scopes)}";
         
         var startUrl = $"{request.StartUrl}&{scopesParameter}";
@@ -66,14 +54,14 @@ public class OpenIdConnectIdentityProvider : IIdentityProvider
                 "document does not contain a token endpoint.");
         }
 
-        var scopes = new Scopes(_configuration.Scopes);
+        var scopes = new Scopes(configuration.Scopes);
 
-        var response = await _httpClient.RequestTokenAsync(new AuthorizationCodeTokenRequest
+        var response = await httpClient.RequestTokenAsync(new AuthorizationCodeTokenRequest
         {
              Address = wellKnown.token_endpoint,
              GrantType = OidcConstants.GrantTypes.AuthorizationCode,
-             ClientId = _configuration.ClientId,
-             ClientSecret = _configuration.ClientSecret,
+             ClientId = configuration.ClientId,
+             ClientSecret = configuration.ClientSecret,
              
              Parameters =
              {
@@ -90,7 +78,7 @@ public class OpenIdConnectIdentityProvider : IIdentityProvider
                                            $"OIDC server responded {response.HttpStatusCode}: {response.Raw}");
         }
 
-        await _logger.InformAsync($"Queried /token endpoint and obtained id_, access_, and refresh_tokens.");
+        await logger.InformAsync($"Queried /token endpoint and obtained id_, access_, and refresh_tokens.");
         
         var expiryDate = DateTime.UtcNow.AddSeconds(response.ExpiresIn);
         
@@ -101,13 +89,13 @@ public class OpenIdConnectIdentityProvider : IIdentityProvider
     {
         var openIdConfiguration = await GetDiscoveryDocument();
 
-        var response = await _httpClient.RequestRefreshTokenAsync(new RefreshTokenRequest
+        var response = await httpClient.RequestRefreshTokenAsync(new RefreshTokenRequest
         {
             Address = openIdConfiguration.token_endpoint,
             GrantType = OidcConstants.GrantTypes.RefreshToken,
             RefreshToken = refreshToken,
-            ClientId = _configuration.ClientId,
-            ClientSecret = _configuration.ClientSecret,
+            ClientId = configuration.ClientId,
+            ClientSecret = configuration.ClientSecret,
         });
         
         if (response.IsError)
@@ -116,7 +104,7 @@ public class OpenIdConnectIdentityProvider : IIdentityProvider
                                                   $"OIDC server responded {response.HttpStatusCode}: {response.Raw}");
         }
         
-        await _logger.InformAsync($"Queried /token endpoint (refresh grant) and obtained id_, access_, and refresh_tokens.");
+        await logger.InformAsync($"Queried /token endpoint (refresh grant) and obtained id_, access_, and refresh_tokens.");
 
         var expiresIn = DateTime.UtcNow.AddSeconds(response.ExpiresIn);
 
@@ -127,12 +115,12 @@ public class OpenIdConnectIdentityProvider : IIdentityProvider
     {
         var openIdConfiguration = await GetDiscoveryDocument();
 
-        var response = await _httpClient.RevokeTokenAsync(new TokenRevocationRequest
+        var response = await httpClient.RevokeTokenAsync(new TokenRevocationRequest
         {
             Address = openIdConfiguration.revocation_endpoint,
             Token = token,
-            ClientId = _configuration.ClientId,
-            ClientSecret = _configuration.ClientSecret
+            ClientId = configuration.ClientId,
+            ClientSecret = configuration.ClientSecret
         });
         
         if (response.HttpStatusCode != HttpStatusCode.OK)
@@ -141,15 +129,15 @@ public class OpenIdConnectIdentityProvider : IIdentityProvider
                                            $" \r\n{response.Raw}");
         }
         
-        await _logger.InformAsync($"Token revoked.");
+        await logger.InformAsync($"Token revoked.");
     }
 
     public async Task<Uri> GetEndSessionEndpointAsync(string? idToken, string baseAddress)
     {        
         // Determine redirect URL
-        var logOutRedirectEndpoint = _configuration.PostLogoutRedirectEndpoint.StartsWith('/')
-            ? _configuration.PostLogoutRedirectEndpoint
-            : $"/{_configuration.PostLogoutRedirectEndpoint}";
+        var logOutRedirectEndpoint = configuration.PostLogoutRedirectEndpoint.StartsWith('/')
+            ? configuration.PostLogoutRedirectEndpoint
+            : $"/{configuration.PostLogoutRedirectEndpoint}";
         
         var redirectUrl = $"{baseAddress}{logOutRedirectEndpoint}";
 
@@ -173,7 +161,7 @@ public class OpenIdConnectIdentityProvider : IIdentityProvider
     
     protected virtual async Task<DiscoveryDocument?> ObtainDiscoveryDocument(string endpointAddress)
     {
-        var discoveryDocument = await _httpClient.GetDiscoveryDocumentAsync(endpointAddress);
+        var discoveryDocument = await httpClient.GetDiscoveryDocumentAsync(endpointAddress);
         if (discoveryDocument == null)
         {
             return null;
@@ -195,7 +183,7 @@ public class OpenIdConnectIdentityProvider : IIdentityProvider
     {
         var endpointAddress = DiscoveryEndpointAddress;
 
-        if (_cache.TryGetValue(DiscoveryEndpointAddress, out var discoveryDocument))
+        if (cache.TryGetValue(DiscoveryEndpointAddress, out var discoveryDocument))
         {
             return (DiscoveryDocument)discoveryDocument;
         }
@@ -209,7 +197,7 @@ public class OpenIdConnectIdentityProvider : IIdentityProvider
                 $"at {endpointAddress}");
         }
 
-        _cache.Set(endpointAddress, discoveryDocument, TimeSpan.FromHours(1));
+        cache.Set(endpointAddress, discoveryDocument, TimeSpan.FromHours(1));
         return (DiscoveryDocument)discoveryDocument;
     }
 }

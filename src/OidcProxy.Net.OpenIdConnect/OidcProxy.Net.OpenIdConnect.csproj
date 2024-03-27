@@ -20,7 +20,7 @@
         <PackageReadmeFile>Readme.md</PackageReadmeFile>
         <PackageIcon>logo.png</PackageIcon>
         <SignAssembly>true</SignAssembly>
-        <LangVersion>11</LangVersion>
+        <LangVersion>12</LangVersion>
         <PackageReleaseNotes>Upgrades:
             - build(deps): bump Microsoft.AspNetCore.DataProtection.StackExchangeRedis from 8.0.2 to 8.0.3
             - Fix: Hardened signout endpoint

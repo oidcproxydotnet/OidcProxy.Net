@@ -3,15 +3,8 @@ using OidcProxy.Net.ModuleInitializers;
 
 namespace OidcProxy.Net.OpenIdConnect;
 
-internal class RedirectUriFactory : IRedirectUriFactory
+internal class RedirectUriFactory(ProxyOptions options) : IRedirectUriFactory
 {
-    private readonly ProxyOptions _options;
-
-    public RedirectUriFactory(ProxyOptions options)
-    {
-        _options = options;
-    }
-    
     /// <summary>
     /// Determines the current hostname.
     /// </summary>
@@ -19,11 +12,11 @@ internal class RedirectUriFactory : IRedirectUriFactory
     /// <returns>The hostname the identity provider should return the auth code to.</returns>
     public string DetermineHostName(HttpContext context)
     {
-        var hostName = _options.CustomHostName == null 
+        var hostName = options.CustomHostName == null 
             ? new Uri($"{context.Request.Scheme}://{context.Request.Host}")
-            : new Uri($"{_options.CustomHostName.Scheme}://{_options.CustomHostName.Authority}");
+            : new Uri($"{options.CustomHostName.Scheme}://{options.CustomHostName.Authority}");
 
-        return (hostName.Scheme == "http" && _options.AlwaysRedirectToHttps)
+        return (hostName.Scheme == "http" && options.AlwaysRedirectToHttps)
             ? $"https://{hostName.Authority}"
             : hostName.ToString().TrimEnd('/');
     }

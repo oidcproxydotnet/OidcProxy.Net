@@ -7,34 +7,28 @@ using Microsoft.Identity.Client;
 
 namespace OidcProxy.Net.EntraId;
 
-public class EntraIdIdentityProvider : OpenIdConnectIdentityProvider
+public class EntraIdIdentityProvider(
+    ILogger logger,
+    IMemoryCache cache,
+    HttpClient httpClient,
+    EntraIdConfig configuration)
+    : OpenIdConnectIdentityProvider(logger, cache, httpClient, configuration)
 {
-    private readonly HttpClient _httpClient;
-    private readonly EntraIdConfig _configuration;
+    private readonly HttpClient _httpClient = httpClient;
 
-    protected override string DiscoveryEndpointAddress => _configuration.DiscoveryEndpoint;
-    
+    protected override string DiscoveryEndpointAddress => configuration.DiscoveryEndpoint;
 
-    public EntraIdIdentityProvider(ILogger logger,
-        IMemoryCache cache, 
-        HttpClient httpClient, 
-        EntraIdConfig configuration) 
-        : base(logger, cache, httpClient, configuration)
-    {
-        _httpClient = httpClient;
-        _configuration = configuration;
-    }
 
     public override async Task<AuthorizeRequest> GetAuthorizeUrlAsync(string redirectUri)
     {
-        var app = ConfidentialClientApplicationBuilder.Create(_configuration.ClientId)
-            .WithClientSecret(_configuration.ClientSecret)
+        var app = ConfidentialClientApplicationBuilder.Create(configuration.ClientId)
+            .WithClientSecret(configuration.ClientSecret)
             .Build();
 
-        var startUrl = await app.GetAuthorizationRequestUrl(_configuration.Scopes)
+        var startUrl = await app.GetAuthorizationRequestUrl(configuration.Scopes)
             .WithPkce(out var verifier)
             .WithRedirectUri(redirectUri)
-            .WithTenantId(_configuration.TenantId)
+            .WithTenantId(configuration.TenantId)
             .ExecuteAsync();
         
         return new AuthorizeRequest(startUrl, verifier);
