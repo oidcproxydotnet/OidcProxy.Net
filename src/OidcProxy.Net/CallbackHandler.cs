@@ -6,15 +6,8 @@ using ILogger = OidcProxy.Net.Logging.ILogger;
 
 namespace OidcProxy.Net;
 
-public class DefaultAuthenticationCallbackHandler : IAuthenticationCallbackHandler
+public class DefaultAuthenticationCallbackHandler(ILogger logger) : IAuthenticationCallbackHandler
 {
-    private readonly ILogger _logger;
-
-    public DefaultAuthenticationCallbackHandler(ILogger logger)
-    {
-        _logger = logger;
-    }
-
     public virtual async Task<IResult> OnAuthenticationFailed(HttpContext context, 
         string defaultLandingPage, 
         string? userPreferredLandingPage)
@@ -22,7 +15,7 @@ public class DefaultAuthenticationCallbackHandler : IAuthenticationCallbackHandl
         // Todo: Introduce proper error page here
         var landingPage = userPreferredLandingPage ?? defaultLandingPage;
         
-        await _logger.InformAsync($"Redirect({landingPage})");
+        await logger.InformAsync($"Redirect({landingPage})");
         return Results.Redirect(landingPage);
     }
 
@@ -33,7 +26,7 @@ public class DefaultAuthenticationCallbackHandler : IAuthenticationCallbackHandl
     {
         var landingPage = userPreferredLandingPage ?? defaultLandingPage;
         
-        await _logger.InformAsync($"Redirect({landingPage})");
+        await logger.InformAsync($"Redirect({landingPage})");
         return Results.Redirect(landingPage);
     }
 

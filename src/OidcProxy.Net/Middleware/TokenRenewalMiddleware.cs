@@ -4,27 +4,18 @@ using OidcProxy.Net.OpenIdConnect;
 
 namespace OidcProxy.Net.Middleware;
 
-internal class TokenRenewalMiddleware : IYarpMiddleware
+internal class TokenRenewalMiddleware(TokenFactory tokenFactory, ILogger logger) : IYarpMiddleware
 {
-    private readonly TokenFactory _tokenFactory;
-    private readonly ILogger _logger;
-
-    public TokenRenewalMiddleware(TokenFactory tokenFactory, ILogger logger)
-    {
-        _tokenFactory = tokenFactory;
-        _logger = logger;
-    }
-    
     public async Task Apply(HttpContext context, Func<HttpContext, Task> next)
     {
         // Check expiry again because another thread may have updated the token
         try
         {
-            await _tokenFactory.RenewAccessTokenIfExpiredAsync(context.TraceIdentifier);
+            await tokenFactory.RenewAccessTokenIfExpiredAsync(context.TraceIdentifier);
         }
         catch (TokenRenewalFailedException e)
         {
-            await _logger.ErrorAsync(e);
+            await logger.ErrorAsync(e);
 
             context.Response.StatusCode = StatusCodes.Status401Unauthorized;
             await context.Response.WriteAsync(@"{ ""reason"": ""token_renewal_failed"" }");

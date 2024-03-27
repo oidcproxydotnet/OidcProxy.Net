@@ -3,15 +3,8 @@ using RedLockNet;
 
 namespace OidcProxy.Net.Locking.Distributed.Redis;
 
-public class RedisConcurrentContext : IConcurrentContext
+public class RedisConcurrentContext(IDistributedLockFactory redisLockFactory) : IConcurrentContext
 {
-    private readonly IDistributedLockFactory _redisLockFactory;
-
-    public RedisConcurrentContext(IDistributedLockFactory redisLockFactory)
-    {
-        _redisLockFactory = redisLockFactory;
-    }
-    
     public async Task ExecuteOncePerSession(ISession session, string identifier, Func<bool> actionRequired, Func<Task> @delegate)
     {
         var expiryTime = TimeSpan.FromSeconds(15);
@@ -25,7 +18,7 @@ public class RedisConcurrentContext : IConcurrentContext
         
         var cacheKey = $"{typeof(RedisConcurrentContext).FullName}+{session.Id}+{identifier}";
 
-        await using var resourceLock = await _redisLockFactory.CreateLockAsync(cacheKey, expiryTime, waitTime, retryTime);
+        await using var resourceLock = await redisLockFactory.CreateLockAsync(cacheKey, expiryTime, waitTime, retryTime);
         
         var isActionRequired = actionRequired();
         if (!resourceLock.IsAcquired && isActionRequired)

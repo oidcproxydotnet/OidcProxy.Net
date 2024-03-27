@@ -6,8 +6,8 @@
     <Nullable>enable</Nullable>
 
     <PackageId>OidcProxy.Net.EntraId</PackageId>
-    <Version>2.0.2</Version>
-    <Version>2.0.2</Version>
+    <Version>2.0.3</Version>
+    <Version>2.0.3</Version>
     <Authors>Albert Starreveld</Authors>
     <Company>OidcProxy.net</Company>
     <PackageLicenseExpression>LGPL-3.0-only</PackageLicenseExpression>
@@ -20,10 +20,9 @@
     <PackageReadmeFile>Readme.md</PackageReadmeFile>        
     <PackageIcon>logo.png</PackageIcon>        
     <SignAssembly>true</SignAssembly>        
-    <LangVersion>11</LangVersion>
+    <LangVersion>12</LangVersion>
     <PackageReleaseNotes>Upgrades:
-      - build(deps): bump Microsoft.AspNetCore.DataProtection.StackExchangeRedis from 8.0.2 to 8.0.3
-      - Fix: Hardened signout endpoint
+      - build(deps): bump System.IdentityModel.Tokens.Jwt from 7.4.0 to 7.4.1
     </PackageReleaseNotes>
   </PropertyGroup>
   

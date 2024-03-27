@@ -1,9 +1,3 @@
 namespace OidcProxy.Net.OpenIdConnect;
 
-public class TokenRenewalFailedException : ApplicationException
-{
-    public TokenRenewalFailedException(string errorMessage) : base(errorMessage)
-    {
-        
-    }
-}
+public class TokenRenewalFailedException(string errorMessage) : ApplicationException(errorMessage);

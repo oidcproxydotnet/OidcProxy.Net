@@ -26,6 +26,9 @@ public class Auth0IntegrationTests : IClassFixture<HostApplication>
             await Task.Delay(1000);
 
             await app.Auth0LoginPage.TxtUsername.TypeAsync(username);
+            await app.Auth0LoginPage.HitEnter();
+            await Task.Delay(1000);
+            
             await app.Auth0LoginPage.TxtPassword.TypeAsync(password);
             await app.Auth0LoginPage.HitEnter();
             
