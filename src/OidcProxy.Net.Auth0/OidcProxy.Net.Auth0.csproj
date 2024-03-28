@@ -6,8 +6,8 @@
         <Nullable>enable</Nullable>
         
         <PackageId>OidcProxy.Net.Auth0</PackageId>
-        <Version>2.0.3</Version>
-        <Version>2.0.3</Version>
+        <Version>2.0.4</Version>
+        <Version>2.0.4</Version>
         <Authors>Albert Starreveld</Authors>
         <Company>OidcProxy.net</Company>
         <PackageLicenseExpression>LGPL-3.0-only</PackageLicenseExpression>
@@ -22,7 +22,7 @@
         <SignAssembly>true</SignAssembly>
         <LangVersion>12</LangVersion>
         <PackageReleaseNotes>Upgrades:
-            - build(deps): bump System.IdentityModel.Tokens.Jwt from 7.4.0 to 7.4.1
+            - build(deps): bump Microsoft.Identity.Client from 4.59.0 to 4.60.0
         </PackageReleaseNotes>
     </PropertyGroup>
 
