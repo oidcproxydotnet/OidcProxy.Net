@@ -6,8 +6,8 @@
         <Nullable>enable</Nullable>
 
         <PackageId>OidcProxy.Net.OpenIdConnect</PackageId>
-        <Version>2.0.4</Version>
-        <Version>2.0.4</Version>
+        <Version>2.0.5</Version>
+        <Version>2.0.5</Version>
         <Authors>Albert Starreveld</Authors>
         <Company>OidcProxy.net</Company>
         <PackageLicenseExpression>LGPL-3.0-only</PackageLicenseExpression>
@@ -22,13 +22,14 @@
         <SignAssembly>true</SignAssembly>
         <LangVersion>12</LangVersion>
         <PackageReleaseNotes>Upgrades:
-            - build(deps): bump Microsoft.Identity.Client from 4.59.0 to 4.60.0
+            - build(deps): bump jose-jwt from 4.1.0 to 5.0.0
+            - build(deps): bump Microsoft.Identity.Client from 4.60.0 to 4.60.3
         </PackageReleaseNotes>
     </PropertyGroup>
 
     <ItemGroup>
         <PackageReference Include="IdentityModel.OidcClient" Version="5.2.1" />
-        <PackageReference Include="jose-jwt" Version="4.1.0" />
+        <PackageReference Include="jose-jwt" Version="5.0.0" />
         <PackageReference Include="Microsoft.AspNetCore.Http" Version="2.2.2" />
         <PackageReference Include="Microsoft.AspNetCore.Mvc.Core" Version="2.2.5" />
     </ItemGroup>
