@@ -38,7 +38,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Include="IdentityModel.OidcClient" Version="5.2.1" />
+    <PackageReference Include="IdentityModel.OidcClient" Version="6.0.0" />
   </ItemGroup>
 
   <ItemGroup>
