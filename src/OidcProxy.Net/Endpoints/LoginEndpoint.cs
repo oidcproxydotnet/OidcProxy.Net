@@ -46,7 +46,7 @@ internal static class LoginEndpoint
                 await authSession.SetCodeVerifierAsync(authorizeRequest.CodeVerifier);
             }
 
-            await logger.WarnAsync($"Redirect({authorizeRequest.AuthorizeUri})");
+            await logger.InformAsync($"Redirect({authorizeRequest.AuthorizeUri})");
 
             context.Response.Redirect(authorizeRequest.AuthorizeUri.ToString());
         }

@@ -1,8 +1,5 @@
 using Microsoft.AspNetCore.DataProtection;
-using Microsoft.AspNetCore.Http;
-using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.DependencyInjection.Extensions;
 using OidcProxy.Net.IdentityProviders;
 using OidcProxy.Net.Locking;
 using OidcProxy.Net.Locking.Distributed.Redis;
@@ -70,6 +67,12 @@ public class ProxyOptions
     /// The name of the claim that represents the username.
     /// </summary>
     public string RoleClaim { get; set; } = "role";
+
+    /// <summary>
+    /// Allow or disallow anonymous access. When set to false, unauthenticated requests are redirected to the
+    /// /authorize endpoint of the identity provider.
+    /// </summary>
+    public bool AllowAnonymousAccess { get; set; } = true;
 
     /// <summary>
     /// Sets a custom page to redirect to when the authentication on the OIDC Server failed.

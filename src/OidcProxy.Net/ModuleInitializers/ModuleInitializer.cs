@@ -1,5 +1,6 @@
 using Microsoft.AspNetCore.Builder;
 using Microsoft.Extensions.DependencyInjection;
+using OidcProxy.Net.Middleware;
 
 namespace OidcProxy.Net.ModuleInitializers;
 
@@ -18,6 +19,8 @@ public static class ModuleInitializer
     public static IServiceCollection AddOidcProxy(this IServiceCollection serviceCollection,
         Action<ProxyOptions>? configureOptions = null)
     {
+        serviceCollection.AddTransient<AnonymousAccessMiddleware>();
+        
         configureOptions?.Invoke(Options);
         
         Options.Apply(serviceCollection);
@@ -39,6 +42,8 @@ public static class ModuleInitializer
         app.UseSession();
         app.UseAuthentication();
         app.UseAuthorization();
+        
+        app.UseMiddleware<AnonymousAccessMiddleware>();
         
         app.Use(async (context, next) =>
         {
