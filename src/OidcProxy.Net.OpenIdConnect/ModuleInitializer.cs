@@ -71,6 +71,7 @@ public static class ModuleInitializer
             
             options.EnableUserPreferredLandingPages = config.EnableUserPreferredLandingPages;            
             options.AlwaysRedirectToHttps = !config.AlwaysRedirectToHttps.HasValue || config.AlwaysRedirectToHttps.Value;
+            options.AllowAnonymousAccess = !config.AllowAnonymousAccess.HasValue || config.AllowAnonymousAccess.Value;
             options.SetAllowedLandingPages(config.AllowedLandingPages);
             
             if (config.SessionIdleTimeout.HasValue)

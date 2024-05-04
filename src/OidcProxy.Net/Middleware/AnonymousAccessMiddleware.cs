@@ -6,17 +6,17 @@ using OidcProxy.Net.OpenIdConnect;
 
 namespace OidcProxy.Net.Middleware;
 
-internal class AnonymousAccessMiddleware
+internal class AnonymousAccessMiddleware : IMiddleware
 {
-    private readonly RequestDelegate _next;
+    private readonly EndpointName _endpointName;
     private readonly IHttpContextAccessor _httpContextAccessor;
     private readonly ProxyOptions _options;
     private readonly AuthSession _authSession;
     private readonly ILogger _logger;
     private readonly IRedirectUriFactory _redirectUriFactory;
     private readonly IIdentityProvider _identityProvider;
-
-    public AnonymousAccessMiddleware(RequestDelegate next,
+    
+    public AnonymousAccessMiddleware(EndpointName endpointName,
         ProxyOptions options, 
         AuthSession authSession,
         ILogger logger,
@@ -24,7 +24,7 @@ internal class AnonymousAccessMiddleware
         IIdentityProvider identityProvider,
         IHttpContextAccessor httpContextAccessor)
     {
-        _next = next;
+        _endpointName = endpointName;
         _httpContextAccessor = httpContextAccessor;
         _options = options;
         _authSession = authSession;
@@ -33,27 +33,21 @@ internal class AnonymousAccessMiddleware
         _identityProvider = identityProvider;
     }
 
-    public async Task Invoke(HttpContext context)
+    public async Task InvokeAsync(HttpContext context, RequestDelegate next)
     {
         if (_options.AllowAnonymousAccess)
         {
-            await _next(context);
+            await next(context);
             return;
         }
 
         var session = _httpContextAccessor.HttpContext?.Session;
         if (session?.GetAccessToken() != null)
         {
-            await _next(context);
+            await next(context);
         }
 
-        await _logger.InformAsync("Todo: Redirect to /authorize endpoint");
-        await _next(context);
-        return;
-        
-        // Todo: Implement obtaining the correct /.auth endpoint because it is a variable
-        
-        var redirectUri = _redirectUriFactory.DetermineRedirectUri(context, "/.auth");
+        var redirectUri = _redirectUriFactory.DetermineRedirectUri(context, _endpointName.ToString());
         
         var authorizeRequest = await _identityProvider.GetAuthorizeUrlAsync(redirectUri);
         
@@ -66,4 +60,5 @@ internal class AnonymousAccessMiddleware
         
         context.Response.Redirect(authorizeRequest.AuthorizeUri.ToString());
     }
+
 }
