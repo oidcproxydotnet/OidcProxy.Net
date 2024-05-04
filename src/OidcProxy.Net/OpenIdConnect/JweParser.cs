@@ -4,20 +4,13 @@ using OidcProxy.Net.ModuleInitializers;
 
 namespace OidcProxy.Net.OpenIdConnect;
 
-public sealed class JweParser : JwtParser
+public sealed class JweParser(ProxyOptions options, IJweEncryptionKey encryptionKey) : JwtParser(options)
 {
-    private readonly IJweEncryptionKey _encryptionKey;
-
-    public JweParser(ProxyOptions options, IJweEncryptionKey encryptionKey) : base(options)
-    {
-        _encryptionKey = encryptionKey;
-    }
-
     public override JwtPayload? ParseAccessToken(string encryptedAccessToken)
     {
         try
         {
-            var accessToken = _encryptionKey.Decrypt(encryptedAccessToken);
+            var accessToken = encryptionKey.Decrypt(encryptedAccessToken);
             return base.ParseAccessToken(accessToken);
         }
         catch (Exception e)

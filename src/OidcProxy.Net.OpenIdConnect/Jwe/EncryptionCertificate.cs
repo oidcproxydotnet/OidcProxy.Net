@@ -3,18 +3,11 @@ using System.Security.Cryptography.X509Certificates;
 
 namespace OidcProxy.Net.OpenIdConnect.Jwe;
 
-public sealed class EncryptionCertificate : IJweEncryptionKey
+public sealed class EncryptionCertificate(X509Certificate2 certificate) : IJweEncryptionKey
 {
-    private readonly X509Certificate2 _certificate;
-
-    public EncryptionCertificate(X509Certificate2 certificate)
-    {
-        _certificate = certificate;
-    }
-
     public string Decrypt(string token)
     {
-        var privateKey = _certificate.GetRSAPrivateKey();
+        var privateKey = certificate.GetRSAPrivateKey();
         if (privateKey == null)
         {
             throw new NotSupportedException("Failed to decrypt JWE. " +

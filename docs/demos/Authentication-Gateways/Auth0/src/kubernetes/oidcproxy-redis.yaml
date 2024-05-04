@@ -1,0 +1,23 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: oidcproxy-redis
+  namespace: oidcproxy
+spec:
+  replicas: 3
+  selector:
+    matchLabels:
+      app: oidcproxy-redis
+  template:
+    metadata:
+      labels:
+        app: oidcproxy-redis
+    spec:
+      containers:
+        - name: oidcproxy-redis
+          image: redis:latest
+          ports:
+            - containerPort: 6379
+          env:
+          - name: REDIS_PASSWORD
+            value: {add redis password here}

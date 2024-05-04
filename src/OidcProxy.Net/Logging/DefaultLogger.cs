@@ -3,17 +3,9 @@ using Microsoft.Extensions.Logging;
 
 namespace OidcProxy.Net.Logging;
 
-internal class DefaultLogger : ILogger
+internal class DefaultLogger(IHttpContextAccessor httpContextAccessor, ILogger<DefaultLogger> logger)
+    : ILogger
 {
-    private readonly IHttpContextAccessor _httpContextAccessor;
-    private readonly ILogger<DefaultLogger> _logger;
-
-    public DefaultLogger(IHttpContextAccessor httpContextAccessor, ILogger<DefaultLogger> logger)
-    {
-        _httpContextAccessor = httpContextAccessor;
-        _logger = logger;
-    }
-    
     public Task TraceAsync(string message)
     {
         Write(message, LogLevel.Trace);
@@ -52,14 +44,14 @@ internal class DefaultLogger : ILogger
     
     private void Write(string message, LogLevel logLevel)
     {
-        var context = _httpContextAccessor.HttpContext;
+        var context = httpContextAccessor.HttpContext;
         var logEntry = new LogEntry(context.TraceIdentifier, message);
         Write(logEntry, logLevel);
     }
     
     private void Write(Exception exception, LogLevel logLevel)
     {
-        var context = _httpContextAccessor.HttpContext;
+        var context = httpContextAccessor.HttpContext;
         var logEntry = new LogEntry(context.TraceIdentifier, exception);
         Write(logEntry, logLevel);
     }
@@ -73,7 +65,7 @@ internal class DefaultLogger : ILogger
                             $"\"{{@{nameof(LogEntry.TraceId)}}}\", " +
                             $"\"{{@{nameof(LogEntry.Exception)}}}\" ";
             
-            _logger.Log(logLevel, messageFormat, logEntry.Time, logEntry.TraceId, logEntry.Exception);
+            logger.Log(logLevel, messageFormat, logEntry.Time, logEntry.TraceId, logEntry.Exception);
             return;
         }
 
@@ -81,6 +73,6 @@ internal class DefaultLogger : ILogger
                         $"\"{{@{nameof(LogEntry.TraceId)}}}\", " +
                         $"\"{{@{nameof(LogEntry.Message)}}}\" ";
             
-        _logger.Log(logLevel, messageFormat, logEntry.Time, logEntry.TraceId, logEntry.Message);
+        logger.Log(logLevel, messageFormat, logEntry.Time, logEntry.TraceId, logEntry.Message);
     }
 }

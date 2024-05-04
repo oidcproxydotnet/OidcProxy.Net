@@ -8,38 +8,32 @@ using Microsoft.Extensions.Options;
 
 namespace OidcProxy.Net.Middleware;
 
-public sealed class OidcProxyAuthenticationHandler : AuthenticationHandler<OidcProxyAuthenticationSchemeOptions>
+public sealed class OidcProxyAuthenticationHandler(
+    ITokenParser tokenParser,
+    IHttpContextAccessor httpContextAccessor,
+    IOptionsMonitor<OidcProxyAuthenticationSchemeOptions> options,
+    ILoggerFactory logger,
+    UrlEncoder encoder)
+    : AuthenticationHandler<OidcProxyAuthenticationSchemeOptions>(options, logger, encoder)
 {
-    private readonly ITokenParser _tokenParser;
-    private readonly IHttpContextAccessor _httpContextAccessor;
     public const string SchemaName = "OidcProxy.Net";
-
-    public OidcProxyAuthenticationHandler(ITokenParser tokenParser,
-        IHttpContextAccessor httpContextAccessor,
-        IOptionsMonitor<OidcProxyAuthenticationSchemeOptions> options, 
-        ILoggerFactory logger, 
-        UrlEncoder encoder) : base(options, logger, encoder)
-    {
-        _tokenParser = tokenParser;
-        _httpContextAccessor = httpContextAccessor;
-    }
 
     protected override Task<AuthenticateResult> HandleAuthenticateAsync()
     {
         try
         {
-            if (_httpContextAccessor.HttpContext == null)
+            if (httpContextAccessor.HttpContext == null)
             {
                 return Task.FromResult(AuthenticateResult.NoResult());
             }
 
-            var token = _httpContextAccessor.HttpContext.Session.GetAccessToken();
+            var token = httpContextAccessor.HttpContext.Session.GetAccessToken();
             if (string.IsNullOrEmpty(token))
             {
                 return Task.FromResult(AuthenticateResult.NoResult());
             }
 
-            var payload = _tokenParser.ParseAccessToken(token);
+            var payload = tokenParser.ParseAccessToken(token);
             
             var claims = payload
                 .Select(x => new Claim(x.Key, x.Value?.ToString() ?? string.Empty))
@@ -51,8 +45,8 @@ public sealed class OidcProxyAuthenticationHandler : AuthenticationHandler<OidcP
                                                          "The access_token jwt does not contain any claims.");
             }
 
-            var nameClaim = _tokenParser.GetNameClaim();
-            var roleClaim = _tokenParser.GetRoleClaim();
+            var nameClaim = tokenParser.GetNameClaim();
+            var roleClaim = tokenParser.GetRoleClaim();
             
             var claimsIdentity = new ClaimsIdentity(claims, SchemaName, nameClaim, roleClaim);
 

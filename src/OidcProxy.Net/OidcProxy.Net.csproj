@@ -6,8 +6,7 @@
         <Nullable>enable</Nullable>
 
         <PackageId>OidcProxy.Net</PackageId>
-        <Version>2.0.2</Version>
-        <Version>2.0.2</Version>
+        <Version>2.0.6</Version>
         <Authors>Albert Starreveld</Authors>
         <Company>OidcProxy.net</Company>
         <PackageLicenseExpression>LGPL-3.0-only</PackageLicenseExpression>
@@ -19,19 +18,18 @@
         <PackageProjectUrl>https://oidcproxy.net</PackageProjectUrl>
         <PackageIcon>logo.png</PackageIcon>
         <SignAssembly>true</SignAssembly>
-        <LangVersion>11</LangVersion>
+        <LangVersion>12</LangVersion>
         <PackageReleaseNotes>Upgrades:
-            - build(deps): bump Microsoft.AspNetCore.DataProtection.StackExchangeRedis from 8.0.2 to 8.0.3
-            - Fix: Hardened signout endpoint
+            - build(deps): bump IdentityModel.OidcClient from 5.2.1 to 6.0.0
         </PackageReleaseNotes>
     </PropertyGroup>
 
     <ItemGroup>
       <PackageReference Include="Microsoft.AspNetCore.DataProtection.StackExchangeRedis" Version="8.0.3" />
-      <PackageReference Include="Microsoft.Extensions.Caching.StackExchangeRedis" Version="8.0.2" />
-      <PackageReference Include="Microsoft.Identity.Client" Version="4.59.0" />
+      <PackageReference Include="Microsoft.Extensions.Caching.StackExchangeRedis" Version="8.0.3" />
+      <PackageReference Include="Microsoft.Identity.Client" Version="4.60.3" />
       <PackageReference Include="RedLock.net" Version="2.3.2" />
-      <PackageReference Include="System.IdentityModel.Tokens.Jwt" Version="7.4.0" />
+      <PackageReference Include="System.IdentityModel.Tokens.Jwt" Version="7.5.1" />
       <PackageReference Include="Yarp.ReverseProxy" Version="2.1.0" />
     </ItemGroup>
 
