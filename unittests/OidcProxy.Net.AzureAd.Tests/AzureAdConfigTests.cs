@@ -34,7 +34,7 @@ public class AzureAdConfigTests
         actual.Should().BeFalse();
         errors.Any(x => x.Contains("client_id", StringComparison.InvariantCultureIgnoreCase)).Should().BeTrue();
         errors.Any(x => x.Contains("-AZ-", StringComparison.InvariantCulture)).Should().BeTrue();
-        errors.Any(x => x.Contains("https://bff.gocloudnative.org/errors/gcn-az-", StringComparison.InvariantCulture)).Should().BeTrue();
+        errors.Any(x => x.Contains("https://github.com/oidcproxydotnet/OidcProxy.Net/wiki/Errors#gcn-az-", StringComparison.InvariantCulture)).Should().BeTrue();
     }
     
     [Theory]
@@ -49,7 +49,7 @@ public class AzureAdConfigTests
         actual.Should().BeFalse();
         errors.Any(x => x.Contains("client_secret", StringComparison.InvariantCultureIgnoreCase)).Should().BeTrue();
         errors.Any(x => x.Contains("-AZ-", StringComparison.InvariantCulture)).Should().BeTrue();
-        errors.Any(x => x.Contains("https://bff.gocloudnative.org/errors/gcn-az-", StringComparison.InvariantCulture)).Should().BeTrue();
+        errors.Any(x => x.Contains("https://github.com/oidcproxydotnet/OidcProxy.Net/wiki/Errors#gcn-az-", StringComparison.InvariantCulture)).Should().BeTrue();
     }
 
     [Theory]
@@ -64,7 +64,7 @@ public class AzureAdConfigTests
         actual.Should().BeFalse();
         errors.Any(x => x.Contains("tenantid", StringComparison.InvariantCultureIgnoreCase)).Should().BeTrue();
         errors.Any(x => x.Contains("-AZ-", StringComparison.InvariantCulture)).Should().BeTrue();
-        errors.Any(x => x.Contains("https://bff.gocloudnative.org/errors/gcn-az-", StringComparison.InvariantCulture))
+        errors.Any(x => x.Contains("https://github.com/oidcproxydotnet/OidcProxy.Net/wiki/Errors#gcn-az-", StringComparison.InvariantCulture))
             .Should().BeTrue();
     }
 }
