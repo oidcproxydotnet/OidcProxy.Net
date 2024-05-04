@@ -38,6 +38,10 @@ The OidcProxy is an identity-aware reverse proxy. It is a framework that's desig
 - This reduces the risk of impersonation.
 - This reduces the attack surface because, in this scenario, an attacker who does not have access to the webserver cannot be issued any tokens. 
 
+## Important upgrade notes
+:warning: **v2 -> v3**:
+ - /.auth/me endpoint responds with `401` instead of `404` 
+
 ## Getting started with OidcProxy.Net
 
 To get started, configure your identity provider. Create a Client that uses the `Authorization Code` grant with PKCE. It must provide refresh tokens too. This client will have a `client_id` and a `client_secret`. Use those to scaffold a boilerplate project:
