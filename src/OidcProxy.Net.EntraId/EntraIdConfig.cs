@@ -30,7 +30,7 @@ public class EntraIdConfig : OpenIdConnectConfig
             isValid = false;
             results.Add("GCN-AZ-42d458c58299: Unable to start OidcProxy.Net. Invalid TenantId. " +
                         "Configure the TenantId in the appsettings.json or program.cs file and try again. " +
-                        "More info: https://bff.gocloudnative.org/errors/gcn-az-42d458c58299");   
+                        "More info: https://github.com/oidcproxydotnet/OidcProxy.Net/wiki/Errors#gcn-az-42d458c58299");   
         }
 
         errors = results;

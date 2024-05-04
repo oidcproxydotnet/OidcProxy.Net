@@ -147,7 +147,7 @@ public class ProxyOptions
     }
 
     /// <summary>
-    /// The GoCloudNative.BFF typically derives the redirect URL from the request context as a default behavior. However, in cases where the hosting of an image with the GoCloudNative.BFF involves proxies or different configurations, the automatically inferred redirect URL may be incorrect. To address this issue, you can utilize the following method to override the default value of the redirect URL.
+    /// The OidcProxy typically derives the redirect URL from the request context as a default behavior. However, in cases where the hosting of an image with the OidcProxy involves proxies or different configurations, the automatically inferred redirect URL may be incorrect. To address this issue, you can utilize the following method to override the default value of the redirect URL.
     /// </summary>
     /// <param name="hostname"></param>
     /// <exception cref="NotSupportedException"></exception>
