@@ -47,6 +47,7 @@ internal class AnonymousAccessMiddleware : IMiddleware
         if (session?.GetAccessToken() != null)
         {
             await next(context);
+            return;
         }
 
         await _authSession.SetUserPreferredLandingPageAsync(currentPath);
@@ -64,5 +65,4 @@ internal class AnonymousAccessMiddleware : IMiddleware
         
         context.Response.Redirect(authorizeRequest.AuthorizeUri.ToString());
     }
-
 }

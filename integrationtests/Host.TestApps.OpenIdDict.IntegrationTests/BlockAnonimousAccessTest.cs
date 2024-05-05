@@ -1,3 +1,4 @@
+using System.Net;
 using FluentAssertions;
 using Host.TestApps.OpenIdDict.IntegrationTests.Fixtures;
 using Host.TestApps.OpenIdDict.IntegrationTests.Fixtures.OpenIddict;
@@ -49,8 +50,10 @@ public class BlockAnonymousAccessTest : IAsyncLifetime,
     }
 
     [Fact]
-    public async Task ItShouldAuthenticateFist()
+    public async Task ItShouldAuthenticateFirst()
     {
+        const string subJohnDoe = "johndoe";
+
         var app = new App();
 
         try
@@ -68,6 +71,34 @@ public class BlockAnonymousAccessTest : IAsyncLifetime,
             
             // To see if the sign-in was successful, the user should have an access_token.
             app.CurrentPage.Text.Should().Contain("Bearer ey");
+            
+            // Test ASP.NET Core authorization pipeline
+            await app.GoTo("/custom/me");
+            await Task.Delay(1000);
+
+            app.CurrentPage.Text.Should().Contain(subJohnDoe);
+        }
+        finally
+        {
+            await app.CloseBrowser();
+            await Task.Delay(1000);
+        }
+    }
+    
+    [Fact]
+    public async Task WhenNotAuthenticated_SlashDotAuthSlashMe_ShouldReturn401()
+    {
+        var app = new App();
+
+        try
+        {
+            const string path = "/.auth/me";
+            
+            // Navigate to the cho endpoint
+            await app.NavigateToProxy(path);
+            await Task.Delay(2500);
+
+            app.CurrentStatus.Should().Be(HttpStatusCode.Unauthorized);
         }
         finally
         {
