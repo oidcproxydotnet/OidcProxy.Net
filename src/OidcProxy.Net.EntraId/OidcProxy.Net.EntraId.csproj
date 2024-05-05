@@ -6,7 +6,7 @@
     <Nullable>enable</Nullable>
 
     <PackageId>OidcProxy.Net.EntraId</PackageId>
-    <Version>3.0.0</Version>
+    <Version>3.1.0</Version>
     <Authors>Albert Starreveld</Authors>
     <Company>OidcProxy.net</Company>
     <PackageLicenseExpression>LGPL-3.0-only</PackageLicenseExpression>
@@ -20,8 +20,8 @@
     <PackageIcon>logo.png</PackageIcon>        
     <SignAssembly>true</SignAssembly>        
     <LangVersion>12</LangVersion>
-    <PackageReleaseNotes>Fixes:
-      - fix: /.auth/me endpoint responds with 401 instead of 404
+    <PackageReleaseNotes>Enhancements:
+      - Added possibility to allow/deny anonymous access
     </PackageReleaseNotes>
   </PropertyGroup>
   
