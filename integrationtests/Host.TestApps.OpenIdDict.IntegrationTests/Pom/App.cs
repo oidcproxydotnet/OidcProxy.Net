@@ -9,7 +9,7 @@ public class App
 
     private const string BaseAddress = "https://localhost:8444";
 
-    public async Task NavigateToProxy()
+    public async Task NavigateToProxy(string startUrl = "/.auth/login")
     {
         using var browserFetcher = new BrowserFetcher(SupportedBrowser.Chrome);
         await browserFetcher.DownloadAsync();
@@ -25,7 +25,7 @@ public class App
         
         await _page.SetUserAgentAsync("Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/68.0.3419.0 Safari/537.36");
 
-        await _page.GoToAsync($"{BaseAddress}/.auth/login");
+        await _page.GoToAsync($"{BaseAddress}{startUrl}");
     }
 
     public async Task GoTo(string uri)
@@ -33,17 +33,13 @@ public class App
         await _page!.GoToAsync($"{BaseAddress}{uri}");
     }
 
-    public async Task WaitForNavigationAsync()
-    {
-        await _page!.WaitForNavigationAsync();
-        await Task.Delay(500);
-    }
-
     public async Task CloseBrowser()
     {
         await _page!.CloseAsync();
         await _browser!.CloseAsync();
     }
+
+    public string CurrentUrl => _page?.Url ?? string.Empty;
 
     public Endpoint CurrentPage => new(_page!);
 }

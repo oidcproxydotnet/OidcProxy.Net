@@ -35,7 +35,9 @@ internal class AnonymousAccessMiddleware : IMiddleware
 
     public async Task InvokeAsync(HttpContext context, RequestDelegate next)
     {
-        if (_options.AllowAnonymousAccess)
+        var currentPath = context.Request.Path + context.Request.QueryString;
+        if (_options.AllowAnonymousAccess 
+            || currentPath.StartsWith(_endpointName.ToString(), StringComparison.InvariantCultureIgnoreCase))
         {
             await next(context);
             return;
@@ -47,6 +49,8 @@ internal class AnonymousAccessMiddleware : IMiddleware
             await next(context);
         }
 
+        await _authSession.SetUserPreferredLandingPageAsync(currentPath);
+        
         var redirectUri = _redirectUriFactory.DetermineRedirectUri(context, _endpointName.ToString());
         
         var authorizeRequest = await _identityProvider.GetAuthorizeUrlAsync(redirectUri);
