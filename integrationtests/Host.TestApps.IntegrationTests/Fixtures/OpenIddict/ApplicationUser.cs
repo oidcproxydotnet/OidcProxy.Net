@@ -1,6 +1,6 @@
 using Microsoft.AspNetCore.Identity;
 
-namespace Host.TestApps.OpenIdDict.IntegrationTests.Fixtures.OpenIddict;
+namespace Host.TestApps.IntegrationTests.Fixtures.OpenIddict;
 
 public class ApplicationUser : IdentityUser
 {

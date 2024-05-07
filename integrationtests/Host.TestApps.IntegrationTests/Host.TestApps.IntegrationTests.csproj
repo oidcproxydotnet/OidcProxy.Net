@@ -1,10 +1,10 @@
-﻿<Project Sdk="Microsoft.NET.Sdk">
+<Project Sdk="Microsoft.NET.Sdk">
 
     <PropertyGroup>
         <TargetFramework>net8.0</TargetFramework>
         <ImplicitUsings>enable</ImplicitUsings>
         <Nullable>enable</Nullable>
-        <RootNamespace>Host.TestApps.OpenIdDict.IntegrationTests</RootNamespace>
+        <RootNamespace>Host.TestApps.IntegrationTests</RootNamespace>
     </PropertyGroup>
 
     <ItemGroup>
@@ -18,24 +18,27 @@
         <PackageReference Include="OpenIddict.AspNetCore" Version="5.5.0" />
         <PackageReference Include="OpenIddict.EntityFrameworkCore" Version="5.5.0" />
         <PackageReference Include="PuppeteerSharp" Version="17.0.0" />
+        <PackageReference Include="SpecFlow" Version="3.9.74" />
+        <PackageReference Include="SpecFlow.xUnit" Version="3.9.74" />
         <PackageReference Include="System.Linq.Async" Version="6.0.1" />
         <PackageReference Include="xunit" Version="2.8.0" />
         <PackageReference Include="Microsoft.EntityFrameworkCore.Sqlite" Version="8.0.4" />
     </ItemGroup>
 
     <ItemGroup>
+      <None Update="appsettings.json">
+        <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+      </None>
       <None Update="cert.pem">
         <CopyToOutputDirectory>Always</CopyToOutputDirectory>
       </None>
       <None Update="key.pem">
         <CopyToOutputDirectory>Always</CopyToOutputDirectory>
       </None>
-      <None Update="appsettings.json">
-        <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-      </None>
     </ItemGroup>
 
     <ItemGroup>
+      <ProjectReference Include="..\..\src\OidcProxy.Net.Auth0\OidcProxy.Net.Auth0.csproj" />
       <ProjectReference Include="..\..\src\OidcProxy.Net.OpenIdConnect\OidcProxy.Net.OpenIdConnect.csproj" />
       <ProjectReference Include="..\Host.TestApps.Echo\Host.TestApps.Echo.csproj" />
     </ItemGroup>

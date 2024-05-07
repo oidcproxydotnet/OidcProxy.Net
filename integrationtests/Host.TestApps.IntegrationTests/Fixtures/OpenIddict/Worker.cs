@@ -1,8 +1,9 @@
+using Host.TestApps.IntegrationTests.Specs.Glue.OpenIdDict;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using OpenIddict.Abstractions;
 
-namespace Host.TestApps.OpenIdDict.IntegrationTests.Fixtures.OpenIddict;
+namespace Host.TestApps.IntegrationTests.Fixtures.OpenIddict;
 
 public class Worker : IHostedService
 {
@@ -17,7 +18,7 @@ public class Worker : IHostedService
     {
         await using var scope = _serviceProvider.CreateAsyncScope();
 
-        var context = scope.ServiceProvider.GetRequiredService<DbContext>();
+        var context = scope.ServiceProvider.GetRequiredService<TestDbContext>();
         await context.Database.EnsureCreatedAsync(cancellationToken);
 
         await EnsureClientCreated(scope, cancellationToken);

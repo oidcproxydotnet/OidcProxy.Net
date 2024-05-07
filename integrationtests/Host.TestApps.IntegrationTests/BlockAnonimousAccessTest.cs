@@ -1,8 +1,8 @@
 using System.Net;
 using FluentAssertions;
-using Host.TestApps.OpenIdDict.IntegrationTests.Fixtures;
-using Host.TestApps.OpenIdDict.IntegrationTests.Fixtures.OpenIddict;
-using Host.TestApps.OpenIdDict.IntegrationTests.Pom;
+using Host.TestApps.IntegrationTests.Fixtures;
+using Host.TestApps.IntegrationTests.Fixtures.OpenIddict;
+using Host.TestApps.IntegrationTests.Pom;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Configuration;
@@ -10,7 +10,7 @@ using OidcProxy.Net.ModuleInitializers;
 using OidcProxy.Net.OpenIdConnect;
 using Xunit;
 
-namespace Host.TestApps.OpenIdDict.IntegrationTests;
+namespace Host.TestApps.IntegrationTests;
 
 public class BlockAnonymousAccessTest : IAsyncLifetime, 
     IClassFixture<EchoFixture>, // Run an echo-api

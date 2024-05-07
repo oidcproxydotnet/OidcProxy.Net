@@ -2,7 +2,7 @@ using Host.TestApps.TestApi;
 using Microsoft.AspNetCore.Builder;
 using Xunit;
 
-namespace Host.TestApps.OpenIdDict.IntegrationTests.Fixtures;
+namespace Host.TestApps.IntegrationTests.Fixtures;
 
 public class EchoFixture : IAsyncLifetime, IDisposable
 {

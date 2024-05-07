@@ -1,6 +1,6 @@
 using Microsoft.Extensions.DependencyInjection;
 
-namespace Host.TestApps.OpenIdDict.IntegrationTests.Fixtures.OpenIddict;
+namespace Host.TestApps.IntegrationTests.Fixtures.OpenIddict;
 
 public class IdentityServerMimicFixture : OpenIddictFixture
 {

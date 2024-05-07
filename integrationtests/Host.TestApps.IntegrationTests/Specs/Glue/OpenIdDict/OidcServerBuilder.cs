@@ -1,36 +1,48 @@
+using Host.TestApps.IntegrationTests.Fixtures.OpenIddict;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
-using Microsoft.IdentityModel.Tokens;
 using OpenIddict.Server;
-using Xunit;
 
-namespace Host.TestApps.OpenIdDict.IntegrationTests.Fixtures.OpenIddict;
+namespace Host.TestApps.IntegrationTests.Specs.Glue.OpenIdDict;
 
-public class OpenIddictFixture : IAsyncLifetime, IDisposable
+public class OidcServerBuilder
 {
-    private WebApplication app;
+    private string _url = "https://localhost:8765/";
+
+    private Action<OpenIddictServerBuilder> _configureEncryptionMethod = options =>
+    {
+        options.DisableAccessTokenEncryption();
+
+        options.AddDevelopmentEncryptionCertificate();
+    };
     
-    public async Task InitializeAsync()
+    public OidcServerBuilder WithUrl(string url)
+    {
+        _url = url;
+        return this;
+    }
+
+    public WebApplication Build()
     {
         var builder = WebApplication.CreateBuilder();
 
         builder.Services.AddCors();
         builder.Services.AddControllersWithViews();
 
-        builder.Services.AddDbContext<DbContext>(options =>
+        builder.Services.AddDbContext<TestDbContext>(options =>
         {
             options.UseSqlite($"Filename={Path.Combine(Path.GetTempPath(), "openiddict-oidcproxy-test-server.sqlite3")}");
             options.UseOpenIddict();
         });
 
         builder.Services.AddIdentity<ApplicationUser, IdentityRole>()
-            .AddEntityFrameworkStores<DbContext>()
+            .AddEntityFrameworkStores<TestDbContext>()
             .AddDefaultTokenProviders();
 
         builder.Services.AddOpenIddict()
-            .AddCore(o => o.UseEntityFrameworkCore().UseDbContext<DbContext>())
+            .AddCore(o => o.UseEntityFrameworkCore().UseDbContext<TestDbContext>())
             .AddServer(options =>
             {
                 options.SetTokenEndpointUris("connect/token");
@@ -41,7 +53,7 @@ public class OpenIddictFixture : IAsyncLifetime, IDisposable
                     .AllowAuthorizationCodeFlow()
                     .AllowRefreshTokenFlow();
 
-                AddEncryptionMethod(options);
+                _configureEncryptionMethod(options);
         
                 options
                     .AddDevelopmentSigningCertificate();
@@ -63,7 +75,7 @@ public class OpenIddictFixture : IAsyncLifetime, IDisposable
 
         builder.Services.AddHostedService<Worker>();
         
-        app = builder.Build();
+        var app = builder.Build();
         
         app.UseDeveloperExceptionPage();
 
@@ -84,24 +96,8 @@ public class OpenIddictFixture : IAsyncLifetime, IDisposable
             .MapTokenEndpoint()
             .MapLogoutEndpoint();
 
-        app.Urls.Add("https://localhost:8765/");
-        
-        await app.StartAsync();
-    }
+        app.Urls.Add(_url);
 
-    public async Task DisposeAsync()
-    {
-        await app.StopAsync();
-    }
-
-    public void Dispose()
-    {
-        // I.l.e.
-    }
-    
-    protected virtual void AddEncryptionMethod(OpenIddictServerBuilder options)
-    {
-        options.AddEncryptionKey(new SymmetricSecurityKey(
-            Convert.FromBase64String("DRjd/GnduI3Efzen9V9BvbNUfc/VKgXltV7Kbk9sMkY=")));
+        return app;
     }
 }

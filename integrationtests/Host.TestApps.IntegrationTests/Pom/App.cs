@@ -1,7 +1,7 @@
 using System.Net;
 using PuppeteerSharp;
 
-namespace Host.TestApps.OpenIdDict.IntegrationTests.Pom;
+namespace Host.TestApps.IntegrationTests.Pom;
 
 public class App
 {
