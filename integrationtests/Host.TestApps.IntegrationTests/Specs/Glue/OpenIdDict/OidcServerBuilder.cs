@@ -94,6 +94,8 @@ public class OidcServerBuilder
             });
 
         builder.Services.AddHostedService<Worker>();
+
+        builder.ConfigureDotnetDevCertExplicitlyIfItExists(_url);
         
         var app = builder.Build();
         
