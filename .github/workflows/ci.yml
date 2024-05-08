@@ -17,6 +17,8 @@ jobs:
       with:
         dotnet-version: 8.0.x
     - uses: browser-actions/setup-chrome@v1
+    - name: Install development certificates
+      run: dotnet dev-certs https --trust
     - name: Run unit tests
       run: dotnet test --filter 'FullyQualifiedName~.UnitTests'
     - name: Run integration tests
