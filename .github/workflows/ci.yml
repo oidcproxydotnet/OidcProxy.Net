@@ -7,7 +7,7 @@ on:
     branches: [ "main" ]
 
 env:
-  GITHUB_ACTIONS_RUNNER_TLS_NO_VERIFY: 1
+  DOTNET_SYSTEM_NET_HTTP_USESOCKETSHTTPHANDLER: 0
 
 jobs:
   build:
