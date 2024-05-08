@@ -22,7 +22,7 @@ public static class ExtensionMethods
     public static void ConfigureDotnetDevCertExplicitlyIfItExists(this WebApplicationBuilder builder, string url)
     {
         var userProfile = Environment.GetFolderPath(Environment.SpecialFolder.UserProfile);
-        var dotnetToolsPath = Path.Combine(userProfile, ".dotnet", "tools", ".store", "dotnet-dev-certs");
+        var dotnetToolsPath = Path.Combine(userProfile, ".aspnet", "https");
         
         if (!Path.Exists(dotnetToolsPath))
         {
@@ -30,7 +30,7 @@ public static class ExtensionMethods
         }
         
         var certPath = Directory
-            .GetFiles(dotnetToolsPath, "localhost.pfx", SearchOption.AllDirectories)
+            .GetFiles(dotnetToolsPath, "aspnetapp.pfx", SearchOption.AllDirectories)
             .FirstOrDefault();
 
         if (!string.IsNullOrEmpty(certPath))
@@ -38,7 +38,7 @@ public static class ExtensionMethods
             builder.WebHost.UseKestrel(options =>
             {
                 var uri = new Uri(url);
-                options.Listen(IPAddress.Any, uri.Port, o => o.UseHttps(certPath));
+                options.Listen(IPAddress.Any, uri.Port, o => o.UseHttps(certPath, "crypticpassword"));
             });        
         }
     }

@@ -18,7 +18,9 @@ jobs:
         dotnet-version: 8.0.x
     - uses: browser-actions/setup-chrome@v1
     - name: Install development certificates
-      run: dotnet dev-certs https --trust
+      run: | 
+        dotnet dev-certs https -ep $env:USERPROFILE\.aspnet\https\aspnetapp.pfx -p crypticpassword
+        dotnet dev-certs https --trust
     - name: Run unit tests
       run: dotnet test --filter 'FullyQualifiedName~.UnitTests'
     - name: Run integration tests
