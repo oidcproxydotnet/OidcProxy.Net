@@ -1,17 +1,21 @@
+using System.Security.Cryptography.X509Certificates;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Configuration;
 using OidcProxy.Net.ModuleInitializers;
 using OidcProxy.Net.OpenIdConnect;
+using OidcProxy.Net.OpenIdConnect.Jwe;
 
-namespace Host.TestApps.IntegrationTests.Specs.Glue;
+namespace Host.TestApps.IntegrationTests.Specs.Glue.OidcProxyNet;
 
 public class OidcProxyBuilder
 {
     public string Url { get; private set; } = "https://localhost:8444";
     private bool _allowAnonymousAccess = true;
+    private bool _addClaimsTransformation = false;
     private List<string> _whitelist = new();
-
+    private IJweEncryptionKey? _encryptionKey = null;
+    
     public OidcProxyBuilder WithUrl(string url)
     {
         Url = url;
@@ -30,6 +34,24 @@ public class OidcProxyBuilder
         return this;
     }
     
+    public OidcProxyBuilder WithClaimsTransformation()
+    {
+        _addClaimsTransformation = true;
+        return this;
+    }
+
+    public OidcProxyBuilder WithJweKey(IJweEncryptionKey key)
+    {
+        _encryptionKey = key;
+        return this;
+    }
+    
+    public OidcProxyBuilder WithJweCert(X509Certificate2 cert)
+    {
+        _encryptionKey = new EncryptionCertificate(cert);
+        return this;
+    }
+
     public WebApplication Build()
     {
         OidcProxy.Net.ModuleInitializers.ModuleInitializer.Reset();
@@ -47,7 +69,18 @@ public class OidcProxyBuilder
             config.AllowedLandingPages = _whitelist;
         }
 
-        builder.Services.AddOidcProxy(config);
+        builder.Services.AddOidcProxy(config, x =>
+        {
+            if (_addClaimsTransformation)
+            {
+                x.AddClaimsTransformation<ClaimsTransformation>();
+            }
+
+            if (_encryptionKey != null)
+            {
+                x.UseJweKey(_encryptionKey);
+            }
+        });
 
         var app = builder.Build();
         

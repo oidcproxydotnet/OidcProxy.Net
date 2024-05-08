@@ -1,8 +1,11 @@
+using System.Security.Cryptography.X509Certificates;
 using Host.TestApps.IntegrationTests.Fixtures.OpenIddict;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.IdentityModel.Tokens;
+using OidcProxy.Net.OpenIdConnect.Jwe;
 using OpenIddict.Server;
 
 namespace Host.TestApps.IntegrationTests.Specs.Glue.OpenIdDict;
@@ -22,6 +25,23 @@ public class OidcServerBuilder
     {
         _url = url;
         return this;
+    }
+    
+    
+    public void WithJweKey(SymmetricSecurityKey encryptionKey)
+    {
+        _configureEncryptionMethod = options =>
+        {
+            options.AddEncryptionKey(encryptionKey);
+        };
+    }
+
+    public void WithJweCert(X509Certificate2 x509Certificate2)
+    {
+        _configureEncryptionMethod = options =>
+        {
+            options.AddEncryptionCertificate(x509Certificate2);
+        };
     }
 
     public WebApplication Build()

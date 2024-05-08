@@ -1,6 +1,6 @@
 Feature: Redirecting after signing in
 
-Scenario: Normal GET requests via browser
+Scenario Outline: Normal GET requests via browser
 Given the OidcProxy is configured to disallow anonymous access
   And the user interacts with the site that implements the OidcProxy with a browser
  When the user navigates to <url>
@@ -14,7 +14,7 @@ Examples:
 | /api/echo?a=b&foo=bar |
 | /api/echo?a=b#foo=bar |
 
-Scenario: Defining whitelisted redirect-urls in sign-in url
+Scenario Outline: Defining whitelisted redirect-urls in sign-in url
 Given the OidcProxy is configured to allow anonymous access
   And the user interacts with the site that implements the OidcProxy with a browser
   And the OidcProxy has included <url> in the whitelisted redirect urls

@@ -19,7 +19,7 @@ public class BrowserInteractionSteps(ScenarioContext scenarioContext)
 
         _browser = await Puppeteer.LaunchAsync(new LaunchOptions
         {
-            Headless = false,
+            Headless = true,
             IgnoreHTTPSErrors = true,
             Args = ["--no-sandbox"]
         });
@@ -36,6 +36,27 @@ public class BrowserInteractionSteps(ScenarioContext scenarioContext)
         _response = await _page.GoToAsync($"{root}{path}");
     }
 
+    [Given(@"the user has authenticated \(navigated to /\.auth/login\)")]
+    public async Task NavigateToLoginEndpoint()
+    {
+        var root = scenarioContext["proxyurl"];
+        _response = await _page.GoToAsync($"{root}/.auth/login");
+    }
+    
+    [Given(@"the user has signed out \(navigated to /\.auth/end-session\)")]
+    public async Task NavigateToEndSessionEndpoint()
+    {
+        var root = scenarioContext["proxyurl"];
+        _response = await _page.GoToAsync($"{root}/.auth/end-session");
+    }
+    
+    [When("the user invokes a downstream API")]
+    public async Task NavigateToEchoEndpoint()
+    {
+        var root = scenarioContext["proxyurl"];
+        _response = await _page.GoToAsync($"{root}/api/echo");
+    }
+
     [Then("the path in the browser equals (.*)")]
     public void AssertUrlEquals(string url)
     {
@@ -45,22 +66,65 @@ public class BrowserInteractionSteps(ScenarioContext scenarioContext)
         _page.Url.Replace(root, string.Empty).Should().Be(url);
     }
 
+    [Then(@"the downstream API receives an AUTHORIZATION header")]
     [Then("access_tokens are forwarded to downstream APIs")]
     public async Task AssertTokensAreForwarded()
     {
-        var uri = new Uri(_page.Url);
-        var root = uri.GetLeftPart(UriPartial.Authority);
-        _response = await _page.GoToAsync($"{root}/api/echo");
-
-        var content = await _page.GetContentAsync();
+        var content = await GetContentFromEchoEndpoint();
         content.Should().Contain("Bearer ey");
     }
 
+    [Then(@"the downstream API does not receive an AUTHORIZATION header")]
+    public async Task AssertTokensAreNotForwarded()
+    {
+        var content = await GetContentFromEchoEndpoint();
+        content.Should().NotContain("Bearer ey");
+    }
+
+    [Then("the payload of the the ID_TOKEN is visible")]
+    public async Task AssertMeEndpointShowsClaims()
+    {
+        var uri = new Uri(_page.Url);
+        var root = uri.GetLeftPart(UriPartial.Authority);
+        _response = await _page.GoToAsync($"{root}/.auth/me");
+        
+        var content = await _page.GetContentAsync();
+        content.Should().Contain("johndoe");
+    }
+    
+    [Then(@"the /me endpoint shows the claims returned by the claims transformation only")]
+    public async Task AssertMeEndpointShowsTransformedClaimsOnly()
+    {
+        var uri = new Uri(_page.Url);
+        var root = uri.GetLeftPart(UriPartial.Authority);
+        _response = await _page.GoToAsync($"{root}/.auth/me");
+        
+        var content = await _page.GetContentAsync();
+        content.Should().NotContain("johndoe");
+        
+        content.Should().Contain("claims");
+        content.Should().Contain("Transformed");
+    }
+    
     [AfterScenario]
     public async Task TearDown()
     {
-        await Task.Delay(5000);
         await _page!.CloseAsync();
         await _browser!.CloseAsync();
+    }
+    
+    private async Task<string> GetContentFromEchoEndpoint()
+    {
+        var uri = new Uri(_page.Url);
+        var root = uri.GetLeftPart(UriPartial.Authority);
+        var pathToEchoEndpoint = $"{root}/api/echo";
+
+        if (_page.Url != pathToEchoEndpoint)
+        {
+            _response = await _page.GoToAsync(pathToEchoEndpoint);
+        }
+        
+        var content = await _page.GetContentAsync();
+        return content;
     }
 }

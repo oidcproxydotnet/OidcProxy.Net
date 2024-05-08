@@ -1,7 +1,8 @@
+using System.Security.Cryptography.X509Certificates;
 using FluentAssertions;
 using Microsoft.AspNetCore.Builder;
+using Microsoft.IdentityModel.Tokens;
 using TechTalk.SpecFlow;
-using TechTalk.SpecFlow.Bindings;
 
 namespace Host.TestApps.IntegrationTests.Specs.Glue.OpenIdDict;
 
@@ -12,7 +13,7 @@ public class OidcServerSteps(ScenarioContext scenarioContext)
     
     private readonly OidcServerBuilder _builder = new ();
     
-    private WebApplication _app;
+    private WebApplication? _app;
 
     [BeforeScenario]
     public void Reset()
@@ -21,14 +22,27 @@ public class OidcServerSteps(ScenarioContext scenarioContext)
     }
 
     [BeforeStep]
-    public async Task BeforeWhenStep()
+    public async Task BeforeStep()
     {
-        var currentStepType = scenarioContext.StepContext.StepInfo.StepDefinitionType;
-        if (currentStepType == StepDefinitionType.When)
+        if (_app == null && scenarioContext.RequiresBootstrap())
         {
             _app = _builder.Build();
             await _app.StartAsync();
         }
+    }
+    
+    [Given(@"the Oidc Server encrypts JWEs with this symmetric key: (.*)")]
+    public void SetSymmetricKey(string base64)
+    {
+        var key = new SymmetricSecurityKey(Convert.FromBase64String(base64));
+        _builder.WithJweKey(key);
+    }
+    
+    [Given(@"the Oidc server is configured to encrypt JWEs with this certificate: (.*), (.*)")]
+    public void SetCertKey(string certPath, string keyPath)
+    {
+        var cert = X509Certificate2.CreateFromPemFile(certPath, keyPath);
+        _builder.WithJweCert(cert);
     }
 
     [Then("the user has been authenticated")]
