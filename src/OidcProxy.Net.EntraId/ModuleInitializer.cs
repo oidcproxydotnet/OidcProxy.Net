@@ -1,7 +1,7 @@
 ﻿using Microsoft.AspNetCore.Builder;
-using OidcProxy.Net.ModuleInitializers;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using OidcProxy.Net.ModuleInitializers;
 
 namespace OidcProxy.Net.EntraId;
 
@@ -16,10 +16,10 @@ public static class ModuleInitializer
         {
             throw new NotSupportedException(string.Join(", ", errors));
         }
-        
+
         options.RegisterIdentityProvider<EntraIdIdentityProvider, EntraIdConfig>(config, endpointName);
     }
-    
+
     /// <summary>
     /// Initialises the BFF. Also use app.UseOidcProxy();
     /// </summary>
@@ -39,21 +39,21 @@ public static class ModuleInitializer
         var endpointName = config.EndpointName ?? ".auth";
         var routes = config.ReverseProxy?.Routes.ToRouteConfig();
         var clusters = config.ReverseProxy?.Clusters.ToClusterConfig();
-        
+
         if (entraIdConfig == null)
         {
             throw new ArgumentException("Failed to initialise OidcProxy.Net. " +
                 $"Invoke `builder.Services.AddOidcProxy(..)` with an instance of `{nameof(EntraIdProxyConfig)}` " +
                 $"and provide a value for {nameof(EntraIdProxyConfig)}.{nameof(config.EntraId)}.");
         }
-        
+
         if (routes == null || !routes.Any())
         {
             throw new ArgumentException("Failed to initialise OidcProxy.Net. " +
                 $"Invoke `builder.Services.AddOidcProxy(..)` with an instance of `{nameof(EntraIdProxyConfig)}` " +
                 $"and provide a value for {nameof(EntraIdProxyConfig)}.{nameof(config.ReverseProxy)}.{nameof(config.ReverseProxy.Routes)}.");
         }
-        
+
         if (clusters == null || !clusters.Any())
         {
             throw new ArgumentException("Failed to initialise OidcProxy.Net. " +
@@ -69,26 +69,26 @@ public static class ModuleInitializer
             AssignIfNotNull(config.CookieName, cookieName => options.CookieName = cookieName);
             AssignIfNotNull(config.NameClaim, nameClaim => options.NameClaim = nameClaim);
             AssignIfNotNull(config.RoleClaim, roleClaim => options.RoleClaim = roleClaim);
-            
+
             options.EnableUserPreferredLandingPages = config.EnableUserPreferredLandingPages;
             options.AlwaysRedirectToHttps = !config.AlwaysRedirectToHttps.HasValue || config.AlwaysRedirectToHttps.Value;
             options.SetAllowedLandingPages(config.AllowedLandingPages);
-            
+
             if (config.SessionIdleTimeout.HasValue)
             {
                 options.SessionIdleTimeout = config.SessionIdleTimeout.Value;
             }
-            
-            ConfigureEntraId(options, entraIdConfig, endpointName);
-        
-            options.ConfigureYarp(yarp => yarp.LoadFromMemory(routes, clusters));
-            
+
             configureOptions?.Invoke(options);
+
+            ConfigureEntraId(options, entraIdConfig, endpointName);
+
+            options.ConfigureYarp(yarp => yarp.LoadFromMemory(routes, clusters));
         });
     }
 
     public static void UseEntraIdProxy(this WebApplication app) => app.UseOidcProxy();
-        
+
     private static void AssignIfNotNull<T>(T? value, Action<T> @do)
     {
         if (value != null)
