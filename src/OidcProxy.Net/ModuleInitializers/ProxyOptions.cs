@@ -184,6 +184,10 @@ public class ProxyOptions
         IdpRegistration = registration;
     }
 
+    /// <summary>
+    /// Adds middleware into the YARP processing pipeline.
+    /// </summary>
+    /// <typeparam name="THandler">The type implementing the middleware.</typeparam>
     public void AddYarpMiddleware<THandler>() where THandler : IYarpMiddleware
     {
         _customYarpMiddleware.Add(typeof(THandler));
