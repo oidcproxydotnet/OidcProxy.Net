@@ -184,9 +184,9 @@ public class ProxyOptions
         IdpRegistration = registration;
     }
 
-    public void AddYarpMiddleware(Type handlerType)
+    public void AddYarpMiddleware<THandler>() where THandler : IYarpMiddleware
     {
-        _customYarpMiddleware.Add(handlerType);
+        _customYarpMiddleware.Add(typeof(THandler));
     }
 
     /// <summary>
