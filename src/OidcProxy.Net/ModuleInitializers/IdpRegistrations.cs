@@ -1,6 +1,6 @@
-using OidcProxy.Net.Endpoints;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.Extensions.DependencyInjection;
+using OidcProxy.Net.Endpoints;
 using OidcProxy.Net.IdentityProviders;
 using OidcProxy.Net.Middleware;
 
@@ -14,8 +14,8 @@ internal class IdpRegistration<TIdentityProvider, TOptions> : IIdpRegistration w
     private readonly Action<WebApplication> _idpEndpointRegistration;
 
     private readonly Action<IReverseProxyBuilder> _proxyConfiguration;
-    
-    private readonly List<Type> _yarpMiddlewareRegistrations = new();
+
+    private readonly List<Type> _yarpMiddlewareRegistrations = [typeof(TokenRenewalMiddleware)];
 
     public IdpRegistration(TOptions options, string endpointName = ".auth")
     {
@@ -35,10 +35,13 @@ internal class IdpRegistration<TIdentityProvider, TOptions> : IIdpRegistration w
         };
 
         _idpEndpointRegistration = app => app.MapAuthenticationEndpoints(endpointName);
-        
-        _yarpMiddlewareRegistrations.Add(typeof(TokenRenewalMiddleware));
     }
-    
+
+    public void AddYarpMiddleware(Type handlerType)
+    {
+        _yarpMiddlewareRegistrations.Add(handlerType);
+    }
+
     public void Apply(IServiceCollection serviceCollection)
     {
         _idpRegistration.Invoke(serviceCollection);

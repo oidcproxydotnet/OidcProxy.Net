@@ -7,10 +7,10 @@ using OidcProxy.Net.Locking.InMemory;
 using OidcProxy.Net.Logging;
 using OidcProxy.Net.Middleware;
 using OidcProxy.Net.OpenIdConnect;
-using StackExchange.Redis;
 using RedLockNet;
 using RedLockNet.SERedis;
 using RedLockNet.SERedis.Configuration;
+using StackExchange.Redis;
 
 namespace OidcProxy.Net.ModuleInitializers;
 
@@ -21,17 +21,19 @@ public class ProxyOptions
     private Action<IReverseProxyBuilder> _applyReverseProxyConfiguration = _ => { };
 
     private Action<IServiceCollection> _applyClaimsTransformationRegistration = (s) => s.AddTransient<IClaimsTransformation, DefaultClaimsTransformation>();
-    
+
     private Action<IServiceCollection> _applyBackBone = (s) => s.AddTransient<IConcurrentContext, InMemoryConcurrentContext>();
 
     private Action<IServiceCollection> _applyAuthenticationCallbackHandlerRegistration = (s) => s.AddTransient<IAuthenticationCallbackHandler, DefaultAuthenticationCallbackHandler>();
-    
+
     private Action<IServiceCollection> _applyJwtParser = (s) => s.AddTransient<ITokenParser, JwtParser>();
+
+    private List<Type> _customYarpMiddleware = [];
 
     internal Uri? CustomHostName = null;
 
     internal LandingPage ErrorPage;
-        
+
     internal LandingPage LandingPage;
 
     internal LandingPage[] AllowedUserPreferredLandingPages = Array.Empty<LandingPage>();
@@ -45,13 +47,13 @@ public class ProxyOptions
     /// Get or set a value that indicates the amount of time of inactivity after which the session will be abandoned.
     /// </summary>
     public TimeSpan SessionIdleTimeout { get; set; } = TimeSpan.FromMinutes(20);
-    
+
     /// <summary>
     /// Gets ors sets a value which indicates whether or not the redirect_uri will automatically be rewritten to http
     /// instead of https. This feature might come in handy when hosting the software in a Docker image.
     /// </summary>
     public bool AlwaysRedirectToHttps { get; set; } = true;
-    
+
     /// <summary>
     /// Gets or sets a value that indicates whether or not the user is allowed to specify the page he/she wants to be
     /// redirected to after authenticating successfully.
@@ -62,7 +64,7 @@ public class ProxyOptions
     /// The name of the claim that represents the username.
     /// </summary>
     public string NameClaim { get; set; } = "sub";
-    
+
     /// <summary>
     /// The name of the claim that represents the username.
     /// </summary>
@@ -85,12 +87,12 @@ public class ProxyOptions
                                     "Cannot initialize OidcProxy.Net. " +
                                     "Invalid error page. " +
                                     "The path to the error page must be relative and may not have a querystring.";
-        
+
         if (!LandingPage.TryParse(errorPage, out var value))
         {
             throw new NotSupportedException(errorMessage);
         }
-        
+
         if (errorPage.Contains('?') || errorPage.Contains('#'))
         {
             throw new NotSupportedException(errorMessage);
@@ -111,13 +113,13 @@ public class ProxyOptions
                                         "Cannot initialize OidcProxy.Net. " +
                                         "Invalid landing page. " +
                                         "The path to the landing page must be relative.";
-            
+
             throw new NotSupportedException(errorMessage);
         }
-        
+
         LandingPage = value;
     }
-    
+
     /// <summary>
     /// 
     /// </summary>
@@ -130,7 +132,7 @@ public class ProxyOptions
         }
 
         var allowedLandingPages = new List<LandingPage>();
-        
+
         foreach (var landingPage in landingPages)
         {
             if (!LandingPage.TryParse(landingPage, out var value))
@@ -139,13 +141,13 @@ public class ProxyOptions
                                             "Cannot initialize OidcProxy.Net. " +
                                             "Invalid landing page. " +
                                             "The path to the landing page must be relative.";
-            
+
                 throw new NotSupportedException(errorMessage);
             }
-            
+
             allowedLandingPages.Add(value);
         }
-        
+
         AllowedUserPreferredLandingPages = allowedLandingPages.ToArray();
     }
 
@@ -168,8 +170,8 @@ public class ProxyOptions
         CustomHostName = hostname;
     }
 
-    public void RegisterIdentityProvider<TIdentityProvider, TOptions>(TOptions options, string endpointName = ".auth") 
-        where TIdentityProvider : class, IIdentityProvider 
+    public void RegisterIdentityProvider<TIdentityProvider, TOptions>(TOptions options, string endpointName = ".auth")
+        where TIdentityProvider : class, IIdentityProvider
         where TOptions : class
     {
         if (IdpRegistration != null)
@@ -178,7 +180,23 @@ public class ProxyOptions
                                             "Configuring multiple IdentityProviders is not supported.");
         }
 
-        IdpRegistration = new IdpRegistration<TIdentityProvider, TOptions>(options, endpointName);
+        var registration = new IdpRegistration<TIdentityProvider, TOptions>(options, endpointName);
+
+        foreach (var handlerType in _customYarpMiddleware)
+        {
+            registration.AddYarpMiddleware(handlerType);
+        }
+
+        IdpRegistration = registration;
+    }
+
+    /// <summary>
+    /// Adds middleware into the YARP processing pipeline.
+    /// </summary>
+    /// <typeparam name="THandler">The type implementing the middleware.</typeparam>
+    public void AddYarpMiddleware<THandler>() where THandler : IYarpMiddleware
+    {
+        _customYarpMiddleware.Add(typeof(THandler));
     }
 
     /// <summary>
@@ -198,7 +216,7 @@ public class ProxyOptions
     {
         _applyJwtParser = s => s.AddTransient<ITokenParser, TTokenParser>();
     }
-    
+
     /// <summary>
     /// Configure how to decrypt a JWE
     /// </summary>
@@ -272,7 +290,7 @@ public class ProxyOptions
         _applyBackBone(serviceCollection);
 
         IdpRegistration.Apply(proxyBuilder);
-        
+
         IdpRegistration.Apply(serviceCollection);
 
         _applyClaimsTransformationRegistration(serviceCollection);
@@ -286,20 +304,20 @@ public class ProxyOptions
             {
                 options.IdleTimeout = SessionIdleTimeout;
                 options.Cookie.HttpOnly = true;
-                options.Cookie.IsEssential = true;    
+                options.Cookie.IsEssential = true;
                 options.Cookie.Name = CookieName;
             });
-        
+
         serviceCollection
             .AddTransient(_ => this)
             .AddTransient<IRedirectUriFactory, RedirectUriFactory>();
-        
+
         serviceCollection
             .AddHttpContextAccessor()
             .AddTransient<TokenFactory>()
             .AddTransient<AuthSession>()
             .AddTransient<ILogger, DefaultLogger>();
-                
+
         serviceCollection
             .AddAuthentication(OidcProxyAuthenticationHandler.SchemaName)
             .AddScheme<OidcProxyAuthenticationSchemeOptions, OidcProxyAuthenticationHandler>(OidcProxyAuthenticationHandler.SchemaName, null);
