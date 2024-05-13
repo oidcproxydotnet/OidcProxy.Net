@@ -7,7 +7,7 @@ using Microsoft.IdentityModel.Tokens;
 using OpenIddict.Abstractions;
 using OpenIddict.Server.AspNetCore;
 
-namespace Host.TestApps.OpenIdDict.IntegrationTests.Fixtures.OpenIddict;
+namespace Host.TestApps.IntegrationTests.Specs.Glue.OpenIdDict;
 
 
 public static class Endpoints
@@ -24,6 +24,8 @@ public static class Endpoints
             identity.SetResources(resources);
             identity.SetDestinations(c => new [] { OpenIddictConstants.Destinations.AccessToken });
 
+            OidcServerSteps.HasAuthenticated = true;
+            
             return Results.SignIn(new ClaimsPrincipal(identity), properties: null, OpenIddictServerAspNetCoreDefaults.AuthenticationScheme);
         });
 

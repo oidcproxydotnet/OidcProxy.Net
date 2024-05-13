@@ -71,6 +71,12 @@ public class ProxyOptions
     public string RoleClaim { get; set; } = "role";
 
     /// <summary>
+    /// Allow or disallow anonymous access. When set to false, unauthenticated requests are redirected to the
+    /// /authorize endpoint of the identity provider.
+    /// </summary>
+    public bool AllowAnonymousAccess { get; set; } = true;
+
+    /// <summary>
     /// Sets a custom page to redirect to when the authentication on the OIDC Server failed.
     /// The url will be augmented with an additional query string parameter to indicate what error occured.
     /// </summary>

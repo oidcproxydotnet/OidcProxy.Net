@@ -10,6 +10,7 @@ namespace OidcProxy.Net.Endpoints;
 internal static class LoginEndpoint
 {
     public static async Task Get(HttpContext context,
+            [FromServices] EndpointName endpointName,
             [FromServices] AuthSession authSession,
             [FromServices] ProxyOptions options,
             [FromServices] ILogger logger,
@@ -34,10 +35,8 @@ internal static class LoginEndpoint
                     return;
                 }
             }
-
-            var endpointName = context.Request.Path.RemoveQueryString().TrimEnd("/login");
             
-            var redirectUri = redirectUriFactory.DetermineRedirectUri(context, endpointName);
+            var redirectUri = redirectUriFactory.DetermineRedirectUri(context, endpointName.ToString());
 
             var authorizeRequest = await identityProvider.GetAuthorizeUrlAsync(redirectUri);
 
@@ -46,7 +45,7 @@ internal static class LoginEndpoint
                 await authSession.SetCodeVerifierAsync(authorizeRequest.CodeVerifier);
             }
 
-            await logger.WarnAsync($"Redirect({authorizeRequest.AuthorizeUri})");
+            await logger.InformAsync($"Redirect({authorizeRequest.AuthorizeUri})");
 
             context.Response.Redirect(authorizeRequest.AuthorizeUri.ToString());
         }

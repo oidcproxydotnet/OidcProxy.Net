@@ -22,6 +22,7 @@ internal class IdpRegistration<TIdentityProvider, TOptions> : IIdpRegistration w
         _idpRegistration = serviceCollection =>
         {
             serviceCollection
+                .AddSingleton<EndpointName>(_ => new EndpointName(endpointName))
                 .AddTransient<TokenRenewalMiddleware>()
                 .AddTransient<IIdentityProvider, TIdentityProvider>()
                 .AddTransient(_ => options)

@@ -8,6 +8,8 @@
 
     <ItemGroup>
       <ProjectReference Include="..\..\src\OidcProxy.Net.OpenIdConnect\OidcProxy.Net.OpenIdConnect.csproj" />
+        <ProjectReference Include="..\Host.TestApps.Echo\Host.TestApps.Echo.csproj" />
+
     </ItemGroup>
 
 </Project>
