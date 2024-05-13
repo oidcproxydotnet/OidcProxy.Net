@@ -1,7 +1,6 @@
-using Microsoft.AspNetCore.Builder;
-using OidcProxy.Net.ModuleInitializers;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using OidcProxy.Net.ModuleInitializers;
 
 namespace OidcProxy.Net.OpenIdConnect;
 
@@ -32,27 +31,27 @@ public static class ModuleInitializer
         {
             throw new ArgumentNullException(nameof(config), "Failed to initialise OidcProxy.Net. Config cannot be null. " +
                 $"Invoke `builder.Services.AddOidcProxy(..)` with an instance of `{nameof(OidcProxyConfig)}`.");
-        } 
+        }
 
         var oidcConfig = config.Oidc;
         var endpointName = config.EndpointName ?? ".auth";
         var routes = config.ReverseProxy?.Routes.ToRouteConfig();
         var clusters = config.ReverseProxy?.Clusters.ToClusterConfig();
-        
+
         if (oidcConfig == null)
         {
             throw new ArgumentException("Failed to initialise OidcProxy.Net. " +
                 $"Invoke `builder.Services.AddOidcProxy(..)` with an instance of `{nameof(OidcProxyConfig)}` " +
                 $"and provide a value for {nameof(OidcProxyConfig)}.{nameof(config.Oidc)}.");
         }
-        
+
         if (routes == null || !routes.Any())
         {
             throw new ArgumentException("Failed to initialise OidcProxy.Net. " +
                 $"Invoke `builder.Services.AddOidcProxy(..)` with an instance of `{nameof(OidcProxyConfig)}` " +
                 $"and provide a value for {nameof(OidcProxyConfig)}.{nameof(config.ReverseProxy)}.{nameof(config.ReverseProxy.Routes)}.");
         }
-        
+
         if (clusters == null || !clusters.Any())
         {
             throw new ArgumentException("Failed to initialise OidcProxy.Net. " +
@@ -68,21 +67,22 @@ public static class ModuleInitializer
             AssignIfNotNull(config.CookieName, cookieName => options.CookieName = cookieName);
             AssignIfNotNull(config.NameClaim, nameClaim => options.NameClaim = nameClaim);
             AssignIfNotNull(config.RoleClaim, roleClaim => options.RoleClaim = roleClaim);
-            
-            options.EnableUserPreferredLandingPages = config.EnableUserPreferredLandingPages;            
+
+            options.EnableUserPreferredLandingPages = config.EnableUserPreferredLandingPages;
             options.AlwaysRedirectToHttps = !config.AlwaysRedirectToHttps.HasValue || config.AlwaysRedirectToHttps.Value;
+            options.AllowAnonymousAccess = !config.AllowAnonymousAccess.HasValue || config.AllowAnonymousAccess.Value;
             options.SetAllowedLandingPages(config.AllowedLandingPages);
-            
+
             if (config.SessionIdleTimeout.HasValue)
             {
                 options.SessionIdleTimeout = config.SessionIdleTimeout.Value;
             }
-            
-            options.ConfigureOpenIdConnect(oidcConfig, endpointName);
-        
-            options.ConfigureYarp(yarp => yarp.LoadFromMemory(routes, clusters));
-            
+
             configureOptions?.Invoke(options);
+
+            options.ConfigureOpenIdConnect(oidcConfig, endpointName);
+
+            options.ConfigureYarp(yarp => yarp.LoadFromMemory(routes, clusters));
         });
     }
 

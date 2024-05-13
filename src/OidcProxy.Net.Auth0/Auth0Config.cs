@@ -2,7 +2,7 @@ using System.Text.RegularExpressions;
 
 namespace OidcProxy.Net.Auth0;
 
-public class  Auth0Config
+public class Auth0Config
 {
     public string ClientId { get; set; } = string.Empty;
     
