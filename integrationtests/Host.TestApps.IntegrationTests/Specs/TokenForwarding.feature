@@ -17,5 +17,7 @@ Given the user interacts with the site that implements the OidcProxy with a brow
   And the user has signed out (navigated to /.auth/end-session)
  When the user invokes a downstream API
  Then the downstream API does not receive an AUTHORIZATION header
+ 
+ 
 
 
