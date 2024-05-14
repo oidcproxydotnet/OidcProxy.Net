@@ -1,11 +1,8 @@
 using System.Security.Cryptography.X509Certificates;
-using System.Text;
-using System.Text.Unicode;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.IdentityModel.Tokens;
 using OidcProxy.Net.OpenIdConnect.Jwe;
 using TechTalk.SpecFlow;
-using TechTalk.SpecFlow.Bindings;
 
 namespace Host.TestApps.IntegrationTests.Specs.Glue.OidcProxyNet;
 
@@ -64,6 +61,12 @@ public class OidcProxySteps(ScenarioContext scenarioContext)
     {
         var cert = X509Certificate2.CreateFromPemFile(certPath, keyPath);
         _builder.WithJweCert(cert);
+    }
+    
+    [Given(@"the OidcProxy has been configured to use an ASP.NET Core Policy")]
+    public void ConfigurePolicy()
+    {
+        _builder.WithPolicy();
     }
 
     [AfterScenario]

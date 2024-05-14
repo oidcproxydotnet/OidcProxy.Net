@@ -1,4 +1,6 @@
+using System.Net;
 using FluentAssertions;
+using Host.TestApps.IntegrationTests.Specs.Glue.OidcProxyNet;
 using PuppeteerSharp;
 using TechTalk.SpecFlow;
 
@@ -49,8 +51,16 @@ public class BrowserInteractionSteps(ScenarioContext scenarioContext)
         var root = scenarioContext["proxyurl"];
         _response = await _page.GoToAsync($"{root}/.auth/end-session");
     }
-    
+
+    [When(@"a resource is requested that requires authorization")]
+    public async Task NavigateToCustomMeEndpoint()
+    {
+        var root = scenarioContext["proxyurl"];
+        _response = await _page.GoToAsync($"{root}/custom/me");
+    }
+
     [When("the user invokes a downstream API")]
+    [When(@"an endpoint is invoked that forwards requests through YARP")]
     public async Task NavigateToEchoEndpoint()
     {
         var root = scenarioContext["proxyurl"];
@@ -106,6 +116,33 @@ public class BrowserInteractionSteps(ScenarioContext scenarioContext)
         content.Should().Contain("Transformed");
     }
     
+    [Then(@"the endpoint produces a 200 OK")]
+    public void ThenTheEndpointProducesOK()
+    {
+        _response.Status.Should().Be(HttpStatusCode.OK);
+    }
+    
+    [Then("the endpoint responds with a 401 unauthorized")]
+    public void ThenTheEndpointProducesUnauthenticated()
+    {
+        _response.Status.Should().Be(HttpStatusCode.Unauthorized);
+    }
+
+    [Then("the ASP.NET Core can use ACCESS_TOKEN claims only")]
+    public void AssertAccessTokenClaimsOnly()
+    {
+        DummyClaimHandler.Claims.Should().NotContain(x => x.Type == "aud");
+        DummyClaimHandler.Claims.Should().NotContain(x => x.Type == "azp");
+        DummyClaimHandler.Claims.Should().NotContain(x => x.Type == "at_hash");
+        
+        DummyClaimHandler.Claims.Should().Contain(x => x.Type == "scope");
+        DummyClaimHandler.Claims.Should().Contain(x => x.Type == "jti");
+        DummyClaimHandler.Claims.Should().Contain(x => x.Type == "name");
+        DummyClaimHandler.Claims.Should().Contain(x => x.Type == "preferred_username");
+        DummyClaimHandler.Claims.Should().Contain(x => x.Type == "oi_prst");
+        DummyClaimHandler.Claims.Should().Contain(x => x.Type == "client_id");
+    }
+
     [AfterScenario]
     public async Task TearDown()
     {

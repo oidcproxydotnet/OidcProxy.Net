@@ -1,7 +1,9 @@
 using System.Security.Cryptography.X509Certificates;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.DependencyInjection;
 using OidcProxy.Net.ModuleInitializers;
 using OidcProxy.Net.OpenIdConnect;
 using OidcProxy.Net.OpenIdConnect.Jwe;
@@ -15,7 +17,9 @@ public class OidcProxyBuilder
     private bool _addClaimsTransformation = false;
     private List<string> _whitelist = new();
     private IJweEncryptionKey? _encryptionKey = null;
-    
+    private Action<WebApplicationBuilder> _configurePolicyOnWebAppBuilder = _ => { };
+    private Action<WebApplication> _configurePolicyOnWebApplication = _ => { };
+
     public OidcProxyBuilder WithUrl(string url)
     {
         Url = url;
@@ -52,6 +56,42 @@ public class OidcProxyBuilder
         return this;
     }
 
+    public OidcProxyBuilder WithPolicy()
+    {
+        const string policyName = "foo";
+        
+        _configurePolicyOnWebAppBuilder = builder =>
+        {
+            builder.Services.AddAuthorization(o =>
+            {
+                o.AddPolicy(policyName, policy => { policy.Requirements.Add(new DummyClaimRequirement()); });
+            });
+            
+            builder.Services.AddSingleton<IAuthorizationHandler, DummyClaimHandler>();
+        };
+
+        _configurePolicyOnWebApplication = app =>
+        {
+            app.Use(async (context, next) =>
+            {
+                var authService = context.RequestServices.GetRequiredService<IAuthorizationService>();
+
+                var result = await authService.AuthorizeAsync(context.User, null, policyName);
+
+                if (!result.Succeeded)
+                {
+                    context.Response.StatusCode = StatusCodes.Status403Forbidden;
+                    await context.Response.WriteAsync("Forbidden");
+                    return;
+                }
+
+                await next();
+            });
+        };
+
+        return this;
+    }
+
     public WebApplication Build()
     {
         OidcProxy.Net.ModuleInitializers.ModuleInitializer.Reset();
@@ -81,6 +121,8 @@ public class OidcProxyBuilder
                 x.UseJweKey(_encryptionKey);
             }
         });
+        
+        _configurePolicyOnWebAppBuilder.Invoke(builder);
 
         var app = builder.Build();
         
@@ -92,6 +134,8 @@ public class OidcProxyBuilder
             .MapGet("/", () => "{}");
         
         app.UseOidcProxy();
+        
+        _configurePolicyOnWebApplication.Invoke(app);
 
         app.Urls.Add(Url);
 
