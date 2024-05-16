@@ -40,5 +40,4 @@ dotnet run
 Open a browser and navigate to https://localhost:8444
 
 Read more about OidcProxy.Net here:
-- https://github.com/thecloudnativewebapp/oidcproxy.net
-- https://bff.gocloudnative.org/
+- https://github.com/oidcproxydotnet/oidcproxy.net
