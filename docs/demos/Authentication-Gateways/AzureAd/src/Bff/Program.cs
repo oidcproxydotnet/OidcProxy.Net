@@ -1,21 +1,21 @@
 using System.Net.Http.Headers;
+using OidcProxy.Net.EntraId;
 using Bff;
-using GoCloudNative.Bff.Authentication.AzureAd;
-using GoCloudNative.Bff.Authentication.ModuleInitializers;
+using OidcProxy.Net;
 
 var builder = WebApplication.CreateBuilder(args);
 
 var config = builder.Configuration
-    .GetSection("Bff")
-    .Get<AzureAdBffConfig>();
+    .GetSection("OidcProxy")
+    .Get<EntraIdProxyConfig>();
 
-builder.Services.AddBff(config);
+builder.Services.AddEntraIdProxy(config);
 
 var app = builder.Build();
 
 app.UseRouting();
 
-app.UseBff();
+app.UseEntraIdProxy();
 
 // This is an example how you can execute multiple requests 
 app.Map("/api/weatherforecast", async (HttpContext context, HttpClient httpClient) =>
