@@ -48,11 +48,11 @@ Configure the API:
 * Replace {yourAuthority} with the same value as the spa+bff setting.
 * Replace {yourDomain} with the same value as the spa+bff setting.
 
-## Run the demo using Visual Studio/JetBrains Rider
+## Run the demo using Visual Studio
 
 * Open demo.sln
-* Right-click the Api project and click `run`.
-* Right-click the spa+bff project and click `run`.
+* Right-client on the `Api` project and select Debug → Start new instance.
+* Right-client on the `spa+bff` project and select Debug → Start new instance.
 
 ## Or run the demo using the CLI
 
@@ -70,9 +70,9 @@ Configure the API:
 
 ## Result
 
-If you've followed these steps correctly, you should see:
+If you've followed these steps correctly, you should see the below. Click the `login` link to authenticate with Keycloak. If successful, the user name will be shown.
 
-![](https://miro.medium.com/v2/resize:fit:1346/format:webp/1*QGx3Ci4-U3MIT9D_GVVqjw.png)
+![Demo UI](readme-images/demo-ui.png)
 
 ## Issues
 

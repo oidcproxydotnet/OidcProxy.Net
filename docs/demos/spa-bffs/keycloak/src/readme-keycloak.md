@@ -19,8 +19,13 @@ Follow these steps to configure Keycloak correctly:
 
 ![login-settings](readme-images/login-settings.png)
 
-Once the new client has been created, click on the Credentials tab. Ensure “Client Id and Secret” is selected as the Client Authenticator, and take a copy of the Client Secret. This and the Client ID will be needed for the spa+bff configuration.
+- Once the new client has been created, click on the Credentials tab. Ensure “Client Id and Secret” is selected as the Client Authenticator, and take a copy of the Client Secret. This and the Client ID will be needed for the spa+bff configuration.
 
 ![client-secret](readme-images/client-secret.png)
 
+
+
+- You can now set up one or more users within your Keycloak realm and/or configure an external Identity Provider if you have not done so already.
+
 Proceed with the instructions described in [readme.md](readme.md).
+
