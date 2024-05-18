@@ -14,8 +14,8 @@ export class AppComponent {
   forecast: any = null;
 
   constructor(private http: HttpClient) {
-    http.get("/.auth/me").subscribe((r) => {
-      this.user = r;
+    http.get("/.auth/me").subscribe((r: any) => {
+      this.user = r.name ?? '( not signed in.. )';
     })
   }
 
