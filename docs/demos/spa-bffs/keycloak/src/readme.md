@@ -51,8 +51,8 @@ Configure the API:
 ## Run the demo using Visual Studio
 
 * Open demo.sln
-* Right-client on the `Api` project and select Debug → Start new instance.
-* Right-client on the `spa+bff` project and select Debug → Start new instance.
+* Right-click on the `Api` project and select Debug → Start new instance.
+* Right-click on the `spa+bff` project and select Debug → Start new instance.
 
 ## Or run the demo using the CLI
 
