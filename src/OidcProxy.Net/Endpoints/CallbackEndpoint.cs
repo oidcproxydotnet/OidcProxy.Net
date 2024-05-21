@@ -1,7 +1,7 @@
-using OidcProxy.Net.Logging;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using OidcProxy.Net.IdentityProviders;
+using OidcProxy.Net.Logging;
 using OidcProxy.Net.ModuleInitializers;
 using OidcProxy.Net.OpenIdConnect;
 
@@ -21,16 +21,16 @@ internal static class CallbackEndpoint
         try
         {
             var userPreferredLandingPage = authSession.GetUserPreferredLandingPage();
-            
+
             var code = context.Request.Query["code"].SingleOrDefault();
             if (string.IsNullOrEmpty(code))
             {
                 await logger.InformAsync("Unable to obtain access token. Querystring parameter 'code' has no value.");
-                
+
                 var redirectUri = $"{proxyOptions.ErrorPage}{context.Request.QueryString}";
                 return await authenticationCallbackHandler.OnAuthenticationFailed(context, redirectUri, userPreferredLandingPage);
             }
-            
+
             var endpointName = context.Request.Path.RemoveQueryString().TrimEnd("/login/callback");
             var redirectUrl = redirectUriFactory.DetermineRedirectUri(context, endpointName);
 
@@ -39,17 +39,15 @@ internal static class CallbackEndpoint
             await logger.InformAsync("Exchanging code for access_token.");
             var tokenResponse = await identityProvider.GetTokenAsync(redirectUrl, code, codeVerifier, context.TraceIdentifier);
 
-            await authSession.RemoveCodeVerifierAsync();
-
             await authSession.SaveAsync(tokenResponse);
 
             await logger.InformAsync($"Redirect({proxyOptions.LandingPage})");
 
             var jwtPayload = tokenParser.ParseAccessToken(tokenResponse.access_token);
-            
-            return await authenticationCallbackHandler.OnAuthenticated(context, 
-                jwtPayload, 
-                proxyOptions.LandingPage.ToString(), 
+
+            return await authenticationCallbackHandler.OnAuthenticated(context,
+                jwtPayload,
+                proxyOptions.LandingPage.ToString(),
                 userPreferredLandingPage);
         }
         catch (Exception e)
@@ -57,6 +55,10 @@ internal static class CallbackEndpoint
             await logger.ErrorAsync(e);
             await authenticationCallbackHandler.OnError(context, e);
             throw;
+        }
+        finally
+        {
+            await authSession.RemoveCodeVerifierAsync();
         }
     }
 }
