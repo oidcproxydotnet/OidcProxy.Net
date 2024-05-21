@@ -16,7 +16,7 @@ public class BrowserInteractionSteps(ScenarioContext scenarioContext)
     [Given("the user interacts with the site that implements the OidcProxy with a browser")]
     public async Task StartBrowser()
     {   
-        using var browserFetcher = new BrowserFetcher(SupportedBrowser.Chrome);
+        var browserFetcher = new BrowserFetcher(SupportedBrowser.Chrome);
         await browserFetcher.DownloadAsync();
 
         _browser = await Puppeteer.LaunchAsync(new LaunchOptions
