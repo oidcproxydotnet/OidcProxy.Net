@@ -6,7 +6,7 @@
         <Nullable>enable</Nullable>
         
         <PackageId>OidcProxy.Net.Auth0</PackageId>
-        <Version>3.2.1</Version>
+        <Version>3.2.2</Version>
         <Authors>Albert Starreveld</Authors>
         <Company>OidcProxy.net</Company>
         <PackageLicenseExpression>LGPL-3.0-only</PackageLicenseExpression>
@@ -20,12 +20,8 @@
         <PackageIcon>logo.png</PackageIcon>
         <SignAssembly>true</SignAssembly>
         <LangVersion>12</LangVersion>
-        <PackageReleaseNotes>Enhancements:
-            - Added possibility to allow/deny anonymous access
-            - Added Yarp middleware hook
-
-            Upgrades:
-            - build(deps): bump Microsoft.Identity.Client from 4.60.3 to 4.61.0
+        <PackageReleaseNotes>Bugfixes:
+            - Clear cookies after signing out and after exchaning code for token.
         </PackageReleaseNotes>
     </PropertyGroup>
 
