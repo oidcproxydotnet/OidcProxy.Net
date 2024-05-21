@@ -35,10 +35,26 @@ public class Auth0IdentityProvider(
 
     protected override Task<Uri> BuildEndSessionUri(string? idToken, string redirectUri)
     {
-        // Auth0 does not define their end_session_endpoint in the well-known/openid-configuration
+        var queryStringSeparator = "?";
 
-        var federated = config.FederatedLogout ? "?federated" : string.Empty;
-        var endSessionUrl = $"https://{config.Domain}/oidc/logout{federated}";
+        // Docs on redirect URL
+        // https://auth0.com/docs/authenticate/login/logout/redirect-users-after-logout
+        var redirectUrl = string.Empty;
+        if (!string.IsNullOrEmpty(redirectUri))
+        {
+            var returnToQueryStringValue = HttpUtility.UrlEncode(redirectUri);
+            redirectUrl = $"{queryStringSeparator}returnTo={returnToQueryStringValue}";
+
+            queryStringSeparator = "&";
+        }
+        
+        // Docs on federated logout:
+        // https://auth0.com/docs/authenticate/login/logout/log-users-out-of-idps
+        var federated = config.FederatedLogout ? $"{queryStringSeparator}federated" : string.Empty;
+        
+        // Auth0 does not define their end_session_endpoint in the well-known/openid-configuration
+        var query = $"{redirectUrl}{federated}";
+        var endSessionUrl = $"https://{config.Domain}/oidc/logout{query}";
         var endSessionUri = new Uri(endSessionUrl);
         
         return Task.FromResult(endSessionUri);
