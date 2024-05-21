@@ -1,7 +1,8 @@
-using OidcProxy.Net.Logging;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using OidcProxy.Net.IdentityProviders;
+using OidcProxy.Net.Logging;
+using OidcProxy.Net.ModuleInitializers;
 using OidcProxy.Net.OpenIdConnect;
 
 namespace OidcProxy.Net.Endpoints;
@@ -11,10 +12,11 @@ internal static class EndSessionEndpoint
     public static async Task<IResult> Get(HttpContext context,
         [FromServices] AuthSession authSession,
         [FromServices] ILogger logger,
+        [FromServices] ProxyOptions proxyOptions,
         [FromServices] IRedirectUriFactory redirectUriFactory,
         [FromServices] IIdentityProvider identityProvider)
     {
-        
+
         if (!authSession.HasAccessToken())
         {
             return Results.BadRequest();
@@ -32,9 +34,9 @@ internal static class EndSessionEndpoint
             await logger.WarnAsync($"Unexpected: Failed to revoke access_token during end-session. " +
                               $"Access_token will be removed from the OidcProxy.Net http-session. " +
                               $"This event is only visible in the logs. " +
-                              $"The following error occured: {e}");
+                              $"The following error occurred: {e}");
         }
-        
+
         await logger.InformAsync("Revoking refresh_token.");
         var refreshToken = authSession.GetRefreshToken();
 
@@ -47,7 +49,7 @@ internal static class EndSessionEndpoint
             await logger.WarnAsync($"Unexpected: Failed to revoke refresh_token during end-session. " +
                               $"Refresh_token will be removed from the OidcProxy.Net http-session. " +
                               $"This event is only visible in the logs. " +
-                              $"The following error occured: {e}");
+                              $"The following error occurred: {e}");
         }
 
         string? idToken = null;
@@ -57,6 +59,7 @@ internal static class EndSessionEndpoint
         }
 
         context.Session.Clear();
+        context.Response.Cookies.Delete(proxyOptions.CookieName);
 
         var baseAddress = $"{redirectUriFactory.DetermineHostName(context)}";
 
