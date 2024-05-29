@@ -18,7 +18,7 @@
     <ItemGroup>
       <SourceScripts Include="$(MSBuildThisFileDirectory)\ClientApp\dist\demo\**\*.*" />
     </ItemGroup>
-    <Copy SourceFiles="@(SourceScripts)" DestinationFiles="@(SourceScripts -&gt; '$(MSBuildProjectDirectory)\WwwRoot\%(RecursiveDir)%(FileName)%(Extension)')" Condition="!Exists('$(MSBuildProjectDirectory)\WwwRoot\%(RecursiveDir)%(FileName)%(Extension)')" />
+    <Copy SourceFiles="@(SourceScripts)" DestinationFiles="@(SourceScripts -> '$(MSBuildProjectDirectory)\WwwRoot\%(RecursiveDir)%(FileName)%(Extension)')" Condition="!Exists('$(MSBuildProjectDirectory)\WwwRoot\%(RecursiveDir)%(FileName)%(Extension)')" />
   </Target>
   
   <ItemGroup>
@@ -27,7 +27,7 @@
   </ItemGroup>
   
   <ItemGroup>
-    <PackageReference Include="OidcProxy.Net.Auth0" Version="1.2.0" />
+    <PackageReference Include="OidcProxy.Net.OpenIdConnect" Version="3.2.2" />
   </ItemGroup>
 
 </Project>
