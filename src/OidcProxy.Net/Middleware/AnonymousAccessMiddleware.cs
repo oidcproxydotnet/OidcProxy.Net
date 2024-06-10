@@ -1,7 +1,5 @@
 using Microsoft.AspNetCore.Http;
-using OidcProxy.Net.IdentityProviders;
 using OidcProxy.Net.Logging;
-using OidcProxy.Net.OpenIdConnect;
 
 namespace OidcProxy.Net.Middleware;
 
@@ -9,8 +7,6 @@ internal class AnonymousAccessMiddleware(
     EndpointName oidcProxyReservedEndpointName,
     IAuthSession authSession,
     ILogger logger,
-    IRedirectUriFactory redirectUriFactory,
-    IIdentityProvider identityProvider,
     IHttpContextAccessor httpContextAccessor)
     : IMiddleware
 {
