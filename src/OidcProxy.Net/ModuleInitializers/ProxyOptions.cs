@@ -317,6 +317,7 @@ public class ProxyOptions
             .AddHttpContextAccessor()
             .AddTransient<TokenFactory>()
             .AddTransient<AuthSession>()
+            .AddTransient<IAuthSession, AuthSession>()
             .AddTransient<ILogger, DefaultLogger>();
 
         serviceCollection

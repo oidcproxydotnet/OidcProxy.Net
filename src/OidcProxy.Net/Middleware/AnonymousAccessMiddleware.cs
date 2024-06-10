@@ -7,7 +7,7 @@ namespace OidcProxy.Net.Middleware;
 
 internal class AnonymousAccessMiddleware(
     EndpointName oidcProxyReservedEndpointName,
-    AuthSession authSession,
+    IAuthSession authSession,
     ILogger logger,
     IRedirectUriFactory redirectUriFactory,
     IIdentityProvider identityProvider,
@@ -30,16 +30,7 @@ internal class AnonymousAccessMiddleware(
             return;
         }
 
-        await authSession.SetUserPreferredLandingPageAsync(currentPath);
-        
-        var redirectUri = redirectUriFactory.DetermineRedirectUri(context, oidcProxyReservedEndpointName.ToString());
-        
-        var authorizeRequest = await identityProvider.GetAuthorizeUrlAsync(redirectUri);
-        
-        if (!string.IsNullOrEmpty(authorizeRequest.CodeVerifier))
-        {
-            await authSession.SetCodeVerifierAsync(authorizeRequest.CodeVerifier);
-        }
+        var authorizeRequest = await authSession.InitiateAuthenticationSequence(currentPath);
         
         await logger.InformAsync($"Redirect({authorizeRequest.AuthorizeUri})");
         
