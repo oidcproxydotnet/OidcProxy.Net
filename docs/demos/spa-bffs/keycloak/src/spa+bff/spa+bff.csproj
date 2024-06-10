@@ -1,0 +1,33 @@
+﻿<Project Sdk="Microsoft.NET.Sdk.Web">
+
+  <PropertyGroup>
+    <TargetFramework>net8.0</TargetFramework>
+    <Nullable>enable</Nullable>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <DockerDefaultTargetOS>Linux</DockerDefaultTargetOS>
+    <UserSecretsId>bfd04e9f-205f-47c8-8899-2e8caae134bf</UserSecretsId>
+  </PropertyGroup>
+
+  <Target Name="CopyScriptsToProject" BeforeTargets="Build">
+    <Message Text="Building ClientApp. This may take a while." />
+    <Exec Command="npm install" Condition="'$(RestorePackagesWithLockFile)' != 'true'" WorkingDirectory="$(MSBuildProjectDirectory)\ClientApp" />
+    <Exec Command="npm run build" Condition="'$(RestorePackagesWithLockFile)' != 'true'" WorkingDirectory="$(MSBuildProjectDirectory)\ClientApp" />
+
+    <Message Text="Copying ClientApp/dist folder to wwwroot" />
+    <RemoveDir Directories="$(MSBuildProjectDirectory)\WwwRoot" />
+    <ItemGroup>
+      <SourceScripts Include="$(MSBuildThisFileDirectory)\ClientApp\dist\demo\**\*.*" />
+    </ItemGroup>
+    <Copy SourceFiles="@(SourceScripts)" DestinationFiles="@(SourceScripts -> '$(MSBuildProjectDirectory)\WwwRoot\%(RecursiveDir)%(FileName)%(Extension)')" Condition="!Exists('$(MSBuildProjectDirectory)\WwwRoot\%(RecursiveDir)%(FileName)%(Extension)')" />
+  </Target>
+  
+  <ItemGroup>
+    <Folder Include="ClientApp\dist\" />
+    <Folder Include="wwwroot\" />
+  </ItemGroup>
+  
+  <ItemGroup>
+    <PackageReference Include="OidcProxy.Net.OpenIdConnect" Version="3.2.2" />
+  </ItemGroup>
+
+</Project>
