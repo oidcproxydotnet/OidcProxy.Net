@@ -6,7 +6,7 @@
         <Nullable>enable</Nullable>
 
         <PackageId>OidcProxy.Net</PackageId>
-        <Version>3.2.2</Version>
+        <Version>3.2.3</Version>
         <Authors>Albert Starreveld</Authors>
         <Company>OidcProxy.net</Company>
         <PackageLicenseExpression>LGPL-3.0-only</PackageLicenseExpression>
@@ -20,10 +20,10 @@
         <SignAssembly>true</SignAssembly>
         <LangVersion>12</LangVersion>
         <PackageReleaseNotes>Bugfixes:
-            - Clear cookies after signing out and after exchaning code for token.
+            - 
             
             Upgrades:
-            - build(deps): bump System.IdentityModel.Tokens.Jwt from 7.5.1 to 7.5.2
+            - build(deps): bump Microsoft.Identity.Client from 4.61.0 to 4.61.3
         </PackageReleaseNotes>
     </PropertyGroup>
 
