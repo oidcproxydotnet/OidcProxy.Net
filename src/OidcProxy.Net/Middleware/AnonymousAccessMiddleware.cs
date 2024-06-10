@@ -1,67 +1,47 @@
 using Microsoft.AspNetCore.Http;
 using OidcProxy.Net.IdentityProviders;
 using OidcProxy.Net.Logging;
-using OidcProxy.Net.ModuleInitializers;
 using OidcProxy.Net.OpenIdConnect;
 
 namespace OidcProxy.Net.Middleware;
 
-internal class AnonymousAccessMiddleware : IMiddleware
+internal class AnonymousAccessMiddleware(
+    EndpointName oidcProxyReservedEndpointName,
+    AuthSession authSession,
+    ILogger logger,
+    IRedirectUriFactory redirectUriFactory,
+    IIdentityProvider identityProvider,
+    IHttpContextAccessor httpContextAccessor)
+    : IMiddleware
 {
-    private readonly EndpointName _endpointName;
-    private readonly IHttpContextAccessor _httpContextAccessor;
-    private readonly ProxyOptions _options;
-    private readonly AuthSession _authSession;
-    private readonly ILogger _logger;
-    private readonly IRedirectUriFactory _redirectUriFactory;
-    private readonly IIdentityProvider _identityProvider;
-    
-    public AnonymousAccessMiddleware(EndpointName endpointName,
-        ProxyOptions options, 
-        AuthSession authSession,
-        ILogger logger,
-        IRedirectUriFactory redirectUriFactory,
-        IIdentityProvider identityProvider,
-        IHttpContextAccessor httpContextAccessor)
-    {
-        _endpointName = endpointName;
-        _httpContextAccessor = httpContextAccessor;
-        _options = options;
-        _authSession = authSession;
-        _logger = logger;
-        _redirectUriFactory = redirectUriFactory;
-        _identityProvider = identityProvider;
-    }
-
     public async Task InvokeAsync(HttpContext context, RequestDelegate next)
     {
         var currentPath = context.Request.Path + context.Request.QueryString;
-        if (_options.AllowAnonymousAccess 
-            || currentPath.StartsWith(_endpointName.ToString(), StringComparison.InvariantCultureIgnoreCase))
+        if (currentPath.StartsWith(oidcProxyReservedEndpointName.ToString(), StringComparison.InvariantCultureIgnoreCase))
         {
             await next(context);
             return;
         }
 
-        var session = _httpContextAccessor.HttpContext?.Session;
+        var session = httpContextAccessor.HttpContext?.Session;
         if (session?.GetAccessToken() != null)
         {
             await next(context);
             return;
         }
 
-        await _authSession.SetUserPreferredLandingPageAsync(currentPath);
+        await authSession.SetUserPreferredLandingPageAsync(currentPath);
         
-        var redirectUri = _redirectUriFactory.DetermineRedirectUri(context, _endpointName.ToString());
+        var redirectUri = redirectUriFactory.DetermineRedirectUri(context, oidcProxyReservedEndpointName.ToString());
         
-        var authorizeRequest = await _identityProvider.GetAuthorizeUrlAsync(redirectUri);
+        var authorizeRequest = await identityProvider.GetAuthorizeUrlAsync(redirectUri);
         
         if (!string.IsNullOrEmpty(authorizeRequest.CodeVerifier))
         {
-            await _authSession.SetCodeVerifierAsync(authorizeRequest.CodeVerifier);
+            await authSession.SetCodeVerifierAsync(authorizeRequest.CodeVerifier);
         }
         
-        await _logger.InformAsync($"Redirect({authorizeRequest.AuthorizeUri})");
+        await logger.InformAsync($"Redirect({authorizeRequest.AuthorizeUri})");
         
         context.Response.Redirect(authorizeRequest.AuthorizeUri.ToString());
     }
