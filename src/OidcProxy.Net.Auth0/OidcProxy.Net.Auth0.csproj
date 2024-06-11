@@ -6,7 +6,7 @@
         <Nullable>enable</Nullable>
         
         <PackageId>OidcProxy.Net.Auth0</PackageId>
-        <Version>3.2.3</Version>
+        <Version>3.3.0</Version>
         <Authors>Albert Starreveld</Authors>
         <Company>OidcProxy.net</Company>
         <PackageLicenseExpression>LGPL-3.0-only</PackageLicenseExpression>
@@ -20,8 +20,8 @@
         <PackageIcon>logo.png</PackageIcon>
         <SignAssembly>true</SignAssembly>
         <LangVersion>12</LangVersion>
-        <PackageReleaseNotes>Bugfixes:
-            - 
+        <PackageReleaseNotes>Fixes and improvements:
+            - Introduced IAuthSession interface allowing you to write custom middleware.
 
             Upgrades:
             - build(deps): bump Microsoft.Identity.Client from 4.61.0 to 4.61.3

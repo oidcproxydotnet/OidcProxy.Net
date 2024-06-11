@@ -1,3 +1,5 @@
+using Microsoft.AspNetCore.Http;
+
 namespace OidcProxy.Net.IdentityProviders;
 
 /// <summary>
@@ -25,4 +27,22 @@ public class AuthorizeRequest
         AuthorizeUri = authorizeUri;
         CodeVerifier = codeVerifier;
     }
+
+    /// <summary>
+    /// Wraps the /authorize URI of the Identity Server in an IResult. /authorize URI as defined in section 3.1.2.1. of the OpenId Connect spec: https://openid.net/specs/openid-connect-core-1_0.html#AuthRequest
+    /// </summary>
+    /// <returns>An IResult</returns>
+    public IResult ToResult() => Results.Redirect(AuthorizeUri.ToString());
+
+    /// <summary>
+    /// The /authorize URI of the Identity Server. /authorize URI as defined in section 3.1.2.1. of the OpenId Connect spec: https://openid.net/specs/openid-connect-core-1_0.html#AuthRequest
+    /// </summary>
+    /// <returns>The authorize uri</returns>
+    public Uri ToUri() => AuthorizeUri;
+
+    /// <summary>
+    /// The /authorize URI of the Identity Server. /authorize URI as defined in section 3.1.2.1. of the OpenId Connect spec: https://openid.net/specs/openid-connect-core-1_0.html#AuthRequest
+    /// </summary>
+    /// <returns>The authorize uri</returns>
+    public override string ToString() => AuthorizeUri.ToString();
 }
