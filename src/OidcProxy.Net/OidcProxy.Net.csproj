@@ -23,6 +23,7 @@
             - Introduced IAuthSession interface allowing you to write custom middleware.
             
             Upgrades:
+            - build(deps): bump Microsoft.Extensions.Caching.StackExchangeRedis from 8.0.3 to 8.0.6
             - build(deps): bump Microsoft.Identity.Client from 4.61.0 to 4.61.3
             - build(deps): bump Microsoft.AspNetCore.DataProtection.StackExchangeRedis from 8.0.3 to 8.0.6
         </PackageReleaseNotes>
@@ -30,7 +31,7 @@
 
     <ItemGroup>
       <PackageReference Include="Microsoft.AspNetCore.DataProtection.StackExchangeRedis" Version="8.0.6" />
-      <PackageReference Include="Microsoft.Extensions.Caching.StackExchangeRedis" Version="8.0.3" />
+      <PackageReference Include="Microsoft.Extensions.Caching.StackExchangeRedis" Version="8.0.6" />
       <PackageReference Include="Microsoft.Identity.Client" Version="4.61.3" />
       <PackageReference Include="RedLock.net" Version="2.3.2" />
       <PackageReference Include="System.IdentityModel.Tokens.Jwt" Version="7.5.2" />
