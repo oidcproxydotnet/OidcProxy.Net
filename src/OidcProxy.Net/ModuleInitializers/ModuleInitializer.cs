@@ -21,7 +21,7 @@ public static class ModuleInitializer
     {
         serviceCollection.AddTransient<AnonymousAccessMiddleware>();
         
-        configureOptions?.Invoke(Options);
+        configureOptions?.Invoke(Options);  
         
         Options.Apply(serviceCollection);
         return serviceCollection;
@@ -42,9 +42,12 @@ public static class ModuleInitializer
         app.UseSession();
         app.UseAuthentication();
         app.UseAuthorization();
-        
-        app.UseMiddleware<AnonymousAccessMiddleware>();
-        
+
+        if (!Options.AllowAnonymousAccess)
+        {
+            app.UseMiddleware<AnonymousAccessMiddleware>();
+        }
+
         app.Use(async (context, next) =>
         {
             await context.Session.LoadAsync();

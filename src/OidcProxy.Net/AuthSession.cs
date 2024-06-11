@@ -1,10 +1,16 @@
 using Microsoft.AspNetCore.Http;
 using OidcProxy.Net.IdentityProviders;
+using OidcProxy.Net.OpenIdConnect;
 
 namespace OidcProxy.Net;
 
-internal class AuthSession
+internal class AuthSession : IAuthSession
 {
+    private readonly IHttpContextAccessor _httpContextAccessor;
+    private readonly IRedirectUriFactory _redirectUriFactory;
+    private readonly IIdentityProvider _identityProvider;
+    private readonly EndpointName _oidcProxyReservedEndpointName;
+    
     private static string DateFormat => "yyyy-MM-dd HH:mm:ss.fff";
     
     private static string VerifierKey => $"{typeof(IIdentityProvider)}-verifier_key";
@@ -29,12 +35,20 @@ internal class AuthSession
     /// <param name="httpContextAccessor">An instance of the IHttpContextAccessor to access the session.
     /// To instantiate this class with the ISession directly, use the HttpSession.Create factory method.</param>
     /// <exception cref="NotSupportedException"></exception>
-    public AuthSession(IHttpContextAccessor httpContextAccessor) : this(httpContextAccessor.HttpContext?.Session!)
+    public AuthSession(IHttpContextAccessor httpContextAccessor, 
+        IRedirectUriFactory redirectUriFactory,
+        IIdentityProvider identityProvider,
+        EndpointName oidcProxyReservedEndpointName) : this(httpContextAccessor.HttpContext?.Session!)
     {
         if (httpContextAccessor.HttpContext?.Session == null)
         {
             throw new NotSupportedException("There is no session.");
         }
+
+        _httpContextAccessor = httpContextAccessor;
+        _redirectUriFactory = redirectUriFactory;
+        _identityProvider = identityProvider;
+        _oidcProxyReservedEndpointName = oidcProxyReservedEndpointName;
     }
 
     /// <summary>
@@ -179,6 +193,25 @@ internal class AuthSession
         }
 
         await this.SaveAsync(UserPreferredLandingPageKey, userPreferredLandingPage);
+    }
+
+    public async Task<AuthorizeRequest> InitiateAuthenticationSequence(string userPreferredLandingPage)
+    {
+        await SetUserPreferredLandingPageAsync(userPreferredLandingPage);
+
+        var redirectUri = _redirectUriFactory.DetermineRedirectUri(
+            _httpContextAccessor.HttpContext, 
+            _oidcProxyReservedEndpointName.ToString()
+        );
+        
+        var authorizeRequest = await _identityProvider.GetAuthorizeUrlAsync(redirectUri);
+        
+        if (!string.IsNullOrEmpty(authorizeRequest.CodeVerifier))
+        {
+            await SetCodeVerifierAsync(authorizeRequest.CodeVerifier);
+        }
+
+        return authorizeRequest;
     }
 
     private DateTime? GetDateTime(string key)
