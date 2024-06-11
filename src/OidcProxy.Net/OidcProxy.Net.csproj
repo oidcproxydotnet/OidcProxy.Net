@@ -23,6 +23,7 @@
             - Introduced IAuthSession interface allowing you to write custom middleware.
             
             Upgrades:
+            - build(deps): bump Microsoft.Extensions.Caching.StackExchangeRedis from 8.0.3 to 8.0.6
             - build(deps): bump Microsoft.Identity.Client from 4.61.0 to 4.61.3
             - build(deps): bump Microsoft.AspNetCore.DataProtection.StackExchangeRedis from 8.0.3 to 8.0.6
         </PackageReleaseNotes>
