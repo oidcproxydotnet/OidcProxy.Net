@@ -1,7 +1,5 @@
 using System.IdentityModel.Tokens.Jwt;
 using Microsoft.AspNetCore.Http;
-using Microsoft.Extensions.Logging;
-using OidcProxy.Net.Logging;
 using ILogger = OidcProxy.Net.Logging.ILogger;
 
 namespace OidcProxy.Net;

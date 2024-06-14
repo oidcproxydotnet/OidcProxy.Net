@@ -1,4 +1,3 @@
-using Microsoft.AspNetCore.Http;
 using OidcProxy.Net.IdentityProviders;
 
 namespace OidcProxy.Net;
