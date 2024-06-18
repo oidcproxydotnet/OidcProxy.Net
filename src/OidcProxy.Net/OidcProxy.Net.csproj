@@ -29,7 +29,7 @@
       <PackageReference Include="Microsoft.Extensions.Caching.StackExchangeRedis" Version="8.0.6" />
       <PackageReference Include="Microsoft.Identity.Client" Version="4.61.3" />
       <PackageReference Include="RedLock.net" Version="2.3.2" />
-      <PackageReference Include="System.IdentityModel.Tokens.Jwt" Version="7.6.0" />
+      <PackageReference Include="System.IdentityModel.Tokens.Jwt" Version="7.6.1" />
       <PackageReference Include="Yarp.ReverseProxy" Version="2.1.0" />
     </ItemGroup>
 
