@@ -56,6 +56,12 @@ public class OidcServerSteps(ScenarioContext scenarioContext)
     {
         OidcServerSteps.HasAuthenticated.Should().BeFalse();
     }
+    
+    [Given(@"the Oidc Server signs the JWT with SHA256")]
+    public void Void()
+    {
+        // this is the case by default
+    }
 
     [AfterScenario]
     public async Task TearDown()

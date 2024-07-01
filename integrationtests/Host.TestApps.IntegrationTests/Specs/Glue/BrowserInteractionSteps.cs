@@ -38,6 +38,7 @@ public class BrowserInteractionSteps(ScenarioContext scenarioContext)
         _response = await _page.GoToAsync($"{root}{path}");
     }
 
+    [When(@"the user has authenticated \(navigated to /\.auth/login\)")]
     [Given(@"the user has authenticated \(navigated to /\.auth/login\)")]
     public async Task NavigateToLoginEndpoint()
     {
@@ -117,9 +118,16 @@ public class BrowserInteractionSteps(ScenarioContext scenarioContext)
     }
     
     [Then(@"the endpoint produces a 200 OK")]
-    public void ThenTheEndpointProducesOK()
+    public void AssertEndpointProducesOK()
     {
         _response.Status.Should().Be(HttpStatusCode.OK);
+    }
+    
+    [Then(@"the response body shows the message ""(.*)""")]
+    public async Task AssertResponseBodyContains(string expectedText)
+    {
+        var text = await _response.TextAsync();
+        text.Should().Contain(expectedText);
     }
     
     [Then("the endpoint responds with a 401 unauthorized")]

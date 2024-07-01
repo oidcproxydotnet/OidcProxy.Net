@@ -27,7 +27,6 @@ public class OidcServerBuilder
         return this;
     }
     
-    
     public void WithJweKey(SymmetricSecurityKey encryptionKey)
     {
         _configureEncryptionMethod = options =>

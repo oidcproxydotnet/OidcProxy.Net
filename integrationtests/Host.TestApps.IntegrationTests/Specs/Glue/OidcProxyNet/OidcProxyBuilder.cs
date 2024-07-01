@@ -4,6 +4,7 @@ using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using OidcProxy.Net.IdentityProviders;
 using OidcProxy.Net.ModuleInitializers;
 using OidcProxy.Net.OpenIdConnect;
 using OidcProxy.Net.OpenIdConnect.Jwe;
@@ -19,6 +20,7 @@ public class OidcProxyBuilder
     private IJweEncryptionKey? _encryptionKey = null;
     private Action<WebApplicationBuilder> _configurePolicyOnWebAppBuilder = _ => { };
     private Action<WebApplication> _configurePolicyOnWebApplication = _ => { };
+    private Action<WebApplicationBuilder> _configureMitm = _ => { };
 
     public OidcProxyBuilder WithUrl(string url)
     {
@@ -41,6 +43,12 @@ public class OidcProxyBuilder
     public OidcProxyBuilder WithClaimsTransformation()
     {
         _addClaimsTransformation = true;
+        return this;
+    }
+
+    public OidcProxyBuilder WithMitm()
+    {
+        _configureMitm = builder => builder.Services.AddScoped<IIdentityProvider, MitmOpenIdConnectIdentityProvider>();
         return this;
     }
 
@@ -123,6 +131,7 @@ public class OidcProxyBuilder
         });
         
         _configurePolicyOnWebAppBuilder.Invoke(builder);
+        _configureMitm.Invoke(builder);
 
         var app = builder.Build();
         

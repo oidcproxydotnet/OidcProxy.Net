@@ -69,6 +69,12 @@ public class OidcProxySteps(ScenarioContext scenarioContext)
         _builder.WithPolicy();
     }
 
+    [Given(@"the Proxy receives a token that has been tampered with")]
+    public void GivenTheProxyReceivesATokenThatHasBeenTamperedWith()
+    {
+        _builder.WithMitm();
+    }
+    
     [AfterScenario]
     public async Task TearDown()
     {
