@@ -7,6 +7,6 @@ public interface ITokenParser
     string GetRoleClaim();
     string GetNameClaim();
     
-    JwtPayload? ParseAccessToken(string? accessToken);
+    JwtPayload? ParseJwtPayload(string? accessToken);
     JwtPayload? ParseIdToken(string? idToken);
 }

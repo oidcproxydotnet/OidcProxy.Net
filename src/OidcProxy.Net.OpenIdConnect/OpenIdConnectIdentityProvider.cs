@@ -1,4 +1,5 @@
 using System.Net;
+using System.Text;
 using System.Web;
 using OidcProxy.Net.IdentityProviders;
 using IdentityModel;
@@ -83,6 +84,37 @@ public class OpenIdConnectIdentityProvider(
         var expiryDate = DateTime.UtcNow.AddSeconds(response.ExpiresIn);
         
         return new TokenResponse(response.AccessToken, response.IdentityToken, response.RefreshToken, expiryDate);
+    }
+    
+    public async Task<IEnumerable<KeySet>> GetJwksAsync()
+    {
+        var openIdConfiguration = await GetDiscoveryDocument();
+        var jwksUri = openIdConfiguration.jwks_uri;
+
+        if (cache.TryGetValue(jwksUri, out var keySet) && keySet != null)
+        {
+            return (KeySet[])keySet;
+        }
+        
+        var response = await httpClient.GetJsonWebKeySetAsync(jwksUri);
+        if (response.IsError)
+        {
+            throw new ApplicationException($"Unable to JSON Web Key Set. " +
+                                           $"OIDC server responded {response.HttpStatusCode}: {response.Raw}");
+        }
+        
+        keySet = response.KeySet?.Keys
+            .Select(x =>
+            {
+                var exponent = Base64UrlDecode(x.E);
+                var modulus = Base64UrlDecode(x.N);
+                
+                return new KeySet(exponent, modulus, x.Kid);
+            })
+            .ToArray();
+        
+        cache.Set(jwksUri, keySet, TimeSpan.FromHours(1));
+        return keySet as KeySet[] ?? Array.Empty<KeySet>();
     }
 
     public async Task<TokenResponse> RefreshTokenAsync(string refreshToken, string traceIdentifier)
@@ -199,5 +231,19 @@ public class OpenIdConnectIdentityProvider(
 
         cache.Set(endpointAddress, discoveryDocument, TimeSpan.FromHours(1));
         return (DiscoveryDocument)discoveryDocument;
+    }
+    
+    private static byte[] Base64UrlDecode(string input)
+    {
+        var output = input.Replace('-', '+').Replace('_', '/');
+        switch (output.Length % 4)
+        {
+            case 0: break;
+            case 2: output += "=="; break;
+            case 3: output += "="; break;
+            default: throw new ArgumentException("Illegal base64url string.");
+        }
+        
+        return Convert.FromBase64String(output);
     }
 }

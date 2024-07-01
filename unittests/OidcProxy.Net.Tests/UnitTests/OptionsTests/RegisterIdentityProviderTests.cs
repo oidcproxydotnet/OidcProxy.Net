@@ -72,6 +72,11 @@ public class RegisterIdentityProviderTests
             throw new NotImplementedException();
         }
 
+        public Task<IEnumerable<KeySet>> GetJwksAsync()
+        {
+            throw new NotImplementedException();
+        }
+
         public Task<TokenResponse> RefreshTokenAsync(string refreshToken, string traceIdentifier)
         {
             throw new NotImplementedException();

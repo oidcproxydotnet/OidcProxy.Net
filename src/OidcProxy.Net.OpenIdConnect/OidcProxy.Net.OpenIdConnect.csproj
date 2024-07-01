@@ -27,7 +27,6 @@
 
     <ItemGroup>
         <PackageReference Include="IdentityModel.OidcClient" Version="6.0.0" />
-        <PackageReference Include="jose-jwt" Version="5.0.0" />
     </ItemGroup>
 
     <ItemGroup>

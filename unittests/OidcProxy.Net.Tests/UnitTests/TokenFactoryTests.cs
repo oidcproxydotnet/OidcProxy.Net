@@ -1,4 +1,5 @@
 using FluentAssertions;
+using OidcProxy.Net.Jwt;
 using OidcProxy.Net.ModuleInitializers;
 using OidcProxy.Net.OpenIdConnect;
 
@@ -13,7 +14,7 @@ public class TokenFactoryTests
     {
         var sut = new JwtParser(new ProxyOptions());
         
-        var actual = sut.ParseAccessToken(token);
+        var actual = sut.ParseJwtPayload(token);
 
         actual.Sub.Should().NotBeNullOrEmpty();
     }
@@ -24,7 +25,7 @@ public class TokenFactoryTests
     {
         var sut = new JwtParser(new ProxyOptions());
         
-        var actual = sut.ParseAccessToken(token);
+        var actual = sut.ParseJwtPayload(token);
 
         actual.Sub.Should().NotBeNullOrEmpty();
     }
@@ -35,7 +36,7 @@ public class TokenFactoryTests
         const string token = "x..y";
         var sut = new JwtParser(new ProxyOptions());
         
-        var actual = sut.ParseAccessToken(token);
+        var actual = sut.ParseJwtPayload(token);
 
         actual.Should().BeNull();
     }

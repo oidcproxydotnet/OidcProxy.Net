@@ -1,5 +1,6 @@
 using Microsoft.AspNetCore.Builder;
 using Microsoft.Extensions.DependencyInjection;
+using OidcProxy.Net.Jwt.SignatureValidation;
 using OidcProxy.Net.Middleware;
 
 namespace OidcProxy.Net.ModuleInitializers;
@@ -20,6 +21,7 @@ public static class ModuleInitializer
         Action<ProxyOptions>? configureOptions = null)
     {
         serviceCollection.AddTransient<AnonymousAccessMiddleware>();
+        serviceCollection.AddTransient<TokenValidator>();
         
         configureOptions?.Invoke(Options);  
         

@@ -16,7 +16,6 @@ Given the user interacts with the site that implements the OidcProxy with a brow
   And the Proxy receives a token that has been tampered with
   When the user has authenticated (navigated to /.auth/login)
   Then the endpoint responds with a 401 unauthorized
-   And the response body shows the message "Invalid token"
 Examples:
 | algorithm |
 | SHA256    |

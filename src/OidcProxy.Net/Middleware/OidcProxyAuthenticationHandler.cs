@@ -33,7 +33,7 @@ public sealed class OidcProxyAuthenticationHandler(
                 return Task.FromResult(AuthenticateResult.NoResult());
             }
 
-            var payload = tokenParser.ParseAccessToken(token);
+            var payload = tokenParser.ParseJwtPayload(token);
             
             var claims = payload
                 .Select(x => new Claim(x.Key, x.Value?.ToString() ?? string.Empty))

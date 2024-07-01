@@ -1,6 +1,8 @@
+using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using OidcProxy.Net.IdentityProviders;
+using OidcProxy.Net.Jwt.SignatureValidation;
 using OidcProxy.Net.Logging;
 using OidcProxy.Net.ModuleInitializers;
 using OidcProxy.Net.OpenIdConnect;
@@ -16,6 +18,7 @@ internal static class CallbackEndpoint
         [FromServices] ProxyOptions proxyOptions,
         [FromServices] IIdentityProvider identityProvider,
         [FromServices] ITokenParser tokenParser,
+        [FromServices] TokenValidator tokenValidator,
         [FromServices] IAuthenticationCallbackHandler authenticationCallbackHandler)
     {
         try
@@ -39,11 +42,19 @@ internal static class CallbackEndpoint
             await logger.InformAsync("Exchanging code for access_token.");
             var tokenResponse = await identityProvider.GetTokenAsync(redirectUrl, code, codeVerifier, context.TraceIdentifier);
 
+            if (!(await tokenValidator.Validate(tokenResponse.access_token)) ||
+                !(await tokenValidator.Validate(tokenResponse.id_token)))
+            {
+                return await authenticationCallbackHandler.OnAuthenticationFailed(context,
+                    proxyOptions.LandingPage.ToString(),
+                    userPreferredLandingPage);
+            }
+
             await authSession.SaveAsync(tokenResponse);
 
             await logger.InformAsync($"Redirect({proxyOptions.LandingPage})");
 
-            var jwtPayload = tokenParser.ParseAccessToken(tokenResponse.access_token);
+            var jwtPayload = tokenParser.ParseJwtPayload(tokenResponse.access_token);
 
             return await authenticationCallbackHandler.OnAuthenticated(context,
                 jwtPayload,

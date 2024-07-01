@@ -1,6 +1,7 @@
 using Microsoft.AspNetCore.DataProtection;
 using Microsoft.Extensions.DependencyInjection;
 using OidcProxy.Net.IdentityProviders;
+using OidcProxy.Net.Jwt;
 using OidcProxy.Net.Locking;
 using OidcProxy.Net.Locking.Distributed.Redis;
 using OidcProxy.Net.Locking.InMemory;

@@ -57,7 +57,7 @@ public class EncryptionCertificateTests
         var cert = X509Certificate2.CreateFromPemFile(CertPath, PrivateKeyPath);
         var sut = new JweParser(new ProxyOptions(), new EncryptionCertificate(cert));
 
-        var actual = sut.ParseAccessToken(AccessToken);
+        var actual = sut.ParseJwtPayload(AccessToken);
 
         actual.Should().NotBeNullOrEmpty();
     }
@@ -68,7 +68,7 @@ public class EncryptionCertificateTests
         var cert = new X509Certificate2();
         var sut = new JweParser(new ProxyOptions(), new EncryptionCertificate(cert));
 
-        var actual = () => sut.ParseAccessToken(AccessToken);
+        var actual = () => sut.ParseJwtPayload(AccessToken);
 
         actual.Should().Throw<AuthenticationException>();
     }

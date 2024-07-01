@@ -47,7 +47,7 @@ public class EncryptionKeyTests
     [Fact]
     public void ItShouldDecryptToken()
     {
-        var actual = _sut.ParseAccessToken(AccessToken);
+        var actual = _sut.ParseJwtPayload(AccessToken);
 
         actual.Should().NotBeNullOrEmpty();
     }
@@ -55,7 +55,7 @@ public class EncryptionKeyTests
     [Fact]
     public void WhenParsingFails_ShouldThrowAuthenticationException()
     {
-        var actual = () => _sut.ParseAccessToken(string.Empty);
+        var actual = () => _sut.ParseJwtPayload(string.Empty);
 
         actual.Should().Throw<AuthenticationException>();
     }
