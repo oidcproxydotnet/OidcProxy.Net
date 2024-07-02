@@ -1,12 +1,10 @@
 using System.Security.Cryptography.X509Certificates;
-using System.Text;
 using Host.TestApps.IntegrationTests.Fixtures.OpenIddict;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.IdentityModel.Tokens;
-using OpenIddict.Server;
 
 namespace Host.TestApps.IntegrationTests.Specs.Glue.OpenIdDict;
 
@@ -98,9 +96,6 @@ public class OidcServerBuilder
                     .UseAspNetCore()
                     .EnableTokenEndpointPassthrough()
                     .EnableAuthorizationEndpointPassthrough();
-                
-                options
-                    .RemoveEventHandler(OpenIddictServerHandlers.Exchange.ValidateScopeParameter.Descriptor);
             })
 
             .AddValidation(options =>

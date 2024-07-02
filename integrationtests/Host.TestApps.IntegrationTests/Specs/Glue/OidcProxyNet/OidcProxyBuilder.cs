@@ -1,4 +1,5 @@
 using System.Security.Cryptography.X509Certificates;
+using Host.TestApps.IntegrationTests.Specs.Glue.OidcProxyNet.OpenIdConnectImplementations;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Http;
@@ -22,7 +23,7 @@ public class OidcProxyBuilder
     private IEncryptionKey? _encryptionKey = null;
     private Action<WebApplicationBuilder> _configurePolicyOnWebAppBuilder = _ => { };
     private Action<WebApplication> _configurePolicyOnWebApplication = _ => { };
-    private Action<WebApplicationBuilder> _configureMitm = _ => { };
+    private MockedOpenIdConnectIdentityProviderSettings _settings = new();
 
     public OidcProxyBuilder WithUrl(string url)
     {
@@ -56,10 +57,16 @@ public class OidcProxyBuilder
 
     public OidcProxyBuilder WithMitm()
     {
-        _configureMitm = builder => builder.Services.AddScoped<IIdentityProvider, MitmOpenIdConnectIdentityProvider>();
+        _settings.WithTamperedToken = true;
         return this;
     }
 
+    public OidcProxyBuilder WithExpiredAccessToken()
+    {
+        _settings.WithExpiredToken = true;
+        return this;
+    }
+    
     public OidcProxyBuilder WithEncryptionKey(IEncryptionKey key)
     {
         _encryptionKey = key;
@@ -145,8 +152,13 @@ public class OidcProxyBuilder
         });
         
         _configurePolicyOnWebAppBuilder.Invoke(builder);
-        _configureMitm.Invoke(builder);
-
+        
+        // Mock the default identity provider with a mock..
+        builder.Services
+            .AddTransient<IIdentityProvider, MockedOpenIdConnectIdentityProvider>()
+            .AddTransient(_ => _settings)
+            .AddHttpClient<MockedOpenIdConnectIdentityProvider>();;
+        
         var app = builder.Build();
         
         app

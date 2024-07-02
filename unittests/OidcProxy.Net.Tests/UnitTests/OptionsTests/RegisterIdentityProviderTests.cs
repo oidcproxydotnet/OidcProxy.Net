@@ -1,4 +1,5 @@
 using FluentAssertions;
+using OidcProxy.Net.Cryptography;
 using OidcProxy.Net.IdentityProviders;
 using OidcProxy.Net.ModuleInitializers;
 

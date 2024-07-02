@@ -2,9 +2,9 @@ using OidcProxy.Net.IdentityProviders;
 
 namespace OidcProxy.Net.Jwt.SignatureValidation;
 
-internal class JwtValidator(IIdentityProvider identityProvider, Hs256SignatureValidator hs256SignatureValidator)
-{   
-    public async Task<bool> Validate(string token)
+public class JwtValidator(IIdentityProvider identityProvider, Hs256SignatureValidator hs256SignatureValidator)
+{
+    public virtual async Task<bool> Validate(string token)
     {
         var jwtParser = new JwtParser();
         if (jwtParser.IsJwe(token))
@@ -13,9 +13,9 @@ internal class JwtValidator(IIdentityProvider identityProvider, Hs256SignatureVa
             // using the <see cref="OidcProxy.Net.Middleware.OidcProxyAuthenticationHandler"/>
             // If the JWE can't be decrypted by it, it means it has been tampered with.
             // This makes signature validation redundant. Hence the statement: If it's a JWT, it's valid!
-            return true;  
+            return true;
         }
-        
+
         var signatureValidator = CreateValidator(token);
         if (signatureValidator == null)
         {
@@ -33,7 +33,7 @@ internal class JwtValidator(IIdentityProvider identityProvider, Hs256SignatureVa
         {
             return new InvalidJwtSignatureValidator();
         }
-        
+
         SignatureValidator signatureValidator;
         switch (header.Alg)
         {

@@ -5,6 +5,7 @@ using IdentityModel;
 using IdentityModel.Client;
 using IdentityModel.OidcClient;
 using Microsoft.Extensions.Caching.Memory;
+using OidcProxy.Net.Cryptography;
 using OidcProxy.Net.Logging;
 using TokenResponse = OidcProxy.Net.IdentityProviders.TokenResponse;
 
@@ -66,7 +67,6 @@ public class OpenIdConnectIdentityProvider(
              Parameters =
              {
                  { OidcConstants.TokenRequest.Code, code },
-                 { OidcConstants.TokenRequest.Scope, string.Join(' ', scopes) },
                  { OidcConstants.TokenRequest.RedirectUri, redirectUri },
                  { OidcConstants.TokenRequest.CodeVerifier, codeVerifier },
              }
@@ -107,11 +107,10 @@ public class OpenIdConnectIdentityProvider(
         return keySet as IEnumerable<KeySet> ?? Array.Empty<KeySet>();
     }
 
-    public async Task<TokenResponse> RefreshTokenAsync(string refreshToken, string traceIdentifier)
+    public virtual async Task<TokenResponse> RefreshTokenAsync(string refreshToken, string traceIdentifier)
     {
         var openIdConfiguration = await GetDiscoveryDocument();
         var scopes = new Scopes(configuration.Scopes);
-
 
         var response = await httpClient.RequestRefreshTokenAsync(new RefreshTokenRequest
         {

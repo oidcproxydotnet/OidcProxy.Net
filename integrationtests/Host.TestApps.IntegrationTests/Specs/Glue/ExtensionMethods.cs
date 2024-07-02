@@ -16,7 +16,8 @@ public static class ExtensionMethods
         var currentStepText = scenarioContext.StepContext.StepInfo.Text;
 
         return (currentStepType == StepDefinitionType.When
-                || currentStepText.Contains("the user has authenticated"));
+                || currentStepText.Contains("the user has authenticated"))
+                || currentStepText.Contains("the user's access_token has expired");
     }
     
     public static void ConfigureDotnetDevCertExplicitlyIfItExists(this WebApplicationBuilder builder, string url)

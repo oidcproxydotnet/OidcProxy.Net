@@ -1,3 +1,5 @@
+using OidcProxy.Net.Cryptography;
+
 namespace OidcProxy.Net.IdentityProviders;
 
 /// <summary>

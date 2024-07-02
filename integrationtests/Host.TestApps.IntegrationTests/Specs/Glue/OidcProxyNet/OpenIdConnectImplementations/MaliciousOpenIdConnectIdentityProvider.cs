@@ -5,20 +5,54 @@ using OidcProxy.Net.IdentityProviders;
 using OidcProxy.Net.Logging;
 using OidcProxy.Net.OpenIdConnect;
 
-namespace Host.TestApps.IntegrationTests.Specs.Glue.OidcProxyNet;
+namespace Host.TestApps.IntegrationTests.Specs.Glue.OidcProxyNet.OpenIdConnectImplementations;
 
-public class MitmOpenIdConnectIdentityProvider(ILogger logger, IMemoryCache cache, HttpClient httpClient, OpenIdConnectConfig configuration) 
+public class MockedOpenIdConnectIdentityProvider(MockedOpenIdConnectIdentityProviderSettings settings, 
+    ILogger logger, 
+    IMemoryCache cache, 
+    HttpClient httpClient, 
+    OpenIdConnectConfig configuration) 
     : OpenIdConnectIdentityProvider(logger, cache, httpClient, configuration)
 {
     public override async Task<TokenResponse> GetTokenAsync(string redirectUri, string code, string? codeVerifier, string traceIdentifier)
     {
         var token = await base.GetTokenAsync(redirectUri, code, codeVerifier, traceIdentifier);
 
+        var accessToken = settings.WithTamperedToken
+            ? MimicTamperedAccessToken(token)
+            : token.access_token;
+
+        var expiryDate = settings.WithExpiredToken
+            ? DateTime.Now.AddDays(-1)
+            : token.ExpiryDate;
+
+        return new TokenResponse(accessToken,
+            token.id_token, 
+            token.refresh_token, 
+            expiryDate);
+    }
+
+    public override async Task<TokenResponse> RefreshTokenAsync(string refreshToken, string traceIdentifier)
+    {
+        var token = await base.RefreshTokenAsync(refreshToken, traceIdentifier);
+        
+        var accessToken = settings.WithTamperedToken
+            ? MimicTamperedAccessToken(token)
+            : token.access_token;
+
+        return new TokenResponse(accessToken,
+            token.id_token, 
+            token.refresh_token, 
+            token.ExpiryDate);
+    }
+
+    private static string MimicTamperedAccessToken(TokenResponse token)
+    {
         var tokenParts = token.access_token.Split('.');
         if (tokenParts.Length != 3)
         {
             Console.WriteLine("Invalid JWT token format.");
-            return token;
+            return token.access_token;
         }
 
         var header = tokenParts[0];
@@ -31,11 +65,7 @@ public class MitmOpenIdConnectIdentityProvider(ILogger logger, IMemoryCache cach
         payloadDict["tampered"] = "true";
 
         var newPayload = Base64UrlEncode(JsonConvert.SerializeObject(payloadDict));
-
-        return new TokenResponse($"{header}.{newPayload}.{signature}",
-            token.id_token, 
-            token.refresh_token, 
-            token.ExpiryDate);
+        return $"{header}.{newPayload}.{signature}";
     }
 
     private static string Base64UrlEncode(string input)

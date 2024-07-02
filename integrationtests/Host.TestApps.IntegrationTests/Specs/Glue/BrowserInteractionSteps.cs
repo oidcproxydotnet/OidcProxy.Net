@@ -31,6 +31,15 @@ public class BrowserInteractionSteps(ScenarioContext scenarioContext)
         await _page.SetUserAgentAsync("Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/68.0.3419.0 Safari/537.36");
     }
 
+    [AfterStep]
+    public async Task Authenticate()
+    {
+        if (scenarioContext.StepContext.StepInfo.Text == "the user's access_token has expired")
+        {
+            await NavigateToLoginEndpoint();
+        }
+    }
+
     [When("the user navigates to (.*)")]
     public async Task NavigateTo(string path)
     {
@@ -131,7 +140,7 @@ public class BrowserInteractionSteps(ScenarioContext scenarioContext)
     }
     
     [Then("the endpoint responds with a 401 unauthorized")]
-    public void ThenTheEndpointProducesUnauthenticated()
+    public async Task ThenTheEndpointProducesUnauthenticated()
     {
         _response.Status.Should().Be(HttpStatusCode.Unauthorized);
     }

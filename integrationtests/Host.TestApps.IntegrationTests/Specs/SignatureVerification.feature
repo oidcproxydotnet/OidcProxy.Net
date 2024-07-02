@@ -21,6 +21,22 @@ Given the user interacts with the site that implements the OidcProxy with a brow
   And the Proxy receives a token that has been tampered with
   When the user has authenticated (navigated to /.auth/login)
   Then the endpoint responds with a 401 unauthorized
+  
+Scenario: Tampered access_token anonymous access not allowed
+Given the OidcProxy is configured to disallow anonymous access
+  And the user interacts with the site that implements the OidcProxy with a browser
+  And the Oidc Server signs the JWT with RS256
+  And the Proxy receives a token that has been tampered with
+ When the user navigates to /api/echo
+ Then the endpoint responds with a 401 unauthorized
+  
+Scenario: Tampered access_token RS256 during token refresh
+Given the user interacts with the site that implements the OidcProxy with a browser
+  And the Oidc Server signs the JWT with RS256
+  And the user's access_token has expired
+  And the Proxy receives a token that has been tampered with
+  When the user invokes a downstream API
+  Then the endpoint responds with a 401 unauthorized
 
 Scenario: Tampered access_token HS256
 Given the user interacts with the site that implements the OidcProxy with a browser
@@ -29,3 +45,5 @@ Given the user interacts with the site that implements the OidcProxy with a brow
   And the Proxy receives a token that has been tampered with
   When the user has authenticated (navigated to /.auth/login)
   Then the endpoint responds with a 401 unauthorized
+  
+  

@@ -1,8 +1,8 @@
-using OidcProxy.Net.IdentityProviders;
+using OidcProxy.Net.Cryptography;
 
 namespace OidcProxy.Net.OpenIdConnect;
 
-public class JsonWebKeySet : List<KeySet>
+internal class JsonWebKeySet : List<KeySet>
 {
     internal static JsonWebKeySet Create(IdentityModel.Client.JsonWebKeySetResponse jwksResponse)
     {
@@ -11,9 +11,8 @@ public class JsonWebKeySet : List<KeySet>
             {
                 var exponent = x.E.Base64UrlDecode();
                 var modulus = x.N.Base64UrlDecode();
-                var key = x.K.Base64UrlDecode();
                 
-                return new KeySet(exponent, modulus, key, x.Kid);
+                return new KeySet(exponent, modulus, x.Kid);
             })
             .ToArray();
 

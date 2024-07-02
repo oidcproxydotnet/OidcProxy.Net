@@ -81,6 +81,12 @@ public class OidcProxySteps(ScenarioContext scenarioContext)
         _builder.WithMitm();
     }
     
+    [Given(@"the user's access_token has expired")]
+    public void MymmicTokenExpiry()
+    {
+        _builder.WithExpiredAccessToken();
+    }
+    
     [AfterScenario]
     public async Task TearDown()
     {
