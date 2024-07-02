@@ -18,7 +18,6 @@ public class EntraIdIdentityProvider(
 
     protected override string DiscoveryEndpointAddress => configuration.DiscoveryEndpoint;
 
-
     public override async Task<AuthorizeRequest> GetAuthorizeUrlAsync(string redirectUri)
     {
         var app = ConfidentialClientApplicationBuilder.Create(configuration.ClientId)

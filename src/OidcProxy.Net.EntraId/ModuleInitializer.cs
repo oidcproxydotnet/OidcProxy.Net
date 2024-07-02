@@ -18,6 +18,7 @@ public static class ModuleInitializer
         }
 
         options.RegisterIdentityProvider<EntraIdIdentityProvider, EntraIdConfig>(config, endpointName);
+        options.RegisterSignatureValidator<EntraIdJwtSignatureValidator>();
     }
 
     /// <summary>

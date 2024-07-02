@@ -19,7 +19,7 @@ internal static class CallbackEndpoint
         [FromServices] ProxyOptions proxyOptions,
         [FromServices] IIdentityProvider identityProvider,
         [FromServices] ITokenParser tokenParser,
-        [FromServices] JwtValidator jwtValidator,
+        [FromServices] IJwtSignatureValidator jwtSignatureValidator,
         [FromServices] IAuthenticationCallbackHandler authenticationCallbackHandler)
     {
         try
@@ -43,7 +43,7 @@ internal static class CallbackEndpoint
             await logger.InformAsync("Exchanging code for access_token.");
             var tokenResponse = await identityProvider.GetTokenAsync(redirectUrl, code, codeVerifier, context.TraceIdentifier);
 
-            if (!(await jwtValidator.Validate(tokenResponse.access_token)))
+            if (!(await jwtSignatureValidator.Validate(tokenResponse.access_token)))
             {
                 return await authenticationCallbackHandler.OnAuthenticationFailed(context,
                     proxyOptions.LandingPage.ToString(),

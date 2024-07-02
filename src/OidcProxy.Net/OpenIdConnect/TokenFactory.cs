@@ -8,7 +8,7 @@ namespace OidcProxy.Net.OpenIdConnect;
 
 internal class TokenFactory(
     AuthSession authSession,
-    JwtValidator jwtValidator,
+    IJwtSignatureValidator jwtSignatureValidator,
     IIdentityProvider identityProvider,
     ILogger logger,
     IConcurrentContext concurrentContext)
@@ -30,7 +30,7 @@ internal class TokenFactory(
                     var refreshToken = authSession.GetRefreshToken(); // todo: What is refresh_token is null?
                     var tokenResponse = await identityProvider.RefreshTokenAsync(refreshToken, traceIdentifier);
 
-                    if (!(await jwtValidator.Validate(tokenResponse.access_token)))
+                    if (!(await jwtSignatureValidator.Validate(tokenResponse.access_token)))
                     {
                         throw new TokenRenewalFailedException("Failed to renew token. The new token has an invalid signature.");
                     }

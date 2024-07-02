@@ -1,10 +1,9 @@
 using System.IdentityModel.Tokens.Jwt;
 using OidcProxy.Net.Cryptography;
-using OidcProxy.Net.IdentityProviders;
 
 namespace OidcProxy.Net.Jwt.SignatureValidation;
 
-public class InvalidJwtSignatureValidator : SignatureValidator
+internal class InvalidJwtSignatureValidator : SignatureValidator
 {
     protected override KeySet? GetKeySet(IEnumerable<KeySet> keys, JwtHeader header)
     {

@@ -31,6 +31,8 @@ public class ProxyOptions
 
     private Action<IServiceCollection> _applyJwtParser = (s) => s.AddTransient<ITokenParser, JwtParser>();
 
+    private Action<IServiceCollection> _applyJwtValidator = (s) => s.AddTransient<IJwtSignatureValidator, JwtSignatureValidator>();
+    
     private Action<IServiceCollection> _applyHs256SignatureValidator = (s) => s.AddTransient<Hs256SignatureValidator>(_ => null);
 
     private List<Type> _customYarpMiddleware = [];
@@ -258,6 +260,16 @@ public class ProxyOptions
     {
         _applyReverseProxyConfiguration = configuration;
     }
+    
+    /// <summary>
+    /// Register a class that validates the access token signature
+    /// </summary>
+    /// <typeparam name="T">The type to register</typeparam>
+    /// <exception cref="NotImplementedException"></exception>
+    public void RegisterSignatureValidator<T>() where T : class, IJwtSignatureValidator
+    {
+        _applyJwtValidator = s => s.AddTransient<IJwtSignatureValidator, T>();
+    }
 
     /// <summary>
     /// Configure a Redis backbone. This is required to run this module in distributed mode.
@@ -310,6 +322,7 @@ public class ProxyOptions
         _applyClaimsTransformationRegistration(serviceCollection);
         _applyAuthenticationCallbackHandlerRegistration(serviceCollection);
         _applyJwtParser(serviceCollection);
+        _applyJwtValidator(serviceCollection);
         _applyHs256SignatureValidator(serviceCollection);
 
         serviceCollection
@@ -333,6 +346,9 @@ public class ProxyOptions
             .AddTransient<AuthSession>()
             .AddTransient<IAuthSession, AuthSession>()
             .AddTransient<ILogger, DefaultLogger>();
+
+        serviceCollection
+            .AddTransient<Rs256SignatureValidator>();
 
         serviceCollection
             .AddAuthentication(OidcProxyAuthenticationHandler.SchemaName)

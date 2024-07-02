@@ -1,15 +1,21 @@
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Cryptography;
+using Jose;
 using OidcProxy.Net.Cryptography;
-using OidcProxy.Net.IdentityProviders;
 
 namespace OidcProxy.Net.Jwt.SignatureValidation;
 
-public class Rs256SignatureValidator : SignatureValidator
+internal class Rs256SignatureValidator : SignatureValidator
 {
     protected override KeySet? GetKeySet(IEnumerable<KeySet> keySets, JwtHeader header)
     {
-        return keySets.SingleOrDefault(x => x.Kid == header.Kid);
+        var keys = keySets
+            .Where(x => x.Kid == header.Kid)
+            .ToArray();
+        
+        return (keys.Length == 1)
+            ? keys.Single()
+            : null;
     }
 
     protected override object CreateSigningObject(KeySet signingKey)
@@ -23,5 +29,10 @@ public class Rs256SignatureValidator : SignatureValidator
         var rsa = RSA.Create();
         rsa.ImportParameters(rsaParameters);
         return rsa;
+    }
+
+    protected override void Decode(string token, object key)
+    {
+        JWT.Decode(token, key, JwsAlgorithm.RS256);
     }
 }

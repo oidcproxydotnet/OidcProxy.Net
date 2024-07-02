@@ -203,7 +203,7 @@ public class OpenIdConnectIdentityProvider(
         };
     }
 
-    private async Task<DiscoveryDocument> GetDiscoveryDocument()
+    public async Task<DiscoveryDocument> GetDiscoveryDocument()
     {
         var endpointAddress = DiscoveryEndpointAddress;
 

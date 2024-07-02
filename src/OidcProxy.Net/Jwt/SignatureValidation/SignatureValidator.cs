@@ -1,11 +1,10 @@
 using System.IdentityModel.Tokens.Jwt;
 using Jose;
 using OidcProxy.Net.Cryptography;
-using OidcProxy.Net.IdentityProviders;
 
 namespace OidcProxy.Net.Jwt.SignatureValidation;
 
-public abstract class SignatureValidator
+internal abstract class SignatureValidator
 {
     public async Task<bool> Validate(string token, IEnumerable<KeySet> keys)
     {
@@ -31,7 +30,7 @@ public abstract class SignatureValidator
             Decode(token, rsa);
             return true;
         }
-        catch (Exception)
+        catch (Exception e)
         {
             return false;
         }   

@@ -1,8 +1,12 @@
 using OidcProxy.Net.IdentityProviders;
+using OidcProxy.Net.Logging;
 
 namespace OidcProxy.Net.Jwt.SignatureValidation;
 
-public class JwtValidator(IIdentityProvider identityProvider, Hs256SignatureValidator hs256SignatureValidator)
+internal class JwtSignatureValidator(IIdentityProvider identityProvider, 
+    ILogger logger, 
+    Rs256SignatureValidator rs256SignatureValidator,
+    Hs256SignatureValidator hs256SignatureValidator) : IJwtSignatureValidator
 {
     public virtual async Task<bool> Validate(string token)
     {
@@ -19,6 +23,7 @@ public class JwtValidator(IIdentityProvider identityProvider, Hs256SignatureVali
         var signatureValidator = CreateValidator(token);
         if (signatureValidator == null)
         {
+            await logger.WarnAsync("Unable to determine how to validate the access_token. The access_token signature has not been verified.");
             return true;
         }
 
@@ -26,7 +31,7 @@ public class JwtValidator(IIdentityProvider identityProvider, Hs256SignatureVali
         return await signatureValidator.Validate(token, keys);
     }
 
-    protected virtual SignatureValidator? CreateValidator(string token)
+    private SignatureValidator? CreateValidator(string token)
     {
         var header = JwtParser.ParseJwtHeader(token);
         if (header == null)
@@ -38,7 +43,7 @@ public class JwtValidator(IIdentityProvider identityProvider, Hs256SignatureVali
         switch (header.Alg)
         {
             case "RS256":
-                signatureValidator = new Rs256SignatureValidator();
+                signatureValidator = rs256SignatureValidator;
                 break;
             case "HS256":
                 signatureValidator = hs256SignatureValidator;
