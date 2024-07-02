@@ -1,12 +1,13 @@
 using System.Security.Authentication;
 using FluentAssertions;
 using Microsoft.IdentityModel.Tokens;
+using OidcProxy.Net.Cryptography;
+using OidcProxy.Net.Jwt;
 using OidcProxy.Net.ModuleInitializers;
-using OidcProxy.Net.OpenIdConnect.Jwe;
 
 namespace OidcProxy.Net.OpenIdConnect.Tests.Jwe;
 
-public class EncryptionKeyTests
+public class SymmetricKeyTests
 {
     private const string AccessToken = "eyJhbGciOiJBMjU2S1ciLCJlbmMiOiJBMjU2Q0JDLUhTNTEyIiwidHlwIjoiYXQrand0IiwiY3R5" +
                                        "IjoiSldUIn0" +
@@ -36,18 +37,18 @@ public class EncryptionKeyTests
 
     private readonly ITokenParser _sut;
     
-    public EncryptionKeyTests()
+    public SymmetricKeyTests()
     {
         var bytes = Convert.FromBase64String("DRjd/GnduI3Efzen9V9BvbNUfc/VKgXltV7Kbk9sMkY=");
         var key = new SymmetricSecurityKey(bytes);
         
-        _sut = new JweParser(new ProxyOptions(), new EncryptionKey(key));
+        _sut = new JweParser(new SymmetricKey(key));
     }
     
     [Fact]
     public void ItShouldDecryptToken()
     {
-        var actual = _sut.ParseAccessToken(AccessToken);
+        var actual = _sut.ParseJwtPayload(AccessToken);
 
         actual.Should().NotBeNullOrEmpty();
     }
@@ -55,7 +56,7 @@ public class EncryptionKeyTests
     [Fact]
     public void WhenParsingFails_ShouldThrowAuthenticationException()
     {
-        var actual = () => _sut.ParseAccessToken(string.Empty);
+        var actual = () => _sut.ParseJwtPayload(string.Empty);
 
         actual.Should().Throw<AuthenticationException>();
     }

@@ -1,6 +1,9 @@
 using Microsoft.AspNetCore.DataProtection;
 using Microsoft.Extensions.DependencyInjection;
+using OidcProxy.Net.Cryptography;
 using OidcProxy.Net.IdentityProviders;
+using OidcProxy.Net.Jwt;
+using OidcProxy.Net.Jwt.SignatureValidation;
 using OidcProxy.Net.Locking;
 using OidcProxy.Net.Locking.Distributed.Redis;
 using OidcProxy.Net.Locking.InMemory;
@@ -27,6 +30,10 @@ public class ProxyOptions
     private Action<IServiceCollection> _applyAuthenticationCallbackHandlerRegistration = (s) => s.AddTransient<IAuthenticationCallbackHandler, DefaultAuthenticationCallbackHandler>();
 
     private Action<IServiceCollection> _applyJwtParser = (s) => s.AddTransient<ITokenParser, JwtParser>();
+
+    private Action<IServiceCollection> _applyJwtValidator = (s) => s.AddTransient<IJwtSignatureValidator, JwtSignatureValidator>();
+    
+    private Action<IServiceCollection> _applyHs256SignatureValidator = (s) => s.AddTransient<Hs256SignatureValidator>(_ => null);
 
     private List<Type> _customYarpMiddleware = [];
 
@@ -218,14 +225,23 @@ public class ProxyOptions
     }
 
     /// <summary>
-    /// Configure how to decrypt a JWE
+    /// Provide the encryption key that is used to decrypt the JWE
     /// </summary>
     /// <param name="key">An implementation of the ITokenEncryptionKey class.</param>
-    public void UseJweKey(IJweEncryptionKey key)
+    public void UseEncryptionKey(IEncryptionKey key)
     {
         _applyJwtParser = s => s
             .AddTransient<ITokenParser, JweParser>()
             .AddSingleton(key);
+    }
+    
+    /// <summary>
+    /// 
+    /// </summary>
+    /// <exception cref="NotImplementedException"></exception>
+    public void UseSigningKey(SymmetricKey key)
+    {
+        _applyHs256SignatureValidator = s => s.AddTransient<Hs256SignatureValidator>(_ => new Hs256SignatureValidator(key));
     }
 
     /// <summary>
@@ -243,6 +259,16 @@ public class ProxyOptions
     public void ConfigureYarp(Action<IReverseProxyBuilder> configuration)
     {
         _applyReverseProxyConfiguration = configuration;
+    }
+    
+    /// <summary>
+    /// Register a class that validates the access token signature
+    /// </summary>
+    /// <typeparam name="T">The type to register</typeparam>
+    /// <exception cref="NotImplementedException"></exception>
+    public void RegisterSignatureValidator<T>() where T : class, IJwtSignatureValidator
+    {
+        _applyJwtValidator = s => s.AddTransient<IJwtSignatureValidator, T>();
     }
 
     /// <summary>
@@ -296,6 +322,8 @@ public class ProxyOptions
         _applyClaimsTransformationRegistration(serviceCollection);
         _applyAuthenticationCallbackHandlerRegistration(serviceCollection);
         _applyJwtParser(serviceCollection);
+        _applyJwtValidator(serviceCollection);
+        _applyHs256SignatureValidator(serviceCollection);
 
         serviceCollection
             .AddDistributedMemoryCache()
@@ -318,6 +346,9 @@ public class ProxyOptions
             .AddTransient<AuthSession>()
             .AddTransient<IAuthSession, AuthSession>()
             .AddTransient<ILogger, DefaultLogger>();
+
+        serviceCollection
+            .AddTransient<Rs256SignatureValidator>();
 
         serviceCollection
             .AddAuthentication(OidcProxyAuthenticationHandler.SchemaName)

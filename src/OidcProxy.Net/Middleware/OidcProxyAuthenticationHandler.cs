@@ -5,11 +5,14 @@ using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
+using OidcProxy.Net.Jwt;
+using OidcProxy.Net.ModuleInitializers;
 
 namespace OidcProxy.Net.Middleware;
 
-public sealed class OidcProxyAuthenticationHandler(
+internal sealed class OidcProxyAuthenticationHandler(
     ITokenParser tokenParser,
+    ProxyOptions proxyOptions,
     IHttpContextAccessor httpContextAccessor,
     IOptionsMonitor<OidcProxyAuthenticationSchemeOptions> options,
     ILoggerFactory logger,
@@ -33,7 +36,7 @@ public sealed class OidcProxyAuthenticationHandler(
                 return Task.FromResult(AuthenticateResult.NoResult());
             }
 
-            var payload = tokenParser.ParseAccessToken(token);
+            var payload = tokenParser.ParseJwtPayload(token);
             
             var claims = payload
                 .Select(x => new Claim(x.Key, x.Value?.ToString() ?? string.Empty))
@@ -45,11 +48,7 @@ public sealed class OidcProxyAuthenticationHandler(
                                                          "The access_token jwt does not contain any claims.");
             }
 
-            var nameClaim = tokenParser.GetNameClaim();
-            var roleClaim = tokenParser.GetRoleClaim();
-            
-            var claimsIdentity = new ClaimsIdentity(claims, SchemaName, nameClaim, roleClaim);
-
+            var claimsIdentity = new ClaimsIdentity(claims, SchemaName, proxyOptions.NameClaim, proxyOptions.RoleClaim);
             var claimsPrincipal = new ClaimsPrincipal(claimsIdentity);
             var ticket = new AuthenticationTicket(claimsPrincipal, SchemaName);
 

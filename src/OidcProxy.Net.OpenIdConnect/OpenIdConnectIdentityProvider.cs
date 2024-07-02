@@ -5,6 +5,7 @@ using IdentityModel;
 using IdentityModel.Client;
 using IdentityModel.OidcClient;
 using Microsoft.Extensions.Caching.Memory;
+using OidcProxy.Net.Cryptography;
 using OidcProxy.Net.Logging;
 using TokenResponse = OidcProxy.Net.IdentityProviders.TokenResponse;
 
@@ -66,7 +67,6 @@ public class OpenIdConnectIdentityProvider(
              Parameters =
              {
                  { OidcConstants.TokenRequest.Code, code },
-                 { OidcConstants.TokenRequest.Scope, string.Join(' ', scopes) },
                  { OidcConstants.TokenRequest.RedirectUri, redirectUri },
                  { OidcConstants.TokenRequest.CodeVerifier, codeVerifier },
              }
@@ -84,12 +84,33 @@ public class OpenIdConnectIdentityProvider(
         
         return new TokenResponse(response.AccessToken, response.IdentityToken, response.RefreshToken, expiryDate);
     }
+    
+    public async Task<IEnumerable<KeySet>> GetJwksAsync()
+    {
+        var openIdConfiguration = await GetDiscoveryDocument();
+        var jwksUri = openIdConfiguration.jwks_uri;
 
-    public async Task<TokenResponse> RefreshTokenAsync(string refreshToken, string traceIdentifier)
+        if (cache.TryGetValue(jwksUri, out var keySet) && keySet != null)
+        {
+            return (JsonWebKeySet)keySet;
+        }
+        
+        var response = await httpClient.GetJsonWebKeySetAsync(jwksUri);
+        if (response.IsError)
+        {
+            throw new ApplicationException($"Unable to JSON Web Key Set. " +
+                                           $"OIDC server responded {response.HttpStatusCode}: {response.Raw}");
+        }
+        
+        keySet = JsonWebKeySet.Create(response);
+        cache.Set(jwksUri, keySet, TimeSpan.FromHours(1));
+        return keySet as IEnumerable<KeySet> ?? Array.Empty<KeySet>();
+    }
+
+    public virtual async Task<TokenResponse> RefreshTokenAsync(string refreshToken, string traceIdentifier)
     {
         var openIdConfiguration = await GetDiscoveryDocument();
         var scopes = new Scopes(configuration.Scopes);
-
 
         var response = await httpClient.RequestRefreshTokenAsync(new RefreshTokenRequest
         {
@@ -182,7 +203,7 @@ public class OpenIdConnectIdentityProvider(
         };
     }
 
-    private async Task<DiscoveryDocument> GetDiscoveryDocument()
+    public async Task<DiscoveryDocument> GetDiscoveryDocument()
     {
         var endpointAddress = DiscoveryEndpointAddress;
 

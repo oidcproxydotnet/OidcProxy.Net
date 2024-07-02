@@ -31,6 +31,15 @@ public class BrowserInteractionSteps(ScenarioContext scenarioContext)
         await _page.SetUserAgentAsync("Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/68.0.3419.0 Safari/537.36");
     }
 
+    [AfterStep]
+    public async Task Authenticate()
+    {
+        if (scenarioContext.StepContext.StepInfo.Text == "the user's access_token has expired")
+        {
+            await NavigateToLoginEndpoint();
+        }
+    }
+
     [When("the user navigates to (.*)")]
     public async Task NavigateTo(string path)
     {
@@ -38,6 +47,7 @@ public class BrowserInteractionSteps(ScenarioContext scenarioContext)
         _response = await _page.GoToAsync($"{root}{path}");
     }
 
+    [When(@"the user has authenticated \(navigated to /\.auth/login\)")]
     [Given(@"the user has authenticated \(navigated to /\.auth/login\)")]
     public async Task NavigateToLoginEndpoint()
     {
@@ -117,13 +127,20 @@ public class BrowserInteractionSteps(ScenarioContext scenarioContext)
     }
     
     [Then(@"the endpoint produces a 200 OK")]
-    public void ThenTheEndpointProducesOK()
+    public void AssertEndpointProducesOK()
     {
         _response.Status.Should().Be(HttpStatusCode.OK);
     }
     
+    [Then(@"the response body shows the message ""(.*)""")]
+    public async Task AssertResponseBodyContains(string expectedText)
+    {
+        var text = await _response.TextAsync();
+        text.Should().Contain(expectedText);
+    }
+    
     [Then("the endpoint responds with a 401 unauthorized")]
-    public void ThenTheEndpointProducesUnauthenticated()
+    public async Task ThenTheEndpointProducesUnauthenticated()
     {
         _response.Status.Should().Be(HttpStatusCode.Unauthorized);
     }

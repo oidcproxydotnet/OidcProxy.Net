@@ -1,3 +1,5 @@
+using OidcProxy.Net.Cryptography;
+
 namespace OidcProxy.Net.IdentityProviders;
 
 /// <summary>
@@ -20,6 +22,12 @@ public interface IIdentityProvider
     /// <param name="codeVerifier">In case of PKCE, provide the code verifier, as specified in section 4.1 of the PKCE spec: https://www.rfc-editor.org/rfc/rfc7636#section-4.1</param>
     /// <returns>An id_token, an access_token, and an id_token as specified in section 3.1.3.3. of the OpenId Connect spec: https://openid.net/specs/openid-connect-core-1_0.html#TokenResponse.</returns>
     Task<TokenResponse> GetTokenAsync(string redirectUri, string code, string? codeVerifier, string traceIdentifier);
+    
+    /// <summary>
+    /// Gets the JSON Web Key Set
+    /// </summary>
+    /// <returns>The JSON Web Key Set</returns>
+    Task<IEnumerable<KeySet>> GetJwksAsync();
     
     /// <summary>
     /// Exchanges the refresh_token for a new access_token as defined in section 12.1. of the OpenId Connect spec: https://openid.net/specs/openid-connect-core-1_0.html#RefreshingAccessToken.

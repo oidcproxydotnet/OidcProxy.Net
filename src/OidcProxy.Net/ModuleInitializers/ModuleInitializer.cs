@@ -1,5 +1,6 @@
 using Microsoft.AspNetCore.Builder;
 using Microsoft.Extensions.DependencyInjection;
+using OidcProxy.Net.Jwt.SignatureValidation;
 using OidcProxy.Net.Middleware;
 
 namespace OidcProxy.Net.ModuleInitializers;
