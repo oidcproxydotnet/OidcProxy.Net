@@ -1,16 +1,11 @@
 using System.IdentityModel.Tokens.Jwt;
 using System.Text;
-using OidcProxy.Net.ModuleInitializers;
 using OidcProxy.Net.OpenIdConnect;
 
 namespace OidcProxy.Net.Jwt;
 
-public class JwtParser(ProxyOptions options) : ITokenParser
+public class JwtParser : ITokenParser
 {
-    public virtual string GetNameClaim() => options.NameClaim;
-    
-    public virtual string GetRoleClaim() => options.RoleClaim;
-
     public bool IsJwe(string token)
     {
         if (string.IsNullOrEmpty(token))
@@ -25,7 +20,7 @@ public class JwtParser(ProxyOptions options) : ITokenParser
 
     public virtual JwtPayload? ParseJwtPayload(string token) => ParsePayload(token);
 
-    public JwtHeader? ParseJwtHeader(string token)
+    public static JwtHeader? ParseJwtHeader(string token)
     {
         var parts = token.Split('.', StringSplitOptions.RemoveEmptyEntries);
         return parts.Length != 3 && parts.Length != 5 // A JWT has 3 parts, a JWE has 5.
@@ -40,16 +35,6 @@ public class JwtParser(ProxyOptions options) : ITokenParser
             return null;
         }
 
-        var urlEncodedMiddleSection = GetSection(token, 1);
-        
-        var middleSection = urlEncodedMiddleSection
-            .Replace('-', '+')
-            .Replace('_', '/');
-        
-        var base64 = middleSection
-            .PadRight(middleSection.Length + (4 - middleSection.Length % 4) % 4, '=');
-        
-        var bytes = Convert.FromBase64String(base64);
         var json = Decode(token);
         
         return string.IsNullOrEmpty(json)

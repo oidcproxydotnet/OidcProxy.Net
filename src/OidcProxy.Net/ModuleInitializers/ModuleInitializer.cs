@@ -21,7 +21,7 @@ public static class ModuleInitializer
         Action<ProxyOptions>? configureOptions = null)
     {
         serviceCollection.AddTransient<AnonymousAccessMiddleware>();
-        serviceCollection.AddTransient<TokenValidator>();
+        serviceCollection.AddTransient<JwtValidator>();
         
         configureOptions?.Invoke(Options);  
         

@@ -4,10 +4,11 @@ using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.IdentityModel.Tokens;
+using OidcProxy.Net.Cryptography;
 using OidcProxy.Net.IdentityProviders;
 using OidcProxy.Net.ModuleInitializers;
 using OidcProxy.Net.OpenIdConnect;
-using OidcProxy.Net.OpenIdConnect.Jwe;
 
 namespace Host.TestApps.IntegrationTests.Specs.Glue.OidcProxyNet;
 
@@ -16,8 +17,9 @@ public class OidcProxyBuilder
     public string Url { get; private set; } = "https://localhost:8444";
     private bool _allowAnonymousAccess = true;
     private bool _addClaimsTransformation = false;
+    private bool _addSIgningKey = false;
     private List<string> _whitelist = new();
-    private IJweEncryptionKey? _encryptionKey = null;
+    private IEncryptionKey? _encryptionKey = null;
     private Action<WebApplicationBuilder> _configurePolicyOnWebAppBuilder = _ => { };
     private Action<WebApplication> _configurePolicyOnWebApplication = _ => { };
     private Action<WebApplicationBuilder> _configureMitm = _ => { };
@@ -46,13 +48,19 @@ public class OidcProxyBuilder
         return this;
     }
 
+    public OidcProxyBuilder WithSigningKey()
+    {
+        _addSIgningKey = true;
+        return this;
+    }
+
     public OidcProxyBuilder WithMitm()
     {
         _configureMitm = builder => builder.Services.AddScoped<IIdentityProvider, MitmOpenIdConnectIdentityProvider>();
         return this;
     }
 
-    public OidcProxyBuilder WithJweKey(IJweEncryptionKey key)
+    public OidcProxyBuilder WithEncryptionKey(IEncryptionKey key)
     {
         _encryptionKey = key;
         return this;
@@ -60,7 +68,7 @@ public class OidcProxyBuilder
     
     public OidcProxyBuilder WithJweCert(X509Certificate2 cert)
     {
-        _encryptionKey = new EncryptionCertificate(cert);
+        _encryptionKey = new SslCertificate(cert);
         return this;
     }
 
@@ -126,7 +134,13 @@ public class OidcProxyBuilder
 
             if (_encryptionKey != null)
             {
-                x.UseJweKey(_encryptionKey);
+                x.UseEncryptionKey(_encryptionKey);
+            }
+
+            if (_addSIgningKey)
+            {
+                var bytes = "fImIhRwPzldBm0w4rNQGv0FQ5O1ArMgH+6zT4AlSbgE=\n"u8.ToArray();
+                x.UseSigningKey(new SymmetricKey(new SymmetricSecurityKey(bytes)));
             }
         });
         

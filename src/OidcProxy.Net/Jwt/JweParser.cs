@@ -1,11 +1,11 @@
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Authentication;
-using OidcProxy.Net.Jwt;
-using OidcProxy.Net.ModuleInitializers;
+using OidcProxy.Net.Cryptography;
+using OidcProxy.Net.OpenIdConnect;
 
-namespace OidcProxy.Net.OpenIdConnect;
+namespace OidcProxy.Net.Jwt;
 
-public sealed class JweParser(ProxyOptions options, IJweEncryptionKey encryptionKey) : JwtParser(options)
+public sealed class JweParser(IEncryptionKey encryptionKey) : JwtParser
 {
     public override JwtPayload? ParseJwtPayload(string encryptedAccessToken)
     {

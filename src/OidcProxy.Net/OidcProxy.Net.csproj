@@ -20,11 +20,19 @@
         <SignAssembly>true</SignAssembly>
         <LangVersion>12</LangVersion>
         <PackageReleaseNotes>Enhancements
-            - Implemented signature verification
+            - Implemented signature verification RS256
+            - Implemented signature verification HS256
             
-            Fixes:
-            - DefaultAuthenticationCallbackHandler.OnAuthenticationFailed returns a 401 when authentication fails.
-            - Removed JwtParser.ParseAccessToken.
+            Breaking changes:
+            - DefaultAuthenticationCallbackHandler.OnAuthenticationFailed returns a 401 when authentication fails instead of redirect.
+            - Moved OidcProxy.Net.OpenIdConnect.JweParser to OidcProxy.Net.Jwt.JweParser. Removed options parameter from constructor.
+            - Moved OidcProxy.Net.OpenIdConnect.ITokenParser to OidcProxy.Net.Jwt.ITokenParser.
+            - Renamed JwtParser.ParseAccessToken to JwtParser.ParseJwtPayload
+            - Renamed options.UseJweKey to options.UseEncryptionKey
+            - Renamed and moved OidcProxy.Net.OpenIdConnect.Jwe.EncryptionKey to OidcProxy.Net.Cryptography.SymmetricKey
+            - Renamed and moved OidcProxy.Net.OpenIdConnect.IJweEncryptionKey to OidcProxy.Net.Cryptography.IEncryptionKey
+            - Renamed and moved OidcProxy.Net.OpenIdConnect.Jwe.EncryptionCertificate to OidcProxy.Net.Cryptography.SslCertificate
+            - Removed OidcProxyAuthenticationHandler
         </PackageReleaseNotes>
     </PropertyGroup>
 

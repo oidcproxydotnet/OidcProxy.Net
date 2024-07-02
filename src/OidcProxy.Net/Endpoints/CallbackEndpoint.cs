@@ -2,6 +2,7 @@ using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using OidcProxy.Net.IdentityProviders;
+using OidcProxy.Net.Jwt;
 using OidcProxy.Net.Jwt.SignatureValidation;
 using OidcProxy.Net.Logging;
 using OidcProxy.Net.ModuleInitializers;
@@ -18,7 +19,7 @@ internal static class CallbackEndpoint
         [FromServices] ProxyOptions proxyOptions,
         [FromServices] IIdentityProvider identityProvider,
         [FromServices] ITokenParser tokenParser,
-        [FromServices] TokenValidator tokenValidator,
+        [FromServices] JwtValidator jwtValidator,
         [FromServices] IAuthenticationCallbackHandler authenticationCallbackHandler)
     {
         try
@@ -42,8 +43,7 @@ internal static class CallbackEndpoint
             await logger.InformAsync("Exchanging code for access_token.");
             var tokenResponse = await identityProvider.GetTokenAsync(redirectUrl, code, codeVerifier, context.TraceIdentifier);
 
-            if (!(await tokenValidator.Validate(tokenResponse.access_token)) ||
-                !(await tokenValidator.Validate(tokenResponse.id_token)))
+            if (!(await jwtValidator.Validate(tokenResponse.access_token)))
             {
                 return await authenticationCallbackHandler.OnAuthenticationFailed(context,
                     proxyOptions.LandingPage.ToString(),

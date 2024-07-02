@@ -1,12 +1,12 @@
 using System.Security.Authentication;
 using System.Security.Cryptography.X509Certificates;
 using FluentAssertions;
-using OidcProxy.Net.ModuleInitializers;
-using OidcProxy.Net.OpenIdConnect.Jwe;
+using OidcProxy.Net.Cryptography;
+using OidcProxy.Net.Jwt;
 
 namespace OidcProxy.Net.OpenIdConnect.Tests.Jwe;
 
-public class EncryptionCertificateTests
+public class SslCertificateTests
 {
     private const string AccessToken =
         "eyJhbGciOiJSU0EtT0FFUCIsImVuYyI6IkEyNTZDQkMtSFM1MTIiLCJraWQiOiJDRjc4OUQ3NDgxNkYwNUUwODA4MzU2QTk0MUNENDNDNzl" +
@@ -38,13 +38,13 @@ public class EncryptionCertificateTests
     private string PrivateKeyPath = $"{Guid.NewGuid()}.pem";
     private string PublicKeyPath = $"{Guid.NewGuid()}.pem";
     
-    public EncryptionCertificateTests()
+    public SslCertificateTests()
     {
         File.WriteAllText(CertPath, Files.Cert);
         File.WriteAllText(PrivateKeyPath, Files.PrivateKey);
     }
     
-    ~EncryptionCertificateTests() 
+    ~SslCertificateTests() 
     {
         File.Delete(CertPath);
         File.Delete(PrivateKeyPath);
@@ -55,7 +55,7 @@ public class EncryptionCertificateTests
     public void ItShouldDecryptToken()
     {
         var cert = X509Certificate2.CreateFromPemFile(CertPath, PrivateKeyPath);
-        var sut = new JweParser(new ProxyOptions(), new EncryptionCertificate(cert));
+        var sut = new JweParser(new SslCertificate(cert));
 
         var actual = sut.ParseJwtPayload(AccessToken);
 
@@ -66,7 +66,7 @@ public class EncryptionCertificateTests
     public void WhenCertificateWithoutPrivateKey_ItShouldThrowNotSupportedException()
     {
         var cert = new X509Certificate2();
-        var sut = new JweParser(new ProxyOptions(), new EncryptionCertificate(cert));
+        var sut = new JweParser(new SslCertificate(cert));
 
         var actual = () => sut.ParseJwtPayload(AccessToken);
 
