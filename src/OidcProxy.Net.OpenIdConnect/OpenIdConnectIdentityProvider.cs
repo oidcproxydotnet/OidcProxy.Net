@@ -110,6 +110,8 @@ public class OpenIdConnectIdentityProvider(
     public async Task<TokenResponse> RefreshTokenAsync(string refreshToken, string traceIdentifier)
     {
         var openIdConfiguration = await GetDiscoveryDocument();
+        var scopes = new Scopes(configuration.Scopes);
+
 
         var response = await httpClient.RequestRefreshTokenAsync(new RefreshTokenRequest
         {
@@ -118,6 +120,7 @@ public class OpenIdConnectIdentityProvider(
             RefreshToken = refreshToken,
             ClientId = configuration.ClientId,
             ClientSecret = configuration.ClientSecret,
+            Scope = string.Join(' ', scopes)
         });
         
         if (response.IsError)
