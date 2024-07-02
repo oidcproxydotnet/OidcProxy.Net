@@ -39,6 +39,18 @@ The OidcProxy is an identity-aware reverse proxy. It is a framework that's desig
 - This reduces the attack surface because, in this scenario, an attacker who does not have access to the webserver cannot be issued any tokens. 
 
 ## Important upgrade notes
+
+:warning: **v3 -> v4**:
+ - DefaultAuthenticationCallbackHandler.OnAuthenticationFailed returns a 401 when authentication fails instead of redirect.
+ - Moved OidcProxy.Net.OpenIdConnect.JweParser to OidcProxy.Net.Jwt.JweParser. Removed options parameter from constructor.
+ - Moved OidcProxy.Net.OpenIdConnect.ITokenParser to OidcProxy.Net.Jwt.ITokenParser.
+ - Renamed JwtParser.ParseAccessToken to JwtParser.ParseJwtPayload
+ - Renamed options.UseJweKey to options.UseEncryptionKey
+ - Renamed and moved OidcProxy.Net.OpenIdConnect.Jwe.EncryptionKey to OidcProxy.Net.Cryptography.SymmetricKey
+ - Renamed and moved OidcProxy.Net.OpenIdConnect.IJweEncryptionKey to OidcProxy.Net.Cryptography.IEncryptionKey
+ - Renamed and moved OidcProxy.Net.OpenIdConnect.Jwe.EncryptionCertificate to OidcProxy.Net.Cryptography.SslCertificate
+ - Removed OidcProxyAuthenticationHandler
+
 :warning: **v2 -> v3**:
  - /.auth/me endpoint responds with `401` instead of `404` 
 
