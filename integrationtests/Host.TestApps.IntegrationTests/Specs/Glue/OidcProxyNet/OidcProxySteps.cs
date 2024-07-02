@@ -1,7 +1,7 @@
 using System.Security.Cryptography.X509Certificates;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.IdentityModel.Tokens;
-using OidcProxy.Net.OpenIdConnect.Jwe;
+using OidcProxy.Net.Cryptography;
 using TechTalk.SpecFlow;
 
 namespace Host.TestApps.IntegrationTests.Specs.Glue.OidcProxyNet;
@@ -53,7 +53,7 @@ public class OidcProxySteps(ScenarioContext scenarioContext)
     public void SetSymmetricKey(string base64)
     {
         var key = new SymmetricSecurityKey(Convert.FromBase64String(base64));
-        _builder.WithJweKey(new EncryptionKey(key));
+        _builder.WithEncryptionKey(new SymmetricKey(key));
     }
 
     [Given(@"the OidcProxy is configured to decrypt JWEs with this certificate: (.*), (.*)")]
@@ -69,6 +69,24 @@ public class OidcProxySteps(ScenarioContext scenarioContext)
         _builder.WithPolicy();
     }
 
+    [Given(@"the OidcProxy is configured to use a symmetric key to validate the token signature")]
+    public void SetSigningKey()
+    {
+        _builder.WithSigningKey();
+    }
+
+    [Given(@"the Proxy receives a token that has been tampered with")]
+    public void MymmicMitmAttack()
+    {
+        _builder.WithMitm();
+    }
+    
+    [Given(@"the user's access_token has expired")]
+    public void MymmicTokenExpiry()
+    {
+        _builder.WithExpiredAccessToken();
+    }
+    
     [AfterScenario]
     public async Task TearDown()
     {

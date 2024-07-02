@@ -4,6 +4,7 @@ using OidcProxy.Net.IdentityProviders;
 using OidcProxy.Net.Locking.InMemory;
 using OidcProxy.Net.OpenIdConnect;
 using NSubstitute;
+using OidcProxy.Net.Jwt.SignatureValidation;
 using OidcProxy.Net.Logging;
 using OidcProxy.Net.Tests.UnitTests;
 
@@ -21,8 +22,12 @@ public class SingleInstanceTokenRenewalTests : IAsyncLifetime
     
     private readonly AuthSession _session2 = AuthSession.Create(new TestSession());
     
+    private JwtValidator _jwtValidator;
+    
     public SingleInstanceTokenRenewalTests()
     {
+        _jwtValidator = new DummyJwtValidator(_identityProvider, null);
+
         // Mock the token refresh-call
         _identityProvider.RefreshTokenAsync(Arg.Any<string>(), Arg.Any<string>()).Returns(Task.Run(async () =>
         {
@@ -71,7 +76,7 @@ public class SingleInstanceTokenRenewalTests : IAsyncLifetime
 
         async Task GetToken()
         {   
-            var sut = new TokenFactory(_authSession, _identityProvider, _logger, new InMemoryConcurrentContext());
+            var sut = new TokenFactory(_authSession, _jwtValidator, _identityProvider, _logger, new InMemoryConcurrentContext());
             await sut.RenewAccessTokenIfExpiredAsync(TraceIdentifier);
         }
     }
@@ -92,13 +97,13 @@ public class SingleInstanceTokenRenewalTests : IAsyncLifetime
 
         async Task GetToken()
         {   
-            var sut = new TokenFactory(_authSession, _identityProvider, _logger, new InMemoryConcurrentContext());
+            var sut = new TokenFactory(_authSession, _jwtValidator, _identityProvider, _logger, new InMemoryConcurrentContext());
             await sut.RenewAccessTokenIfExpiredAsync(TraceIdentifier);
         }
         
         async Task GetToken2()
         {   
-            var sut = new TokenFactory(_session2, _identityProvider, _logger, new InMemoryConcurrentContext());
+            var sut = new TokenFactory(_session2, _jwtValidator, _identityProvider, _logger, new InMemoryConcurrentContext());
             await sut.RenewAccessTokenIfExpiredAsync(TraceIdentifier);
         }
     }
@@ -117,7 +122,7 @@ public class SingleInstanceTokenRenewalTests : IAsyncLifetime
                     Guid.NewGuid().ToString(),
                     DateTime.UtcNow.AddSeconds(-1)));
                 
-                var sut = new TokenFactory(session, _identityProvider, _logger, new InMemoryConcurrentContext());
+                var sut = new TokenFactory(session, _jwtValidator, _identityProvider, _logger, new InMemoryConcurrentContext());
                 await sut.RenewAccessTokenIfExpiredAsync(TraceIdentifier);
             }));
         }
@@ -139,7 +144,7 @@ public class SingleInstanceTokenRenewalTests : IAsyncLifetime
             Guid.NewGuid().ToString(),
             DateTime.UtcNow.AddSeconds(-1)));
         
-        var sut = new TokenFactory(wrap, _identityProvider, _logger, new InMemoryConcurrentContext());
+        var sut = new TokenFactory(wrap,_jwtValidator, _identityProvider, _logger, new InMemoryConcurrentContext());
         
         // Act
         await sut.RenewAccessTokenIfExpiredAsync(TraceIdentifier);

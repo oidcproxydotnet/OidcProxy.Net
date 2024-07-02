@@ -1,4 +1,5 @@
 using FluentAssertions;
+using OidcProxy.Net.Cryptography;
 using OidcProxy.Net.IdentityProviders;
 using OidcProxy.Net.ModuleInitializers;
 
@@ -68,6 +69,11 @@ public class RegisterIdentityProviderTests
         }
 
         public Task<TokenResponse> GetTokenAsync(string redirectUri, string code, string? codeVerifier, string traceIdentifier)
+        {
+            throw new NotImplementedException();
+        }
+
+        public Task<IEnumerable<KeySet>> GetJwksAsync()
         {
             throw new NotImplementedException();
         }

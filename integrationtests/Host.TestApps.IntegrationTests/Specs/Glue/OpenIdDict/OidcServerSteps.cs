@@ -56,6 +56,22 @@ public class OidcServerSteps(ScenarioContext scenarioContext)
     {
         OidcServerSteps.HasAuthenticated.Should().BeFalse();
     }
+    
+    [Given(@"the Oidc Server signs the JWT with (.*)")]
+    public void Void(string alg)
+    {
+        switch (alg)
+        {
+            case "RS256":
+                _builder.UseRS256Algorithm();
+                break;
+            case "HS256":
+                _builder.UseHS256Algorithm();
+                break;
+            default:
+                throw new NotSupportedException();
+        }
+    }
 
     [AfterScenario]
     public async Task TearDown()

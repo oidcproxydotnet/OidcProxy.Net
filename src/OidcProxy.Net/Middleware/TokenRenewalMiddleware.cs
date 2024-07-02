@@ -1,3 +1,4 @@
+using System.Security.Authentication;
 using OidcProxy.Net.Logging;
 using Microsoft.AspNetCore.Http;
 using OidcProxy.Net.OpenIdConnect;

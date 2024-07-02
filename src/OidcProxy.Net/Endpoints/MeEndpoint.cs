@@ -1,5 +1,6 @@
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using OidcProxy.Net.Jwt;
 using OidcProxy.Net.OpenIdConnect;
 
 namespace OidcProxy.Net.Endpoints;

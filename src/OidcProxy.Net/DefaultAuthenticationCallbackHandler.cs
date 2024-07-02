@@ -10,11 +10,7 @@ public class DefaultAuthenticationCallbackHandler(ILogger logger) : IAuthenticat
         string defaultLandingPage, 
         string? userPreferredLandingPage)
     {
-        // Todo: Introduce proper error page here
-        var landingPage = userPreferredLandingPage ?? defaultLandingPage;
-        
-        await logger.InformAsync($"Redirect({landingPage})");
-        return Results.Redirect(landingPage);
+        return Results.Unauthorized();
     }
 
     public virtual async Task<IResult> OnAuthenticated(HttpContext context, 

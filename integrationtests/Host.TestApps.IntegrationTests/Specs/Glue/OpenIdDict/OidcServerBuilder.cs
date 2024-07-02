@@ -5,8 +5,6 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.IdentityModel.Tokens;
-using OidcProxy.Net.OpenIdConnect.Jwe;
-using OpenIddict.Server;
 
 namespace Host.TestApps.IntegrationTests.Specs.Glue.OpenIdDict;
 
@@ -20,13 +18,14 @@ public class OidcServerBuilder
 
         options.AddDevelopmentEncryptionCertificate();
     };
-    
+
+    private Action<OpenIddictServerBuilder> _configureSigningAlgorithm = options => options.AddDevelopmentSigningCertificate();
+
     public OidcServerBuilder WithUrl(string url)
     {
         _url = url;
         return this;
     }
-    
     
     public void WithJweKey(SymmetricSecurityKey encryptionKey)
     {
@@ -41,6 +40,22 @@ public class OidcServerBuilder
         _configureEncryptionMethod = options =>
         {
             options.AddEncryptionCertificate(x509Certificate2);
+        };
+    }
+
+    public void UseRS256Algorithm()
+    {
+        // do nothing.. RS256 is used by default..
+    }
+    
+    public void UseHS256Algorithm()
+    {
+        _configureSigningAlgorithm = options =>
+        {
+            var keyBytes = "fImIhRwPzldBm0w4rNQGv0FQ5O1ArMgH+6zT4AlSbgE=\n"u8.ToArray();
+            options
+                .AddEphemeralSigningKey()
+                .AddSigningKey(new SymmetricSecurityKey(keyBytes));
         };
     }
 
@@ -64,7 +79,7 @@ public class OidcServerBuilder
         builder.Services.AddOpenIddict()
             .AddCore(o => o.UseEntityFrameworkCore().UseDbContext<TestDbContext>())
             .AddServer(options =>
-            {
+            {   
                 options.SetTokenEndpointUris("connect/token");
 
                 options.SetAuthorizationEndpointUris("connect/authorize");
@@ -74,17 +89,13 @@ public class OidcServerBuilder
                     .AllowRefreshTokenFlow();
 
                 _configureEncryptionMethod(options);
-        
-                options
-                    .AddDevelopmentSigningCertificate();
+
+                _configureSigningAlgorithm.Invoke(options);
 
                 options
                     .UseAspNetCore()
                     .EnableTokenEndpointPassthrough()
                     .EnableAuthorizationEndpointPassthrough();
-                
-                options
-                    .RemoveEventHandler(OpenIddictServerHandlers.Exchange.ValidateScopeParameter.Descriptor);
             })
 
             .AddValidation(options =>
@@ -122,4 +133,5 @@ public class OidcServerBuilder
 
         return app;
     }
+
 }

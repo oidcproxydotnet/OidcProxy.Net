@@ -1,9 +1,9 @@
-using Jose;
 using System.Security.Cryptography.X509Certificates;
+using Jose;
 
-namespace OidcProxy.Net.OpenIdConnect.Jwe;
+namespace OidcProxy.Net.Cryptography;
 
-public sealed class EncryptionCertificate(X509Certificate2 certificate) : IJweEncryptionKey
+public sealed class SslCertificate(X509Certificate2 certificate) : IEncryptionKey
 {
     public string Decrypt(string token)
     {
