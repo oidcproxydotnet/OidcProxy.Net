@@ -23,6 +23,10 @@
             - Implemented signature verification RS256
             - Implemented signature verification HS256
             
+            Fixes
+            - Removed scope parameter from Token request
+            - Added scope parameter to Token request when refreshing the token
+            
             Breaking changes:
             - DefaultAuthenticationCallbackHandler.OnAuthenticationFailed returns a 401 when authentication fails instead of redirect.
             - Moved OidcProxy.Net.OpenIdConnect.JweParser to OidcProxy.Net.Jwt.JweParser. Removed options parameter from constructor.
