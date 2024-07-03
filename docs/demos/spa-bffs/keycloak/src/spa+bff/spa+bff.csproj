@@ -27,7 +27,7 @@
   </ItemGroup>
   
   <ItemGroup>
-    <PackageReference Include="OidcProxy.Net.OpenIdConnect" Version="3.2.2" />
+    <PackageReference Include="OidcProxy.Net.OpenIdConnect" Version="4.0.0" />
   </ItemGroup>
 
 </Project>
