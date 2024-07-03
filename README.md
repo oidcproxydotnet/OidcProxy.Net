@@ -106,7 +106,7 @@ builder.Services.AddOidcProxy(config);
 //     Convert.FromBase64String("DRjd/GnduI3Efzen9V9BvbNUfc/VKgXltV7Kbk9sMkY=")
 // );
 // 
-// builder.Services.AddOidcProxy(config, o => o.UseJweKey(new EncryptionKey(key)));
+// builder.Services.AddOidcProxy(config, o => o.UseEncryptionKey(new SymmetricKey(key)));
 
 var app = builder.Build();
 
