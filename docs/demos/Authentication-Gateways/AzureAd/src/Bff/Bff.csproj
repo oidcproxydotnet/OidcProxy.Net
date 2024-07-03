@@ -9,6 +9,6 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="OidcProxy.Net.EntraId" Version="3.2.1" />
+    <PackageReference Include="OidcProxy.Net.EntraId" Version="4.0.0" />
   </ItemGroup>
 </Project>
