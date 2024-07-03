@@ -40,7 +40,7 @@ The OidcProxy is an identity-aware reverse proxy. It is a framework that's desig
 
 ## Important upgrade notes
 
-:warning: **v3 -> v4**:
+:warning: **v3 -> v4** (to be released soon):
  - DefaultAuthenticationCallbackHandler.OnAuthenticationFailed returns a 401 when authentication fails instead of redirect.
  - Moved OidcProxy.Net.OpenIdConnect.JweParser to OidcProxy.Net.Jwt.JweParser. Removed options parameter from constructor.
  - Moved OidcProxy.Net.OpenIdConnect.ITokenParser to OidcProxy.Net.Jwt.ITokenParser.
