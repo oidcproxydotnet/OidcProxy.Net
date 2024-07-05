@@ -28,6 +28,14 @@ internal class JwtSignatureValidator(IIdentityProvider identityProvider,
         }
 
         var keys = await identityProvider.GetJwksAsync();
+        if (await signatureValidator.Validate(token, keys))
+        {
+            return true;
+        }
+        
+        // If the signature verification fails, it is very well possible the keys have rotated
+        // in that case it is common practice to re-obtain the key-set and verify again.
+        keys = await identityProvider.GetJwksAsync(true);
         return await signatureValidator.Validate(token, keys);
     }
 
