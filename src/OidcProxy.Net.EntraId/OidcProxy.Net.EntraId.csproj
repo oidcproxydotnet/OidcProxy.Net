@@ -6,7 +6,7 @@
     <Nullable>enable</Nullable>
 
     <PackageId>OidcProxy.Net.EntraId</PackageId>
-    <Version>4.0.0</Version>
+    <Version>5.0.0</Version>
     <Authors>Albert Starreveld</Authors>
     <Company>OidcProxy.net</Company>
     <PackageLicenseExpression>LGPL-3.0-only</PackageLicenseExpression>
@@ -20,7 +20,13 @@
     <PackageIcon>logo.png</PackageIcon>        
     <SignAssembly>true</SignAssembly>        
     <LangVersion>12</LangVersion>
-    <PackageReleaseNotes>Enhancements
+    <PackageReleaseNotes>
+      v5.0:
+      Fixes
+      - Fix for RS256 key-rotation
+
+      v4.0:
+      Enhancements
       - Implemented signature verification RS256
       - Implemented signature verification HS256
 
