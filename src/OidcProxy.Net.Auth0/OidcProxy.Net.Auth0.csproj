@@ -21,11 +21,11 @@
         <SignAssembly>true</SignAssembly>
         <LangVersion>12</LangVersion>
         <PackageReleaseNotes>
-            v5.0:
+            v4.0 -> v5.0:
             Fixes
-            - Fix for RS256 key-rotation
+            - Invalidate JSON Web Key Set cache when (RS256) keys are rotated
 
-            v4.0:
+            v3.0 -> v5.0:
             Enhancements
             - Implemented signature verification RS256
             - Implemented signature verification HS256
