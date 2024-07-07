@@ -73,7 +73,7 @@ public class RegisterIdentityProviderTests
             throw new NotImplementedException();
         }
 
-        public Task<IEnumerable<KeySet>> GetJwksAsync()
+        public Task<IEnumerable<KeySet>> GetJwksAsync(bool invalidateCache)
         {
             throw new NotImplementedException();
         }

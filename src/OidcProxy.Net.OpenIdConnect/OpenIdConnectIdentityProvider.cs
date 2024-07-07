@@ -84,13 +84,13 @@ public class OpenIdConnectIdentityProvider(
         
         return new TokenResponse(response.AccessToken, response.IdentityToken, response.RefreshToken, expiryDate);
     }
-    
-    public async Task<IEnumerable<KeySet>> GetJwksAsync()
+
+    public async Task<IEnumerable<KeySet>> GetJwksAsync(bool invalidateCache = false)
     {
         var openIdConfiguration = await GetDiscoveryDocument();
         var jwksUri = openIdConfiguration.jwks_uri;
 
-        if (cache.TryGetValue(jwksUri, out var keySet) && keySet != null)
+        if (!invalidateCache && cache.TryGetValue(jwksUri, out var keySet) && keySet != null)
         {
             return (JsonWebKeySet)keySet;
         }

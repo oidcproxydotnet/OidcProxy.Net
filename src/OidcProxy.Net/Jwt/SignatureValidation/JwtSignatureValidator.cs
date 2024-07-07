@@ -28,7 +28,17 @@ internal class JwtSignatureValidator(IIdentityProvider identityProvider,
         }
 
         var keys = await identityProvider.GetJwksAsync();
-        return await signatureValidator.Validate(token, keys);
+        try
+        {
+            return await signatureValidator.Validate(token, keys);
+        }
+        catch (KeySetNotFoundException)
+        {
+            // If the signature verification fails because the key wasn't found, it is very well possible the keys have
+            // rotated in that case it is common practice to re-obtain the key-set and verify again.
+            keys = await identityProvider.GetJwksAsync(true);
+            return await signatureValidator.Validate(token, keys);
+        }
     }
 
     private SignatureValidator? CreateValidator(string token)

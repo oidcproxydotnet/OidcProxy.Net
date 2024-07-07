@@ -27,7 +27,7 @@ public interface IIdentityProvider
     /// Gets the JSON Web Key Set
     /// </summary>
     /// <returns>The JSON Web Key Set</returns>
-    Task<IEnumerable<KeySet>> GetJwksAsync();
+    Task<IEnumerable<KeySet>> GetJwksAsync(bool invalidateCache = false);
     
     /// <summary>
     /// Exchanges the refresh_token for a new access_token as defined in section 12.1. of the OpenId Connect spec: https://openid.net/specs/openid-connect-core-1_0.html#RefreshingAccessToken.

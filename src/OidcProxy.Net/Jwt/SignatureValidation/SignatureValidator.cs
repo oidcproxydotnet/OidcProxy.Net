@@ -17,8 +17,8 @@ internal abstract class SignatureValidator
         var keySet = GetKeySet(keys, header);
         if (keySet == null)
         {
-            throw new ApplicationException("Failed to validate signature. " +
-                                           "Unable to find appropriate key to validate the signature with.");
+            throw new KeySetNotFoundException("Failed to validate signature. " +
+                                              "Unable to find appropriate key to validate the signature with.");
         }
 
         // The signature is validated using JoseJWT. It uses an object to do so.
