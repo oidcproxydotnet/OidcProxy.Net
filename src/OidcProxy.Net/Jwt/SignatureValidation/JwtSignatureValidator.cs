@@ -58,8 +58,6 @@ internal class JwtSignatureValidator(IIdentityProvider identityProvider,
         }
         catch (KeySetNotFoundException)
         {
-            // Todo: No test-coverage here
-
             // If the signature verification fails because the key wasn't found, it is very well possible the keys have
             // rotated in that case it is common practice to re-obtain the key-set and verify again.
             keys = await identityProvider.GetJwksAsync(true);

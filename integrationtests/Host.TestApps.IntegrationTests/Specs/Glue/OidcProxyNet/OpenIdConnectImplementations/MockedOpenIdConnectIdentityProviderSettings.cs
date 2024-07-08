@@ -4,5 +4,11 @@ public class MockedOpenIdConnectIdentityProviderSettings
 {
     public bool WithExpiredToken { get; set; }
 
-    public bool WithTamperedToken { get; set; }
+    public bool TamperedPayload { get; set; }
+    
+    public bool AlgorithmChanged { get; set; }
+    
+    public bool WithNoHeader { get; set; }
+    
+    public bool WithTrailingDots { get; set; }
 }

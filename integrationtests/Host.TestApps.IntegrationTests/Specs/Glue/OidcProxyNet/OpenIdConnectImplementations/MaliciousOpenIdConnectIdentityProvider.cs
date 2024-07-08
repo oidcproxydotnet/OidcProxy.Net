@@ -18,8 +18,8 @@ public class MockedOpenIdConnectIdentityProvider(MockedOpenIdConnectIdentityProv
     {
         var token = await base.GetTokenAsync(redirectUri, code, codeVerifier, traceIdentifier);
 
-        var accessToken = settings.WithTamperedToken
-            ? MimicTamperedAccessToken(token)
+        var accessToken = settings.TamperedPayload
+            ? MimicTamperedAccessToken(token, settings)
             : token.access_token;
 
         var expiryDate = settings.WithExpiredToken
@@ -36,8 +36,8 @@ public class MockedOpenIdConnectIdentityProvider(MockedOpenIdConnectIdentityProv
     {
         var token = await base.RefreshTokenAsync(refreshToken, traceIdentifier);
         
-        var accessToken = settings.WithTamperedToken
-            ? MimicTamperedAccessToken(token)
+        var accessToken = settings.TamperedPayload
+            ? MimicTamperedAccessToken(token, settings)
             : token.access_token;
 
         return new TokenResponse(accessToken,
@@ -46,7 +46,7 @@ public class MockedOpenIdConnectIdentityProvider(MockedOpenIdConnectIdentityProv
             token.ExpiryDate);
     }
 
-    private static string MimicTamperedAccessToken(TokenResponse token)
+    private static string MimicTamperedAccessToken(TokenResponse token, MockedOpenIdConnectIdentityProviderSettings settings)
     {
         var tokenParts = token.access_token.Split('.');
         if (tokenParts.Length != 3)
@@ -59,13 +59,30 @@ public class MockedOpenIdConnectIdentityProvider(MockedOpenIdConnectIdentityProv
         var payload = tokenParts[1];
         var signature = tokenParts[2];
 
-        var decodedPayload = Base64UrlDecode(payload);
-        
-        var payloadDict = JsonConvert.DeserializeObject<Dictionary<string, object>>(decodedPayload);
-        payloadDict["tampered"] = "true";
+        if (settings.TamperedPayload)
+        {
+            var decodedPayload = Base64UrlDecode(payload);
+            var payloadDict = JsonConvert.DeserializeObject<Dictionary<string, object>>(decodedPayload);
+            payloadDict["tampered"] = "true";
+            payload = Base64UrlEncode(JsonConvert.SerializeObject(payloadDict));
+        }
 
-        var newPayload = Base64UrlEncode(JsonConvert.SerializeObject(payloadDict));
-        return $"{header}.{newPayload}.{signature}";
+        if (settings.AlgorithmChanged)
+        {
+            var decodedPayload = Base64UrlDecode(header);
+            var payloadDict = JsonConvert.DeserializeObject<Dictionary<string, object>>(decodedPayload);
+            payloadDict["alg"] = "FOO";
+            header = Base64UrlEncode(JsonConvert.SerializeObject(payloadDict));
+        }
+        
+        if (settings.WithNoHeader)
+        {
+            header = string.Empty;
+        }
+
+        return settings.WithTrailingDots 
+            ? $"{header}.{payload}.{signature}.e30.e30"
+            : $"{header}.{payload}.{signature}";
     }
 
     private static string Base64UrlEncode(string input)

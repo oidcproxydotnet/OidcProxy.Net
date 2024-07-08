@@ -78,9 +78,31 @@ public class OidcProxySteps(ScenarioContext scenarioContext)
     [Given(@"the Proxy receives a token that has been tampered with")]
     public void MymmicMitmAttack()
     {
-        _builder.WithMitm();
+        _builder.WithMitm(AbuseCase.TamperedPayload);
     }
-    
+
+    [Given(@"the Proxy receives a token with a (.*)")]
+    public void MimmicMitmAttack(string abuseCase)
+    {
+        switch (abuseCase)
+        {
+            case "payload that has been tampered with":
+                _builder.WithMitm(AbuseCase.TamperedPayload);
+                break;
+            case "payload and header that has been tampered with":
+                _builder.WithMitm(AbuseCase.TamperedPayload | AbuseCase.ChangedAlgorithm);
+                break;
+            case "payload that has been tampered with and no JWT header":
+                _builder.WithMitm(AbuseCase.TamperedPayload | AbuseCase.RemovedHeader);
+                break;
+            case "payload that has been tampered with and two trailing JWT sections":
+                _builder.WithMitm(AbuseCase.TamperedPayload | AbuseCase.TrailingDots);
+                break;
+            default:
+                throw new PendingStepException();
+        }
+    }
+
     [Given(@"the user's access_token has expired")]
     public void MymmicTokenExpiry()
     {
