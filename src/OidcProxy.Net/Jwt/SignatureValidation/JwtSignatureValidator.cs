@@ -34,7 +34,6 @@ internal class JwtSignatureValidator(IIdentityProvider identityProvider,
         var header = JwtParser.ParseJwtHeader(token);
         if (header == null)
         {
-            // Todo: No test-coverage here
             await logger.WarnAsync("Unable to determine how to validate the access_token. " +
                                    "The JWT does not have a header. " +
                                    "The signature has not been verified and the JWT is considered to be invalid.");
