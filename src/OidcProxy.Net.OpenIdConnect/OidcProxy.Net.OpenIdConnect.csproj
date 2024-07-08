@@ -68,8 +68,4 @@
     <ItemGroup>
       <ProjectReference Include="..\OidcProxy.Net\OidcProxy.Net.csproj" />
     </ItemGroup>
-
-    <ItemGroup>
-      <Folder Include="Jwe\" />
-    </ItemGroup>
 </Project>

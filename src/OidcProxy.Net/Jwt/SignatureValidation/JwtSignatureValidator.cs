@@ -67,19 +67,11 @@ internal class JwtSignatureValidator(IIdentityProvider identityProvider,
 
     private SignatureValidator? CreateValidator(JwtHeader header)
     {
-        SignatureValidator signatureValidator;
-        switch (header.Alg)
+        return header.Alg switch
         {
-            case "RS256":
-                signatureValidator = rs256SignatureValidator;
-                break;
-            case "HS256":
-                signatureValidator = hs256SignatureValidator;
-                break;
-            default:
-                return null;
-        }
-
-        return signatureValidator;
+            "RS256" => rs256SignatureValidator,
+            "HS256" => hs256SignatureValidator,
+            _ => null
+        };
     }
 }
