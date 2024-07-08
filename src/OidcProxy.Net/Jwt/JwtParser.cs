@@ -6,16 +6,6 @@ namespace OidcProxy.Net.Jwt;
 
 public class JwtParser : ITokenParser
 {
-    public bool IsJwe(string token)
-    {
-        if (string.IsNullOrEmpty(token))
-        {
-            return false;
-        }
-
-        return token.Split('.', StringSplitOptions.RemoveEmptyEntries).Length == 5;
-    }
-
     public virtual JwtPayload? ParseIdToken(string idToken) => ParsePayload(idToken);
 
     public virtual JwtPayload? ParseJwtPayload(string token) => ParsePayload(token);
