@@ -29,7 +29,7 @@ public class ProxyOptions
 
     private Action<IServiceCollection> _applyAuthenticationCallbackHandlerRegistration = (s) => s.AddTransient<IAuthenticationCallbackHandler, DefaultAuthenticationCallbackHandler>();
 
-    private Action<IServiceCollection> _applyJwtParser = (s) => s.AddTransient<ITokenParser, JwtParser>();
+    private Action<IServiceCollection> _applyJwtParser = (s) => s.AddTransient<ITokenParser, JwtParser>().AddSingleton<IEncryptionKey?>(_ => null);
 
     private Action<IServiceCollection> _applyJwtValidator = (s) => s.AddTransient<IJwtSignatureValidator, JwtSignatureValidator>();
     
@@ -221,7 +221,8 @@ public class ProxyOptions
     /// <typeparam name="TTokenParser">The type of the class to use to convert the jwt to a JwtPayload.</typeparam>
     public void AddTokenParser<TTokenParser>() where TTokenParser : class, ITokenParser
     {
-        _applyJwtParser = s => s.AddTransient<ITokenParser, TTokenParser>();
+        _applyJwtParser = s => s
+            .AddTransient<ITokenParser, TTokenParser>();
     }
 
     /// <summary>

@@ -55,9 +55,28 @@ public class OidcProxyBuilder
         return this;
     }
 
-    public OidcProxyBuilder WithMitm()
+    public OidcProxyBuilder WithMitm(AbuseCase abuseCase)
     {
-        _settings.WithTamperedToken = true;
+        if ((abuseCase & AbuseCase.TamperedPayload) != 0)
+        {
+            _settings.TamperedPayload = true;
+        }
+        
+        if ((abuseCase & AbuseCase.ChangedAlgorithm) != 0)
+        {
+            _settings.AlgorithmChanged = true;
+        }
+        
+        if ((abuseCase & AbuseCase.RemovedHeader) != 0)
+        {
+            _settings.WithNoHeader = true;
+        }
+        
+        if ((abuseCase & AbuseCase.TrailingDots) != 0)
+        {
+            _settings.WithTrailingDots = true;
+        }
+
         return this;
     }
 

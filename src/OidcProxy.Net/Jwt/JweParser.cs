@@ -7,6 +7,16 @@ namespace OidcProxy.Net.Jwt;
 
 public sealed class JweParser(IEncryptionKey encryptionKey) : JwtParser
 {
+    internal static bool IsJwe(string token)
+    {
+        if (string.IsNullOrEmpty(token))
+        {
+            return false;
+        }
+
+        return token.Split('.', StringSplitOptions.RemoveEmptyEntries).Length == 5;
+    }
+    
     public override JwtPayload? ParseJwtPayload(string encryptedAccessToken)
     {
         try
