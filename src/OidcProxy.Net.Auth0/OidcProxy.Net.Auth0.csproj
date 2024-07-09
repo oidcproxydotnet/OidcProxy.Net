@@ -24,6 +24,7 @@
             v4.0 -> v5.0:
             Fixes
             - Invalidate JSON Web Key Set cache when (RS256) keys are rotated
+            - The procedure to verify the JWT Signature has become more strict.
 
             v3.0 -> v5.0:
             Enhancements

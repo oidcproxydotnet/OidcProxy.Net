@@ -15,11 +15,6 @@ internal class JwtSignatureValidator(IIdentityProvider identityProvider,
     {
         if (JweParser.IsJwe(token))
         {
-            // JWEs are decrypted by the <see cref="OidcProxy.Net.Middleware.OidcProxyAuthenticationHandler"/> class 
-            // using the <see cref="OidcProxy.Net.Middleware.OidcProxyAuthenticationHandler"/>
-            // If the JWE can't be decrypted by it, it means it has been tampered with.
-            // This makes signature validation redundant. Hence the statement: If it's a JWT, it's valid!
-
             try
             {
                 jwtEncryptionKey.Decrypt(token);
