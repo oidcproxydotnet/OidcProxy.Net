@@ -49,7 +49,7 @@
 
     <ItemGroup>
       <PackageReference Include="jose-jwt" Version="5.0.0" />
-      <PackageReference Include="Microsoft.AspNetCore.DataProtection.StackExchangeRedis" Version="8.0.6" />
+      <PackageReference Include="Microsoft.AspNetCore.DataProtection.StackExchangeRedis" Version="8.0.7" />
       <PackageReference Include="Microsoft.Extensions.Caching.StackExchangeRedis" Version="8.0.7" />
       <PackageReference Include="Microsoft.Identity.Client" Version="4.61.3" />
       <PackageReference Include="RedLock.net" Version="2.3.2" />
