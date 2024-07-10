@@ -6,7 +6,7 @@
         <Nullable>enable</Nullable>
 
         <PackageId>OidcProxy.Net.OpenIdConnect</PackageId>
-        <Version>5.0.0</Version>
+        <Version>5.0.1</Version>
         <Authors>Albert Starreveld</Authors>
         <Company>OidcProxy.net</Company>
         <PackageLicenseExpression>LGPL-3.0-only</PackageLicenseExpression>
@@ -20,31 +20,10 @@
         <PackageIcon>logo.png</PackageIcon>
         <SignAssembly>true</SignAssembly>
         <LangVersion>12</LangVersion>
-        <PackageReleaseNotes>
-            v4.0 -> v5.0:
-            Fixes
-            - Invalidate JSON Web Key Set cache when (RS256) keys are rotated
-            - The procedure to verify the JWT Signature has become more strict.
-
-            v3.0 -> v5.0:
-            Enhancements
-            - Implemented signature verification RS256
-            - Implemented signature verification HS256
-
-            Fixes
-            - Removed scope parameter from Token request
-            - Added scope parameter to Token request when refreshing the token
-
-            Breaking changes:
-            - DefaultAuthenticationCallbackHandler.OnAuthenticationFailed returns a 401 when authentication fails instead of redirect.
-            - Moved OidcProxy.Net.OpenIdConnect.JweParser to OidcProxy.Net.Jwt.JweParser. Removed options parameter from constructor.
-            - Moved OidcProxy.Net.OpenIdConnect.ITokenParser to OidcProxy.Net.Jwt.ITokenParser.
-            - Renamed JwtParser.ParseAccessToken to JwtParser.ParseJwtPayload
-            - Renamed options.UseJweKey to options.UseEncryptionKey
-            - Renamed and moved OidcProxy.Net.OpenIdConnect.Jwe.EncryptionKey to OidcProxy.Net.Cryptography.SymmetricKey
-            - Renamed and moved OidcProxy.Net.OpenIdConnect.IJweEncryptionKey to OidcProxy.Net.Cryptography.IEncryptionKey
-            - Renamed and moved OidcProxy.Net.OpenIdConnect.Jwe.EncryptionCertificate to OidcProxy.Net.Cryptography.SslCertificate
-            - Removed OidcProxyAuthenticationHandler
+        <PackageReleaseNotes>Upgrades:
+            - build(deps): bump System.IdentityModel.Tokens.Jwt from 7.6.2 to 7.6.3
+            - build(deps): bump Microsoft.Extensions.Caching.StackExchangeRedis from 8.0.6 to 8.0.7
+            - build(deps): bump Microsoft.AspNetCore.DataProtection.StackExchangeRedis from 8.0.6 to 8.0.7
         </PackageReleaseNotes>
     </PropertyGroup>
 
