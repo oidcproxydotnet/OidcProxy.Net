@@ -23,17 +23,17 @@ public class ProxyOptions
 
     private Action<IReverseProxyBuilder> _applyReverseProxyConfiguration = _ => { };
 
-    private Action<IServiceCollection> _applyClaimsTransformationRegistration = (s) => s.AddTransient<IClaimsTransformation, DefaultClaimsTransformation>();
+    private Action<IServiceCollection> _applyClaimsTransformationRegistration = (s) => s.AddTransient<IClaimsTransformation, DefaultClaimsTransformation>(); //done
 
-    private Action<IServiceCollection> _applyBackBone = (s) => s.AddTransient<IConcurrentContext, InMemoryConcurrentContext>();
+    private Action<IServiceCollection> _applyBackBone = (s) => s.AddTransient<IConcurrentContext, InMemoryConcurrentContext>(); // done
 
-    private Action<IServiceCollection> _applyAuthenticationCallbackHandlerRegistration = (s) => s.AddTransient<IAuthenticationCallbackHandler, DefaultAuthenticationCallbackHandler>();
+    private Action<IServiceCollection> _applyAuthenticationCallbackHandlerRegistration = (s) => s.AddTransient<IAuthenticationCallbackHandler, DefaultAuthenticationCallbackHandler>(); // done
 
-    private Action<IServiceCollection> _applyJwtParser = (s) => s.AddTransient<ITokenParser, JwtParser>().AddSingleton<IEncryptionKey?>(_ => null);
+    private Action<IServiceCollection> _applyJwtParser = (s) => s.AddTransient<ITokenParser, JwtParser>().AddSingleton<IEncryptionKey?>(_ => null); // done
 
-    private Action<IServiceCollection> _applyJwtValidator = (s) => s.AddTransient<IJwtSignatureValidator, JwtSignatureValidator>();
+    private Action<IServiceCollection> _applyJwtValidator = (s) => s.AddTransient<IJwtSignatureValidator, JwtSignatureValidator>(); // done
     
-    private Action<IServiceCollection> _applyHs256SignatureValidator = (s) => s.AddTransient<Hs256SignatureValidator>(_ => null);
+    private Action<IServiceCollection> _applyHs256SignatureValidator = (s) => s.AddTransient<Hs256SignatureValidator>(_ => null); // done
 
     private List<Type> _customYarpMiddleware = [];
 
@@ -212,7 +212,7 @@ public class ProxyOptions
     /// <typeparam name="TClaimsTransformation">The class that augments the output of the /{0}/me endpoint</typeparam>
     public void AddClaimsTransformation<TClaimsTransformation>() where TClaimsTransformation : class, IClaimsTransformation
     {
-        _applyClaimsTransformationRegistration = s => s.AddTransient<IClaimsTransformation, TClaimsTransformation>();
+        _applyClaimsTransformationRegistration = s => s.AddTransient<IClaimsTransformation, TClaimsTransformation>(); // done
     }
 
     /// <summary>
@@ -222,7 +222,7 @@ public class ProxyOptions
     public void AddTokenParser<TTokenParser>() where TTokenParser : class, ITokenParser
     {
         _applyJwtParser = s => s
-            .AddTransient<ITokenParser, TTokenParser>();
+            .AddTransient<ITokenParser, TTokenParser>(); // done
     }
 
     /// <summary>
@@ -232,7 +232,7 @@ public class ProxyOptions
     public void UseEncryptionKey(IEncryptionKey key)
     {
         _applyJwtParser = s => s
-            .AddTransient<ITokenParser, JweParser>()
+            .AddTransient<ITokenParser, JweParser>() // done
             .AddSingleton(key);
     }
     
@@ -242,7 +242,7 @@ public class ProxyOptions
     /// <exception cref="NotImplementedException"></exception>
     public void UseSigningKey(SymmetricKey key)
     {
-        _applyHs256SignatureValidator = s => s.AddTransient<Hs256SignatureValidator>(_ => new Hs256SignatureValidator(key));
+        _applyHs256SignatureValidator = s => s.AddTransient<Hs256SignatureValidator>(_ => new Hs256SignatureValidator(key)); // done
     }
 
     /// <summary>
@@ -251,7 +251,7 @@ public class ProxyOptions
     /// <typeparam name="TAuthenticationCallbackHandler">The type of the class.</typeparam>
     public void AddAuthenticationCallbackHandler<TAuthenticationCallbackHandler>() where TAuthenticationCallbackHandler : class, IAuthenticationCallbackHandler
     {
-        _applyAuthenticationCallbackHandlerRegistration = s => s.AddTransient<IAuthenticationCallbackHandler, TAuthenticationCallbackHandler>();
+        _applyAuthenticationCallbackHandlerRegistration = s => s.AddTransient<IAuthenticationCallbackHandler, TAuthenticationCallbackHandler>(); // done
     }
 
     /// <summary>
@@ -269,7 +269,7 @@ public class ProxyOptions
     /// <exception cref="NotImplementedException"></exception>
     public void RegisterSignatureValidator<T>() where T : class, IJwtSignatureValidator
     {
-        _applyJwtValidator = s => s.AddTransient<IJwtSignatureValidator, T>();
+        _applyJwtValidator = s => s.AddTransient<IJwtSignatureValidator, T>(); // done
     }
 
     /// <summary>
@@ -280,7 +280,7 @@ public class ProxyOptions
     /// <param name="redisInstanceName"></param>
     public void ConfigureRedisBackBone(ConnectionMultiplexer connectionMultiplexer)
     {
-        _applyBackBone = (serviceCollection) =>
+        _applyBackBone = (serviceCollection) => // all done!
         {
             serviceCollection
                 .AddDataProtection()
@@ -310,49 +310,49 @@ public class ProxyOptions
         }
 
         var proxyBuilder = serviceCollection
-            .AddReverseProxy();
+            .AddReverseProxy(); // done
 
         _applyReverseProxyConfiguration(proxyBuilder);
 
-        _applyBackBone(serviceCollection);
+        _applyBackBone(serviceCollection); // done
 
         IdpRegistration.Apply(proxyBuilder);
 
         IdpRegistration.Apply(serviceCollection);
 
-        _applyClaimsTransformationRegistration(serviceCollection);
-        _applyAuthenticationCallbackHandlerRegistration(serviceCollection);
-        _applyJwtParser(serviceCollection);
-        _applyJwtValidator(serviceCollection);
-        _applyHs256SignatureValidator(serviceCollection);
+        _applyClaimsTransformationRegistration(serviceCollection); // done
+        _applyAuthenticationCallbackHandlerRegistration(serviceCollection); // done
+        _applyJwtParser(serviceCollection); // done
+        _applyJwtValidator(serviceCollection); // done
+        _applyHs256SignatureValidator(serviceCollection);// done
 
         serviceCollection
-            .AddDistributedMemoryCache()
-            .AddMemoryCache()
-            .AddSession(options =>
+            .AddDistributedMemoryCache() // done
+            .AddMemoryCache() // done
+            .AddSession(options => // done
             {
                 options.IdleTimeout = SessionIdleTimeout;
                 options.Cookie.HttpOnly = true;
                 options.Cookie.IsEssential = true;
                 options.Cookie.Name = CookieName;
-            });
+            }); // all done
 
         serviceCollection
-            .AddTransient(_ => this)
-            .AddTransient<IRedirectUriFactory, RedirectUriFactory>();
+            .AddTransient(_ => this) // done
+            .AddTransient<IRedirectUriFactory, RedirectUriFactory>(); // done
 
         serviceCollection
-            .AddHttpContextAccessor()
-            .AddTransient<TokenFactory>()
-            .AddTransient<AuthSession>()
-            .AddTransient<IAuthSession, AuthSession>()
-            .AddTransient<ILogger, DefaultLogger>();
+            .AddHttpContextAccessor() // done
+            .AddTransient<TokenFactory>() // done
+            .AddTransient<AuthSession>() // done
+            .AddTransient<IAuthSession, AuthSession>() // done
+            .AddTransient<ILogger, DefaultLogger>(); // done
 
-        serviceCollection
-            .AddTransient<Rs256SignatureValidator>();
+        serviceCollection // done
+            .AddTransient<Rs256SignatureValidator>(); // done
 
-        serviceCollection
-            .AddAuthentication(OidcProxyAuthenticationHandler.SchemaName)
-            .AddScheme<OidcProxyAuthenticationSchemeOptions, OidcProxyAuthenticationHandler>(OidcProxyAuthenticationHandler.SchemaName, null);
+        serviceCollection // done
+            .AddAuthentication(OidcProxyAuthenticationHandler.SchemaName) // done
+            .AddScheme<OidcProxyAuthenticationSchemeOptions, OidcProxyAuthenticationHandler>(OidcProxyAuthenticationHandler.SchemaName, null); // done
     }
 }

@@ -13,9 +13,9 @@ internal class IdpRegistration<TIdentityProvider, TOptions> : IIdpRegistration w
 
     private readonly Action<WebApplication> _idpEndpointRegistration;
 
-    private readonly Action<IReverseProxyBuilder> _proxyConfiguration;
+    private readonly Action<IReverseProxyBuilder> _proxyConfiguration; // done
 
-    private readonly List<Type> _yarpMiddlewareRegistrations = [typeof(TokenRenewalMiddleware)];
+    private readonly List<Type> _yarpMiddlewareRegistrations = [typeof(TokenRenewalMiddleware)]; // done
 
     public IdpRegistration(TOptions options, string endpointName = ".auth")
     {
@@ -26,35 +26,35 @@ internal class IdpRegistration<TIdentityProvider, TOptions> : IIdpRegistration w
                 .AddTransient<TokenRenewalMiddleware>()
                 .AddTransient<IIdentityProvider, TIdentityProvider>()
                 .AddTransient(_ => options)
-                .AddHttpClient<TIdentityProvider>();
+                .AddHttpClient<TIdentityProvider>(); // all done
         };
 
         _proxyConfiguration = c =>
         {
-            c.AddTransforms<HttpHeaderTransformation>();
+            c.AddTransforms<HttpHeaderTransformation>(); // done
         };
 
-        _idpEndpointRegistration = app => app.MapAuthenticationEndpoints(endpointName);
+        _idpEndpointRegistration = app => app.MapAuthenticationEndpoints(endpointName); // done
     }
 
     public void AddYarpMiddleware(Type handlerType)
     {
-        _yarpMiddlewareRegistrations.Add(handlerType);
+        _yarpMiddlewareRegistrations.Add(handlerType); // done
     }
 
     public void Apply(IServiceCollection serviceCollection)
     {
-        _idpRegistration.Invoke(serviceCollection);
+        _idpRegistration.Invoke(serviceCollection); // done 
     }
 
     public void Apply(WebApplication app)
     {
         _idpEndpointRegistration.Invoke(app);
-        app.RegisterYarpMiddleware(_yarpMiddlewareRegistrations);
+        app.RegisterYarpMiddleware(_yarpMiddlewareRegistrations); // done
     }
 
     public void Apply(IReverseProxyBuilder configuration)
     {
-        _proxyConfiguration.Invoke(configuration);
+        _proxyConfiguration.Invoke(configuration);  // done
     }
 }

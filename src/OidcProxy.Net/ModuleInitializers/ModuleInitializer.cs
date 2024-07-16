@@ -20,7 +20,7 @@ public static class ModuleInitializer
     public static IServiceCollection AddOidcProxy(this IServiceCollection serviceCollection,
         Action<ProxyOptions>? configureOptions = null)
     {
-        serviceCollection.AddTransient<AnonymousAccessMiddleware>();
+        serviceCollection.AddTransient<AnonymousAccessMiddleware>(); // done
         
         configureOptions?.Invoke(Options);  
         
@@ -40,20 +40,21 @@ public static class ModuleInitializer
 
         Options.IdpRegistration.Apply(app);
 
-        app.UseSession();
-        app.UseAuthentication();
-        app.UseAuthorization();
-
+        app.UseAuthentication(); // done
+        app.UseAuthorization(); // done
+        
         if (!Options.AllowAnonymousAccess)
         {
             app.UseMiddleware<AnonymousAccessMiddleware>();
-        }
+        } // done
 
+        app.UseSession(); // done
+        
         app.Use(async (context, next) =>
         {
             await context.Session.LoadAsync();
             await next();
-        });
+        }); // done
 
         return app;
     }
