@@ -2,6 +2,7 @@ namespace OidcProxy.Net.ModuleInitializers;
 
 public class ProxyConfig
 {
+    public Mode Mode { get; set; }
     public string? EndpointName { get; set; }
     public string? ErrorPage { get; set; }
     public string? LandingPage { get; set; }

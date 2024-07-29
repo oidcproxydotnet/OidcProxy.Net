@@ -144,6 +144,12 @@ public class BrowserInteractionSteps(ScenarioContext scenarioContext)
     {
         _response.Status.Should().Be(HttpStatusCode.Unauthorized);
     }
+    
+    [Then(@"the user receives a 404 not found")]
+    public void ThenTheUserReceivesANotFound()
+    {
+        _response.Status.Should().Be(HttpStatusCode.NotFound);
+    }
 
     [Then("the ASP.NET Core can use ACCESS_TOKEN claims only")]
     public void AssertAccessTokenClaimsOnly()

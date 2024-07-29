@@ -1,6 +1,7 @@
 using Microsoft.AspNetCore.Builder;
 using Microsoft.Extensions.DependencyInjection;
 using OidcProxy.Net.Middleware;
+using Yarp.ReverseProxy.Configuration;
 
 namespace OidcProxy.Net.ModuleInitializers.Configuration;
 
@@ -8,7 +9,7 @@ internal class YarpBootstrap : IBootstrap
 {
     private readonly List<Type> _yarpMiddlewareRegistrations = [typeof(TokenRenewalMiddleware)];
 
-    private Action<IReverseProxyBuilder> _configuration = _ => { };
+    private IList<Action<IReverseProxyBuilder>> _configuration = new List<Action<IReverseProxyBuilder>>();
 
     public void AddYarpMiddleware(IEnumerable<Type> handlerType)
     {
@@ -20,8 +21,11 @@ internal class YarpBootstrap : IBootstrap
         var proxyBuilder = services
             .AddReverseProxy()
             .AddTransforms<HttpHeaderTransformation>();
-        
-        _configuration.Invoke(proxyBuilder);
+
+        foreach (var config in _configuration)
+        {
+            config.Invoke(proxyBuilder);
+        }
     }
 
     public void Configure(ProxyOptions options, WebApplication app)
@@ -29,8 +33,8 @@ internal class YarpBootstrap : IBootstrap
         app.RegisterYarpMiddleware(_yarpMiddlewareRegistrations);
     }
 
-    public void WithPostConfigure(Action<IReverseProxyBuilder> configuration)
+    public void ConfigureProxyBuilder(Action<IReverseProxyBuilder> configuration)
     {
-        _configuration = configuration;
+        _configuration.Add(configuration);
     }
 }

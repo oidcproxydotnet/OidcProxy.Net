@@ -54,6 +54,7 @@ internal class AuthorizationBootstrap : IBootstrap
     public void Configure(ProxyOptions options, IServiceCollection services)
     {
         services
+            .AddAuthorization()
             .AddAuthentication(OidcProxyAuthenticationHandler.SchemaName)
             .AddScheme<OidcProxyAuthenticationSchemeOptions, OidcProxyAuthenticationHandler>(OidcProxyAuthenticationHandler.SchemaName, null);
         

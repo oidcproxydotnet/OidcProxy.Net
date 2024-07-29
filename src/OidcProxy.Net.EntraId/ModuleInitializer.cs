@@ -7,7 +7,8 @@ namespace OidcProxy.Net.EntraId;
 
 public static class ModuleInitializer
 {
-    public static void ConfigureEntraId(this ProxyOptions options, IConfigurationSection configurationSection, string endpointName = ".auth")
+    public static void ConfigureEntraId(this ProxyOptions options, IConfigurationSection configurationSection,
+        string endpointName = ".auth")
         => ConfigureEntraId(options, (IConfigurationSection)configurationSection.Get<EntraIdConfig>(), endpointName);
 
     public static void ConfigureEntraId(this ProxyOptions options, EntraIdConfig config, string endpointName = ".auth")
@@ -27,12 +28,14 @@ public static class ModuleInitializer
     /// <param name="serviceCollection"></param>
     /// <param name="config"></param>
     /// <returns></returns>
-    public static IServiceCollection AddEntraIdProxy(this IServiceCollection serviceCollection, EntraIdProxyConfig config,
+    public static IServiceCollection AddEntraIdProxy(this IServiceCollection serviceCollection,
+        EntraIdProxyConfig config,
         Action<ProxyOptions>? configureOptions = null)
     {
         if (config == null)
         {
-            throw new ArgumentNullException(nameof(config), "Failed to initialise OidcProxy.Net. Config cannot be null. " +
+            throw new ArgumentNullException(nameof(config),
+                "Failed to initialise OidcProxy.Net. Config cannot be null. " +
                 $"Invoke `builder.Services.AddOidcProxy(..)` with an instance of `{nameof(EntraIdProxyConfig)}`.");
         }
 
@@ -44,22 +47,8 @@ public static class ModuleInitializer
         if (entraIdConfig == null)
         {
             throw new ArgumentException("Failed to initialise OidcProxy.Net. " +
-                $"Invoke `builder.Services.AddOidcProxy(..)` with an instance of `{nameof(EntraIdProxyConfig)}` " +
-                $"and provide a value for {nameof(EntraIdProxyConfig)}.{nameof(config.EntraId)}.");
-        }
-
-        if (routes == null || !routes.Any())
-        {
-            throw new ArgumentException("Failed to initialise OidcProxy.Net. " +
-                $"Invoke `builder.Services.AddOidcProxy(..)` with an instance of `{nameof(EntraIdProxyConfig)}` " +
-                $"and provide a value for {nameof(EntraIdProxyConfig)}.{nameof(config.ReverseProxy)}.{nameof(config.ReverseProxy.Routes)}.");
-        }
-
-        if (clusters == null || !clusters.Any())
-        {
-            throw new ArgumentException("Failed to initialise OidcProxy.Net. " +
-                $"Invoke `builder.Services.AddOidcProxy(..)` with an instance of `{nameof(EntraIdProxyConfig)}` " +
-                $"and provide a value for {nameof(EntraIdProxyConfig)}.{nameof(config.ReverseProxy)}.{nameof(config.ReverseProxy.Clusters)}.");
+                                        $"Invoke `builder.Services.AddOidcProxy(..)` with an instance of `{nameof(EntraIdProxyConfig)}` " +
+                                        $"and provide a value for {nameof(EntraIdProxyConfig)}.{nameof(config.EntraId)}.");
         }
 
         return serviceCollection.AddOidcProxy(options =>
@@ -71,8 +60,10 @@ public static class ModuleInitializer
             AssignIfNotNull(config.NameClaim, nameClaim => options.NameClaim = nameClaim);
             AssignIfNotNull(config.RoleClaim, roleClaim => options.RoleClaim = roleClaim);
 
+            options.Mode = config.Mode;
             options.EnableUserPreferredLandingPages = config.EnableUserPreferredLandingPages;
-            options.AlwaysRedirectToHttps = !config.AlwaysRedirectToHttps.HasValue || config.AlwaysRedirectToHttps.Value;
+            options.AlwaysRedirectToHttps =
+                !config.AlwaysRedirectToHttps.HasValue || config.AlwaysRedirectToHttps.Value;
             options.AllowAnonymousAccess = !config.AllowAnonymousAccess.HasValue || config.AllowAnonymousAccess.Value;
             options.SetAllowedLandingPages(config.AllowedLandingPages);
 
@@ -85,7 +76,10 @@ public static class ModuleInitializer
 
             ConfigureEntraId(options, entraIdConfig, endpointName);
 
-            options.ConfigureYarp(yarp => yarp.LoadFromMemory(routes, clusters));
+            if (options.Mode != Mode.AuthenticateOnly)
+            {
+                options.ConfigureYarp(routes, clusters);
+            }
         });
     }
 

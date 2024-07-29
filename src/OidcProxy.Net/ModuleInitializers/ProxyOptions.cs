@@ -7,6 +7,7 @@ using OidcProxy.Net.Middleware;
 using OidcProxy.Net.ModuleInitializers.Configuration;
 using OidcProxy.Net.OpenIdConnect;
 using StackExchange.Redis;
+using Yarp.ReverseProxy.Configuration;
 
 namespace OidcProxy.Net.ModuleInitializers;
 
@@ -42,15 +43,18 @@ public class ProxyOptions
         _configureClaimsTransformation.Invoke(_oidcProxyBootstrap);
 
         _configureYarpBootstrap.Invoke(_yarpBootstrap);
+        
         _yarpBootstrap.AddYarpMiddleware(_customYarpMiddleware);
 
-        var bootstraps = new IBootstrap?[]
+        var bootstraps = new List<IBootstrap?>();
+        if (Mode != Mode.AuthenticateOnly)
         {
-            _yarpBootstrap,
-            _sessionBootstrap,
-            _oidcProxyBootstrap,
-            _authorizationBootstrap,
-        };
+            bootstraps.Add(_yarpBootstrap);
+        }
+
+        bootstraps.Add(_sessionBootstrap);
+        bootstraps.Add(_oidcProxyBootstrap);
+        bootstraps.Add(_authorizationBootstrap);
         
         return bootstraps
             .Where(x => x != null)
@@ -72,6 +76,11 @@ public class ProxyOptions
 
     internal LandingPage[] AllowedUserPreferredLandingPages = Array.Empty<LandingPage>();
 
+    /// <summary>
+    /// Gets or sets the Mode of OidcProxy. When setting to `AuthenticateOnly`, requests will not be relayed downstream automatically.
+    /// </summary>
+    public Mode Mode { get; set; }
+    
     /// <summary>
     /// Gets or sets the name of the cookie.
     /// </summary>
@@ -283,7 +292,27 @@ public class ProxyOptions
     /// </summary>
     public void ConfigureYarp(Action<IReverseProxyBuilder> configuration)
     {
-        _configureYarpBootstrap = yarpBootstrap => yarpBootstrap.WithPostConfigure(configuration);
+        _configureYarpBootstrap = yarpBootstrap => yarpBootstrap.ConfigureProxyBuilder(configuration);
+    }
+
+    public void ConfigureYarp(IReadOnlyList<RouteConfig> routes, IReadOnlyList<ClusterConfig> clusters)
+    {
+        if (!routes.Any())
+        {
+            throw new ArgumentException("Failed to initialise OidcProxy.Net. " +
+                                        $"Invoke `builder.Services.AddOidcProxy(..)` " +
+                                        $"and provide a value for config.ReverseProxy.Routes");
+        }
+
+        if (!clusters.Any())
+        {            
+            throw new ArgumentException("Failed to initialise OidcProxy.Net. " +
+                                         $"Invoke `builder.Services.AddOidcProxy(..)` " +
+                                         $"and provide a value for config.ReverseProxy.Clusters");
+        }
+        
+        _configureYarpBootstrap = yarpBootstrap => yarpBootstrap
+            .ConfigureProxyBuilder(b => b.LoadFromMemory(routes, clusters));
     }
 
     /// <summary>
@@ -311,6 +340,7 @@ public class ProxyOptions
     /// <summary>
     /// Apply the options to the service collection
     /// </summary>
+    [Obsolete("Do not use. Will be removed soon.")]
     public void Apply(IServiceCollection serviceCollection)
     {
         if (_oidcProxyBootstrap == null)

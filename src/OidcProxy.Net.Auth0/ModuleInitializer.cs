@@ -47,20 +47,6 @@ public static class ModuleInitializer
                 $"and provide a value for {nameof(Auth0ProxyConfig)}.{nameof(config.Auth0)}.");
         }
 
-        if (routes == null || !routes.Any())
-        {
-            throw new ArgumentException("Failed to initialise OidcProxy.Net. " +
-                $"Invoke `builder.Services.AddOidcProxy(..)` with an instance of `{nameof(Auth0ProxyConfig)}` " +
-                $"and provide a value for {nameof(Auth0ProxyConfig)}.{nameof(config.ReverseProxy)}.{nameof(config.ReverseProxy.Routes)}.");
-        }
-
-        if (clusters == null || !clusters.Any())
-        {
-            throw new ArgumentException("Failed to initialise OidcProxy.Net. " +
-                $"Invoke `builder.Services.AddOidcProxy(..)` with an instance of `{nameof(Auth0ProxyConfig)}` " +
-                $"and provide a value for {nameof(Auth0ProxyConfig)}.{nameof(config.ReverseProxy)}.{nameof(config.ReverseProxy.Clusters)}.");
-        }
-
         return serviceCollection.AddOidcProxy(options =>
         {
             AssignIfNotNull(config.ErrorPage, options.SetAuthenticationErrorPage);
@@ -70,6 +56,7 @@ public static class ModuleInitializer
             AssignIfNotNull(config.NameClaim, nameClaim => options.NameClaim = nameClaim);
             AssignIfNotNull(config.RoleClaim, roleClaim => options.RoleClaim = roleClaim);
 
+            options.Mode = config.Mode;
             options.EnableUserPreferredLandingPages = config.EnableUserPreferredLandingPages;
             options.AlwaysRedirectToHttps = !config.AlwaysRedirectToHttps.HasValue || config.AlwaysRedirectToHttps.Value;
             options.AllowAnonymousAccess = !config.AllowAnonymousAccess.HasValue || config.AllowAnonymousAccess.Value;
@@ -84,7 +71,10 @@ public static class ModuleInitializer
 
             options.ConfigureAuth0(auth0Config, endpointName);
 
-            options.ConfigureYarp(yarp => yarp.LoadFromMemory(routes, clusters));
+            if (options.Mode != Mode.AuthenticateOnly)
+            {
+                options.ConfigureYarp(routes, clusters);
+            }
         });
     }
 
