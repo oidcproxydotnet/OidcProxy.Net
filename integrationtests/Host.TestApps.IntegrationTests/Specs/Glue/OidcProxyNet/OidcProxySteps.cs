@@ -109,6 +109,12 @@ public class OidcProxySteps(ScenarioContext scenarioContext)
         _builder.WithExpiredAccessToken();
     }
     
+    [Given(@"the proxy runs in AuthenticateOnly-Mode")]
+    public void RemoveYarpFromConfigAndSetToAuthenticationOnlyMode()
+    {
+        _builder.WithAuthenticateOnlyMode();
+    }
+    
     [AfterScenario]
     public async Task TearDown()
     {

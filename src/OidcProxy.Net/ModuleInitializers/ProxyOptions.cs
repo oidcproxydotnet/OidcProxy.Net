@@ -1,41 +1,72 @@
-using Microsoft.AspNetCore.DataProtection;
 using Microsoft.Extensions.DependencyInjection;
 using OidcProxy.Net.Cryptography;
 using OidcProxy.Net.IdentityProviders;
 using OidcProxy.Net.Jwt;
 using OidcProxy.Net.Jwt.SignatureValidation;
-using OidcProxy.Net.Locking;
-using OidcProxy.Net.Locking.Distributed.Redis;
-using OidcProxy.Net.Locking.InMemory;
-using OidcProxy.Net.Logging;
 using OidcProxy.Net.Middleware;
+using OidcProxy.Net.ModuleInitializers.Configuration;
 using OidcProxy.Net.OpenIdConnect;
-using RedLockNet;
-using RedLockNet.SERedis;
-using RedLockNet.SERedis.Configuration;
 using StackExchange.Redis;
+using Yarp.ReverseProxy.Configuration;
 
 namespace OidcProxy.Net.ModuleInitializers;
 
 public class ProxyOptions
 {
-    internal IIdpRegistration? IdpRegistration = null;
+    #region Bootstrapping
 
-    private Action<IReverseProxyBuilder> _applyReverseProxyConfiguration = _ => { };
+    private Action<IOidcProxyBootstrap> _configureCallbackHandler = _ => { };
 
-    private Action<IServiceCollection> _applyClaimsTransformationRegistration = (s) => s.AddTransient<IClaimsTransformation, DefaultClaimsTransformation>();
+    private Action<IOidcProxyBootstrap> _configureClaimsTransformation = _ => { };
 
-    private Action<IServiceCollection> _applyBackBone = (s) => s.AddTransient<IConcurrentContext, InMemoryConcurrentContext>();
+    private Action<YarpBootstrap> _configureYarpBootstrap = _ => { };
 
-    private Action<IServiceCollection> _applyAuthenticationCallbackHandlerRegistration = (s) => s.AddTransient<IAuthenticationCallbackHandler, DefaultAuthenticationCallbackHandler>();
+    private readonly List<Type> _customYarpMiddleware = [typeof(TokenRenewalMiddleware)];
 
-    private Action<IServiceCollection> _applyJwtParser = (s) => s.AddTransient<ITokenParser, JwtParser>().AddSingleton<IEncryptionKey?>(_ => null);
+    private IOidcProxyBootstrap? _oidcProxyBootstrap = null;
 
-    private Action<IServiceCollection> _applyJwtValidator = (s) => s.AddTransient<IJwtSignatureValidator, JwtSignatureValidator>();
+    private readonly SessionBootstrap _sessionBootstrap = new();
+
+    private readonly YarpBootstrap _yarpBootstrap = new();
+
+    private readonly AuthorizationBootstrap _authorizationBootstrap = new();
     
-    private Action<IServiceCollection> _applyHs256SignatureValidator = (s) => s.AddTransient<Hs256SignatureValidator>(_ => null);
+    internal IEnumerable<IBootstrap> GetConfiguration()
+    {
+        if (_oidcProxyBootstrap == null)
+        {
+            throw new NotSupportedException("Unable to bootstrap OidcProxy.Net. " +
+                                            "No IdentityProviders configured.");
+        }
+        
+        _configureCallbackHandler.Invoke(_oidcProxyBootstrap);
+        _configureClaimsTransformation.Invoke(_oidcProxyBootstrap);
 
-    private List<Type> _customYarpMiddleware = [];
+        _configureYarpBootstrap.Invoke(_yarpBootstrap);
+        
+        _yarpBootstrap.AddYarpMiddleware(_customYarpMiddleware);
+
+        var bootstraps = new List<IBootstrap?>();
+        if (Mode != Mode.AuthenticateOnly)
+        {
+            bootstraps.Add(_yarpBootstrap);
+        }
+
+        bootstraps.Add(_sessionBootstrap);
+        bootstraps.Add(_oidcProxyBootstrap);
+        bootstraps.Add(_authorizationBootstrap);
+        
+        return bootstraps
+            .Where(x => x != null)
+            .Cast<IBootstrap>()
+            .ToArray();
+    }
+
+    #endregion
+
+    #region Public properties
+
+    internal string EndpointName = ".auth";
 
     internal Uri? CustomHostName = null;
 
@@ -45,6 +76,11 @@ public class ProxyOptions
 
     internal LandingPage[] AllowedUserPreferredLandingPages = Array.Empty<LandingPage>();
 
+    /// <summary>
+    /// Gets or sets the Mode of OidcProxy. When setting to `AuthenticateOnly`, requests will not be relayed downstream automatically.
+    /// </summary>
+    public Mode Mode { get; set; }
+    
     /// <summary>
     /// Gets or sets the name of the cookie.
     /// </summary>
@@ -82,6 +118,8 @@ public class ProxyOptions
     /// /authorize endpoint of the identity provider.
     /// </summary>
     public bool AllowAnonymousAccess { get; set; } = true;
+
+    #endregion
 
     /// <summary>
     /// Sets a custom page to redirect to when the authentication on the OIDC Server failed.
@@ -128,9 +166,9 @@ public class ProxyOptions
     }
 
     /// <summary>
-    /// 
+    /// Set the whitelist of endpoints a user may return to after authenticating successfully.
     /// </summary>
-    /// <param name="landingPage"></param>
+    /// <param name="landingPages">A collection of endpoints</param>
     public void SetAllowedLandingPages(IEnumerable<string>? landingPages)
     {
         if (landingPages == null || !landingPages.Any())
@@ -177,24 +215,18 @@ public class ProxyOptions
         CustomHostName = hostname;
     }
 
-    public void RegisterIdentityProvider<TIdentityProvider, TOptions>(TOptions options, string endpointName = ".auth")
+    public void RegisterIdentityProvider<TIdentityProvider, TIdentityProviderConfig>(TIdentityProviderConfig config, string endpointName = ".auth")
         where TIdentityProvider : class, IIdentityProvider
-        where TOptions : class
+        where TIdentityProviderConfig : class
     {
-        if (IdpRegistration != null)
+        if (_oidcProxyBootstrap != null)
         {
             throw new NotSupportedException("Unable to bootstrap OidcProxy.Net. " +
                                             "Configuring multiple IdentityProviders is not supported.");
         }
 
-        var registration = new IdpRegistration<TIdentityProvider, TOptions>(options, endpointName);
-
-        foreach (var handlerType in _customYarpMiddleware)
-        {
-            registration.AddYarpMiddleware(handlerType);
-        }
-
-        IdpRegistration = registration;
+        EndpointName = endpointName;
+        _oidcProxyBootstrap = new OidcProxyBootstrap<TIdentityProvider, TIdentityProviderConfig>(config);
     }
 
     /// <summary>
@@ -210,9 +242,11 @@ public class ProxyOptions
     /// By default, the /{0}/me endpoint displays the payload of the ID token, including all the claims. However, there may be situations where it is necessary to display fewer claims or additional claims are required. To customize the claims shown in the /{0}/me endpoint, you can create a custom implementation of the IClaimsTransformation interface and register it using this method. This allows you to control the transformation and selection of claims for the endpoint. 
     /// </summary>
     /// <typeparam name="TClaimsTransformation">The class that augments the output of the /{0}/me endpoint</typeparam>
-    public void AddClaimsTransformation<TClaimsTransformation>() where TClaimsTransformation : class, IClaimsTransformation
+    public void AddClaimsTransformation<TClaimsTransformation>()
+        where TClaimsTransformation : class, IClaimsTransformation
     {
-        _applyClaimsTransformationRegistration = s => s.AddTransient<IClaimsTransformation, TClaimsTransformation>();
+        _configureClaimsTransformation = oidcProxyBootstrap =>
+            oidcProxyBootstrap.WithClaimsTransformation<TClaimsTransformation>();
     }
 
     /// <summary>
@@ -221,8 +255,7 @@ public class ProxyOptions
     /// <typeparam name="TTokenParser">The type of the class to use to convert the jwt to a JwtPayload.</typeparam>
     public void AddTokenParser<TTokenParser>() where TTokenParser : class, ITokenParser
     {
-        _applyJwtParser = s => s
-            .AddTransient<ITokenParser, TTokenParser>();
+        _authorizationBootstrap.WithTokenParser<TTokenParser>();
     }
 
     /// <summary>
@@ -231,27 +264,27 @@ public class ProxyOptions
     /// <param name="key">An implementation of the ITokenEncryptionKey class.</param>
     public void UseEncryptionKey(IEncryptionKey key)
     {
-        _applyJwtParser = s => s
-            .AddTransient<ITokenParser, JweParser>()
-            .AddSingleton(key);
+        _authorizationBootstrap.WithEncryptionKey(key);
     }
-    
+
     /// <summary>
     /// 
     /// </summary>
     /// <exception cref="NotImplementedException"></exception>
     public void UseSigningKey(SymmetricKey key)
     {
-        _applyHs256SignatureValidator = s => s.AddTransient<Hs256SignatureValidator>(_ => new Hs256SignatureValidator(key));
+        _authorizationBootstrap.WithSigningKey(key);
     }
 
     /// <summary>
     /// Configure a class that redirects the user somewhere after authenticating.
     /// </summary>
     /// <typeparam name="TAuthenticationCallbackHandler">The type of the class.</typeparam>
-    public void AddAuthenticationCallbackHandler<TAuthenticationCallbackHandler>() where TAuthenticationCallbackHandler : class, IAuthenticationCallbackHandler
+    public void AddAuthenticationCallbackHandler<TAuthenticationCallbackHandler>()
+        where TAuthenticationCallbackHandler : class, IAuthenticationCallbackHandler
     {
-        _applyAuthenticationCallbackHandlerRegistration = s => s.AddTransient<IAuthenticationCallbackHandler, TAuthenticationCallbackHandler>();
+        _configureCallbackHandler = oidcProxyBootstrap =>
+            oidcProxyBootstrap.WithCallbackHandler<TAuthenticationCallbackHandler>();
     }
 
     /// <summary>
@@ -259,17 +292,38 @@ public class ProxyOptions
     /// </summary>
     public void ConfigureYarp(Action<IReverseProxyBuilder> configuration)
     {
-        _applyReverseProxyConfiguration = configuration;
+        _configureYarpBootstrap = yarpBootstrap => yarpBootstrap.ConfigureProxyBuilder(configuration);
     }
-    
+
+    public void ConfigureYarp(IReadOnlyList<RouteConfig> routes, IReadOnlyList<ClusterConfig> clusters)
+    {
+        if (!routes.Any())
+        {
+            throw new ArgumentException("Failed to initialise OidcProxy.Net. " +
+                                        $"Invoke `builder.Services.AddOidcProxy(..)` " +
+                                        $"and provide a value for config.ReverseProxy.Routes");
+        }
+
+        if (!clusters.Any())
+        {            
+            throw new ArgumentException("Failed to initialise OidcProxy.Net. " +
+                                         $"Invoke `builder.Services.AddOidcProxy(..)` " +
+                                         $"and provide a value for config.ReverseProxy.Clusters");
+        }
+        
+        _configureYarpBootstrap = yarpBootstrap => yarpBootstrap
+            .ConfigureProxyBuilder(b => b.LoadFromMemory(routes, clusters));
+    }
+
     /// <summary>
     /// Register a class that validates the access token signature
     /// </summary>
-    /// <typeparam name="T">The type to register</typeparam>
+    /// <typeparam name="TJwtSignatureValidator">The type to register</typeparam>
     /// <exception cref="NotImplementedException"></exception>
-    public void RegisterSignatureValidator<T>() where T : class, IJwtSignatureValidator
+    public void RegisterSignatureValidator<TJwtSignatureValidator>()
+        where TJwtSignatureValidator : class, IJwtSignatureValidator
     {
-        _applyJwtValidator = s => s.AddTransient<IJwtSignatureValidator, T>();
+        _authorizationBootstrap.WithSignatureValidator<TJwtSignatureValidator>();
     }
 
     /// <summary>
@@ -280,79 +334,25 @@ public class ProxyOptions
     /// <param name="redisInstanceName"></param>
     public void ConfigureRedisBackBone(ConnectionMultiplexer connectionMultiplexer)
     {
-        _applyBackBone = (serviceCollection) =>
-        {
-            serviceCollection
-                .AddDataProtection()
-                .PersistKeysToStackExchangeRedis(connectionMultiplexer, this.CookieName);
-
-            serviceCollection.AddStackExchangeRedisCache(options =>
-            {
-                options.Configuration = connectionMultiplexer.Configuration;
-                options.InstanceName = CookieName;
-            });
-
-            serviceCollection
-                .AddTransient<IConcurrentContext, RedisConcurrentContext>()
-                .AddTransient<IDistributedLockFactory>(_ => RedLockFactory.Create(new List<RedLockMultiplexer>() { connectionMultiplexer }));
-        };
+        _sessionBootstrap.WithRedis(connectionMultiplexer);
     }
 
     /// <summary>
     /// Apply the options to the service collection
     /// </summary>
+    [Obsolete("Do not use. Will be removed soon.")]
     public void Apply(IServiceCollection serviceCollection)
     {
-        if (IdpRegistration == null)
+        if (_oidcProxyBootstrap == null)
         {
             throw new NotSupportedException("Unable to bootstrap OidcProxy.Net. " +
                                             "You must register an IdentityProvider.");
         }
 
-        var proxyBuilder = serviceCollection
-            .AddReverseProxy();
-
-        _applyReverseProxyConfiguration(proxyBuilder);
-
-        _applyBackBone(serviceCollection);
-
-        IdpRegistration.Apply(proxyBuilder);
-
-        IdpRegistration.Apply(serviceCollection);
-
-        _applyClaimsTransformationRegistration(serviceCollection);
-        _applyAuthenticationCallbackHandlerRegistration(serviceCollection);
-        _applyJwtParser(serviceCollection);
-        _applyJwtValidator(serviceCollection);
-        _applyHs256SignatureValidator(serviceCollection);
-
-        serviceCollection
-            .AddDistributedMemoryCache()
-            .AddMemoryCache()
-            .AddSession(options =>
-            {
-                options.IdleTimeout = SessionIdleTimeout;
-                options.Cookie.HttpOnly = true;
-                options.Cookie.IsEssential = true;
-                options.Cookie.Name = CookieName;
-            });
-
-        serviceCollection
-            .AddTransient(_ => this)
-            .AddTransient<IRedirectUriFactory, RedirectUriFactory>();
-
-        serviceCollection
-            .AddHttpContextAccessor()
-            .AddTransient<TokenFactory>()
-            .AddTransient<AuthSession>()
-            .AddTransient<IAuthSession, AuthSession>()
-            .AddTransient<ILogger, DefaultLogger>();
-
-        serviceCollection
-            .AddTransient<Rs256SignatureValidator>();
-
-        serviceCollection
-            .AddAuthentication(OidcProxyAuthenticationHandler.SchemaName)
-            .AddScheme<OidcProxyAuthenticationSchemeOptions, OidcProxyAuthenticationHandler>(OidcProxyAuthenticationHandler.SchemaName, null);
+        var configuration = GetConfiguration();
+        foreach (var bootstrap in configuration)
+        {
+            bootstrap.Configure(this, serviceCollection);
+        }
     }
 }

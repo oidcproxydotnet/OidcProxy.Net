@@ -6,7 +6,7 @@
         <Nullable>enable</Nullable>
 
         <PackageId>OidcProxy.Net</PackageId>
-        <Version>5.0.1</Version>
+        <Version>5.1.0</Version>
         <Authors>Albert Starreveld</Authors>
         <Company>OidcProxy.net</Company>
         <PackageLicenseExpression>LGPL-3.0-only</PackageLicenseExpression>
@@ -19,10 +19,12 @@
         <PackageIcon>logo.png</PackageIcon>
         <SignAssembly>true</SignAssembly>
         <LangVersion>12</LangVersion>
-        <PackageReleaseNotes>Upgrades:
-            - build(deps): bump System.IdentityModel.Tokens.Jwt from 7.6.2 to 7.6.3
-            - build(deps): bump Microsoft.Extensions.Caching.StackExchangeRedis from 8.0.6 to 8.0.7
-            - build(deps): bump Microsoft.AspNetCore.DataProtection.StackExchangeRedis from 8.0.6 to 8.0.7
+        <PackageReleaseNotes>Enhancements:
+            - Implemented 'AuthenticateOnly' mode (disables forwarding requests to downstream services).
+            
+            Upgrades:
+            - build(deps): bump Microsoft.Identity.Client from 4.61.3 to 4.62.0
+            - build(deps): bump System.IdentityModel.Tokens.Jwt from 7.6.3 to 8.0.1
         </PackageReleaseNotes>
     </PropertyGroup>
 
@@ -30,9 +32,9 @@
       <PackageReference Include="jose-jwt" Version="5.0.0" />
       <PackageReference Include="Microsoft.AspNetCore.DataProtection.StackExchangeRedis" Version="8.0.7" />
       <PackageReference Include="Microsoft.Extensions.Caching.StackExchangeRedis" Version="8.0.7" />
-      <PackageReference Include="Microsoft.Identity.Client" Version="4.61.3" />
+      <PackageReference Include="Microsoft.Identity.Client" Version="4.62.0" />
       <PackageReference Include="RedLock.net" Version="2.3.2" />
-      <PackageReference Include="System.IdentityModel.Tokens.Jwt" Version="7.6.3" />
+      <PackageReference Include="System.IdentityModel.Tokens.Jwt" Version="8.0.1" />
       <PackageReference Include="Yarp.ReverseProxy" Version="2.1.0" />
     </ItemGroup>
 

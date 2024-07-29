@@ -17,8 +17,9 @@ public class OidcProxyBuilder
 {
     public string Url { get; private set; } = "https://localhost:8444";
     private bool _allowAnonymousAccess = true;
-    private bool _addClaimsTransformation = false;
-    private bool _addSIgningKey = false;
+    private bool _addClaimsTransformation;
+    private bool _addSigningKey;
+    private bool _authenticateOnlyMode;
     private List<string> _whitelist = new();
     private IEncryptionKey? _encryptionKey = null;
     private Action<WebApplicationBuilder> _configurePolicyOnWebAppBuilder = _ => { };
@@ -51,7 +52,7 @@ public class OidcProxyBuilder
 
     public OidcProxyBuilder WithSigningKey()
     {
-        _addSIgningKey = true;
+        _addSigningKey = true;
         return this;
     }
 
@@ -133,6 +134,11 @@ public class OidcProxyBuilder
 
         return this;
     }
+    
+    public void WithAuthenticateOnlyMode()
+    {
+        _authenticateOnlyMode = true;
+    }
 
     public WebApplication Build()
     {
@@ -145,6 +151,12 @@ public class OidcProxyBuilder
             .Get<OidcProxyConfig>();
 
         config.AllowAnonymousAccess = _allowAnonymousAccess;
+
+        if (_authenticateOnlyMode)
+        {
+            config.ReverseProxy = null;
+            config.Mode = Mode.AuthenticateOnly;
+        }
 
         if (_whitelist.Any())
         {
@@ -163,7 +175,7 @@ public class OidcProxyBuilder
                 x.UseEncryptionKey(_encryptionKey);
             }
 
-            if (_addSIgningKey)
+            if (_addSigningKey)
             {
                 var bytes = "fImIhRwPzldBm0w4rNQGv0FQ5O1ArMgH+6zT4AlSbgE=\n"u8.ToArray();
                 x.UseSigningKey(new SymmetricKey(new SymmetricSecurityKey(bytes)));
