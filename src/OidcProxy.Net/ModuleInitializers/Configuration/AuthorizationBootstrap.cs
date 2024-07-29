@@ -7,7 +7,7 @@ using OidcProxy.Net.Middleware;
 
 namespace OidcProxy.Net.ModuleInitializers.Configuration;
 
-public class AuthorizationBootstrap : IBootstrap
+internal class AuthorizationBootstrap : IBootstrap
 {
     private Action<IServiceCollection> _applyJwtParser = s => s
         .AddTransient<ITokenParser, JwtParser>()

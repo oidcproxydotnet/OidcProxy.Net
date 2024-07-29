@@ -4,24 +4,33 @@ using OidcProxy.Net.Middleware;
 
 namespace OidcProxy.Net.ModuleInitializers.Configuration;
 
-public class YarpBootstrap : IBootstrap
+internal class YarpBootstrap : IBootstrap
 {
     private readonly List<Type> _yarpMiddlewareRegistrations = [typeof(TokenRenewalMiddleware)];
-    
-    public void AddYarpMiddleware(Type handlerType)
+
+    private Action<IReverseProxyBuilder> _configuration = _ => { };
+
+    public void AddYarpMiddleware(IEnumerable<Type> handlerType)
     {
-        _yarpMiddlewareRegistrations.Add(handlerType);
+        _yarpMiddlewareRegistrations.AddRange(handlerType);
     }
     
     public void Configure(ProxyOptions options, IServiceCollection services)
     {
-        services
+        var proxyBuilder = services
             .AddReverseProxy()
             .AddTransforms<HttpHeaderTransformation>();
+        
+        _configuration.Invoke(proxyBuilder);
     }
 
     public void Configure(ProxyOptions options, WebApplication app)
     {
         app.RegisterYarpMiddleware(_yarpMiddlewareRegistrations);
+    }
+
+    public void WithPostConfigure(Action<IReverseProxyBuilder> configuration)
+    {
+        _configuration = configuration;
     }
 }

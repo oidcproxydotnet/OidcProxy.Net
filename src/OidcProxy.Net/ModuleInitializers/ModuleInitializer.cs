@@ -1,7 +1,5 @@
 using Microsoft.AspNetCore.Builder;
 using Microsoft.Extensions.DependencyInjection;
-using OidcProxy.Net.Jwt.SignatureValidation;
-using OidcProxy.Net.Middleware;
 
 namespace OidcProxy.Net.ModuleInitializers;
 
@@ -20,11 +18,14 @@ public static class ModuleInitializer
     public static IServiceCollection AddOidcProxy(this IServiceCollection serviceCollection,
         Action<ProxyOptions>? configureOptions = null)
     {
-        serviceCollection.AddTransient<AnonymousAccessMiddleware>(); // done
-        
         configureOptions?.Invoke(Options);  
         
-        Options.Apply(serviceCollection);
+        var configuration = Options.GetConfiguration();
+        foreach (var option in configuration)
+        {
+            option.Configure(Options, serviceCollection);
+        }
+        
         return serviceCollection;
     }
 
@@ -33,28 +34,11 @@ public static class ModuleInitializer
     /// </summary>
     public static WebApplication UseOidcProxy(this WebApplication app)
     {
-        if (Options.IdpRegistration == null)
+        var configuration = Options.GetConfiguration();
+        foreach (var option in configuration)
         {
-            throw new NotSupportedException("Cannot bootstrap OidcProxy.Net. Register an identity provider.");
+            option.Configure(Options, app);
         }
-
-        Options.IdpRegistration.Apply(app);
-
-        app.UseAuthentication(); // done
-        app.UseAuthorization(); // done
-        
-        if (!Options.AllowAnonymousAccess)
-        {
-            app.UseMiddleware<AnonymousAccessMiddleware>();
-        } // done
-
-        app.UseSession(); // done
-        
-        app.Use(async (context, next) =>
-        {
-            await context.Session.LoadAsync();
-            await next();
-        }); // done
 
         return app;
     }

@@ -9,21 +9,23 @@ using OidcProxy.Net.OpenIdConnect;
 
 namespace OidcProxy.Net.ModuleInitializers.Configuration;
 
-internal class OidcProxyBootstrap<TIdentityProvider>(string endpointName) : IBootstrap
+internal class OidcProxyBootstrap<TIdentityProvider, TIdentityProviderConfig>(TIdentityProviderConfig config) 
+    : IOidcProxyBootstrap 
     where TIdentityProvider : class, IIdentityProvider
+    where TIdentityProviderConfig : class
 {
     private Type _callbackHandlerType = typeof(DefaultAuthenticationCallbackHandler);
 
     private Type _claimsTransformationType = typeof(DefaultClaimsTransformation);
     
-    public OidcProxyBootstrap<TIdentityProvider> WithCallbackHandler<TCallbackHandler>()
+    public IOidcProxyBootstrap WithCallbackHandler<TCallbackHandler>()
         where TCallbackHandler : IAuthenticationCallbackHandler
     {
         _callbackHandlerType = typeof(TCallbackHandler);
         return this;
     }
 
-    public OidcProxyBootstrap<TIdentityProvider> WithClaimsTransformation<TClaimsTransformation>()
+    public IOidcProxyBootstrap WithClaimsTransformation<TClaimsTransformation>()
         where TClaimsTransformation : IClaimsTransformation
     {
         _claimsTransformationType = typeof(TClaimsTransformation);
@@ -33,9 +35,13 @@ internal class OidcProxyBootstrap<TIdentityProvider>(string endpointName) : IBoo
     public void Configure(ProxyOptions options, IServiceCollection services)
     {
         services
-            .AddSingleton<EndpointName>(_ => new EndpointName(endpointName))
+            .AddTransient<AnonymousAccessMiddleware>();
+        
+        services
+            .AddSingleton<EndpointName>(_ => new EndpointName(options.EndpointName))
             .AddTransient<TokenRenewalMiddleware>()
             .AddTransient<IIdentityProvider, TIdentityProvider>()
+            .AddTransient<TIdentityProviderConfig>(_ => config)
             .AddTransient(_ => options)
             .AddHttpClient<TIdentityProvider>();
 
@@ -59,6 +65,11 @@ internal class OidcProxyBootstrap<TIdentityProvider>(string endpointName) : IBoo
 
     public void Configure(ProxyOptions options, WebApplication app)
     {
-        app.MapAuthenticationEndpoints(endpointName);
+        if (!options.AllowAnonymousAccess)
+        {
+            app.UseMiddleware<AnonymousAccessMiddleware>();
+        }
+        
+        app.MapAuthenticationEndpoints(options.EndpointName);
     }
 }

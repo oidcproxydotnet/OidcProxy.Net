@@ -4,7 +4,7 @@ using OidcProxy.Net.Middleware;
 
 namespace OidcProxy.Net.ModuleInitializers.Configuration;
 
-public class AllowAnonymousBootstrap : IBootstrap
+internal class AllowAnonymousBootstrap : IBootstrap
 {
     public void Configure(ProxyOptions options, IServiceCollection services)
     {

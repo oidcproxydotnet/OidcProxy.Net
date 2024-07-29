@@ -11,7 +11,7 @@ using StackExchange.Redis;
 
 namespace OidcProxy.Net.ModuleInitializers.Configuration;
 
-public class SessionBootstrap(TimeSpan sessionIdleTimeout, string cookieName) : IBootstrap
+internal class SessionBootstrap : IBootstrap
 {
     private ConnectionMultiplexer? _connectionMultiplexer;
 
@@ -26,12 +26,12 @@ public class SessionBootstrap(TimeSpan sessionIdleTimeout, string cookieName) : 
         services
             .AddDistributedMemoryCache()
             .AddMemoryCache()
-            .AddSession(options =>
+            .AddSession(o =>
             {
-                options.IdleTimeout = sessionIdleTimeout;
-                options.Cookie.HttpOnly = true;
-                options.Cookie.IsEssential = true;
-                options.Cookie.Name = cookieName;
+                o.IdleTimeout = options.SessionIdleTimeout;
+                o.Cookie.HttpOnly = true;
+                o.Cookie.IsEssential = true;
+                o.Cookie.Name = options.CookieName;
             });
 
         if (_connectionMultiplexer == null)
@@ -42,12 +42,12 @@ public class SessionBootstrap(TimeSpan sessionIdleTimeout, string cookieName) : 
         {
             services
                 .AddDataProtection()
-                .PersistKeysToStackExchangeRedis(_connectionMultiplexer, cookieName);
+                .PersistKeysToStackExchangeRedis(_connectionMultiplexer, options.CookieName);
 
             services.AddStackExchangeRedisCache(redisCacheOptions =>
             {
                 redisCacheOptions.Configuration = _connectionMultiplexer.Configuration;
-                redisCacheOptions.InstanceName = cookieName;
+                redisCacheOptions.InstanceName = options.CookieName;
             });
 
             services
