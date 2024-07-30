@@ -29,11 +29,11 @@ public class SetLandingPageTests
     [InlineData("")]
     [InlineData(null)]
     [InlineData("https://external.domain.com")]
-    public void InvalidRelativePath_ShouldThrowNotSupportedException(string path)
+    public void InvalidRelativePath_ShouldThrowNotSupportedException(string? path)
     {
         var sut = new ProxyOptions();
         
-        var actual = () => sut.SetLandingPage(path);
+        var actual = () => sut.SetLandingPage(path!);
 
         actual.Should().Throw<NotSupportedException>();
     }

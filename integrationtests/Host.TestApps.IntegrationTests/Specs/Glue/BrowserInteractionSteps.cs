@@ -9,9 +9,9 @@ namespace Host.TestApps.IntegrationTests.Specs.Glue;
 [Binding]
 public class BrowserInteractionSteps(ScenarioContext scenarioContext)
 {
-    private IBrowser _browser;
-    private IPage _page;
-    private IResponse _response;
+    private IBrowser _browser = null!;
+    private IPage _page = null!;
+    private IResponse _response = null!;
 
     [Given("the user interacts with the site that implements the OidcProxy with a browser")]
     public async Task StartBrowser()
@@ -140,7 +140,7 @@ public class BrowserInteractionSteps(ScenarioContext scenarioContext)
     }
     
     [Then("the endpoint responds with a 401 unauthorized")]
-    public async Task ThenTheEndpointProducesUnauthenticated()
+    public void ThenTheEndpointProducesUnauthenticated()
     {
         _response.Status.Should().Be(HttpStatusCode.Unauthorized);
     }

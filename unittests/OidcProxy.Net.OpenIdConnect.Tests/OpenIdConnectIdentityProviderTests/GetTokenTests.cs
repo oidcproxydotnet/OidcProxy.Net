@@ -20,7 +20,7 @@ public class GetTokenTests
 
         _config = new OpenIdConnectConfig
         {
-            Authority = _httpClient.BaseAddress?.ToString()
+            Authority = _httpClient!.BaseAddress!.ToString()
         };
         
         _cache = new TestCache();

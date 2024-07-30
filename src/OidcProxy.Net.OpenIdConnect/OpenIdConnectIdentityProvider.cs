@@ -54,9 +54,7 @@ public class OpenIdConnectIdentityProvider(
                 "Unable to exchange code for access_token. The well-known/openid-configuration" +
                 "document does not contain a token endpoint.");
         }
-
-        var scopes = new Scopes(configuration.Scopes);
-
+        
         var response = await httpClient.RequestTokenAsync(new AuthorizationCodeTokenRequest
         {
              Address = wellKnown.token_endpoint,

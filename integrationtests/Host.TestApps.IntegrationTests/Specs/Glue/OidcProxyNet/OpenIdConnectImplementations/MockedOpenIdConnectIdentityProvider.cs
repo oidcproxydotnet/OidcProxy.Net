@@ -52,7 +52,7 @@ public class MockedOpenIdConnectIdentityProvider(MockedOpenIdConnectIdentityProv
 
     private static string MimicTamperedAccessToken(TokenResponse token, MockedOpenIdConnectIdentityProviderSettings settings)
     {
-        var tokenParts = token.access_token.Split('.');
+        var tokenParts = token?.access_token?.Split('.') ?? Array.Empty<string>();
         if (tokenParts.Length != 3)
         {
             Console.WriteLine("Invalid JWT token format.");
@@ -66,7 +66,9 @@ public class MockedOpenIdConnectIdentityProvider(MockedOpenIdConnectIdentityProv
         if (settings.TamperedPayload)
         {
             var decodedPayload = Base64UrlDecode(payload);
-            var payloadDict = JsonConvert.DeserializeObject<Dictionary<string, object>>(decodedPayload);
+            var payloadDict = JsonConvert.DeserializeObject<Dictionary<string, object>>(decodedPayload)
+                ?? new Dictionary<string, object>();
+            
             payloadDict["tampered"] = "true";
             payload = Base64UrlEncode(JsonConvert.SerializeObject(payloadDict));
         }
@@ -74,7 +76,9 @@ public class MockedOpenIdConnectIdentityProvider(MockedOpenIdConnectIdentityProv
         if (settings.AlgorithmChanged)
         {
             var decodedPayload = Base64UrlDecode(header);
-            var payloadDict = JsonConvert.DeserializeObject<Dictionary<string, object>>(decodedPayload);
+            var payloadDict = JsonConvert.DeserializeObject<Dictionary<string, object>>(decodedPayload)
+                              ?? new Dictionary<string, object>();
+            
             payloadDict["alg"] = "FOO";
             header = Base64UrlEncode(JsonConvert.SerializeObject(payloadDict));
         }

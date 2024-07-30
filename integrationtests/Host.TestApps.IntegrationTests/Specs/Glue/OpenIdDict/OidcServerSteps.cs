@@ -76,6 +76,11 @@ public class OidcServerSteps(ScenarioContext scenarioContext)
     [AfterScenario]
     public async Task TearDown()
     {
+        if (_app == null)
+        {
+            return;
+        }
+
         await _app.StopAsync();
     }
 }

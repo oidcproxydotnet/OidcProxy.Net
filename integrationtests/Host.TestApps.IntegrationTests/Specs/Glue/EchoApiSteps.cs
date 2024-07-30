@@ -8,7 +8,7 @@ namespace Host.TestApps.IntegrationTests.Specs.Glue;
 [Binding]
 public class EchoApiSteps(ScenarioContext scenarioContext)
 {
-    private WebApplication _app;
+    private WebApplication _app = null!;
 
     [BeforeStep]
     public async Task BeforeWhenStep()

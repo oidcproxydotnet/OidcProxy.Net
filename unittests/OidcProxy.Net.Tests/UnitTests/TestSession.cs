@@ -18,10 +18,10 @@ public class TestSession : ISession
         return Task.CompletedTask;
     }
 
-    public bool TryGetValue(string key, out byte[]? value)
+    public bool TryGetValue(string key, out byte[] value)
     {
-        var isSuccess = _values.TryGetValue(key, out byte[] result);
-        value = result;
+        var isSuccess = _values.TryGetValue(key, out var result);
+        value = result!;
         return isSuccess;
     }
 
@@ -42,9 +42,9 @@ public class TestSession : ISession
     }
 
     public void Clear() => _values.Clear();
-    
-    
-    public bool IsAvailable { get; }
+
+
+    public bool IsAvailable { get; } = false;
     public string Id => _sessionId;
     public IEnumerable<string> Keys => _values.Keys;
 }

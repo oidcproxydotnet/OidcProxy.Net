@@ -36,7 +36,7 @@ public class HostApplication : IAsyncLifetime, IDisposable
             .GetSection("OidcProxy")
             .Get<Auth0ProxyConfig>();
 
-        builder.Services.AddAuth0Proxy(config);
+        builder.Services.AddAuth0Proxy(config!);
 
         // Build and run..
         _testApi = builder.Build();
