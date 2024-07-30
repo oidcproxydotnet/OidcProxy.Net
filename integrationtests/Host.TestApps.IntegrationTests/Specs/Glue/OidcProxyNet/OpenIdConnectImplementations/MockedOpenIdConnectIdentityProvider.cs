@@ -14,6 +14,8 @@ public class MockedOpenIdConnectIdentityProvider(MockedOpenIdConnectIdentityProv
     OpenIdConnectConfig configuration) 
     : OpenIdConnectIdentityProvider(logger, cache, httpClient, configuration)
 {
+    public static bool HasRefreshedToken { get; set; } = false;
+
     public override async Task<TokenResponse> GetTokenAsync(string redirectUri, string code, string? codeVerifier, string traceIdentifier)
     {
         var token = await base.GetTokenAsync(redirectUri, code, codeVerifier, traceIdentifier);
@@ -39,6 +41,8 @@ public class MockedOpenIdConnectIdentityProvider(MockedOpenIdConnectIdentityProv
         var accessToken = settings.TamperedPayload
             ? MimicTamperedAccessToken(token, settings)
             : token.access_token;
+
+        HasRefreshedToken = true;
 
         return new TokenResponse(accessToken,
             token.id_token, 

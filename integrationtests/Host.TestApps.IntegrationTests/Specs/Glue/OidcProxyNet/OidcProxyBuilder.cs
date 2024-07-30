@@ -143,6 +143,8 @@ public class OidcProxyBuilder
 
     public WebApplication Build()
     {
+        // Reset
+        MockedOpenIdConnectIdentityProvider.HasRefreshedToken = false;
         OidcProxy.Net.ModuleInitializers.ModuleInitializer.Reset();
         
         var builder = WebApplication.CreateBuilder(Array.Empty<string>());

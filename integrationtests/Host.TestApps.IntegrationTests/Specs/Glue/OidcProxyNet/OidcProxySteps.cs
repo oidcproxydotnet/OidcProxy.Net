@@ -1,4 +1,6 @@
 using System.Security.Cryptography.X509Certificates;
+using FluentAssertions;
+using Host.TestApps.IntegrationTests.Specs.Glue.OidcProxyNet.OpenIdConnectImplementations;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.IdentityModel.Tokens;
 using OidcProxy.Net.Cryptography;
@@ -114,7 +116,13 @@ public class OidcProxySteps(ScenarioContext scenarioContext)
     {
         _builder.WithAuthenticateOnlyMode();
     }
-    
+
+    [Then("the OidcProxy obtains a new token")]
+    public void AssertTokenRefreshed()
+    {
+        MockedOpenIdConnectIdentityProvider.HasRefreshedToken.Should().BeTrue();
+    }
+
     [AfterScenario]
     public async Task TearDown()
     {
