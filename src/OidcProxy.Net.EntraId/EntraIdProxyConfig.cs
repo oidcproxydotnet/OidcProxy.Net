@@ -4,7 +4,7 @@ namespace OidcProxy.Net.EntraId;
 
 public class EntraIdProxyConfig : ProxyConfig
 {
-    public EntraIdConfig EntraId { get; set; }
+    public EntraIdConfig EntraId { get; set; } = new ();
 
     public override bool Validate(out IEnumerable<string> errors)
     {

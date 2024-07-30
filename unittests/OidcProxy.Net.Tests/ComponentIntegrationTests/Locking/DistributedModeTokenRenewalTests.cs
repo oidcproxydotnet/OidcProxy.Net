@@ -1,3 +1,4 @@
+using Microsoft.AspNetCore.Http;
 using OidcProxy.Net.IdentityProviders;
 using OidcProxy.Net.Locking.Distributed.Redis;
 using OidcProxy.Net.OpenIdConnect;
@@ -22,9 +23,9 @@ public class DistributedModeTokenRenewalTests : IAsyncLifetime
     
     private readonly ILogger _logger = Substitute.For<ILogger>();
     
-    private readonly AuthSession _authSession = AuthSession.Create(new TestSession());
+    private readonly AuthSession _authSession;
     
-    private readonly AuthSession _session2 = AuthSession.Create(new TestSession());
+    private readonly AuthSession _session2;
     
     private readonly IIdentityProvider _identityProvider = Substitute.For<IIdentityProvider>();
 
@@ -33,6 +34,9 @@ public class DistributedModeTokenRenewalTests : IAsyncLifetime
 #region Initialise
     public DistributedModeTokenRenewalTests()
     {
+        _authSession = CreateAuthSession(new TestSession());
+        _session2 = CreateAuthSession(new TestSession());
+        
         _jwtSignatureValidator = new DummyJwtSignatureValidator();
         
         // Mock the token refresh-call
@@ -69,7 +73,24 @@ public class DistributedModeTokenRenewalTests : IAsyncLifetime
         var connection = await ConnectionMultiplexer.ConnectAsync(connectionString);
         _redLockFactory = RedLockFactory.Create(new List<RedLockMultiplexer> { connection });
     }
-#endregion
+
+    private static AuthSession CreateAuthSession(ISession session)
+    {
+        var httpContext = new DefaultHttpContext
+        {
+            Session = session
+        };
+
+        var contextAccessor = Substitute.For<IHttpContextAccessor>();
+        contextAccessor.HttpContext.Returns(httpContext);
+
+        return new AuthSession(contextAccessor,
+            Substitute.For<IRedirectUriFactory>(),
+            Substitute.For<IIdentityProvider>(),
+            new EndpointName(".auth"));
+    }
+
+    #endregion
 
     [Fact]
     public async Task When10000ConcurrentRequestsOnSingleSession_ShouldRenewTokenOnce()
@@ -125,7 +146,7 @@ public class DistributedModeTokenRenewalTests : IAsyncLifetime
         {
             tasks.Add(Task.Run(async () =>
             {
-                var session = AuthSession.Create(new TestSession());
+                var session = CreateAuthSession(new TestSession());
                 await session.SaveAsync(new TokenResponse(Guid.NewGuid().ToString(),
                     Guid.NewGuid().ToString(),
                     Guid.NewGuid().ToString(),

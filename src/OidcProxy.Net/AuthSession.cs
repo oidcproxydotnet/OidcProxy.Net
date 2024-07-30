@@ -26,19 +26,18 @@ internal class AuthSession : IAuthSession
     private static string UserPreferredLandingPageKey => $"{typeof(IIdentityProvider)}-user_preferred_landing_page";
     
     public ISession Session { get; private set; }
-
-    public static AuthSession Create(ISession session) => new(session);
-
+    
     /// <summary>
     /// Creates a new instance of the SessionWrapper class.
     /// </summary>
     /// <param name="httpContextAccessor">An instance of the IHttpContextAccessor to access the session.
-    /// To instantiate this class with the ISession directly, use the HttpSession.Create factory method.</param>
-    /// <exception cref="NotSupportedException"></exception>
+    /// To instantiate this class with the ISession directly, use the HttpSession.Create factory method.</param>    /// <param name="redirectUriFactory"></param>
+    /// <param name="identityProvider">An instance of the IIdentityProvider interface.</param>
+    /// <param name="oidcProxyReservedEndpointName">The path to the oidc-proxy reserved endpoints</param>
     public AuthSession(IHttpContextAccessor httpContextAccessor, 
         IRedirectUriFactory redirectUriFactory,
         IIdentityProvider identityProvider,
-        EndpointName oidcProxyReservedEndpointName) : this(httpContextAccessor.HttpContext?.Session!)
+        EndpointName oidcProxyReservedEndpointName)
     {
         if (httpContextAccessor.HttpContext?.Session == null)
         {
@@ -49,15 +48,7 @@ internal class AuthSession : IAuthSession
         _redirectUriFactory = redirectUriFactory;
         _identityProvider = identityProvider;
         _oidcProxyReservedEndpointName = oidcProxyReservedEndpointName;
-    }
-
-    /// <summary>
-    /// Creates a new instance of the HttpSession class.
-    /// </summary>
-    /// <param name="session">The session</param>
-    private AuthSession(ISession session)
-    {
-        this.Session = session;
+        this.Session = httpContextAccessor.HttpContext?.Session!;
     }
 
     /// <summary>
@@ -71,6 +62,13 @@ internal class AuthSession : IAuthSession
     /// </summary>
     /// <returns>A boolean value indicating whether the http session contains an `access_token`.</returns>
     public bool HasAccessToken() => Session.Keys.Contains(TokenKey);
+    
+    /// <summary>
+    /// Checks the http-session for presence of an `access_token`.
+    /// </summary>
+    /// <param name="session">A reference to the http session</param>
+    /// <returns>A boolean value indicating whether the http session contains an `access_token`.</returns>
+    internal static bool HasAccessToken(ISession session) => session.Keys.Contains(TokenKey);
     
     /// <summary>
     /// Checks the http-session for presence of an `refresh_token`.
@@ -88,7 +86,14 @@ internal class AuthSession : IAuthSession
     /// Collects the `access_token` from the http session
     /// </summary>
     /// <returns>Null, or the `access_token`</returns>
-    public string? GetAccessToken() => Session?.GetString(TokenKey);
+    public string? GetAccessToken() => GetAccessTokenFromSession(Session);
+
+    /// <summary>
+    /// Collects the `access_token` from the http session
+    /// </summary>
+    /// <param name="session">A reference to the http session</param>
+    /// <returns>Null, or the `access_token`</returns>
+    internal static string? GetAccessTokenFromSession(ISession session) => session?.GetString(TokenKey);
     
     /// <summary>
     /// Collects the `refresh_token` from the http session

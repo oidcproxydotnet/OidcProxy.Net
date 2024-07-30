@@ -18,14 +18,17 @@ public class SingleInstanceTokenRenewalTests : IAsyncLifetime
     
     private readonly IIdentityProvider _identityProvider = Substitute.For<IIdentityProvider>();
 
-    private readonly AuthSession _authSession = AuthSession.Create(new TestSession());
+    private readonly AuthSession _authSession;
     
-    private readonly AuthSession _session2 = AuthSession.Create(new TestSession());
+    private readonly AuthSession _session2;
     
     private IJwtSignatureValidator _jwtSignatureValidator;
     
     public SingleInstanceTokenRenewalTests()
     {
+        _authSession = CreateAuthSession(new TestSession());
+        _session2 = CreateAuthSession(new TestSession());
+        
         _jwtSignatureValidator = new DummyJwtSignatureValidator();
 
         // Mock the token refresh-call
@@ -54,6 +57,22 @@ public class SingleInstanceTokenRenewalTests : IAsyncLifetime
             DateTime.UtcNow.AddSeconds(-1)));
     }
 
+    private static AuthSession CreateAuthSession(ISession session)
+    {
+        var httpContext = new DefaultHttpContext
+        {
+            Session = session
+        };
+
+        var contextAccessor = Substitute.For<IHttpContextAccessor>();
+        contextAccessor.HttpContext.Returns(httpContext);
+
+        return new AuthSession(contextAccessor,
+            Substitute.For<IRedirectUriFactory>(),
+            Substitute.For<IIdentityProvider>(),
+            new EndpointName(".auth"));
+    }
+    
     public Task DisposeAsync()
     {
         // i.l.e.
@@ -116,7 +135,7 @@ public class SingleInstanceTokenRenewalTests : IAsyncLifetime
         {
             tasks.Add(Task.Run(async () =>
             {
-                var session = AuthSession.Create(new TestSession());
+                var session = CreateAuthSession(new TestSession());
                 await session.SaveAsync(new TokenResponse(Guid.NewGuid().ToString(),
                     Guid.NewGuid().ToString(),
                     Guid.NewGuid().ToString(),
@@ -137,8 +156,8 @@ public class SingleInstanceTokenRenewalTests : IAsyncLifetime
     {   
         // Arrange
         var session = new TestSession();
-        
-        var wrap = AuthSession.Create(session);
+
+        var wrap = CreateAuthSession(new TestSession());
         await wrap.SaveAsync(new TokenResponse(Guid.NewGuid().ToString(),
             Guid.NewGuid().ToString(),
             Guid.NewGuid().ToString(),

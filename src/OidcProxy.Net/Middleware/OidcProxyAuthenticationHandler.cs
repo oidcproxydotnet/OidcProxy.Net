@@ -37,6 +37,11 @@ internal sealed class OidcProxyAuthenticationHandler(
             }
 
             var payload = tokenParser.ParseJwtPayload(token);
+            if (payload == null)
+            {
+                throw new AuthenticationFailureException("Failed to authenticate. " +
+                                                         "The access_token jwt does not have a payload.");
+            }
             
             var claims = payload
                 .Select(x => new Claim(x.Key, x.Value?.ToString() ?? string.Empty))

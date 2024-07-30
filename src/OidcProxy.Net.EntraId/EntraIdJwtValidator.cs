@@ -3,8 +3,8 @@ namespace OidcProxy.Net.EntraId;
 
 internal class EntraIdJwtSignatureValidator : IJwtSignatureValidator
 {
-    public async Task<bool> Validate(string token)
+    public Task<bool> Validate(string? token)
     {
-        return true; // Todo: Implement token validation for EntraId. Please consider making a pull request.
+        return Task.FromResult(true); // Todo: Implement token validation for EntraId. Please consider making a pull request.
     }
 }

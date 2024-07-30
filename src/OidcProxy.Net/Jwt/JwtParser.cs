@@ -6,19 +6,24 @@ namespace OidcProxy.Net.Jwt;
 
 public class JwtParser : ITokenParser
 {
-    public virtual JwtPayload? ParseIdToken(string idToken) => ParsePayload(idToken);
+    public virtual JwtPayload? ParseIdToken(string? idToken) => ParsePayload(idToken);
 
-    public virtual JwtPayload? ParseJwtPayload(string token) => ParsePayload(token);
+    public virtual JwtPayload? ParseJwtPayload(string? token) => ParsePayload(token);
 
-    public static JwtHeader? ParseJwtHeader(string token)
+    public static JwtHeader? ParseJwtHeader(string? token)
     {
+        if (string.IsNullOrEmpty(token))
+        {
+            return null;
+        }
+
         var parts = token.Split('.', StringSplitOptions.RemoveEmptyEntries);
         return parts.Length != 3 && parts.Length != 5 // A JWT has 3 parts, a JWE has 5.
             ? null 
             : JwtHeader.Base64UrlDeserialize(parts[0]);
     }
 
-    private static JwtPayload? ParsePayload(string token)
+    private static JwtPayload? ParsePayload(string? token)
     {
         if (string.IsNullOrEmpty(token))
         {
@@ -32,7 +37,7 @@ public class JwtParser : ITokenParser
             : JwtPayload.Deserialize(json);
     }
 
-    private static string Decode(string token)
+    private static string? Decode(string? token)
     {
         if (string.IsNullOrEmpty(token))
         {
