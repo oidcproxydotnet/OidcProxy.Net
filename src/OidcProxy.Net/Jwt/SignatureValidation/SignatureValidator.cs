@@ -6,12 +6,12 @@ namespace OidcProxy.Net.Jwt.SignatureValidation;
 
 internal abstract class SignatureValidator
 {
-    public async Task<bool> Validate(string token, IEnumerable<KeySet> keys)
+    public Task<bool> Validate(string token, IEnumerable<KeySet> keys)
     {
         var header = GetHeader(token);
         if (header == null)
         {
-            return false;
+            return Task.FromResult(false);
         }
     
         var keySet = GetKeySet(keys, header);
@@ -28,11 +28,11 @@ internal abstract class SignatureValidator
         try
         {
             Decode(token, rsa);
-            return true;
+            return Task.FromResult(true);
         }
-        catch (Exception e)
+        catch (Exception)
         {
-            return false;
+            return Task.FromResult(false);
         }   
     }
 

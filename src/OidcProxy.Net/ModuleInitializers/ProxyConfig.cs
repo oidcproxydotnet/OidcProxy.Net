@@ -11,7 +11,7 @@ public class ProxyConfig : IAppSettingsSection
     public string? LandingPage { get; set; }
     public string? NameClaim { get; set; }
     public string? RoleClaim { get; set; }
-    public IEnumerable<string> AllowedLandingPages { get; set; }
+    public IEnumerable<string> AllowedLandingPages { get; set; } = Array.Empty<string>();
     public bool EnableUserPreferredLandingPages { get; set; } = false;
     public bool? AlwaysRedirectToHttps { get; set; }
     public bool? AllowAnonymousAccess { get; set; }
@@ -51,7 +51,7 @@ public class ProxyConfig : IAppSettingsSection
         {
             var routes = ReverseProxy?.Routes.ToRouteConfig();
             var clusters = ReverseProxy?.Clusters.ToClusterConfig();
-            
+
             options.ConfigureYarp(routes, clusters);
         }
     }

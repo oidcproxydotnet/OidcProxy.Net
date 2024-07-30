@@ -18,7 +18,7 @@ public static class Endpoints
         {
             var request = context.GetOpenIddictServerRequest();
             var identity = CreateClaimsIdentity();
-            identity.SetScopes(request.GetScopes());
+            identity.SetScopes(request?.GetScopes());
             
             var resources = await manager.ListResourcesAsync(identity.GetScopes()).ToListAsync();
             identity.SetResources(resources);

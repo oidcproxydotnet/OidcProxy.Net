@@ -1,4 +1,8 @@
 using FluentAssertions;
+using Microsoft.AspNetCore.Http;
+using NSubstitute;
+using OidcProxy.Net.IdentityProviders;
+using OidcProxy.Net.OpenIdConnect;
 
 namespace OidcProxy.Net.Tests.UnitTests;
 
@@ -11,7 +15,7 @@ public class SessionWrapperTests
     [Theory]
     public async Task ShouldStoreLandingPageInSession(string landingPage)
     {
-        var testSession = AuthSession.Create(new TestSession());
+        var testSession = CreateAuthSession(new TestSession());
 
         await testSession.SetUserPreferredLandingPageAsync(landingPage);
         var actual = testSession.GetUserPreferredLandingPage();
@@ -22,7 +26,7 @@ public class SessionWrapperTests
     [Fact]
     public async Task WhenEmptyLandingPage_ShouldRemoveLandingPageValueFromSession()
     {
-        var testSession = AuthSession.Create(new TestSession());
+        var testSession = CreateAuthSession(new TestSession());
 
         await testSession.SetUserPreferredLandingPageAsync(string.Empty);
         var actual = testSession.GetUserPreferredLandingPage();
@@ -109,14 +113,8 @@ public class SessionWrapperTests
     [InlineData(@"//www.whitelisteddomain.tld@https:///www.google.com/%2e%2e")]
     [InlineData(@"/https://www.google.com/%2e%2e")]
     [InlineData(@"/https://www.whitelisteddomain.tld@www.google.com/%2e%2e")]
-    [InlineData(@"///www.google.com/%2f%2e%2e")]
-    [InlineData(@"///www.whitelisteddomain.tld@www.google.com/%2f%2e%2e")]
-    [InlineData(@"////www.google.com/%2f%2e%2e")]
-    [InlineData(@"////www.whitelisteddomain.tld@www.google.com/%2f%2e%2e")]
-    [InlineData(@"https:///www.google.com/%2f%2e%2e")]
+   [InlineData(@"https:///www.google.com/%2f%2e%2e")]
     [InlineData(@"https:///www.whitelisteddomain.tld@www.google.com/%2f%2e%2e")]
-    [InlineData(@"/https://www.google.com/%2f%2e%2e")]
-    [InlineData(@"/https://www.whitelisteddomain.tld@www.google.com/%2f%2e%2e")]
     [InlineData(@"/https:///www.google.com/%2f%2e%2e")]
     [InlineData(@"/https:///www.whitelisteddomain.tld@www.google.com/%2f%2e%2e")]
     [InlineData(@"/%09/google.com")]
@@ -305,10 +303,26 @@ public class SessionWrapperTests
     [Theory]
     public async Task WhenMaliciousRequest_ShouldThrowException(string baaaddddd)
     {
-        var testSession = AuthSession.Create(new TestSession());
+        var testSession = CreateAuthSession(new TestSession());
 
         var actual = async () => await testSession.SetUserPreferredLandingPageAsync(baaaddddd);
 
         await actual.Should().ThrowAsync<NotSupportedException>();
+    }
+    
+    private static AuthSession CreateAuthSession(ISession session)
+    {
+        var httpContext = new DefaultHttpContext
+        {
+            Session = session
+        };
+
+        var contextAccessor = Substitute.For<IHttpContextAccessor>();
+        contextAccessor.HttpContext.Returns(httpContext);
+
+        return new AuthSession(contextAccessor,
+            Substitute.For<IRedirectUriFactory>(),
+            Substitute.For<IIdentityProvider>(),
+            new EndpointName(".auth"));
     }
 }

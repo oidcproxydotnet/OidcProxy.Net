@@ -31,8 +31,8 @@ public class TestCache : IMemoryCache
     public bool TryGetValue(object key, out object value)
     {
         var cachedItem = _cache.SingleOrDefault(x => x.Key == key);
-        value = cachedItem?.Value;
-        return value != null;
+        value = cachedItem?.Value ?? null!;
+        return cachedItem?.Value != null;
     }
 
     private class TestCacheEntry : ICacheEntry

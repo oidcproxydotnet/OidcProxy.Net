@@ -29,11 +29,11 @@ public class SetAuthenticationErrorPageTests
     [InlineData("/error?q=x")]
     [InlineData("/error#")]
     [InlineData("/error#q=x")]
-    public void InvalidRelativePath_ShouldThrowNotSupportedException(string path)
+    public void InvalidRelativePath_ShouldThrowNotSupportedException(string? path)
     {
         var sut = new ProxyOptions();
         
-        var actual = () => sut.SetAuthenticationErrorPage(path);
+        var actual = () => sut.SetAuthenticationErrorPage(path!);
 
         actual.Should().Throw<NotSupportedException>();
     }

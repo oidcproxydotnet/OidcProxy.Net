@@ -17,8 +17,13 @@ public sealed class JweParser(IEncryptionKey encryptionKey) : JwtParser
         return token.Split('.', StringSplitOptions.RemoveEmptyEntries).Length == 5;
     }
     
-    public override JwtPayload? ParseJwtPayload(string encryptedAccessToken)
+    public override JwtPayload? ParseJwtPayload(string? encryptedAccessToken)
     {
+        if (string.IsNullOrEmpty(encryptedAccessToken))
+        {            
+            throw new AuthenticationException("Authentication failed. There's no token present.");
+        }
+
         try
         {
             var accessToken = encryptionKey.Decrypt(encryptedAccessToken);

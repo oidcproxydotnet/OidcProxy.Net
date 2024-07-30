@@ -24,9 +24,9 @@ public class Auth0ConfigTests
     [Theory]
     [InlineData(null)]
     [InlineData("")]
-    public void WhenInvalidClientId_ShouldThrowException(string invalid)
+    public void WhenInvalidClientId_ShouldThrowException(string? invalid)
     {
-        _config.ClientId = invalid;
+        _config.ClientId = invalid!;
 
         var actual = _config.Validate(out var errors);
 
@@ -37,9 +37,9 @@ public class Auth0ConfigTests
     [Theory]
     [InlineData(null)]
     [InlineData("")]
-    public void WhenInvalidClientSecret_ShouldThrowException(string invalid)
+    public void WhenInvalidClientSecret_ShouldThrowException(string? invalid)
     {
-        _config.ClientSecret = invalid;
+        _config.ClientSecret = invalid!;
 
         var actual = _config.Validate(out var errors);
 
@@ -53,9 +53,9 @@ public class Auth0ConfigTests
     [InlineData("foo.eu.auth0.com/foo")]
     [InlineData("")]
     [InlineData(null)]
-    public void WhenInvalidDomain_ShouldThrowException(string invalid)
+    public void WhenInvalidDomain_ShouldThrowException(string? invalid)
     {
-        _config.Domain = invalid;
+        _config.Domain = invalid!;
 
         var actual = _config.Validate(out var errors);
 
@@ -78,9 +78,9 @@ public class Auth0ConfigTests
     [Theory]
     [InlineData(null)]
     [InlineData("")]
-    public void WhenInvalidAudience_ShouldThrowException(string invalid)
+    public void WhenInvalidAudience_ShouldThrowException(string? invalid)
     {
-        _config.Audience = invalid;
+        _config.Audience = invalid!;
 
         var actual = _config.Validate(out var errors);
 

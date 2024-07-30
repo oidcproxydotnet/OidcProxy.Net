@@ -11,10 +11,20 @@ internal class JwtSignatureValidator(IIdentityProvider identityProvider,
     Rs256SignatureValidator rs256SignatureValidator,
     Hs256SignatureValidator hs256SignatureValidator) : IJwtSignatureValidator
 {
-    public virtual async Task<bool> Validate(string token)
+    public virtual async Task<bool> Validate(string? token)
     {
+        if (string.IsNullOrEmpty(token))
+        {
+            return false;
+        }
+
         if (JweParser.IsJwe(token))
         {
+            if (jwtEncryptionKey is null)
+            {
+                return false;
+            }
+
             try
             {
                 jwtEncryptionKey.Decrypt(token);

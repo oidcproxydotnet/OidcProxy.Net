@@ -14,6 +14,8 @@ public class MockedOpenIdConnectIdentityProvider(MockedOpenIdConnectIdentityProv
     OpenIdConnectConfig configuration) 
     : OpenIdConnectIdentityProvider(logger, cache, httpClient, configuration)
 {
+    public static bool HasRefreshedToken { get; set; } = false;
+
     public override async Task<TokenResponse> GetTokenAsync(string redirectUri, string code, string? codeVerifier, string traceIdentifier)
     {
         var token = await base.GetTokenAsync(redirectUri, code, codeVerifier, traceIdentifier);
@@ -40,6 +42,8 @@ public class MockedOpenIdConnectIdentityProvider(MockedOpenIdConnectIdentityProv
             ? MimicTamperedAccessToken(token, settings)
             : token.access_token;
 
+        HasRefreshedToken = true;
+
         return new TokenResponse(accessToken,
             token.id_token, 
             token.refresh_token, 
@@ -48,7 +52,7 @@ public class MockedOpenIdConnectIdentityProvider(MockedOpenIdConnectIdentityProv
 
     private static string MimicTamperedAccessToken(TokenResponse token, MockedOpenIdConnectIdentityProviderSettings settings)
     {
-        var tokenParts = token.access_token.Split('.');
+        var tokenParts = token?.access_token?.Split('.') ?? Array.Empty<string>();
         if (tokenParts.Length != 3)
         {
             Console.WriteLine("Invalid JWT token format.");
@@ -62,7 +66,9 @@ public class MockedOpenIdConnectIdentityProvider(MockedOpenIdConnectIdentityProv
         if (settings.TamperedPayload)
         {
             var decodedPayload = Base64UrlDecode(payload);
-            var payloadDict = JsonConvert.DeserializeObject<Dictionary<string, object>>(decodedPayload);
+            var payloadDict = JsonConvert.DeserializeObject<Dictionary<string, object>>(decodedPayload)
+                ?? new Dictionary<string, object>();
+            
             payloadDict["tampered"] = "true";
             payload = Base64UrlEncode(JsonConvert.SerializeObject(payloadDict));
         }
@@ -70,7 +76,9 @@ public class MockedOpenIdConnectIdentityProvider(MockedOpenIdConnectIdentityProv
         if (settings.AlgorithmChanged)
         {
             var decodedPayload = Base64UrlDecode(header);
-            var payloadDict = JsonConvert.DeserializeObject<Dictionary<string, object>>(decodedPayload);
+            var payloadDict = JsonConvert.DeserializeObject<Dictionary<string, object>>(decodedPayload)
+                              ?? new Dictionary<string, object>();
+            
             payloadDict["alg"] = "FOO";
             header = Base64UrlEncode(JsonConvert.SerializeObject(payloadDict));
         }

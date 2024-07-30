@@ -6,11 +6,12 @@ namespace OidcProxy.Net;
 
 public class DefaultAuthenticationCallbackHandler(ILogger logger) : IAuthenticationCallbackHandler
 {
-    public virtual async Task<IResult> OnAuthenticationFailed(HttpContext context, 
+    public virtual Task<IResult> OnAuthenticationFailed(HttpContext context, 
         string defaultLandingPage, 
         string? userPreferredLandingPage)
     {
-        return Results.Unauthorized();
+        var result = Results.Unauthorized();
+        return Task.FromResult(result);
     }
 
     public virtual async Task<IResult> OnAuthenticated(HttpContext context, 

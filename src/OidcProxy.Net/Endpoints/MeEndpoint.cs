@@ -21,6 +21,11 @@ internal static class MeEndpoint
 
         var idToken = authSession.GetIdToken();
         var payload = tokenParser.ParseIdToken(idToken);
+        if (payload == null)
+        {
+            return Results.Ok(new object());
+        }
+        
         var claims = await claimsTransformation.Transform(payload);
         return Results.Ok(claims);
     }

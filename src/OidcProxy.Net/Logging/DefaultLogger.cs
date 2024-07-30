@@ -45,31 +45,30 @@ internal class DefaultLogger(IHttpContextAccessor httpContextAccessor, ILogger<D
     private void Write(string message, LogLevel logLevel)
     {
         var context = httpContextAccessor.HttpContext;
-        var logEntry = new LogEntry(context.TraceIdentifier, message);
+        var logEntry = new LogEntry(context?.TraceIdentifier, message);
         Write(logEntry, logLevel);
     }
     
     private void Write(Exception exception, LogLevel logLevel)
     {
         var context = httpContextAccessor.HttpContext;
-        var logEntry = new LogEntry(context.TraceIdentifier, exception);
+        var logEntry = new LogEntry(context?.TraceIdentifier, exception);
         Write(logEntry, logLevel);
     }
     
     private void Write(LogEntry logEntry, LogLevel logLevel)
     {
-        string messageFormat;
         if (logEntry.IsException)
         {
-            messageFormat = $"{{@{nameof(LogEntry.Time)}}}\", " +
+            const string exceptionMessageFormat = $"{{@{nameof(LogEntry.Time)}}}\", " +
                             $"\"{{@{nameof(LogEntry.TraceId)}}}\", " +
                             $"\"{{@{nameof(LogEntry.Exception)}}}\" ";
             
-            logger.Log(logLevel, messageFormat, logEntry.Time, logEntry.TraceId, logEntry.Exception);
+            logger.Log(logLevel, exceptionMessageFormat, logEntry.Time, logEntry.TraceId, logEntry.Exception);
             return;
         }
 
-        messageFormat = $"{{@{nameof(LogEntry.Time)}}}\", " +
+        const string messageFormat = $"{{@{nameof(LogEntry.Time)}}}\", " +
                         $"\"{{@{nameof(LogEntry.TraceId)}}}\", " +
                         $"\"{{@{nameof(LogEntry.Message)}}}\" ";
             

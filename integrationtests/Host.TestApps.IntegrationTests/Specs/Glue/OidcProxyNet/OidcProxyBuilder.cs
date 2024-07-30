@@ -143,6 +143,8 @@ public class OidcProxyBuilder
 
     public WebApplication Build()
     {
+        // Reset
+        MockedOpenIdConnectIdentityProvider.HasRefreshedToken = false;
         OidcProxy.Net.ModuleInitializers.ModuleInitializer.Reset();
         
         var builder = WebApplication.CreateBuilder(Array.Empty<string>());
@@ -151,7 +153,7 @@ public class OidcProxyBuilder
             .GetSection("OidcProxy")
             .Get<OidcProxyConfig>();
 
-        config.AllowAnonymousAccess = _allowAnonymousAccess;
+        config!.AllowAnonymousAccess = _allowAnonymousAccess;
 
         if (_authenticateOnlyMode)
         {

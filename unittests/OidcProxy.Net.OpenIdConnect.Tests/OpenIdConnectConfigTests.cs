@@ -24,9 +24,9 @@ public class OpenIdConnectConfigTests
     [Theory]
     [InlineData(null)]
     [InlineData("")]
-    public void WhenInvalidClientId_ShouldThrowException(string invalid)
+    public void WhenInvalidClientId_ShouldThrowException(string? invalid)
     {
-        _config.ClientId = invalid;
+        _config.ClientId = invalid!;
 
         var actual = _config.Validate(out var errors);
 
@@ -37,9 +37,9 @@ public class OpenIdConnectConfigTests
     [Theory]
     [InlineData(null)]
     [InlineData("")]
-    public void WhenInvalidClientSecret_ShouldThrowException(string invalid)
+    public void WhenInvalidClientSecret_ShouldThrowException(string? invalid)
     {
-        _config.ClientSecret = invalid;
+        _config.ClientSecret = invalid!;
 
         var actual = _config.Validate(out var errors);
 
@@ -51,9 +51,9 @@ public class OpenIdConnectConfigTests
     [InlineData("htt://authority.com")]
     [InlineData("")]
     [InlineData(null)]
-    public void WhenInvalidAuthority_ShouldThrowException(string invalid)
+    public void WhenInvalidAuthority_ShouldThrowException(string? invalid)
     {
-        _config.Authority = invalid;
+        _config.Authority = invalid!;
 
         var actual = _config.Validate(out var errors);
 

@@ -8,13 +8,13 @@ var config = builder.Configuration
     .GetSection("OidcProxy")
     .Get<Auth0ProxyConfig>();
 
-builder.Services.AddAuth0Proxy(config, o => o.AddAuthenticationCallbackHandler<TestAuthenticationCallbackHandler>());
+builder.Services.AddAuth0Proxy(config!, o => o.AddAuthenticationCallbackHandler<TestAuthenticationCallbackHandler>());
 
 var app = builder.Build();
 
 app.MapGet("/custom/me", async context =>
     {
-        var identity = (ClaimsIdentity)context.User.Identity;
+        var identity = (ClaimsIdentity)context.User.Identity!;
         await context.Response.WriteAsJsonAsync(new
         {
             Sub = identity.Name,

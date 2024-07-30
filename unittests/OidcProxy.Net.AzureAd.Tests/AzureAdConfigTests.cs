@@ -1,7 +1,7 @@
 using FluentAssertions;
 using OidcProxy.Net.EntraId;
 
-namespace EntraId.Tests;
+namespace OidcProxy.Net.AzureAd.Tests;
 
 public class AzureAdConfigTests
 {
@@ -25,12 +25,14 @@ public class AzureAdConfigTests
     [Theory]
     [InlineData(null)]
     [InlineData("")]
-    public void WhenInvalidClientId_ShouldThrowException(string invalid)
+    public void WhenInvalidClientId_ShouldThrowException(string? invalid)
     {
-        _config.ClientId = invalid;
+        _config.ClientId = invalid!;
 
-        var actual = _config.Validate(out var errors);
+        var actual = _config.Validate(out var e);
 
+        var errors = e as string[] ?? e.ToArray();
+        
         actual.Should().BeFalse();
         errors.Any(x => x.Contains("client_id", StringComparison.InvariantCultureIgnoreCase)).Should().BeTrue();
         errors.Any(x => x.Contains("-AZ-", StringComparison.InvariantCulture)).Should().BeTrue();
@@ -40,12 +42,14 @@ public class AzureAdConfigTests
     [Theory]
     [InlineData(null)]
     [InlineData("")]
-    public void WhenInvalidClientSecret_ShouldThrowException(string invalid)
+    public void WhenInvalidClientSecret_ShouldThrowException(string? invalid)
     {
-        _config.ClientSecret = invalid;
+        _config.ClientSecret = invalid!;
 
-        var actual = _config.Validate(out var errors);
+        var actual = _config.Validate(out var e);
 
+        var errors = e as string[] ?? e.ToArray();
+        
         actual.Should().BeFalse();
         errors.Any(x => x.Contains("client_secret", StringComparison.InvariantCultureIgnoreCase)).Should().BeTrue();
         errors.Any(x => x.Contains("-AZ-", StringComparison.InvariantCulture)).Should().BeTrue();
@@ -55,12 +59,14 @@ public class AzureAdConfigTests
     [Theory]
     [InlineData(null)]
     [InlineData("")]
-    public void WhenInvalidTenantId_ShouldThrowException(string invalid)
+    public void WhenInvalidTenantId_ShouldThrowException(string? invalid)
     {
-        _config.TenantId = invalid;
+        _config.TenantId = invalid!;
 
-        var actual = _config.Validate(out var errors);
+        var actual = _config.Validate(out var e);
 
+        var errors = e as string[] ?? e.ToArray();
+        
         actual.Should().BeFalse();
         errors.Any(x => x.Contains("tenantid", StringComparison.InvariantCultureIgnoreCase)).Should().BeTrue();
         errors.Any(x => x.Contains("-AZ-", StringComparison.InvariantCulture)).Should().BeTrue();

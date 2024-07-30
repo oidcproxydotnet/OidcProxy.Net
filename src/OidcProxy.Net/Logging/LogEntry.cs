@@ -2,15 +2,15 @@ namespace OidcProxy.Net.Logging;
 
 internal class LogEntry
 {
-    public LogEntry(string traceId, Exception exception)
+    public LogEntry(string? traceId, Exception exception)
     {
-        TraceId = traceId;
+        TraceId = traceId ?? string.Empty;
         Exception = exception;
     }
     
-    public LogEntry(string traceId, string message)
+    public LogEntry(string? traceId, string message)
     {
-        TraceId = traceId;
+        TraceId = traceId ?? string.Empty;
         Message = message;
     }
 

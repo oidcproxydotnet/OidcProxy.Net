@@ -4,7 +4,7 @@ namespace OidcProxy.Net.Tests.ComponentIntegrationTests.Locking;
 
 public class DummyJwtSignatureValidator : IJwtSignatureValidator
 {
-    public Task<bool> Validate(string token)
+    public Task<bool> Validate(string? token)
     {
         return Task.FromResult(true);
     }

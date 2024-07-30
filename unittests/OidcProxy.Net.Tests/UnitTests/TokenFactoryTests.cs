@@ -16,7 +16,7 @@ public class TokenFactoryTests
         
         var actual = sut.ParseJwtPayload(token);
 
-        actual.Sub.Should().NotBeNullOrEmpty();
+        actual!.Sub.Should().NotBeNullOrEmpty();
     }
 
     [Theory]
@@ -27,7 +27,7 @@ public class TokenFactoryTests
         
         var actual = sut.ParseJwtPayload(token);
 
-        actual.Sub.Should().NotBeNullOrEmpty();
+        actual!.Sub.Should().NotBeNullOrEmpty();
     }
 
     [Fact]

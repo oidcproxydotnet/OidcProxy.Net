@@ -84,10 +84,10 @@ public class OpenIdConnectBffConfigurationTests
     [Fact]
     public void ItShouldReadClusters()
     {
-        var clusters = _deserializedObject?.ReverseProxy.Clusters.ToClusterConfig();
+        var clusters = _deserializedObject!.ReverseProxy!.Clusters.ToClusterConfig();
         clusters.Should().NotBeEmpty();
 
-        var cluster = clusters.FirstOrDefault();
+        var cluster = clusters.First();
         cluster.ClusterId.Should().Be("apicluster");
         cluster.Destinations.Should().NotBeEmpty();
     }
@@ -95,10 +95,10 @@ public class OpenIdConnectBffConfigurationTests
     [Fact]
     public void ItShouldReadRoutes()
     {
-        var routes = _deserializedObject?.ReverseProxy.Routes.ToRouteConfig();
+        var routes = _deserializedObject!.ReverseProxy!.Routes.ToRouteConfig();
         routes.Should().NotBeEmpty();
 
-        var route = routes.FirstOrDefault();
+        var route = routes.First();
         route.RouteId.Should().Be("apiroute");
         route.Match.Path.Should().Be("/api/{*any}");
         route.ClusterId.Should().Be("apicluster");

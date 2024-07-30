@@ -20,14 +20,12 @@ internal class HttpHeaderTransformation : ITransformProvider
     {
         context.AddRequestTransform(x =>
         {
-            var session = AuthSession.Create(x.HttpContext.Session);
-            
-            if (!session.HasAccessToken())
+            if (!AuthSession.HasAccessToken(x.HttpContext.Session))
             {
                 return ValueTask.CompletedTask;
             }
 
-            var token = session.GetAccessToken();
+            var token = AuthSession.GetAccessTokenFromSession(x.HttpContext.Session);
             x.ProxyRequest.Headers.Authorization = new AuthenticationHeaderValue("Bearer", token);
             return ValueTask.CompletedTask;
         });

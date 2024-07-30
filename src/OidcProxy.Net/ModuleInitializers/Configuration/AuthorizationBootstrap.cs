@@ -11,13 +11,13 @@ internal class AuthorizationBootstrap : IBootstrap
 {
     private Action<IServiceCollection> _applyJwtParser = s => s
         .AddTransient<ITokenParser, JwtParser>()
-        .AddSingleton<IEncryptionKey?>(_ => null);
+        .AddSingleton<IEncryptionKey>(_ => null!);
     
     private Action<IServiceCollection> _applyJwtValidator = s => s
         .AddTransient<IJwtSignatureValidator, JwtSignatureValidator>();
     
     private Action<IServiceCollection> _applyHs256SignatureValidator = s => s
-        .AddTransient<Hs256SignatureValidator>(_ => null);
+        .AddTransient<Hs256SignatureValidator>(_ => null!);
     
     public AuthorizationBootstrap WithTokenParser<TTokenParser>() where TTokenParser : class, ITokenParser
     {

@@ -11,6 +11,14 @@ Given the user interacts with the site that implements the OidcProxy with a brow
  When the user invokes a downstream API
  Then the downstream API receives an AUTHORIZATION header
  
+ Scenario: Token expired - refresh-tokens
+ Given the user interacts with the site that implements the OidcProxy with a browser
+   And the user has authenticated (navigated to /.auth/login)
+   And the user's access_token has expired
+  When the user invokes a downstream API
+  Then the OidcProxy obtains a new token
+   And the downstream API receives an AUTHORIZATION header
+  
  Scenario: Authenticated users in AuthenticateOnly-Mode
  Given the user interacts with the site that implements the OidcProxy with a browser
    And the proxy runs in AuthenticateOnly-Mode
