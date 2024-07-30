@@ -1,6 +1,7 @@
 using Yarp.ReverseProxy.Configuration;
 
-namespace OidcProxy.Net.ModuleInitializers;
+// ReSharper disable once CheckNamespace
+namespace OidcProxy.Net;
 
 public class YarpConfig
 {

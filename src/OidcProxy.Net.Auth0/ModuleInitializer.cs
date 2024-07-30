@@ -1,31 +1,18 @@
 using Microsoft.AspNetCore.Builder;
-using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using OidcProxy.Net.ModuleInitializers;
 
 namespace OidcProxy.Net.Auth0;
 
 public static class ModuleInitializer
-{
-    public static void ConfigureAuth0(this ProxyOptions options, IConfigurationSection configurationSection, string endpointName = ".auth")
-        => ConfigureAuth0(options, configurationSection.Get<Auth0Config>(), endpointName);
-
-    public static void ConfigureAuth0(this ProxyOptions options, Auth0Config config, string endpointName = ".auth")
-    {
-        if (!config.Validate(out var errors))
-        {
-            throw new NotSupportedException(string.Join(", ", errors));
-        }
-
-        options.RegisterIdentityProvider<Auth0IdentityProvider, Auth0Config>(config, endpointName);
-    }
-
+{    
     /// <summary>
-    /// Initialises the BFF. Also use app.UseAuth0Proxy();
+    /// Initializes the proxy.
     /// </summary>
-    /// <param name="serviceCollection"></param>
-    /// <param name="config"></param>
-    /// <returns></returns>
+    /// <param name="serviceCollection">An instance of the IServiceCollection, used to register the classes OidcProxy.Net uses internally.</param>
+    /// <param name="config">An object containing the values from AppSettings.config</param>
+    /// <param name="configureOptions">A lambda, used to configure OidcProxy.</param>
+    /// <returns>Used for chaining: Returns the instance of IServiceCollection.</returns>
     public static IServiceCollection AddAuth0Proxy(this IServiceCollection serviceCollection, Auth0ProxyConfig config,
         Action<ProxyOptions>? configureOptions = null)
     {
@@ -35,56 +22,26 @@ public static class ModuleInitializer
                 $"Invoke `builder.Services.AddOidcProxy(..)` with an instance of `{nameof(Auth0ProxyConfig)}`.");
         }
 
-        var auth0Config = config.Auth0;
-        var endpointName = config.EndpointName ?? ".auth";
-        var routes = config.ReverseProxy?.Routes.ToRouteConfig();
-        var clusters = config.ReverseProxy?.Clusters.ToClusterConfig();
-
-        if (auth0Config == null)
+        if (config.Auth0 == null)
         {
             throw new ArgumentException("Failed to initialise OidcProxy.Net. " +
                 $"Invoke `builder.Services.AddOidcProxy(..)` with an instance of `{nameof(Auth0ProxyConfig)}` " +
                 $"and provide a value for {nameof(Auth0ProxyConfig)}.{nameof(config.Auth0)}.");
         }
 
-        return serviceCollection.AddOidcProxy(options =>
+        if (!config.Validate(out var errors))
         {
-            AssignIfNotNull(config.ErrorPage, options.SetAuthenticationErrorPage);
-            AssignIfNotNull(config.LandingPage, options.SetLandingPage);
-            AssignIfNotNull(config.CustomHostName, options.SetCustomHostName);
-            AssignIfNotNull(config.CookieName, cookieName => options.CookieName = cookieName);
-            AssignIfNotNull(config.NameClaim, nameClaim => options.NameClaim = nameClaim);
-            AssignIfNotNull(config.RoleClaim, roleClaim => options.RoleClaim = roleClaim);
+            throw new NotSupportedException(string.Join(", ", errors));
+        }
 
-            options.Mode = config.Mode;
-            options.EnableUserPreferredLandingPages = config.EnableUserPreferredLandingPages;
-            options.AlwaysRedirectToHttps = !config.AlwaysRedirectToHttps.HasValue || config.AlwaysRedirectToHttps.Value;
-            options.AllowAnonymousAccess = !config.AllowAnonymousAccess.HasValue || config.AllowAnonymousAccess.Value;
-            options.SetAllowedLandingPages(config.AllowedLandingPages);
-
-            if (config.SessionIdleTimeout.HasValue)
+        return serviceCollection
+            .AddSingleton(config.Auth0)
+            .AddOidcProxy<Auth0IdentityProvider>(options =>
             {
-                options.SessionIdleTimeout = config.SessionIdleTimeout.Value;
-            }
-
-            configureOptions?.Invoke(options);
-
-            options.ConfigureAuth0(auth0Config, endpointName);
-
-            if (options.Mode != Mode.AuthenticateOnly)
-            {
-                options.ConfigureYarp(routes, clusters);
-            }
-        });
+                config.Apply(options);
+                configureOptions?.Invoke(options);
+            });
     }
 
     public static void UseAuth0Proxy(this WebApplication app) => app.UseOidcProxy();
-
-    private static void AssignIfNotNull<T>(T? value, Action<T> @do)
-    {
-        if (value != null)
-        {
-            @do(value);
-        }
-    }
 }

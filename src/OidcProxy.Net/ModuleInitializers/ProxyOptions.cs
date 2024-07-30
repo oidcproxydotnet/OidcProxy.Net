@@ -66,7 +66,7 @@ public class ProxyOptions
 
     #region Public properties
 
-    internal string EndpointName = ".auth";
+    public string EndpointName { get; set; } = ".auth";
 
     internal Uri? CustomHostName = null;
 
@@ -215,6 +215,7 @@ public class ProxyOptions
         CustomHostName = hostname;
     }
 
+    [Obsolete("Will retire soon. Use `IServiceCollection.UseOidcProxy<TIdentityProvider, TAppSettings>(appSettings)` instead.")]
     public void RegisterIdentityProvider<TIdentityProvider, TIdentityProviderConfig>(TIdentityProviderConfig config, string endpointName = ".auth")
         where TIdentityProvider : class, IIdentityProvider
         where TIdentityProviderConfig : class
@@ -229,6 +230,19 @@ public class ProxyOptions
         _oidcProxyBootstrap = new OidcProxyBootstrap<TIdentityProvider, TIdentityProviderConfig>(config);
     }
 
+    internal void RegisterIdentityProvider<TIdentityProvider, TIdentityProviderConfig>(TIdentityProviderConfig config)
+        where TIdentityProvider : class, IIdentityProvider
+        where TIdentityProviderConfig : class
+    {
+        if (_oidcProxyBootstrap != null)
+        {
+            throw new NotSupportedException("Unable to bootstrap OidcProxy.Net. " +
+                                            "Configuring multiple IdentityProviders is not supported.");
+        }
+
+        _oidcProxyBootstrap = new OidcProxyBootstrap<TIdentityProvider, TIdentityProviderConfig>(config);
+    }
+    
     /// <summary>
     /// Adds middleware into the YARP processing pipeline.
     /// </summary>

@@ -1,4 +1,5 @@
-namespace OidcProxy.Net.ModuleInitializers;
+// ReSharper disable once CheckNamespace
+namespace OidcProxy.Net;
 
 public enum Mode
 {

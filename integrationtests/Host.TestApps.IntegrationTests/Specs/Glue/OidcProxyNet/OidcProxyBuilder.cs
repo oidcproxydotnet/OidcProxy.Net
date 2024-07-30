@@ -6,6 +6,7 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.IdentityModel.Tokens;
+using OidcProxy.Net;
 using OidcProxy.Net.Cryptography;
 using OidcProxy.Net.IdentityProviders;
 using OidcProxy.Net.ModuleInitializers;
