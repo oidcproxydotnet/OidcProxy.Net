@@ -1,4 +1,3 @@
-using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using OidcProxy.Net.ModuleInitializers;
 
@@ -6,25 +5,15 @@ namespace OidcProxy.Net.OpenIdConnect;
 
 public static class ModuleInitializer
 {
-    public static void ConfigureOpenIdConnect(this ProxyOptions options, IConfigurationSection configurationSection, string endpointName = ".auth")
-        => ConfigureOpenIdConnect(options, configurationSection.Get<OpenIdConnectConfig>(), endpointName);
-
-    public static void ConfigureOpenIdConnect(this ProxyOptions options, OpenIdConnectConfig config, string endpointName = ".auth")
-    {
-        if (!config.Validate(out var errors))
-        {
-            throw new NotSupportedException(string.Join(", ", errors));
-        }
-
-        options.RegisterIdentityProvider<OpenIdConnectIdentityProvider, OpenIdConnectConfig>(config, endpointName);
-    }
-
     /// <summary>
+    /// Initializes the proxy.
     /// </summary>
-    /// <param name="serviceCollection"></param>
-    /// <param name="config"></param>
-    /// <returns></returns>
-    public static IServiceCollection AddOidcProxy(this IServiceCollection serviceCollection, OidcProxyConfig config,
+    /// <param name="serviceCollection">An instance of the IServiceCollection, used to register the classes OidcProxy.Net uses internally.</param>
+    /// <param name="config">An object containing the values from AppSettings.config</param>
+    /// <param name="configureOptions">A lambda, used to configure OidcProxy.</param>
+    /// <returns>Used for chaining: Returns the instance of IServiceCollection.</returns>
+    public static IServiceCollection AddOidcProxy(this IServiceCollection serviceCollection, 
+        OidcProxyConfig config,
         Action<ProxyOptions>? configureOptions = null)
     {
         if (config == null)
@@ -32,55 +21,25 @@ public static class ModuleInitializer
             throw new ArgumentNullException(nameof(config), "Failed to initialise OidcProxy.Net. Config cannot be null. " +
                 $"Invoke `builder.Services.AddOidcProxy(..)` with an instance of `{nameof(OidcProxyConfig)}`.");
         }
-
-        var oidcConfig = config.Oidc;
-        var endpointName = config.EndpointName ?? ".auth";
-        var routes = config.ReverseProxy?.Routes.ToRouteConfig();
-        var clusters = config.ReverseProxy?.Clusters.ToClusterConfig();
-
-        if (oidcConfig == null)
+        
+        if (config.Oidc == null)
         {
             throw new ArgumentException("Failed to initialise OidcProxy.Net. " +
-                $"Invoke `builder.Services.AddOidcProxy(..)` with an instance of `{nameof(OidcProxyConfig)}` " +
-                $"and provide a value for {nameof(OidcProxyConfig)}.{nameof(config.Oidc)}.");
+                                        $"Invoke `builder.Services.AddOidcProxy(..)` with an instance of `{nameof(OidcProxyConfig)}` " +
+                                        $"and provide a value for {nameof(OidcProxyConfig)}.{nameof(config.Oidc)}.");
         }
-
-        return serviceCollection.AddOidcProxy(options =>
+        
+        if (!config.Validate(out var errors))
         {
-            AssignIfNotNull(config.ErrorPage, options.SetAuthenticationErrorPage);
-            AssignIfNotNull(config.LandingPage, options.SetLandingPage);
-            AssignIfNotNull(config.CustomHostName, options.SetCustomHostName);
-            AssignIfNotNull(config.CookieName, cookieName => options.CookieName = cookieName);
-            AssignIfNotNull(config.NameClaim, nameClaim => options.NameClaim = nameClaim);
-            AssignIfNotNull(config.RoleClaim, roleClaim => options.RoleClaim = roleClaim);
-
-            options.Mode = config.Mode;
-            options.EnableUserPreferredLandingPages = config.EnableUserPreferredLandingPages;
-            options.AlwaysRedirectToHttps = !config.AlwaysRedirectToHttps.HasValue || config.AlwaysRedirectToHttps.Value;
-            options.AllowAnonymousAccess = !config.AllowAnonymousAccess.HasValue || config.AllowAnonymousAccess.Value;
-            options.SetAllowedLandingPages(config.AllowedLandingPages);
-
-            if (config.SessionIdleTimeout.HasValue)
-            {
-                options.SessionIdleTimeout = config.SessionIdleTimeout.Value;
-            }
-
+            throw new NotSupportedException(string.Join(", ", errors));
+        }
+        
+        serviceCollection.AddSingleton(config.Oidc);
+        
+        return serviceCollection.AddOidcProxy<OpenIdConnectIdentityProvider>(options =>
+        {
+            config.Apply(options);
             configureOptions?.Invoke(options);
-
-            options.ConfigureOpenIdConnect(oidcConfig, endpointName);
-
-            if (options.Mode != Mode.AuthenticateOnly)
-            {
-                options.ConfigureYarp(routes, clusters);
-            }
         });
-    }
-
-    private static void AssignIfNotNull<T>(T? value, Action<T> @do)
-    {
-        if (value != null)
-        {
-            @do(value);
-        }
     }
 }
