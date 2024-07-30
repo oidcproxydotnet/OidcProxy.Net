@@ -42,7 +42,7 @@ public static class ModuleInitializer
     /// <param name="serviceCollection">An instance of the IServiceCollection, used to register the classes OidcProxy.Net uses internally.</param>
     /// <param name="configureOptions">A lambda, used to configure OidcProxy.</param>
     /// <typeparam name="TIdentityProvider">A type reference to the concrete implementation of IIdentityProvider. This class implements everything that is needed to obtain tokens.</typeparam>
-    /// <returns>Used for chaining: Returns the instance of IServiceCollection.</returns>
+    /// <returns>For chaining purposes: Returns the instance of IServiceCollection.</returns>
     public static IServiceCollection AddOidcProxy<TIdentityProvider>(this IServiceCollection serviceCollection,
         Action<ProxyOptions>? configureOptions = null)
         where TIdentityProvider : class, IIdentityProvider
@@ -60,7 +60,7 @@ public static class ModuleInitializer
     /// <param name="configureOptions">A lambda, used to configure OidcProxy.</param>
     /// <typeparam name="TIdentityProvider">A type reference to the concrete implementation of IIdentityProvider. This class implements everything that is needed to obtain tokens.</typeparam>
     /// <typeparam name="TAppSettingsSection">A type reference to the concrete implementation of IAppSettingsSection</typeparam>
-    /// <returns>Used for chaining: Returns the instance of IServiceCollection.</returns>
+    /// <returns>For chaining purposes: Returns the instance of IServiceCollection.</returns>
     public static IServiceCollection AddOidcProxy<TIdentityProvider, TAppSettingsSection>(
         this IServiceCollection serviceCollection,
         TAppSettingsSection appSettingsSection,

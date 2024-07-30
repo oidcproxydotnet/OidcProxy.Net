@@ -1,6 +1,7 @@
 using Microsoft.AspNetCore.Builder;
 using Microsoft.Extensions.DependencyInjection;
 using OidcProxy.Net.ModuleInitializers;
+using OidcProxy.Net.OpenIdConnect;
 
 namespace OidcProxy.Net.Auth0;
 
@@ -33,7 +34,7 @@ public static class ModuleInitializer
         {
             throw new NotSupportedException(string.Join(", ", errors));
         }
-
+        
         return serviceCollection
             .AddSingleton(config.Auth0)
             .AddOidcProxy<Auth0IdentityProvider>(options =>
