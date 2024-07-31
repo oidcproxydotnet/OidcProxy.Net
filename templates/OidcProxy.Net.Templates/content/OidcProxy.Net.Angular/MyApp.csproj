@@ -20,7 +20,7 @@
     <Message Text="Copying ClientApp/dist folder to wwwroot" />
     <RemoveDir Directories="$(MSBuildProjectDirectory)\WwwRoot" />
     <ItemGroup>
-      <SourceScripts Include="$(MSBuildThisFileDirectory)\ClientApp\dist\client-app\**\*.*" />
+      <SourceScripts Include="$(MSBuildThisFileDirectory)\ClientApp\dist\client-app\browser\**\*.*" />
     </ItemGroup>
     <Copy SourceFiles="@(SourceScripts)" DestinationFiles="@(SourceScripts -> '$(MSBuildProjectDirectory)\WwwRoot\%(RecursiveDir)%(FileName)%(Extension)')" />
   </Target>
@@ -33,7 +33,7 @@
   
   <ItemGroup>
     <Folder Include="ClientApp\dist\" />
-    <Folder Include="wwwroot\" CopyToOutputDirectory="PreserveNewest" />
+    <Folder Include="wwwroot\" CopyToOutputDirectory="PreserveNewest" CopyToPublishDirectory="PreserveNewest" />
   </ItemGroup>
 
 </Project>
