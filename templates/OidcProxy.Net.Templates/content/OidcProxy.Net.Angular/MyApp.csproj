@@ -4,10 +4,15 @@
     <TargetFramework>net8.0</TargetFramework>
     <Nullable>enable</Nullable>
     <ImplicitUsings>enable</ImplicitUsings>
-    <DockerDefaultTargetOS>Linux</DockerDefaultTargetOS>
+    <DockerDefaultTargetOS>Linux</DockerDefaultTargetOS>    
   </PropertyGroup>
 
-  <Target Name="CopyScriptsToProject" BeforeTargets="Build">
+  <Target Name="Install" BeforeTargets="Build">
+    <Message Text="Installing npm packages. This may take a while." />
+    <Exec Command="npm install" Condition="'$(RestorePackagesWithLockFile)' != 'true'" WorkingDirectory="$(MSBuildProjectDirectory)\ClientApp" />
+  </Target>
+
+  <Target Name="Release" BeforeTargets="Build" Condition="'$(Configuration)' != 'Debug'">
     <Message Text="Building ClientApp. This may take a while." />
     <Exec Command="npm install" Condition="'$(RestorePackagesWithLockFile)' != 'true'" WorkingDirectory="$(MSBuildProjectDirectory)\ClientApp" />
     <Exec Command="npm run build" Condition="'$(RestorePackagesWithLockFile)' != 'true'" WorkingDirectory="$(MSBuildProjectDirectory)\ClientApp" />
@@ -15,18 +20,20 @@
     <Message Text="Copying ClientApp/dist folder to wwwroot" />
     <RemoveDir Directories="$(MSBuildProjectDirectory)\WwwRoot" />
     <ItemGroup>
-      <SourceScripts Include="$(MSBuildThisFileDirectory)\ClientApp\dist\client-app\**\*.*" />
+      <SourceScripts Include="$(MSBuildThisFileDirectory)\ClientApp\dist\client-app\browser\**\*.*" />
     </ItemGroup>
-    <Copy SourceFiles="@(SourceScripts)" DestinationFiles="@(SourceScripts -> '$(MSBuildProjectDirectory)\WwwRoot\%(RecursiveDir)%(FileName)%(Extension)')" Condition="!Exists('$(MSBuildProjectDirectory)\WwwRoot\%(RecursiveDir)%(FileName)%(Extension)')" />
+    <Copy SourceFiles="@(SourceScripts)" DestinationFiles="@(SourceScripts -> '$(MSBuildProjectDirectory)\WwwRoot\%(RecursiveDir)%(FileName)%(Extension)')" />
   </Target>
   
   <ItemGroup>
-    <PackageReference Include="OidcProxy.Net.OpenIdConnect" Version="3.2.1" />
+    <PackageReference Include="Microsoft.AspNetCore.SpaProxy" Version="8.0.7" />
+    <PackageReference Include="Microsoft.AspNetCore.SpaServices.Extensions" Version="8.0.7" />
+    <PackageReference Include="OidcProxy.Net.OpenIdConnect" Version="5.0.1" />
   </ItemGroup>
   
   <ItemGroup>
     <Folder Include="ClientApp\dist\" />
-    <Folder Include="wwwroot\" />
+    <Folder Include="wwwroot\" CopyToOutputDirectory="PreserveNewest" CopyToPublishDirectory="PreserveNewest" />
   </ItemGroup>
 
 </Project>

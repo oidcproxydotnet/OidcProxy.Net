@@ -1,8 +1,0 @@
-<span *ngIf="userInfo$ | async as response">
-    <span *ngIf="response.userInfo">
-        Hello {{ response.userInfo.sub }}! (<a href="/.auth/end-session">Sign out</a>)
-    </span>
-    <span *ngIf="!response.userInfo">
-        Not signed in. (<a href="/.auth/login">Sign in</a>)
-    </span>
-</span>
