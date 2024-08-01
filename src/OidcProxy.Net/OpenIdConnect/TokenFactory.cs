@@ -1,8 +1,6 @@
-using System.Security.Authentication;
 using OidcProxy.Net.IdentityProviders;
 using OidcProxy.Net.Jwt.SignatureValidation;
 using OidcProxy.Net.Locking;
-using OidcProxy.Net.Logging;
 
 namespace OidcProxy.Net.OpenIdConnect;
 
@@ -10,7 +8,6 @@ internal class TokenFactory(
     AuthSession authSession,
     IJwtSignatureValidator jwtSignatureValidator,
     IIdentityProvider identityProvider,
-    ILogger logger,
     IConcurrentContext concurrentContext)
 {
     public async Task RenewAccessTokenIfExpiredAsync(string traceIdentifier)
@@ -45,7 +42,7 @@ internal class TokenFactory(
             });
     }
 
-    public bool GetIsTokenExpired()
+    private bool GetIsTokenExpired()
     {
         var expiryDateInSession = authSession.GetExpirationDate();
         if (!expiryDateInSession.HasValue)
