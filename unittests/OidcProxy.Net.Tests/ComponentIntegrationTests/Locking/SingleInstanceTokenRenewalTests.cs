@@ -95,7 +95,7 @@ public class SingleInstanceTokenRenewalTests : IAsyncLifetime
 
         async Task GetToken()
         {   
-            var sut = new TokenFactory(_authSession, _jwtSignatureValidator, _identityProvider, _logger, new InMemoryConcurrentContext());
+            var sut = new TokenFactory(_authSession, _jwtSignatureValidator, _identityProvider, new InMemoryConcurrentContext());
             await sut.RenewAccessTokenIfExpiredAsync(TraceIdentifier);
         }
     }
@@ -116,13 +116,13 @@ public class SingleInstanceTokenRenewalTests : IAsyncLifetime
 
         async Task GetToken()
         {   
-            var sut = new TokenFactory(_authSession, _jwtSignatureValidator, _identityProvider, _logger, new InMemoryConcurrentContext());
+            var sut = new TokenFactory(_authSession, _jwtSignatureValidator, _identityProvider, new InMemoryConcurrentContext());
             await sut.RenewAccessTokenIfExpiredAsync(TraceIdentifier);
         }
         
         async Task GetToken2()
         {   
-            var sut = new TokenFactory(_session2, _jwtSignatureValidator, _identityProvider, _logger, new InMemoryConcurrentContext());
+            var sut = new TokenFactory(_session2, _jwtSignatureValidator, _identityProvider, new InMemoryConcurrentContext());
             await sut.RenewAccessTokenIfExpiredAsync(TraceIdentifier);
         }
     }
@@ -141,7 +141,7 @@ public class SingleInstanceTokenRenewalTests : IAsyncLifetime
                     Guid.NewGuid().ToString(),
                     DateTime.UtcNow.AddSeconds(-1)));
                 
-                var sut = new TokenFactory(session, _jwtSignatureValidator, _identityProvider, _logger, new InMemoryConcurrentContext());
+                var sut = new TokenFactory(session, _jwtSignatureValidator, _identityProvider, new InMemoryConcurrentContext());
                 await sut.RenewAccessTokenIfExpiredAsync(TraceIdentifier);
             }));
         }
@@ -163,7 +163,7 @@ public class SingleInstanceTokenRenewalTests : IAsyncLifetime
             Guid.NewGuid().ToString(),
             DateTime.UtcNow.AddSeconds(-1)));
         
-        var sut = new TokenFactory(wrap,_jwtSignatureValidator, _identityProvider, _logger, new InMemoryConcurrentContext());
+        var sut = new TokenFactory(wrap,_jwtSignatureValidator, _identityProvider, new InMemoryConcurrentContext());
         
         // Act
         await sut.RenewAccessTokenIfExpiredAsync(TraceIdentifier);
