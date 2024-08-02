@@ -1,8 +1,6 @@
-using System.Security.Authentication;
 using OidcProxy.Net.IdentityProviders;
 using OidcProxy.Net.Jwt.SignatureValidation;
 using OidcProxy.Net.Locking;
-using OidcProxy.Net.Logging;
 
 namespace OidcProxy.Net.OpenIdConnect;
 
@@ -10,7 +8,6 @@ internal class TokenFactory(
     AuthSession authSession,
     IJwtSignatureValidator jwtSignatureValidator,
     IIdentityProvider identityProvider,
-    ILogger logger,
     IConcurrentContext concurrentContext)
 {
     public async Task RenewAccessTokenIfExpiredAsync(string traceIdentifier)
@@ -36,25 +33,6 @@ internal class TokenFactory(
                     }
 
                     await authSession.UpdateAccessAndRefreshTokenAsync(tokenResponse);
-
-                    // in case of static refresh_tokens requesting a new access token will not always yield a refresh_token
-                    if (!string.IsNullOrEmpty(tokenResponse.refresh_token) && refreshToken != tokenResponse.refresh_token) 
-                    {
-                        try
-                        {
-                            await identityProvider.RevokeAsync(refreshToken, traceIdentifier);
-                        }
-                        catch (Exception e)
-                        {
-                            // Suppress and warn... Throwing the exception here is pointless because there's nothing 
-                            // the user can do to revoke the token and the new refresh_token has been issued anyways.
-                            
-                            // Also, in many cases, vendors do not implement the revoke endpoint or they do not support 
-                            // token revocation. (e.g. Auth0, Azure EntraId, OpenIdDict, and so forth...) This will
-                            // also result in an error when revocation is attempted.
-                            await logger.WarnAsync($"Failed to revoke refresh_token. {e}");
-                        }
-                    }
                 }
                 catch (Exception)
                 {
@@ -64,7 +42,7 @@ internal class TokenFactory(
             });
     }
 
-    public bool GetIsTokenExpired()
+    private bool GetIsTokenExpired()
     {
         var expiryDateInSession = authSession.GetExpirationDate();
         if (!expiryDateInSession.HasValue)

@@ -4,7 +4,6 @@ using OidcProxy.Net.Locking.Distributed.Redis;
 using OidcProxy.Net.OpenIdConnect;
 using NSubstitute;
 using OidcProxy.Net.Jwt.SignatureValidation;
-using OidcProxy.Net.Logging;
 using OidcProxy.Net.Tests.UnitTests;
 using RedLockNet.SERedis;
 using RedLockNet.SERedis.Configuration;
@@ -19,10 +18,8 @@ public class DistributedModeTokenRenewalTests : IAsyncLifetime
     
     private RedLockFactory? _redLockFactory;
 
-    private readonly string TraceIdentifier = "123";
-    
-    private readonly ILogger _logger = Substitute.For<ILogger>();
-    
+    private const string TraceIdentifier = "123";
+
     private readonly AuthSession _authSession;
     
     private readonly AuthSession _session2;
@@ -107,7 +104,7 @@ public class DistributedModeTokenRenewalTests : IAsyncLifetime
     
         async Task GetToken()
         {   
-            var sut = new TokenFactory(_authSession, _jwtSignatureValidator, _identityProvider, _logger, new RedisConcurrentContext(_redLockFactory!));
+            var sut = new TokenFactory(_authSession, _jwtSignatureValidator, _identityProvider, new RedisConcurrentContext(_redLockFactory!));
             await sut.RenewAccessTokenIfExpiredAsync(TraceIdentifier);
         }
     }
@@ -127,13 +124,13 @@ public class DistributedModeTokenRenewalTests : IAsyncLifetime
 
         async Task GetToken()
         {   
-            var sut = new TokenFactory(_authSession, _jwtSignatureValidator, _identityProvider, _logger, new RedisConcurrentContext(_redLockFactory!));
+            var sut = new TokenFactory(_authSession, _jwtSignatureValidator, _identityProvider, new RedisConcurrentContext(_redLockFactory!));
             await sut.RenewAccessTokenIfExpiredAsync(TraceIdentifier);
         }
         
         async Task GetToken2()
         {   
-            var sut = new TokenFactory(_session2, _jwtSignatureValidator, _identityProvider, _logger, new RedisConcurrentContext(_redLockFactory!));
+            var sut = new TokenFactory(_session2, _jwtSignatureValidator, _identityProvider, new RedisConcurrentContext(_redLockFactory!));
             await sut.RenewAccessTokenIfExpiredAsync(TraceIdentifier);
         }
     }
@@ -152,7 +149,7 @@ public class DistributedModeTokenRenewalTests : IAsyncLifetime
                     Guid.NewGuid().ToString(),
                     DateTime.UtcNow.AddSeconds(-1)));
                 
-                var sut = new TokenFactory(session, _jwtSignatureValidator, _identityProvider, _logger, new RedisConcurrentContext(_redLockFactory!));
+                var sut = new TokenFactory(session, _jwtSignatureValidator, _identityProvider, new RedisConcurrentContext(_redLockFactory!));
                 await sut.RenewAccessTokenIfExpiredAsync(TraceIdentifier);
             }));
         }

@@ -6,7 +6,7 @@
         <Nullable>enable</Nullable>
         
         <PackageId>OidcProxy.Net.Auth0</PackageId>
-        <Version>5.1.0</Version>
+        <Version>5.1.1</Version>
         <Authors>Albert Starreveld</Authors>
         <Company>OidcProxy.net</Company>
         <PackageLicenseExpression>LGPL-3.0-only</PackageLicenseExpression>
@@ -20,12 +20,8 @@
         <PackageIcon>logo.png</PackageIcon>
         <SignAssembly>true</SignAssembly>
         <LangVersion>12</LangVersion>
-        <PackageReleaseNotes>Enhancements:
-            - Implemented 'AuthenticateOnly' mode (disables forwarding requests to downstream services).
-
-            Upgrades:
-            - build(deps): bump Microsoft.Identity.Client from 4.61.3 to 4.62.0
-            - build(deps): bump System.IdentityModel.Tokens.Jwt from 7.6.3 to 8.0.1
+        <PackageReleaseNotes>Fixes:
+            - Removed refresh-token revocation from token-refresh mechanism.
         </PackageReleaseNotes>
     </PropertyGroup>
 
