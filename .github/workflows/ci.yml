@@ -16,5 +16,14 @@ jobs:
       uses: actions/setup-dotnet@v3
       with:
         dotnet-version: 8.0.x
+        
+    - name: Install CI Tooling
+      run: | 
+        dotnet new tool-manifest
+        dotnet dotnet tool install --local --add-source ./scripts patchbot
+
+    - name: Upgrade version-numbers and release notes
+      run: dotnet patchbot
+
     - name: Run unit tests
       run: dotnet test --filter 'FullyQualifiedName~.UnitTests'
