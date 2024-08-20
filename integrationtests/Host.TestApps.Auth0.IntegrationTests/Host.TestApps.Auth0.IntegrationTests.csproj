@@ -15,6 +15,7 @@
         <PackageReference Include="Microsoft.AspNetCore.Mvc.Razor.RuntimeCompilation" Version="8.0.8" />
         <PackageReference Include="Microsoft.AspNetCore.TestHost" Version="8.0.8" />
         <PackageReference Include="Microsoft.NET.Test.Sdk" Version="17.10.0" />
+        <PackageReference Include="Newtonsoft.Json" Version="13.0.3" />
         <PackageReference Include="NSubstitute" Version="5.1.0" />
         <PackageReference Include="PuppeteerSharp" Version="18.1.0" />
         <PackageReference Include="xunit" Version="2.9.0" />
