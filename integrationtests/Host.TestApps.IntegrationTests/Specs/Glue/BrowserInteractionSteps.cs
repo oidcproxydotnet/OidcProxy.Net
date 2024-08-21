@@ -22,7 +22,6 @@ public class BrowserInteractionSteps(ScenarioContext scenarioContext)
         _browser = await Puppeteer.LaunchAsync(new LaunchOptions
         {
             Headless = true,
-            IgnoreHTTPSErrors = true,
             Args = ["--no-sandbox"]
         });
         
