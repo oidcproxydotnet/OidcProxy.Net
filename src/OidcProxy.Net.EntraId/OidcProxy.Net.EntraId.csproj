@@ -6,7 +6,7 @@
     <Nullable>enable</Nullable>
 
     <PackageId>OidcProxy.Net.EntraId</PackageId>
-    <Version>5.1.4</Version>
+    <Version>5.1.5</Version>
     <Authors>Albert Starreveld</Authors>
     <Company>OidcProxy.net</Company>
     <PackageLicenseExpression>LGPL-3.0-only</PackageLicenseExpression>
@@ -21,9 +21,7 @@
     <SignAssembly>true</SignAssembly>        
     <LangVersion>12</LangVersion>
     <PackageReleaseNotes>Upgrades
-      - build(deps): bump Yarp.ReverseProxy from 2.1.0 to 2.2.0
-      - build(deps): bump Microsoft.Identity.Client from 4.63.0 to 4.64.0
-      - build(deps): bump System.IdentityModel.Tokens.Jwt from 8.0.1 to 8.0.2
+      - build(deps): bump Microsoft.Identity.Client from 4.64.0 to 4.64.1
     </PackageReleaseNotes>
   </PropertyGroup>
   
