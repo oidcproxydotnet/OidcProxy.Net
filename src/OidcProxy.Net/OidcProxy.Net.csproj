@@ -30,7 +30,7 @@
       <PackageReference Include="Microsoft.AspNetCore.DataProtection.StackExchangeRedis" Version="8.0.10" />
       <PackageReference Include="Microsoft.Identity.Client" Version="4.64.1" />
       <PackageReference Include="RedLock.net" Version="2.3.2" />
-      <PackageReference Include="System.IdentityModel.Tokens.Jwt" Version="8.0.2" />
+      <PackageReference Include="System.IdentityModel.Tokens.Jwt" Version="8.2.0" />
       <PackageReference Include="Yarp.ReverseProxy" Version="2.2.0" />
     </ItemGroup>
 
