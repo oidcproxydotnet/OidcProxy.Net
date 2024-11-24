@@ -14,6 +14,8 @@ public class Auth0Config
 
     public string[] Scopes { get; set; } = Array.Empty<string>();
 
+    public bool UseOidcLogoutEndpoint { get; set; } = false;
+
     public bool FederatedLogout { get; set; } = false;
 
     public bool Validate(out IEnumerable<string> errors)
