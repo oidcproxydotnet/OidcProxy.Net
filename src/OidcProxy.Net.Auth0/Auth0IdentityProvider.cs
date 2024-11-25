@@ -40,9 +40,16 @@ public class Auth0IdentityProvider(
         var redirectEndpoint = config.UseOidcLogoutEndpoint ? "/oidc/logout" : "/v2/logout";
         var redirectQueryParameter = config.UseOidcLogoutEndpoint ? "post_logout_redirect_uri" : "returnTo";
         
+        var redirectUrl = string.Empty;
+        if (config.UseOidcLogoutEndpoint && !string.IsNullOrWhiteSpace(idToken))
+        {
+            redirectUrl = $"{queryStringSeparator}id_token_hint={HttpUtility.UrlEncode(idToken)}";
+            queryStringSeparator = "&";
+        }
+
         // Docs on redirect URL
         // https://auth0.com/docs/authenticate/login/logout/redirect-users-after-logout
-        var redirectUrl = string.Empty;
+        
         if (!string.IsNullOrEmpty(redirectUri))
         {
             var returnToQueryStringValue = HttpUtility.UrlEncode(redirectUri);
