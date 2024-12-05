@@ -35,39 +35,15 @@ public class Auth0IdentityProvider(
 
     protected override Task<Uri> BuildEndSessionUri(string? idToken, string redirectUri)
     {
-        var queryStringSeparator = "?";
+        var uri = new Auth0EndSessionUrlBuilder()
+            .UseOidcLogoutEndpoint(config.UseOidcLogoutEndpoint)
+            .WithDomain(config.Domain)
+            .WithFederated(config.FederatedLogout)
+            .WithRedirectUrl(redirectUri)
+            .WithIdTokenHint(idToken)
+            .Build();
 
-        var redirectEndpoint = config.UseOidcLogoutEndpoint ? "/oidc/logout" : "/v2/logout";
-        var redirectQueryParameter = config.UseOidcLogoutEndpoint ? "post_logout_redirect_uri" : "returnTo";
-        
-        var redirectUrl = string.Empty;
-        if (config.UseOidcLogoutEndpoint && !string.IsNullOrWhiteSpace(idToken))
-        {
-            redirectUrl = $"{queryStringSeparator}id_token_hint={HttpUtility.UrlEncode(idToken)}";
-            queryStringSeparator = "&";
-        }
-
-        // Docs on redirect URL
-        // https://auth0.com/docs/authenticate/login/logout/redirect-users-after-logout
-        
-        if (!string.IsNullOrEmpty(redirectUri))
-        {
-            var returnToQueryStringValue = HttpUtility.UrlEncode(redirectUri);
-            redirectUrl = $"{queryStringSeparator}{redirectQueryParameter}={returnToQueryStringValue}";
-
-            queryStringSeparator = "&";
-        }
-        
-        // Docs on federated logout:
-        // https://auth0.com/docs/authenticate/login/logout/log-users-out-of-idps
-        var federated = config.FederatedLogout ? $"{queryStringSeparator}federated" : string.Empty;
-
-        // Auth0 does not define their end_session_endpoint in the well-known/openid-configuration
-        var query = $"{redirectUrl}{federated}";
-        var endSessionUrl = $"https://{config.Domain}{redirectEndpoint}{query}";
-        var endSessionUri = new Uri(endSessionUrl);
-        
-        return Task.FromResult(endSessionUri);
+        return Task.FromResult(uri);
     }
 
     private static OpenIdConnectConfig MapConfiguration(Auth0Config config)

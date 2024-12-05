@@ -1,4 +1,3 @@
-using System.Security.Claims;
 using OidcProxy.Net.Auth0;
 using OidcProxy.Net.ModuleInitializers;
 using Microsoft.AspNetCore.Builder;
@@ -20,7 +19,7 @@ public class HostApplication : IAsyncLifetime, IDisposable
 
     private Task StartOidcTestApiAsync()
     {
-        var builder = WebApplication.CreateBuilder(Array.Empty<string>());
+        var builder = WebApplication.CreateBuilder([]);
         
         // Add config
         var configuration = new ConfigurationBuilder()

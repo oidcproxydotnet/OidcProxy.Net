@@ -27,6 +27,15 @@ app.MapGet("/custom/me", async context =>
     })
     .RequireAuthorization();
 
+app.MapGet("/", async context =>
+{
+    context.Response.WriteAsync("<html><body>" +
+                                "<a href=\"/.auth/login\">login</a><br>" +
+                                "<a href=\"/.auth/me\">me</a><br>" +
+                                "<a href=\"/.auth/end-session\">sign out</a><br>" +
+                                "</body></html>");
+});
+
 app.UseAuth0Proxy();
 
 app.Run();

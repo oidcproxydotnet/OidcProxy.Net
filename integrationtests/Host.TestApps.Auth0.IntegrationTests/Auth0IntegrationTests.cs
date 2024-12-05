@@ -52,9 +52,6 @@ public class Auth0IntegrationTests : IClassFixture<HostApplication>
             await app.GoTo("/.auth/end-session");
             await Task.Delay(1000);
             
-            await app.Auth0SignOutPage.BtnAccept.ClickAsync();
-            await app.WaitForNavigationAsync();
-            
             // Assert user details flushed
             await app.GoTo("/.auth/me");
             await Task.Delay(1000);
