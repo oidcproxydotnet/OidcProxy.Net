@@ -16,6 +16,8 @@ public class OpenIdConnectConfig
 
     public string PostLogoutRedirectEndpoint { get; set; } = "/";
 
+    public bool DisablePushedAuthorization { get; set; } = false;
+
     public virtual bool Validate(out IEnumerable<string> errors)
     {
         var results = new List<string>();

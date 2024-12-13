@@ -3,6 +3,7 @@ using OidcProxy.Net.IdentityProviders;
 using OidcProxy.Net.Logging;
 using OidcProxy.Net.OpenIdConnect;
 using Microsoft.Extensions.Caching.Memory;
+using IdentityModel.Client;
 
 namespace OidcProxy.Net.Auth0;
 
@@ -16,14 +17,15 @@ public class Auth0IdentityProvider(
         client,
         MapConfiguration(config))
 {
-    public override async Task<AuthorizeRequest> GetAuthorizeUrlAsync(string redirectUri)
+    protected override Parameters? GetFrontChannelParameters()
     {
-        var result = await base.GetAuthorizeUrlAsync(redirectUri);
+        var baseParams = base.GetFrontChannelParameters();
+        if (baseParams == null) {
+            baseParams = new Parameters();
+        }
 
-        var audience = HttpUtility.UrlEncode(config.Audience);
-        var authorizeRequestWithAudience = $"{result.AuthorizeUri}&audience={audience}";
-
-        return new AuthorizeRequest(new Uri(authorizeRequestWithAudience), result.CodeVerifier);
+        baseParams.Add("audience", config.Audience);
+        return baseParams;
     }
 
     public override Task RevokeAsync(string token, string traceIdentifier)

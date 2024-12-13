@@ -21,24 +21,27 @@ public class OpenIdConnectIdentityProvider(
     protected virtual string DiscoveryEndpointAddress 
         => $"{configuration.Authority.TrimEnd('/')}/" + $"{configuration.DiscoveryEndpoint.TrimStart('/')}";
 
+    protected virtual Parameters? GetFrontChannelParameters() {
+        return null;
+    }
+
     public virtual async Task<AuthorizeRequest> GetAuthorizeUrlAsync(string redirectUri)
     { 
+        var scopes = new Scopes(configuration.Scopes);
+
         var client = new OidcClient(new OidcClientOptions
         {
             Authority = configuration.Authority,
             ClientId = configuration.ClientId,
             ClientSecret = configuration.ClientSecret,
-            RedirectUri = redirectUri
+            RedirectUri = redirectUri,
+            Scope = string.Join(" ", scopes),
+            DisablePushedAuthorization = configuration.DisablePushedAuthorization
         });
 
-        var request = await client.PrepareLoginAsync();
-
-        var scopes = new Scopes(configuration.Scopes);
-        var scopesParameter = $"scope={string.Join("%20", scopes)}";
+        var request = await client.PrepareLoginAsync(GetFrontChannelParameters());
         
-        var startUrl = $"{request.StartUrl}&{scopesParameter}";
-        
-        return new AuthorizeRequest(new Uri(startUrl), request.CodeVerifier);
+        return new AuthorizeRequest(new Uri(request.StartUrl), request.CodeVerifier);
     }
 
     public virtual async Task<TokenResponse> GetTokenAsync(string redirectUri, 
