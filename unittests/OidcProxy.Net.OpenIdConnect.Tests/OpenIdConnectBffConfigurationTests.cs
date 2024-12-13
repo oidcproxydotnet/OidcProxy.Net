@@ -18,6 +18,7 @@ public class OpenIdConnectBffConfigurationTests
             ""offline_access""
             ],
             ""DiscoveryEndpoint"": ""https://disco.com/.well-known/openid-configuration""
+            ""DisablePushedAuthorization"": true
         },
         ""ErrorPage"": ""/error.aspx"",
         ""LandingPage"": ""/welcome.aspx"",
@@ -66,6 +67,7 @@ public class OpenIdConnectBffConfigurationTests
         _deserializedObject?.Oidc.DiscoveryEndpoint.Should().NotBeNullOrEmpty();
         _deserializedObject?.Oidc.Scopes.Should().NotBeNullOrEmpty();
         _deserializedObject?.Oidc.PostLogoutRedirectEndpoint.Should().NotBeNullOrEmpty();
+        _deserializedObject?.Oidc.DisablePushedAuthorization.Should().BeTrue();
         _deserializedObject?.EndpointName.Should().NotBeNullOrEmpty();
     }
     
