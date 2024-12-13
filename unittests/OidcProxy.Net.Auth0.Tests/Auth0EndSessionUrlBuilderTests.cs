@@ -83,7 +83,6 @@ public class Auth0EndSessionUrlBuilderTests
         actual.ToString().Should().NotContain($"post_logout_redirect_uri=");
     }
 
-    [InlineData(false, true, "https://foo.bar?p1=1&p2=2", "asdfghjkll")]
     [InlineData(true, true, "https://foo.bar?p1=1&p2=2", "asdfghjkll")]
     [Theory]
     public void WhenMultipleQueryStringValues_ShouldUseOneQuestionMarkAndTwoAmpercents(bool useOidcLogoutEndpoint,
@@ -126,7 +125,6 @@ public class Auth0EndSessionUrlBuilderTests
         actual.ToString().Count(x => x.Equals('&')).Should().Be(1);
     }
     
-    [InlineData(false, false, null, "asdfghjkll")]
     [InlineData(true, false, null, "asdfghjkll")]
     [InlineData(false, false, "https://foo.bar?p1=1&p2=2", null)]
     [InlineData(true, false, "https://foo.bar?p1=1&p2=2", null)]
@@ -147,5 +145,25 @@ public class Auth0EndSessionUrlBuilderTests
 
         actual.ToString().Count(x => x.Equals('?')).Should().Be(1);
         actual.ToString().Count(x => x.Equals('&')).Should().Be(0);
+    }
+
+    [InlineData(false, true, "https://foo.bar?p1=1&p2=2", "asdfghjkll")]
+    [InlineData(false, false, null, "asdfghjkll")]
+    [Theory]
+    public void WhenV2Endpoint_ShouldExcludeIdToken(bool useOidcLogoutEndpoint,
+        bool useFederated,
+        string? returnUrl,
+        string? idToken)
+    {
+        var auth0LogoutBuilder = new Auth0EndSessionUrlBuilder()
+            .UseOidcLogoutEndpoint(useOidcLogoutEndpoint)
+            .WithDomain("idp.test.com")
+            .WithRedirectUrl(returnUrl)
+            .WithFederated(useFederated)
+            .WithIdTokenHint(idToken);
+        
+        var actual = auth0LogoutBuilder.Build();
+
+        actual.ToString().Should().NotContain("id_token_hint=asdfghjkll");
     }
 }
