@@ -1,6 +1,5 @@
 using System.Security.Claims;
 using Microsoft.IdentityModel.Tokens;
-using OidcProxy.Net.Cryptography;
 using OidcProxy.Net.ModuleInitializers;
 using OidcProxy.Net.OpenIdConnect;
 
@@ -14,7 +13,8 @@ var key = new SymmetricSecurityKey(
          Convert.FromBase64String("DRjd/GnduI3Efzen9V9BvbNUfc/VKgXltV7Kbk9sMkY=")
      );
 
-builder.Services.AddOidcProxy(config!, o => o.UseEncryptionKey(new SymmetricKey(key)));
+//builder.Services.AddOidcProxy(config!, o => o.UseEncryptionKey(new SymmetricKey(key)));
+builder.Services.AddOidcProxy(config!);
 
 var app = builder.Build();
 
