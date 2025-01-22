@@ -17,7 +17,7 @@ public class OpenIdConnectBffConfigurationTests
             ""profile"",
             ""offline_access""
             ],
-            ""DiscoveryEndpoint"": ""https://disco.com/.well-known/openid-configuration""
+            ""DiscoveryEndpoint"": ""https://disco.com/.well-known/openid-configuration"",
             ""DisablePushedAuthorization"": true
         },
         ""ErrorPage"": ""/error.aspx"",
