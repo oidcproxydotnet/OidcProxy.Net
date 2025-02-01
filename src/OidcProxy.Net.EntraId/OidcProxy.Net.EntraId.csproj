@@ -6,7 +6,7 @@
     <Nullable>enable</Nullable>
 
     <PackageId>OidcProxy.Net.EntraId</PackageId>
-    <Version>5.3.0</Version>
+    <Version>5.3.1</Version>
     <Authors>Albert Starreveld</Authors>
     <Company>OidcProxy.net</Company>
     <PackageLicenseExpression>LGPL-3.0-only</PackageLicenseExpression>
@@ -20,11 +20,9 @@
     <PackageIcon>logo.png</PackageIcon>        
     <SignAssembly>true</SignAssembly>        
     <LangVersion>12</LangVersion>
-    <PackageReleaseNotes>New features
-      - feature: Added support for Pushed Authorization Requests
-
+    <PackageReleaseNotes>
       Upgrades
-      - Misc.
+      - JoseJwt
     </PackageReleaseNotes>
   </PropertyGroup>
   
