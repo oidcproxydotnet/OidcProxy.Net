@@ -195,8 +195,10 @@ Consequently, organizations are forced to make a trade-off between maintainabili
 
 Hence, our mission is to offer an affordable, developer-friendly, secure, identity-aware BFF Framework that can be implemented by anyone.
 
-OidcProxy.Net is powered by [entrypage.io](https://www.entrypage.io)
-
 ## Feedback
 
 We need your feedback. Like any other software product, it is impossible to be successful without user-feedback. Please take a moment of your time to fill out this form: [https://forms.gle/a6uuwFSLSAod52MH9](https://forms.gle/a6uuwFSLSAod52MH9)
+
+## Powered By
+
+OidcProxy.Net is powered by [entrypage.io](https://www.entrypage.io)
