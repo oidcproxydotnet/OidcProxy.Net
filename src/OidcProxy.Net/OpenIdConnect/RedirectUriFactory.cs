@@ -12,10 +12,18 @@ internal class RedirectUriFactory(ProxyOptions options) : IRedirectUriFactory
     /// <returns>The hostname the identity provider should return the auth code to.</returns>
     public string DetermineHostName(HttpContext context)
     {
-        var hostName = options.CustomHostName == null 
-            ? new Uri($"{context.Request.Scheme}://{context.Request.Host}")
-            : new Uri($"{options.CustomHostName.Scheme}://{options.CustomHostName.Authority}");
-
+        Uri hostName;
+        if (options.CustomHostName == null)
+        {
+            hostName = new Uri($"{context.Request.Scheme}://{context.Request.Host}");
+        }
+        else
+        {
+            var host = options.CustomHostName.Authority;
+            var localPath = options.CustomHostName.LocalPath.TrimEnd('/');
+            hostName = new Uri($"{options.CustomHostName.Scheme}://{host}{localPath}");
+        }
+        
         return (hostName.Scheme == "http" && options.AlwaysRedirectToHttps)
             ? $"https://{hostName.Authority}"
             : hostName.ToString().TrimEnd('/');

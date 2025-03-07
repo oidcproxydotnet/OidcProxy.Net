@@ -57,7 +57,7 @@ public class RedirectUriFactoryDetermineHostNameTests
     [InlineData("http://localhost/.auth/login/redirect", "https://localhost")]
     [InlineData("http://localhost:8443/.auth/login/redirect", "https://localhost:8443")]
     [InlineData("HTTP://localhost:8443/.auth/login/redirect", "https://localhost:8443")]
-    [InlineData("https://localhost:8443/.auth/login/redirect", "https://localhost:8443")]
+    [InlineData("https://localhost:8443", "https://localhost:8443")]
     public void WhenCustomHostNameHttp_ShouldRewriteToHttps(string url, string expected)
     {   
         var options = new ProxyOptions();
@@ -75,9 +75,9 @@ public class RedirectUriFactoryDetermineHostNameTests
     
     [Theory]
     [InlineData("https://localhost:443", "https://localhost")]
-    [InlineData("http://localhost:8443/.auth/login/redirect", "http://localhost:8443")]
-    [InlineData("HTTP://localhost:8443/.auth/login/redirect", "http://localhost:8443")]
-    [InlineData("https://localhost:8443/.auth/login/redirect", "https://localhost:8443")]
+    [InlineData("http://localhost:8443", "http://localhost:8443")]
+    [InlineData("HTTP://localhost:8443", "http://localhost:8443")]
+    [InlineData("https://localhost:8443", "https://localhost:8443")]
     public void WhenCustomHostNameAndRewriteModeSetToFalse_ShouldNotRewriteToHttps(string url, string expected)
     {   
         var options = new ProxyOptions();
@@ -89,6 +89,24 @@ public class RedirectUriFactoryDetermineHostNameTests
         var sut = new RedirectUriFactory(options);
         
         var actual = sut.DetermineHostName(_httpContext);
+
+        actual.Should().Be(expected);
+    }
+
+    [Theory]
+    [InlineData("https://www.example.com", "https://www.example.com/.auth/login/callback")]
+    [InlineData("https://www.example.com/with/path", "https://www.example.com/with/path/.auth/login/callback")]
+    public void WhenCustomHostNameWithLocalPath_ShouldIncludeLocalPathInRedirectUrl(string customHostName, string expected)
+    {
+        var options = new ProxyOptions();
+        options.AlwaysRedirectToHttps = true;
+        options.SetCustomHostName(new Uri(customHostName));
+
+        var _httpContext = CreateHttpContext("http://dummy");
+        
+        var sut = new RedirectUriFactory(options);
+        
+        var actual = sut.DetermineRedirectUri(_httpContext, new PathString("/.auth"));
 
         actual.Should().Be(expected);
     }
