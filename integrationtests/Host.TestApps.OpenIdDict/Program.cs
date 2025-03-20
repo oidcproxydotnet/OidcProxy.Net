@@ -1,4 +1,5 @@
 using System.Security.Claims;
+using Host.TestApps.OpenIdDict;
 using Microsoft.IdentityModel.Tokens;
 using OidcProxy.Net.ModuleInitializers;
 using OidcProxy.Net.OpenIdConnect;
@@ -14,7 +15,7 @@ var key = new SymmetricSecurityKey(
      );
 
 //builder.Services.AddOidcProxy(config!, o => o.UseEncryptionKey(new SymmetricKey(key)));
-builder.Services.AddOidcProxy(config!);
+builder.Services.AddOidcProxy(config!, o => o.AddRedirectUriFactory<DummyRedirectUri>());
 
 var app = builder.Build();
 

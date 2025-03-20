@@ -300,6 +300,18 @@ public class ProxyOptions
         _configureCallbackHandler = oidcProxyBootstrap =>
             oidcProxyBootstrap.WithCallbackHandler<TAuthenticationCallbackHandler>();
     }
+    
+    /// <summary>
+    /// Configure a class that redirects the user somewhere after authenticating.
+    /// </summary>
+    /// <typeparam name="TAuthenticationCallbackHandler">The type of the class.</typeparam>
+    public void AddRedirectUriFactory<TRedirectUriFactory>()
+        where TRedirectUriFactory : class, IRedirectUriFactory
+    {
+        _configureCallbackHandler = oidcProxyBootstrap =>
+            oidcProxyBootstrap.WithRedirectUriFactory<TRedirectUriFactory>();
+    }
+
 
     /// <summary>
     /// YARP is initially set up to forward traffic based on the predefined configuration. However, if you require additional configuration options, you can utilize this method to extend the configuration.

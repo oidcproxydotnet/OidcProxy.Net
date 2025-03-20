@@ -1,4 +1,3 @@
-using OidcProxy.Net.IdentityProviders;
 using OidcProxy.Net.OpenIdConnect;
 
 namespace OidcProxy.Net.ModuleInitializers.Configuration;
@@ -10,4 +9,7 @@ internal interface IOidcProxyBootstrap : IBootstrap
 
     IOidcProxyBootstrap WithClaimsTransformation<TClaimsTransformation>()
         where TClaimsTransformation : IClaimsTransformation;
+
+    IOidcProxyBootstrap WithRedirectUriFactory<TRedirectUriFactory>()
+        where TRedirectUriFactory : IRedirectUriFactory;
 }

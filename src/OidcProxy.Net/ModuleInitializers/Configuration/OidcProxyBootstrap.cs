@@ -18,13 +18,22 @@ internal class OidcProxyBootstrap<TIdentityProvider, TIdentityProviderConfig>(TI
 
     private Type _claimsTransformationType = typeof(DefaultClaimsTransformation);
     
+    private Type _redirectUrlFactory = typeof(RedirectUriFactory);
+    
     public IOidcProxyBootstrap WithCallbackHandler<TCallbackHandler>()
         where TCallbackHandler : IAuthenticationCallbackHandler
     {
         _callbackHandlerType = typeof(TCallbackHandler);
         return this;
     }
-
+    
+    public IOidcProxyBootstrap WithRedirectUriFactory<TRedirectUriFactory>() 
+        where TRedirectUriFactory : IRedirectUriFactory
+    {
+        _redirectUrlFactory = typeof(TRedirectUriFactory);
+        return this;
+    }
+    
     public IOidcProxyBootstrap WithClaimsTransformation<TClaimsTransformation>()
         where TClaimsTransformation : IClaimsTransformation
     {
@@ -46,9 +55,6 @@ internal class OidcProxyBootstrap<TIdentityProvider, TIdentityProviderConfig>(TI
             .AddHttpClient<TIdentityProvider>();
 
         services
-            .AddTransient<IRedirectUriFactory, RedirectUriFactory>();
-        
-        services
             .AddHttpContextAccessor()
             .AddTransient<TokenFactory>()
             .AddTransient<AuthSession>()
@@ -60,7 +66,8 @@ internal class OidcProxyBootstrap<TIdentityProvider, TIdentityProviderConfig>(TI
 
         services
             .AddTransient(typeof(IAuthenticationCallbackHandler), _callbackHandlerType)
-            .AddTransient(typeof(IClaimsTransformation), _claimsTransformationType);
+            .AddTransient(typeof(IClaimsTransformation), _claimsTransformationType)
+            .AddTransient(typeof(IRedirectUriFactory), _redirectUrlFactory);
     }
 
     public void Configure(ProxyOptions options, WebApplication app)
