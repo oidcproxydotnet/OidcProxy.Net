@@ -4,7 +4,7 @@ namespace OidcProxy.Net.OpenIdConnect;
 
 internal class JsonWebKeySet : List<KeySet>
 {
-    internal static JsonWebKeySet Create(IdentityModel.Client.JsonWebKeySetResponse jwksResponse)
+    internal static JsonWebKeySet Create(Duende.IdentityModel.Client.JsonWebKeySetResponse jwksResponse)
     {
         var keySets = jwksResponse.KeySet?.Keys
             .Select(x =>

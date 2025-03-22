@@ -1,9 +1,7 @@
-﻿using System.Web;
-using OidcProxy.Net.IdentityProviders;
+﻿using Duende.IdentityModel.Client;
 using OidcProxy.Net.Logging;
 using OidcProxy.Net.OpenIdConnect;
 using Microsoft.Extensions.Caching.Memory;
-using IdentityModel.Client;
 
 namespace OidcProxy.Net.Auth0;
 
