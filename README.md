@@ -1,4 +1,4 @@
-# OidcProxy.Net
+# OidcProxy.Net by Entrypage.io
 
 ![](https://github.com/thecloudnativewebapp/GoCloudNative.Bff/actions/workflows/ci.yml/badge.svg)
 ![Nuget](https://img.shields.io/nuget/dt/OidcProxy.Net)
