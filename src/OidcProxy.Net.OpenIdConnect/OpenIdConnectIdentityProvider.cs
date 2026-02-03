@@ -18,7 +18,7 @@ public class OpenIdConnectIdentityProvider(
     OpenIdConnectConfig configuration)
     : IIdentityProvider
 {
-    protected virtual string DiscoveryEndpointAddress 
+    protected virtual string DiscoveryEndpointAddress
         => $"{configuration.Authority.TrimEnd('/')}/" + $"{configuration.DiscoveryEndpoint.TrimStart('/')}";
 
     protected virtual Parameters? GetFrontChannelParameters() {
@@ -26,7 +26,7 @@ public class OpenIdConnectIdentityProvider(
     }
 
     public virtual async Task<AuthorizeRequest> GetAuthorizeUrlAsync(string redirectUri)
-    { 
+    {
         var scopes = new Scopes(configuration.Scopes);
 
         var client = new OidcClient(new OidcClientOptions
@@ -40,13 +40,13 @@ public class OpenIdConnectIdentityProvider(
         });
 
         var request = await client.PrepareLoginAsync(GetFrontChannelParameters());
-        
+
         return new AuthorizeRequest(new Uri(request.StartUrl), request.CodeVerifier);
     }
 
-    public virtual async Task<TokenResponse> GetTokenAsync(string redirectUri, 
-        string code, 
-        string? codeVerifier, 
+    public virtual async Task<TokenResponse> GetTokenAsync(string redirectUri,
+        string code,
+        string? codeVerifier,
         string traceIdentifier)
     {
         var wellKnown = await GetDiscoveryDocument();
@@ -57,14 +57,14 @@ public class OpenIdConnectIdentityProvider(
                 "Unable to exchange code for access_token. The well-known/openid-configuration" +
                 "document does not contain a token endpoint.");
         }
-        
+
         var response = await httpClient.RequestTokenAsync(new AuthorizationCodeTokenRequest
         {
              Address = wellKnown.token_endpoint,
              GrantType = OidcConstants.GrantTypes.AuthorizationCode,
              ClientId = configuration.ClientId,
              ClientSecret = configuration.ClientSecret,
-             
+
              Parameters =
              {
                  { OidcConstants.TokenRequest.Code, code },
@@ -72,7 +72,7 @@ public class OpenIdConnectIdentityProvider(
                  { OidcConstants.TokenRequest.CodeVerifier, codeVerifier },
              }
         });
-        
+
         if (response.IsError)
         {
             throw new ApplicationException($"Unable to retrieve token. " +
@@ -80,9 +80,9 @@ public class OpenIdConnectIdentityProvider(
         }
 
         await logger.InformAsync($"Queried /token endpoint and obtained id_, access_, and refresh_tokens.");
-        
+
         var expiryDate = DateTime.UtcNow.AddSeconds(response.ExpiresIn);
-        
+
         return new TokenResponse(response.AccessToken, response.IdentityToken, response.RefreshToken, expiryDate);
     }
 
@@ -95,14 +95,14 @@ public class OpenIdConnectIdentityProvider(
         {
             return (JsonWebKeySet)keySet;
         }
-        
+
         var response = await httpClient.GetJsonWebKeySetAsync(jwksUri);
         if (response.IsError)
         {
             throw new ApplicationException($"Unable to JSON Web Key Set. " +
                                            $"OIDC server responded {response.HttpStatusCode}: {response.Raw}");
         }
-        
+
         keySet = JsonWebKeySet.Create(response);
         cache.Set(jwksUri, keySet, TimeSpan.FromHours(1));
         return keySet as IEnumerable<KeySet> ?? Array.Empty<KeySet>();
@@ -122,13 +122,13 @@ public class OpenIdConnectIdentityProvider(
             ClientSecret = configuration.ClientSecret,
             Scope = string.Join(' ', scopes)
         });
-        
+
         if (response.IsError)
         {
             throw new TokenRenewalFailedException($"Unable to retrieve token. " +
                                                   $"OIDC server responded {response.HttpStatusCode}: {response.Raw}");
         }
-        
+
         await logger.InformAsync($"Queried /token endpoint (refresh grant) and obtained id_, access_, and refresh_tokens.");
 
         var expiresIn = DateTime.UtcNow.AddSeconds(response.ExpiresIn);
@@ -147,30 +147,30 @@ public class OpenIdConnectIdentityProvider(
             ClientId = configuration.ClientId,
             ClientSecret = configuration.ClientSecret
         });
-        
+
         if (response.HttpStatusCode != HttpStatusCode.OK)
         {
             throw new ApplicationException($"Unable to revoke tokens. OIDC server responded {response.HttpStatusCode}:" +
                                            $" \r\n{response.Raw}");
         }
-        
+
         await logger.InformAsync($"Token revoked.");
     }
 
     public async Task<Uri> GetEndSessionEndpointAsync(string? idToken, string baseAddress)
-    {        
+    {
         // Determine redirect URL
         var logOutRedirectEndpoint = configuration.PostLogoutRedirectEndpoint.StartsWith('/')
             ? configuration.PostLogoutRedirectEndpoint
             : $"/{configuration.PostLogoutRedirectEndpoint}";
-        
+
         var redirectUrl = $"{baseAddress}{logOutRedirectEndpoint}";
 
         return await BuildEndSessionUri(idToken, redirectUrl);
     }
-    
+
     protected virtual async Task<Uri> BuildEndSessionUri(string? idToken, string redirectUri)
-    {        
+    {
         var openIdConfiguration = await GetDiscoveryDocument();
 
         var endSessionUrEndpoint = openIdConfiguration.end_session_endpoint;
@@ -183,7 +183,7 @@ public class OpenIdConnectIdentityProvider(
         var endSessionUrl  = $"{endSessionUrEndpoint}?id_token_hint={idToken}&post_logout_redirect_uri={urlEncodedRedirectUri}";
         return new Uri(endSessionUrl);
     }
-    
+
     protected virtual async Task<DiscoveryDocument?> ObtainDiscoveryDocument(string endpointAddress)
     {
         var discoveryDocument = await httpClient.GetDiscoveryDocumentAsync(endpointAddress);
@@ -212,7 +212,7 @@ public class OpenIdConnectIdentityProvider(
         {
             return (DiscoveryDocument)discoveryDocument;
         }
-        
+
         discoveryDocument = await ObtainDiscoveryDocument(endpointAddress);
 
         if (discoveryDocument == null)
