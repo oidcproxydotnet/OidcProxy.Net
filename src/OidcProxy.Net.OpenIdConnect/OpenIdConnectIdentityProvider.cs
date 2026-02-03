@@ -54,7 +54,7 @@ public class OpenIdConnectIdentityProvider(
         if (wellKnown.token_endpoint == null)
         {
             throw new ApplicationException(
-                "Unable to exchange code for access_token. The well-known/openid-configuration" +
+                "Unable to exchange code for access_token. The well-known/openid-configuration " +
                 "document does not contain a token endpoint.");
         }
         
