@@ -6,7 +6,8 @@
     <Nullable>enable</Nullable>
 
     <PackageId>OidcProxy.Net.EntraId</PackageId>
-    <Version>5.4.0</Version>    <Authors>Albert Starreveld</Authors>
+    <Version>5.4.1</Version>  
+    <Authors>Albert Starreveld</Authors>
     <Company>OidcProxy.net</Company>
     <PackageLicenseExpression>LGPL-3.0-only</PackageLicenseExpression>
     <Description>An extendible framework for .NET to implement the BFF Security Pattern (a.k.a. Token Handler Pattern) in Single Page Applications.</Description>
@@ -20,14 +21,12 @@
     <SignAssembly>true</SignAssembly>        
     <LangVersion>12</LangVersion>
     <PackageReleaseNotes>
-      Features:
-      - Implemented ability to add custom IRedirectUriFactory (for Daan)
-
       Upgrades
-      - Microsoft.Extensions.Caching.StackExchangeRedis
-      - Microsoft.AspNetCore.DataProtection.StackExchangeRedis
-      - System.IdentityModel.Tokens.Jwt
-      - Yarp.ReverseProxy
+      - jose-jwt from 5.1.1 to 5.20
+      - Microsoft.Extensions.Caching.StackExchangeRedis from 8.0.14 to 8.0.24
+      - Microsoft.AspNetCore.DataProtection.StackExchangeRedis from 8.0.14 to 8.0.24
+      - Microsoft.Identity.Client from 4.70.0 to 4.82.1
+      - System.IdentityModel.Tokens.Jwt from 8.6.1 to 8.16.0
     </PackageReleaseNotes>
   </PropertyGroup>
   
