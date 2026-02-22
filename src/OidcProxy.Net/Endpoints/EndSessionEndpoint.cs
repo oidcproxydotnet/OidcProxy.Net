@@ -61,7 +61,7 @@ internal static class EndSessionEndpoint
         context.Session.Clear();
         context.Response.Cookies.Delete(proxyOptions.CookieName);
 
-        var baseAddress = $"{redirectUriFactory.DetermineHostName(context)}";
+        var baseAddress = $"{redirectUriFactory.DetermineHostName()}";
 
         var endSessionEndpoint = await identityProvider.GetEndSessionEndpointAsync(idToken, baseAddress);
 

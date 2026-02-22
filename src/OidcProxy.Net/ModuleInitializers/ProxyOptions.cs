@@ -68,11 +68,11 @@ public class ProxyOptions
 
     public string EndpointName { get; set; } = ".auth";
 
-    internal Uri? CustomHostName = null;
+    internal Uri HostName { get; set; }
 
-    internal LandingPage ErrorPage;
+    internal LandingPage ErrorPage { get; set; }
 
-    internal LandingPage LandingPage;
+    internal LandingPage LandingPage { get; set; }
 
     internal LandingPage[] AllowedUserPreferredLandingPages = Array.Empty<LandingPage>();
 
@@ -90,12 +90,6 @@ public class ProxyOptions
     /// Get or set a value that indicates the amount of time of inactivity after which the session will be abandoned.
     /// </summary>
     public TimeSpan SessionIdleTimeout { get; set; } = TimeSpan.FromMinutes(20);
-
-    /// <summary>
-    /// Gets ors sets a value which indicates whether or not the redirect_uri will automatically be rewritten to http
-    /// instead of https. This feature might come in handy when hosting the software in a Docker image.
-    /// </summary>
-    public bool AlwaysRedirectToHttps { get; set; } = true;
 
     /// <summary>
     /// Gets or sets a value that indicates whether or not the user is allowed to specify the page he/she wants to be
@@ -194,40 +188,6 @@ public class ProxyOptions
         }
 
         AllowedUserPreferredLandingPages = allowedLandingPages.ToArray();
-    }
-
-    /// <summary>
-    /// The OidcProxy typically derives the redirect URL from the request context as a default behavior. However, in cases where the hosting of an image with the OidcProxy involves proxies or different configurations, the automatically inferred redirect URL may be incorrect. To address this issue, you can utilize the following method to override the default value of the redirect URL.
-    /// </summary>
-    /// <param name="hostname"></param>
-    /// <exception cref="NotSupportedException"></exception>
-    public void SetCustomHostName(Uri hostname)
-    {
-        if (!string.IsNullOrEmpty(hostname.Query))
-        {
-            throw new NotSupportedException("GCN-B-322cf6ab8a70: " +
-                                            "Cannot initialize OidcProxy.Net. " +
-                                            "Error configuring custom hostname. " +
-                                            $"{hostname} is not a valid hostname. " +
-                                            "A custom hostname may not have a querystring.");
-        }
-
-        CustomHostName = hostname;
-    }
-
-    [Obsolete("Will retire soon. Use `IServiceCollection.UseOidcProxy<TIdentityProvider, TAppSettings>(appSettings)` instead.")]
-    public void RegisterIdentityProvider<TIdentityProvider, TIdentityProviderConfig>(TIdentityProviderConfig config, string endpointName = ".auth")
-        where TIdentityProvider : class, IIdentityProvider
-        where TIdentityProviderConfig : class
-    {
-        if (_oidcProxyBootstrap != null)
-        {
-            throw new NotSupportedException("Unable to bootstrap OidcProxy.Net. " +
-                                            "Configuring multiple IdentityProviders is not supported.");
-        }
-
-        EndpointName = endpointName;
-        _oidcProxyBootstrap = new OidcProxyBootstrap<TIdentityProvider, TIdentityProviderConfig>(config);
     }
 
     internal void RegisterIdentityProvider<TIdentityProvider, TIdentityProviderConfig>(TIdentityProviderConfig config)
@@ -361,24 +321,5 @@ public class ProxyOptions
     public void ConfigureRedisBackBone(ConnectionMultiplexer connectionMultiplexer)
     {
         _sessionBootstrap.WithRedis(connectionMultiplexer);
-    }
-
-    /// <summary>
-    /// Apply the options to the service collection
-    /// </summary>
-    [Obsolete("Do not use. Will be removed soon.")]
-    public void Apply(IServiceCollection serviceCollection)
-    {
-        if (_oidcProxyBootstrap == null)
-        {
-            throw new NotSupportedException("Unable to bootstrap OidcProxy.Net. " +
-                                            "You must register an IdentityProvider.");
-        }
-
-        var configuration = GetConfiguration();
-        foreach (var bootstrap in configuration)
-        {
-            bootstrap.Configure(this, serviceCollection);
-        }
     }
 }

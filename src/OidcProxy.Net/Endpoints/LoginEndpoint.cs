@@ -36,7 +36,7 @@ internal static class LoginEndpoint
                 }
             }
             
-            var redirectUri = redirectUriFactory.DetermineRedirectUri(context, endpointName.ToString());
+            var redirectUri = redirectUriFactory.DetermineRedirectUri(endpointName.ToString());
 
             var authorizeRequest = await identityProvider.GetAuthorizeUrlAsync(redirectUri);
 

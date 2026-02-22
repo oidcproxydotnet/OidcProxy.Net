@@ -4,12 +4,12 @@ namespace Host.TestApps.OpenIdDict;
 
 public class DummyRedirectUri : IRedirectUriFactory
 {
-    public string DetermineHostName(HttpContext context)
+    public string DetermineHostName()
     {
         throw new NotImplementedException();
     }
 
-    public string DetermineRedirectUri(HttpContext context, PathString endpointName)
+    public string DetermineRedirectUri(PathString endpointName)
     {
         throw new NotImplementedException();
     }

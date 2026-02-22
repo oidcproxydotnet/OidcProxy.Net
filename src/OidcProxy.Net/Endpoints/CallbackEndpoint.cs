@@ -36,7 +36,7 @@ internal static class CallbackEndpoint
             }
 
             var endpointName = context.Request.Path.RemoveQueryString().TrimEnd("/login/callback");
-            var redirectUrl = redirectUriFactory.DetermineRedirectUri(context, endpointName);
+            var redirectUrl = redirectUriFactory.DetermineRedirectUri(endpointName);
 
             var codeVerifier = authSession.GetCodeVerifier();
 

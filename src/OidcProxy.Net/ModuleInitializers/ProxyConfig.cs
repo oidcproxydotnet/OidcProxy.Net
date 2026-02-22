@@ -13,9 +13,8 @@ public class ProxyConfig : IAppSettingsSection
     public string? RoleClaim { get; set; }
     public IEnumerable<string> AllowedLandingPages { get; set; } = Array.Empty<string>();
     public bool EnableUserPreferredLandingPages { get; set; } = false;
-    public bool? AlwaysRedirectToHttps { get; set; }
     public bool? AllowAnonymousAccess { get; set; }
-    public Uri? CustomHostName { get; set; }
+    public Uri? HostName { get; set; }
     public string? CookieName { get; set; }
     public TimeSpan? SessionIdleTimeout { get; set; }
     public YarpConfig? ReverseProxy { get; set; }
@@ -30,14 +29,17 @@ public class ProxyConfig : IAppSettingsSection
     {
         AssignIfNotNull(ErrorPage, options.SetAuthenticationErrorPage);
         AssignIfNotNull(LandingPage, options.SetLandingPage);
-        AssignIfNotNull(CustomHostName, options.SetCustomHostName);
         AssignIfNotNull(CookieName, cookieName => options.CookieName = cookieName);
         AssignIfNotNull(NameClaim, nameClaim => options.NameClaim = nameClaim);
         AssignIfNotNull(RoleClaim, roleClaim => options.RoleClaim = roleClaim);
-
+        
+        options.HostName = HostName 
+                           ?? throw new NotSupportedException("GCN-O-1700faa58fdf: Unable to start OidcProxy.Net. Invalid hostname. " +
+                                                              "Configure the hostname in the appsettings.json or program.cs file and try again. " +
+                                                              "More info: https://github.com/oidcproxydotnet/OidcProxy.Net/wiki/Errors#gcn-o-1700faa58fdf");
+        
         options.Mode = Mode;
         options.EnableUserPreferredLandingPages = EnableUserPreferredLandingPages;
-        options.AlwaysRedirectToHttps = !AlwaysRedirectToHttps.HasValue || AlwaysRedirectToHttps.Value;
         options.AllowAnonymousAccess = !AllowAnonymousAccess.HasValue || AllowAnonymousAccess.Value;
         options.EndpointName = EndpointName ?? ".auth";
         options.SetAllowedLandingPages(AllowedLandingPages);

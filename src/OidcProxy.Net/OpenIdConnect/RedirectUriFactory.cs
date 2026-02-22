@@ -10,15 +10,10 @@ internal class RedirectUriFactory(ProxyOptions options) : IRedirectUriFactory
     /// </summary>
     /// <param name="context">The current http context. Needed to determine the current host name.</param>
     /// <returns>The hostname the identity provider should return the auth code to.</returns>
-    public string DetermineHostName(HttpContext context)
+    public string DetermineHostName()
     {
-        var hostName = options.CustomHostName == null 
-            ? new Uri($"{context.Request.Scheme}://{context.Request.Host}")
-            : new Uri($"{options.CustomHostName.Scheme}://{options.CustomHostName.Authority}");
-
-        return (hostName.Scheme == "http" && options.AlwaysRedirectToHttps)
-            ? $"https://{hostName.Authority}"
-            : hostName.ToString().TrimEnd('/');
+        var hostName = new Uri($"{options.HostName.Scheme}://{options.HostName.Authority}");
+        return hostName.ToString().TrimEnd('/');
     }
 
     /// <summary>
@@ -27,9 +22,9 @@ internal class RedirectUriFactory(ProxyOptions options) : IRedirectUriFactory
     /// <param name="context">The current http context. Needed to determine the current host name.</param>
     /// <param name="endpointName">The name of the endpoint you have configured. By default, the value is '.auth'. The default redirect url is '/.auth/login/callback'.</param>
     /// <returns>The redirect uri the identity provider will return the auth code to.</returns>
-    public string DetermineRedirectUri(HttpContext context, PathString endpointName)
+    public string DetermineRedirectUri(PathString endpointName)
     {
-        var hostName = DetermineHostName(context);
+        var hostName = DetermineHostName();
         return $"{hostName}{endpointName}/login/callback";
     }
 }

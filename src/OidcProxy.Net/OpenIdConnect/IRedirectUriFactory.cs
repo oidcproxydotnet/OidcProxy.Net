@@ -4,6 +4,6 @@ namespace OidcProxy.Net.OpenIdConnect;
 
 public interface IRedirectUriFactory
 {
-    string DetermineHostName(HttpContext context);
-    string DetermineRedirectUri(HttpContext context, PathString endpointName);
+    string DetermineHostName();
+    string DetermineRedirectUri(PathString endpointName);
 }

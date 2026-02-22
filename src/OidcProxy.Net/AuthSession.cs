@@ -204,11 +204,7 @@ internal class AuthSession : IAuthSession
     {
         await SetUserPreferredLandingPageAsync(userPreferredLandingPage);
 
-        var redirectUri = _redirectUriFactory.DetermineRedirectUri(
-            _httpContextAccessor.HttpContext, 
-            _oidcProxyReservedEndpointName.ToString()
-        );
-        
+        var redirectUri = _redirectUriFactory.DetermineRedirectUri(_oidcProxyReservedEndpointName.ToString());
         var authorizeRequest = await _identityProvider.GetAuthorizeUrlAsync(redirectUri);
         
         if (!string.IsNullOrEmpty(authorizeRequest.CodeVerifier))
