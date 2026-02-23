@@ -31,7 +31,7 @@
 
     <ItemGroup>
       <PackageReference Include="jose-jwt" Version="5.2.0" />
-      <PackageReference Include="Microsoft.Extensions.Caching.StackExchangeRedis" Version="8.0.24" />
+      <PackageReference Include="Microsoft.Extensions.Caching.StackExchangeRedis" Version="10.0.3" />
       <PackageReference Include="Microsoft.AspNetCore.DataProtection.StackExchangeRedis" Version="8.0.24" />
       <PackageReference Include="Microsoft.Identity.Client" Version="4.82.1" />
       <PackageReference Include="RedLock.net" Version="2.3.2" />
